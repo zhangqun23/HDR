@@ -18,8 +18,10 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<!-- session过期设置相关 <session-config> <session-timeout>30</session-timeout> 
-		</session-config> -->
+	<!-- session过期设置相关 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
 
 	<!-- session过滤器配置相关 <filter> <filter-name>SessionFilter</filter-name> <filter-class>com.base.filter.SessionFilter</filter-class> 
 		</filter> <filter-mapping> <filter-name>SessionFilter</filter-name> <url-pattern>/reportForm/*</url-pattern> 

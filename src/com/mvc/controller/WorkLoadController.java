@@ -15,7 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mvc.dao.WorkLoadDao;
-import com.mvc.entity.RoomInfo;
+import com.mvc.entity.CallInfo;
 
 /**
  * 工作量相关报表
@@ -32,8 +32,9 @@ public class WorkLoadController {
 
 	@RequestMapping("/test.do")
 	public void test(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
-		List<RoomInfo> count = workLoadDao.count();
-		System.out.println("count:" + count.get(0).getRoomSort().getSortName());
+		List<CallInfo> count = workLoadDao.count();
+		System.out.println("getSortName:" + count.get(0).getRoomInfo().getRoomSort().getSortName());
+		System.out.println("getServiceName:" + count.get(0).getServiceItem().getServiceName());
 	}
 
 }

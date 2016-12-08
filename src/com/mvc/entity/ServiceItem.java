@@ -1,5 +1,7 @@
 package com.mvc.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -10,7 +12,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "service_items")
-public class ServiceItem {
+public class ServiceItem implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer serviceId;
 	private String serviceName;// 服务类型
@@ -30,7 +34,7 @@ public class ServiceItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(unique = true, nullable = false)
+	@Column(name = "serviceid",unique = true, nullable = false)
 	public Integer getServiceId() {
 		return this.serviceId;
 	}
@@ -57,7 +61,7 @@ public class ServiceItem {
 		this.display = display;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "fatherid",nullable = false)
 	public Integer getFatherId() {
 		return this.fatherId;
 	}
@@ -84,7 +88,7 @@ public class ServiceItem {
 		this.isCustomerService = isCustomerService;
 	}
 
-	@Column(nullable = false)
+	@Column(name = "ischarge",nullable = false)
 	public Integer getIsCharge() {
 		return this.isCharge;
 	}
@@ -129,7 +133,7 @@ public class ServiceItem {
 		this.showOrder = showOrder;
 	}
 
-	@Column(length = 64)
+	@Column(name = "typeid",length = 64)
 	public String getTypeId() {
 		return this.typeId;
 	}

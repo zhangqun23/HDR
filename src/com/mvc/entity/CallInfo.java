@@ -1,6 +1,8 @@
 package com.mvc.entity;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,12 +13,14 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "call_info")
-public class CallInfo {
+public class CallInfo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private String callId;// 主键
-	private ServiceItem serviceId;// 服务ID，同service_sort中的serviceId对应
+	private ServiceItem serviceItem;// 服务ID，同service_sort中的serviceId对应
 	private String serviceSort;// 服务类型
-	private RoomInfo roomId;// 房间号码，同room_info中的room_id对应
+	private RoomInfo roomInfo;// 房间号码，同room_info中的room_id对应
 	private String callStates;// 当前该任务的状态
 	private Integer isdeleted;// 该条是否删除，1删除、0正常
 	private Integer alertNum;// 报警次数
@@ -135,7 +139,7 @@ public class CallInfo {
 		this.customerServiceFlag = customerServiceFlag;
 	}
 
-	@Column(name = "is_prInteger", nullable = false)
+	@Column(name = "is_print", nullable = false)
 	public Integer getIsPrInteger() {
 		return this.isPrInteger;
 	}
@@ -229,12 +233,12 @@ public class CallInfo {
 
 	@ManyToOne
 	@JoinColumn(name = "room_id", referencedColumnName = "room_id")
-	public RoomInfo getRoomId() {
-		return this.roomId;
+	public RoomInfo getRoomInfo() {
+		return this.roomInfo;
 	}
 
-	public void setRoomId(RoomInfo roomId) {
-		this.roomId = roomId;
+	public void setRoomInfo(RoomInfo roomInfo) {
+		this.roomInfo = roomInfo;
 	}
 
 	@Column(name = "service_area", length = 100)
@@ -257,12 +261,12 @@ public class CallInfo {
 
 	@ManyToOne
 	@JoinColumn(name = "service_id")
-	public ServiceItem getServiceId() {
-		return this.serviceId;
+	public ServiceItem getServiceItem() {
+		return this.serviceItem;
 	}
 
-	public void setServiceId(ServiceItem serviceId) {
-		this.serviceId = serviceId;
+	public void setServiceItem(ServiceItem serviceItem) {
+		this.serviceItem = serviceItem;
 	}
 
 	@Column(name = "service_sort", nullable = false, length = 24)

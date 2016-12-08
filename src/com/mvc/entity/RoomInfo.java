@@ -1,5 +1,7 @@
 package com.mvc.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -10,7 +12,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "room_info")
-public class RoomInfo {
+public class RoomInfo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer rmid;// 主键
 	private RoomSort roomSort;// 房间类型ID，同room_sort中的sort_id对应

@@ -1,5 +1,7 @@
 package com.mvc.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -10,27 +12,22 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "department_info")
-public class DepartmentInfo {
+public class DepartmentInfo implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "department_id", unique = true, nullable = false, length = 16)
+	private static final long serialVersionUID = 1L;
+
 	private String departmentId;// 部门ID，主键
-
-	@Column(name = "department_name", length = 32)
 	private String departmentName;// 部门名称
-
-	@Column(name = "department_note", length = 144)
 	private String departmentNote;// 部门说明
-
 	private Integer isdeleted;// 删除标志位，1删除，0未删除
-
-	@Column(name = "parent_id", length = 16)
 	private String parentId;// 所属父类ID
 
 	public DepartmentInfo() {
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "department_id", unique = true, nullable = false, length = 16)
 	public String getDepartmentId() {
 		return this.departmentId;
 	}
@@ -39,6 +36,7 @@ public class DepartmentInfo {
 		this.departmentId = departmentId;
 	}
 
+	@Column(name = "department_name", length = 32)
 	public String getDepartmentName() {
 		return this.departmentName;
 	}
@@ -47,6 +45,7 @@ public class DepartmentInfo {
 		this.departmentName = departmentName;
 	}
 
+	@Column(name = "department_note", length = 144)
 	public String getDepartmentNote() {
 		return this.departmentNote;
 	}
@@ -63,6 +62,7 @@ public class DepartmentInfo {
 		this.isdeleted = isdeleted;
 	}
 
+	@Column(name = "parent_id", length = 16)
 	public String getParentId() {
 		return this.parentId;
 	}

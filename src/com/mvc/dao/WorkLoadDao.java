@@ -5,7 +5,7 @@ package com.mvc.dao;
 
 import java.util.List;
 
-import com.mvc.entity.CallInfo;
+import com.mvc.entity.RoomInfo;
 
 /**
  * 工作量相关的dao层接口
@@ -15,6 +15,6 @@ import com.mvc.entity.CallInfo;
  */
 public interface WorkLoadDao {
 
-	 List<CallInfo> count();
+	 List<RoomInfo> count();
 
 }

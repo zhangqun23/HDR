@@ -14,7 +14,6 @@ import java.util.Date;
 @Entity
 @Table(name = "call_info")
 public class CallInfo implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	private String callId;// 主键
@@ -31,7 +30,7 @@ public class CallInfo implements Serializable {
 	private String crrName;// 该房间号对应的客人姓名
 	private String customerId;// 客人编号，同customer_info中的customer_id对应
 	private byte customerServiceFlag;// 对客对内的标志，1对客、0对内
-	private Integer isPrInteger;// 是否打印，1打印、0不打印
+	private Integer isPrint;// 是否打印，1打印、0不打印
 	private Date lastAlertTime;// 上一次提示报警时间
 	private String pcId;// 主要用来和中软做查房任务时，中软发送的主机ID
 	private Date recordTime;// 记录时间
@@ -140,12 +139,12 @@ public class CallInfo implements Serializable {
 	}
 
 	@Column(name = "is_print", nullable = false)
-	public Integer getIsPrInteger() {
-		return this.isPrInteger;
+	public Integer getIsPrint() {
+		return isPrint;
 	}
 
-	public void setIsPrInteger(Integer isPrInteger) {
-		this.isPrInteger = isPrInteger;
+	public void setIsPrint(Integer isPrint) {
+		this.isPrint = isPrint;
 	}
 
 	@Column(nullable = false)

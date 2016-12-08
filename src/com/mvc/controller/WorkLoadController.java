@@ -15,11 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mvc.dao.WorkLoadDao;
-<<<<<<< HEAD
 import com.mvc.entity.GoodsInfo;
-=======
-import com.mvc.entity.CallInfo;
->>>>>>> 2dd52c9cec39a9289df09cbd19e89086247e3324
 import com.mvc.entity.RoomInfo;
 
 /**

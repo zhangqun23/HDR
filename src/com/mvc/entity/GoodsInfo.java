@@ -12,23 +12,13 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "goods_info")
-<<<<<<< HEAD
-public class GoodsInfo {
-	private Integer goodsId;// 物品ID，主键
-	private String goodsName;// 物品中文名称
-	private String goodsEname;// 物品英文名称
-=======
 public class GoodsInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(unique = true, nullable = false)
-	private Integer goods_id;// 物品ID，主键
-	private String goods_Name;// 物品中文名称
-	private String goods_Ename;// 物品英文名称
->>>>>>> 2dd52c9cec39a9289df09cbd19e89086247e3324
+	private Integer goodsId;// 物品ID，主键
+	private String goodsName;// 物品中文名称
+	private String goodsEname;// 物品英文名称
 	private String code;// code值，一般根据酒馆而定
 	private String description;// 描述
 	private Integer display;// 显示标志，1显示、0不显示

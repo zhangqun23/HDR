@@ -4,19 +4,18 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 /**
- * 服务类型 The persistent class for the service_items database table.
+ * 服务类型 
  * 
  */
 @Entity
 @Table(name = "service_items")
-@NamedQuery(name = "ServiceItem.findAll", query = "SELECT s FROM ServiceItem s")
 public class ServiceItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(unique = true, nullable = false)
-	private int serviceId;
+	private Integer serviceId;
 
 	@Column(name = "service_name", nullable = false, length = 64)
 	private String serviceName;// 服务类型
@@ -25,10 +24,10 @@ public class ServiceItem implements Serializable {
 	private String departId;// 所属部门，同department_info中depart_id对应
 
 	@Column(nullable = false)
-	private int display;// 显示标志，1显示、0不显示
+	private Integer display;// 显示标志，1显示、0不显示
 
 	@Column(nullable = false)
-	private int fatherId;// 父类ID
+	private Integer fatherId;// 父类ID
 
 	@Column(name = "given_time", length = 25)
 	private String givenTime;// 给定完成时间，默认单位为分钟
@@ -37,7 +36,7 @@ public class ServiceItem implements Serializable {
 	private byte isCustomerService;// 对客标志，1对客、0对内、2既对客又对内
 
 	@Column(nullable = false)
-	private int isCharge;// 该服务是否收费，0不收费、1收费、2收费+服务费
+	private Integer isCharge;// 该服务是否收费，0不收费、1收费、2收费+服务费
 
 	@Column(name = "need_check", nullable = false)
 	private byte needCheck;// 是否需要验收，1是0否
@@ -46,7 +45,7 @@ public class ServiceItem implements Serializable {
 	private String parentName;// 父类名称
 
 	@Column(name = "show_order")
-	private int showOrder;// 排序
+	private Integer showOrder;// 排序
 
 	@Column(length = 64)
 	private String typeId;// 服务对应的分类，同goods_type中的Goods_TpeId对应
@@ -54,11 +53,11 @@ public class ServiceItem implements Serializable {
 	public ServiceItem() {
 	}
 
-	public int getServiceId() {
+	public Integer getServiceId() {
 		return this.serviceId;
 	}
 
-	public void setServiceId(int serviceId) {
+	public void setServiceId(Integer serviceId) {
 		this.serviceId = serviceId;
 	}
 
@@ -70,19 +69,19 @@ public class ServiceItem implements Serializable {
 		this.departId = departId;
 	}
 
-	public int getDisplay() {
+	public Integer getDisplay() {
 		return this.display;
 	}
 
-	public void setDisplay(int display) {
+	public void setDisplay(Integer display) {
 		this.display = display;
 	}
 
-	public int getFatherId() {
+	public Integer getFatherId() {
 		return this.fatherId;
 	}
 
-	public void setFatherId(int fatherId) {
+	public void setFatherId(Integer fatherId) {
 		this.fatherId = fatherId;
 	}
 
@@ -102,11 +101,11 @@ public class ServiceItem implements Serializable {
 		this.isCustomerService = isCustomerService;
 	}
 
-	public int getIsCharge() {
+	public Integer getIsCharge() {
 		return this.isCharge;
 	}
 
-	public void setIsCharge(int isCharge) {
+	public void setIsCharge(Integer isCharge) {
 		this.isCharge = isCharge;
 	}
 
@@ -134,11 +133,11 @@ public class ServiceItem implements Serializable {
 		this.serviceName = serviceName;
 	}
 
-	public int getShowOrder() {
+	public Integer getShowOrder() {
 		return this.showOrder;
 	}
 
-	public void setShowOrder(int showOrder) {
+	public void setShowOrder(Integer showOrder) {
 		this.showOrder = showOrder;
 	}
 

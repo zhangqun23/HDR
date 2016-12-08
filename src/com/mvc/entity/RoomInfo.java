@@ -4,23 +4,24 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 /**
- * 房间信息 The persistent class for the room_info database table.
+ * 房间信息
  * 
+ * @author zjn
+ * @date 2016年12月8日
  */
 @Entity
 @Table(name = "room_info")
-@NamedQuery(name = "RoomInfo.findAll", query = "SELECT r FROM RoomInfo r")
 public class RoomInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(unique = true, nullable = false)
-	private int rmid;// 主键
+	private Integer rmid;// 主键
 
 	@ManyToOne
 	@JoinColumn(name = "sort_id")
-	private RoomSort sortId;// 房间类型ID，同room_sort中的sort_id对应
+	private RoomSort roomSort;// 房间类型ID，同room_sort中的sort_id对应
 
 	@Column(name = "room_floor", length = 8)
 	private String roomFloor;// 所在楼层
@@ -44,13 +45,13 @@ public class RoomInfo implements Serializable {
 	private String sortNo;// 房间类型编码，同room_sort中的sort_no对应
 
 	@Column(nullable = false)
-	private int isdeleted;// 删除标志位，1删除、0未删除
+	private Integer isdeleted;// 删除标志位，1删除、0未删除
 
 	@Column(name = "room_description", length = 64)
 	private String roomDescription;// 房间描述
 
 	@Column(name = "guest_num", nullable = false)
-	private int guestNum;// 客人数
+	private Integer guestNum;// 客人数
 
 	@Column(length = 100)
 	private String reason;// 维修房、停用房的具体原因
@@ -59,22 +60,22 @@ public class RoomInfo implements Serializable {
 	private String remark;// 备注
 
 	@Column(nullable = false)
-	private int alarm;
+	private Integer alarm;
 
 	@Column(nullable = false)
-	private int flag;
+	private Integer flag;
 
 	@Column(name = "room_booked")
-	private int roomBooked;
+	private Integer roomBooked;
 
 	@Column(name = "room_clean")
-	private int roomClean;
+	private Integer roomClean;
 
 	@Column(name = "room_online")
-	private int roomOnline;
+	private Integer roomOnline;
 
 	@Column(name = "room_repair")
-	private int roomRepair;
+	private Integer roomRepair;
 
 	@Column(name = "tmp_status", length = 8)
 	private String tmpStatus;
@@ -82,19 +83,19 @@ public class RoomInfo implements Serializable {
 	public RoomInfo() {
 	}
 
-	public int getRmid() {
+	public Integer getRmid() {
 		return this.rmid;
 	}
 
-	public void setRmid(int rmid) {
+	public void setRmid(Integer rmid) {
 		this.rmid = rmid;
 	}
 
-	public int getAlarm() {
+	public Integer getAlarm() {
 		return this.alarm;
 	}
 
-	public void setAlarm(int alarm) {
+	public void setAlarm(Integer alarm) {
 		this.alarm = alarm;
 	}
 
@@ -106,27 +107,27 @@ public class RoomInfo implements Serializable {
 		this.cleanStatus = cleanStatus;
 	}
 
-	public int getFlag() {
+	public Integer getFlag() {
 		return this.flag;
 	}
 
-	public void setFlag(int flag) {
+	public void setFlag(Integer flag) {
 		this.flag = flag;
 	}
 
-	public int getGuestNum() {
+	public Integer getGuestNum() {
 		return this.guestNum;
 	}
 
-	public void setGuestNum(int guestNum) {
+	public void setGuestNum(Integer guestNum) {
 		this.guestNum = guestNum;
 	}
 
-	public int getIsdeleted() {
+	public Integer getIsdeleted() {
 		return this.isdeleted;
 	}
 
-	public void setIsdeleted(int isdeleted) {
+	public void setIsdeleted(Integer isdeleted) {
 		this.isdeleted = isdeleted;
 	}
 
@@ -146,19 +147,19 @@ public class RoomInfo implements Serializable {
 		this.remark = remark;
 	}
 
-	public int getRoomBooked() {
+	public Integer getRoomBooked() {
 		return this.roomBooked;
 	}
 
-	public void setRoomBooked(int roomBooked) {
+	public void setRoomBooked(Integer roomBooked) {
 		this.roomBooked = roomBooked;
 	}
 
-	public int getRoomClean() {
+	public Integer getRoomClean() {
 		return this.roomClean;
 	}
 
-	public void setRoomClean(int roomClean) {
+	public void setRoomClean(Integer roomClean) {
 		this.roomClean = roomClean;
 	}
 
@@ -202,19 +203,19 @@ public class RoomInfo implements Serializable {
 		this.roomNo = roomNo;
 	}
 
-	public int getRoomOnline() {
+	public Integer getRoomOnline() {
 		return this.roomOnline;
 	}
 
-	public void setRoomOnline(int roomOnline) {
+	public void setRoomOnline(Integer roomOnline) {
 		this.roomOnline = roomOnline;
 	}
 
-	public int getRoomRepair() {
+	public Integer getRoomRepair() {
 		return this.roomRepair;
 	}
 
-	public void setRoomRepair(int roomRepair) {
+	public void setRoomRepair(Integer roomRepair) {
 		this.roomRepair = roomRepair;
 	}
 
@@ -226,12 +227,12 @@ public class RoomInfo implements Serializable {
 		this.roomStatus = roomStatus;
 	}
 
-	public RoomSort getSortId() {
-		return this.sortId;
+	public RoomSort getRoomSort() {
+		return this.roomSort;
 	}
 
-	public void setSortId(RoomSort sortId) {
-		this.sortId = sortId;
+	public void setRoomSort(RoomSort roomSort) {
+		this.roomSort = roomSort;
 	}
 
 	public String getSortNo() {

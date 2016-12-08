@@ -1,6 +1,5 @@
 package com.mvc.entity;
 
-import java.io.Serializable;
 import javax.persistence.*;
 
 /**
@@ -9,8 +8,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "service_items")
-public class ServiceItem implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class ServiceItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

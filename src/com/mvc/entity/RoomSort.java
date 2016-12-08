@@ -17,24 +17,24 @@ public class RoomSort implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="sort_id", unique=true, nullable=false)
-	private int sortId;
+	private int sortId;//主键
+	
+	@Column(name="sort_name", length=16)
+	private String sortName;//房间类型名称
 
 	@Column(name="bed_num")
-	private int bedNum;
+	private int bedNum;//床数
 
-	private int isdeleted;
+	private int isdeleted;//记录删除标志位，1删除、0未删除
 
 	@Column(name="room_pic", length=128)
-	private String roomPic;
-
-	@Column(name="sort_name", length=16)
-	private String sortName;
+	private String roomPic;//房间图片
 
 	@Column(name="sort_no", nullable=false, length=10)
-	private String sortNo;
+	private String sortNo;//房间类型编码
 
 	@Column(nullable=false)
-	private int weight;
+	private int weight;//图片宽度
 
 	public RoomSort() {
 	}

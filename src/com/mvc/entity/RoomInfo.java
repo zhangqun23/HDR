@@ -3,80 +3,80 @@ package com.mvc.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the room_info database table.
+ * 房间信息 The persistent class for the room_info database table.
  * 
  */
 @Entity
-@Table(name="room_info")
-@NamedQuery(name="RoomInfo.findAll", query="SELECT r FROM RoomInfo r")
+@Table(name = "room_info")
+@NamedQuery(name = "RoomInfo.findAll", query = "SELECT r FROM RoomInfo r")
 public class RoomInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
-	private int rmid;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique = true, nullable = false)
+	private int rmid;// 主键
 
-	@Column(nullable=false)
+	@ManyToOne
+	@JoinColumn(name = "sort_id")
+	private RoomSort sortId;// 房间类型ID，同room_sort中的sort_id对应
+
+	@Column(name = "room_floor", length = 8)
+	private String roomFloor;// 所在楼层
+
+	@Column(name = "room_floor_info", length = 10)
+	private String roomFloorInfo;// 房间所属区域，同hotel_area中的area_no对应
+
+	@Column(name = "room_id", nullable = false, length = 16)
+	private String roomId;// 房间号
+
+	@Column(name = "room_no", length = 16)
+	private String roomNo;// 房间号
+
+	@Column(name = "clean_status", length = 12)
+	private String cleanStatus;// 房间清洁状态，0脏房、1干净房、2微脏房、3已查干净房
+
+	@Column(name = "room_status", length = 12)
+	private String roomStatus;// 房间状态，V空房、O住人、U维修、S锁房、A临时房态（根据不同的酒馆系统而变）
+
+	@Column(name = "sort_no", nullable = false, length = 10)
+	private String sortNo;// 房间类型编码，同room_sort中的sort_no对应
+
+	@Column(nullable = false)
+	private int isdeleted;// 删除标志位，1删除、0未删除
+
+	@Column(name = "room_description", length = 64)
+	private String roomDescription;// 房间描述
+
+	@Column(name = "guest_num", nullable = false)
+	private int guestNum;// 客人数
+
+	@Column(length = 100)
+	private String reason;// 维修房、停用房的具体原因
+
+	@Column(nullable = false, length = 128)
+	private String remark;// 备注
+
+	@Column(nullable = false)
 	private int alarm;
 
-	@Column(name="clean_status", length=12)
-	private String cleanStatus;
-
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private int flag;
 
-	@Column(name="guest_num", nullable=false)
-	private int guestNum;
-
-	@Column(nullable=false)
-	private int isdeleted;
-
-	@Column(length=100)
-	private String reason;
-
-	@Column(nullable=false, length=128)
-	private String remark;
-
-	@Column(name="room_booked")
+	@Column(name = "room_booked")
 	private int roomBooked;
 
-	@Column(name="room_clean")
+	@Column(name = "room_clean")
 	private int roomClean;
 
-	@Column(name="room_description", length=64)
-	private String roomDescription;
-
-	@Column(name="room_floor", length=8)
-	private String roomFloor;
-
-	@Column(name="room_floor_info", length=10)
-	private String roomFloorInfo;
-
-	@Column(name="room_id", nullable=false, length=16)
-	private String roomId;
-
-	@Column(name="room_no", length=16)
-	private String roomNo;
-
-	@Column(name="room_online")
+	@Column(name = "room_online")
 	private int roomOnline;
 
-	@Column(name="room_repair")
+	@Column(name = "room_repair")
 	private int roomRepair;
 
-	@Column(name="room_status", length=12)
-	private String roomStatus;
-
-	@Column(name="sort_id", nullable=false)
-	private int sortId;
-
-	@Column(name="sort_no", nullable=false, length=10)
-	private String sortNo;
-
-	@Column(name="tmp_status", length=8)
+	@Column(name = "tmp_status", length = 8)
 	private String tmpStatus;
 
 	public RoomInfo() {
@@ -226,11 +226,11 @@ public class RoomInfo implements Serializable {
 		this.roomStatus = roomStatus;
 	}
 
-	public int getSortId() {
+	public RoomSort getSortId() {
 		return this.sortId;
 	}
 
-	public void setSortId(int sortId) {
+	public void setSortId(RoomSort sortId) {
 		this.sortId = sortId;
 	}
 

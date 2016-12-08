@@ -3,54 +3,53 @@ package com.mvc.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the service_items database table.
+ * 服务类型 The persistent class for the service_items database table.
  * 
  */
 @Entity
-@Table(name="service_items")
-@NamedQuery(name="ServiceItem.findAll", query="SELECT s FROM ServiceItem s")
+@Table(name = "service_items")
+@NamedQuery(name = "ServiceItem.findAll", query = "SELECT s FROM ServiceItem s")
 public class ServiceItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique = true, nullable = false)
 	private int serviceId;
 
-	@Column(name="depart_id", length=32)
-	private String departId;
+	@Column(name = "service_name", nullable = false, length = 64)
+	private String serviceName;// 服务类型
 
-	@Column(nullable=false)
-	private int display;
+	@Column(name = "depart_id", length = 32)
+	private String departId;// 所属部门，同department_info中depart_id对应
 
-	@Column(nullable=false)
-	private int fatherId;
+	@Column(nullable = false)
+	private int display;// 显示标志，1显示、0不显示
 
-	@Column(name="given_time", length=25)
-	private String givenTime;
+	@Column(nullable = false)
+	private int fatherId;// 父类ID
 
-	@Column(name="is_customer_service", nullable=false)
-	private byte isCustomerService;
+	@Column(name = "given_time", length = 25)
+	private String givenTime;// 给定完成时间，默认单位为分钟
 
-	@Column(nullable=false)
-	private int isCharge;
+	@Column(name = "is_customer_service", nullable = false)
+	private byte isCustomerService;// 对客标志，1对客、0对内、2既对客又对内
 
-	@Column(name="need_check", nullable=false)
-	private byte needCheck;
+	@Column(nullable = false)
+	private int isCharge;// 该服务是否收费，0不收费、1收费、2收费+服务费
 
-	@Column(name="parent_name", length=64)
-	private String parentName;
+	@Column(name = "need_check", nullable = false)
+	private byte needCheck;// 是否需要验收，1是0否
 
-	@Column(name="service_name", nullable=false, length=64)
-	private String serviceName;
+	@Column(name = "parent_name", length = 64)
+	private String parentName;// 父类名称
 
-	@Column(name="show_order")
-	private int showOrder;
+	@Column(name = "show_order")
+	private int showOrder;// 排序
 
-	@Column(length=64)
-	private String typeId;
+	@Column(length = 64)
+	private String typeId;// 服务对应的分类，同goods_type中的Goods_TpeId对应
 
 	public ServiceItem() {
 	}

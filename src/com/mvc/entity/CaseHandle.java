@@ -15,35 +15,20 @@ import java.util.Date;
 public class CaseHandle implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "record_id", unique = true, nullable = false)
 	private Integer recordId;
-
-	@ManyToOne
-	@JoinColumn(name = "case_id")
 	private CaseInfo caseInfo;
-
-	@Lob
-	@Column(name = "handle_message")
 	private String handleMessage;
-
-	@Column(name = "record_sort", nullable = false, length = 16)
 	private String recordSort;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "record_time", nullable = false)
 	private Date recordTime;
-
-	@Column(name = "recorder_id", nullable = false, length = 16)
 	private String recorderId;
-
-	@Column(length = 255)
 	private String remark;
 
 	public CaseHandle() {
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "record_id", unique = true, nullable = false)
 	public Integer getRecordId() {
 		return this.recordId;
 	}
@@ -52,6 +37,8 @@ public class CaseHandle implements Serializable {
 		this.recordId = recordId;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "case_id")
 	public CaseInfo getCaseInfo() {
 		return caseInfo;
 	}
@@ -60,6 +47,8 @@ public class CaseHandle implements Serializable {
 		this.caseInfo = caseInfo;
 	}
 
+	@Lob
+	@Column(name = "handle_message")
 	public String getHandleMessage() {
 		return this.handleMessage;
 	}
@@ -68,6 +57,7 @@ public class CaseHandle implements Serializable {
 		this.handleMessage = handleMessage;
 	}
 
+	@Column(name = "record_sort", nullable = false, length = 16)
 	public String getRecordSort() {
 		return this.recordSort;
 	}
@@ -76,6 +66,8 @@ public class CaseHandle implements Serializable {
 		this.recordSort = recordSort;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "record_time", nullable = false)
 	public Date getRecordTime() {
 		return this.recordTime;
 	}
@@ -84,6 +76,7 @@ public class CaseHandle implements Serializable {
 		this.recordTime = recordTime;
 	}
 
+	@Column(name = "recorder_id", nullable = false, length = 16)
 	public String getRecorderId() {
 		return this.recorderId;
 	}
@@ -92,6 +85,7 @@ public class CaseHandle implements Serializable {
 		this.recorderId = recorderId;
 	}
 
+	@Column(length = 255)
 	public String getRemark() {
 		return this.remark;
 	}

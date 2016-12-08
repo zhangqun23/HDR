@@ -1,56 +1,40 @@
 package com.mvc.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
- * 服务类型 
+ * 服务类型
  * 
+ * @author zjn
+ * @date 2016年12月8日
  */
 @Entity
 @Table(name = "service_items")
-public class ServiceItem {
+public class ServiceItem implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(unique = true, nullable = false)
+	private static final long serialVersionUID = 1L;
+
 	private Integer serviceId;
-
-	@Column(name = "service_name", nullable = false, length = 64)
 	private String serviceName;// 服务类型
-
-	@Column(name = "depart_id", length = 32)
 	private String departId;// 所属部门，同department_info中depart_id对应
-
-	@Column(nullable = false)
 	private Integer display;// 显示标志，1显示、0不显示
-
-	@Column(nullable = false)
 	private Integer fatherId;// 父类ID
-
-	@Column(name = "given_time", length = 25)
 	private String givenTime;// 给定完成时间，默认单位为分钟
-
-	@Column(name = "is_customer_service", nullable = false)
 	private byte isCustomerService;// 对客标志，1对客、0对内、2既对客又对内
-
-	@Column(nullable = false)
 	private Integer isCharge;// 该服务是否收费，0不收费、1收费、2收费+服务费
-
-	@Column(name = "need_check", nullable = false)
 	private byte needCheck;// 是否需要验收，1是0否
-
-	@Column(name = "parent_name", length = 64)
 	private String parentName;// 父类名称
-
-	@Column(name = "show_order")
 	private Integer showOrder;// 排序
-
-	@Column(length = 64)
 	private String typeId;// 服务对应的分类，同goods_type中的Goods_TpeId对应
 
 	public ServiceItem() {
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "serviceid",unique = true, nullable = false)
 	public Integer getServiceId() {
 		return this.serviceId;
 	}
@@ -59,6 +43,7 @@ public class ServiceItem {
 		this.serviceId = serviceId;
 	}
 
+	@Column(name = "depart_id", length = 32)
 	public String getDepartId() {
 		return this.departId;
 	}
@@ -67,6 +52,7 @@ public class ServiceItem {
 		this.departId = departId;
 	}
 
+	@Column(nullable = false)
 	public Integer getDisplay() {
 		return this.display;
 	}
@@ -75,6 +61,7 @@ public class ServiceItem {
 		this.display = display;
 	}
 
+	@Column(name = "fatherid",nullable = false)
 	public Integer getFatherId() {
 		return this.fatherId;
 	}
@@ -83,6 +70,7 @@ public class ServiceItem {
 		this.fatherId = fatherId;
 	}
 
+	@Column(name = "given_time", length = 25)
 	public String getGivenTime() {
 		return this.givenTime;
 	}
@@ -91,6 +79,7 @@ public class ServiceItem {
 		this.givenTime = givenTime;
 	}
 
+	@Column(name = "is_customer_service", nullable = false)
 	public byte getIsCustomerService() {
 		return this.isCustomerService;
 	}
@@ -99,6 +88,7 @@ public class ServiceItem {
 		this.isCustomerService = isCustomerService;
 	}
 
+	@Column(name = "ischarge",nullable = false)
 	public Integer getIsCharge() {
 		return this.isCharge;
 	}
@@ -107,6 +97,7 @@ public class ServiceItem {
 		this.isCharge = isCharge;
 	}
 
+	@Column(name = "need_check", nullable = false)
 	public byte getNeedCheck() {
 		return this.needCheck;
 	}
@@ -115,6 +106,7 @@ public class ServiceItem {
 		this.needCheck = needCheck;
 	}
 
+	@Column(name = "parent_name", length = 64)
 	public String getParentName() {
 		return this.parentName;
 	}
@@ -123,6 +115,7 @@ public class ServiceItem {
 		this.parentName = parentName;
 	}
 
+	@Column(name = "service_name", nullable = false, length = 64)
 	public String getServiceName() {
 		return this.serviceName;
 	}
@@ -131,6 +124,7 @@ public class ServiceItem {
 		this.serviceName = serviceName;
 	}
 
+	@Column(name = "show_order")
 	public Integer getShowOrder() {
 		return this.showOrder;
 	}
@@ -139,6 +133,7 @@ public class ServiceItem {
 		this.showOrder = showOrder;
 	}
 
+	@Column(name = "typeid",length = 64)
 	public String getTypeId() {
 		return this.typeId;
 	}

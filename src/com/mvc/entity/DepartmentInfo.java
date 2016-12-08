@@ -1,20 +1,27 @@
 package com.mvc.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
  * 部门信息
  * 
+ * @author zhangqun
+ * @date 2016年12月8日
  */
 @Entity
 @Table(name = "department_info")
-public class DepartmentInfo {
+public class DepartmentInfo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private String departmentId;// 部门ID，主键
 	private String departmentName;// 部门名称
 	private String departmentNote;// 部门说明
 	private Integer isdeleted;// 删除标志位，1删除，0未删除
 	private String parentId;// 所属父类ID
+
 	public DepartmentInfo() {
 	}
 

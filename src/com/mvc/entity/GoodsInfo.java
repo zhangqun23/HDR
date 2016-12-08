@@ -1,5 +1,7 @@
 package com.mvc.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -10,7 +12,13 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "goods_info")
-public class GoodsInfo {
+public class GoodsInfo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique = true, nullable = false)
 	private Integer goods_id;// 物品ID，主键
 	private String goods_Name;// 物品中文名称
 	private String goods_Ename;// 物品英文名称

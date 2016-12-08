@@ -21,15 +21,13 @@ public class TempList implements Serializable {
 	@Column(unique=true, nullable=false)
 	private int id;//主键
 	
-	@OneToMany
+	@ManyToOne
 	@JoinColumn(name="goods_id")
-	@Column(name="goods_id", nullable=false, length=45)
-	private String goodsId;//物品ID，同goods_info中的Goods_Id对应
+	private GoodsInfo goodsId;//物品ID，同goods_info中的Goods_Id对应
 	
-	@OneToMany
+	@ManyToOne
 	@JoinColumn(name = "staff_id")
-	@Column(name="staff_id", nullable=false)
-	private int staffId;//员工ID，同staff_info中的staff_id对应
+	private StaffInfo staffId;//员工ID，同staff_info中的staff_id对应
 
 	@Column(name="area_no", length=255)
 	private String areaNo;//房间所属区域
@@ -79,13 +77,7 @@ public class TempList implements Serializable {
 		this.callId = callId;
 	}
 
-	public String getGoodsId() {
-		return this.goodsId;
-	}
 
-	public void setGoodsId(String goodsId) {
-		this.goodsId = goodsId;
-	}
 
 	public int getIsdeleted() {
 		return this.isdeleted;
@@ -119,11 +111,21 @@ public class TempList implements Serializable {
 		this.roomNo = roomNo;
 	}
 
-	public int getStaffId() {
-		return this.staffId;
+
+
+	public GoodsInfo getGoodsId() {
+		return goodsId;
 	}
 
-	public void setStaffId(int staffId) {
+	public void setGoodsId(GoodsInfo goodsId) {
+		this.goodsId = goodsId;
+	}
+
+	public StaffInfo getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(StaffInfo staffId) {
 		this.staffId = staffId;
 	}
 

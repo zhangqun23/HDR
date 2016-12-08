@@ -38,7 +38,7 @@
 	<div class="loginbody">
 
 		<span class="systemlogo"></span> <a href="/HDR//workLoad/test.do">测试测试</a>
-
+<span>  </span><a href="/HDR/workHouse/selectWorkHouse.do">员工统计</a>
 		<div class="loginbox">
 			<form action="/HDR/login/login.do" method="post" id="login-form">
 				<ul>

@@ -4,61 +4,51 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
- * The persistent class for the case_handle database table.
+ * 任务处理
  * 
+ * @author wangrui
+ * @date 2016年12月8日
  */
 @Entity
-@Table(name="case_handle")
-@NamedQuery(name="CaseHandle.findAll", query="SELECT c FROM CaseHandle c")
+@Table(name = "case_handle")
 public class CaseHandle implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="record_id", unique=true, nullable=false)
-	private int recordId;
-
-	@Column(name="case_id", nullable=false, length=16)
-	private String caseId;
-
-	@Lob
-	@Column(name="handle_message")
+	private Integer recordId;
+	private CaseInfo caseInfo;
 	private String handleMessage;
-
-	@Column(name="record_sort", nullable=false, length=16)
 	private String recordSort;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="record_time", nullable=false)
 	private Date recordTime;
-
-	@Column(name="recorder_id", nullable=false, length=16)
 	private String recorderId;
-
-	@Column(length=255)
 	private String remark;
 
 	public CaseHandle() {
 	}
 
-	public int getRecordId() {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "record_id", unique = true, nullable = false)
+	public Integer getRecordId() {
 		return this.recordId;
 	}
 
-	public void setRecordId(int recordId) {
+	public void setRecordId(Integer recordId) {
 		this.recordId = recordId;
 	}
 
-	public String getCaseId() {
-		return this.caseId;
+	@ManyToOne
+	@JoinColumn(name = "case_id")
+	public CaseInfo getCaseInfo() {
+		return caseInfo;
 	}
 
-	public void setCaseId(String caseId) {
-		this.caseId = caseId;
+	public void setCaseInfo(CaseInfo caseInfo) {
+		this.caseInfo = caseInfo;
 	}
 
+	@Lob
+	@Column(name = "handle_message")
 	public String getHandleMessage() {
 		return this.handleMessage;
 	}
@@ -67,6 +57,7 @@ public class CaseHandle implements Serializable {
 		this.handleMessage = handleMessage;
 	}
 
+	@Column(name = "record_sort", nullable = false, length = 16)
 	public String getRecordSort() {
 		return this.recordSort;
 	}
@@ -75,6 +66,8 @@ public class CaseHandle implements Serializable {
 		this.recordSort = recordSort;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "record_time", nullable = false)
 	public Date getRecordTime() {
 		return this.recordTime;
 	}
@@ -83,6 +76,7 @@ public class CaseHandle implements Serializable {
 		this.recordTime = recordTime;
 	}
 
+	@Column(name = "recorder_id", nullable = false, length = 16)
 	public String getRecorderId() {
 		return this.recorderId;
 	}
@@ -91,6 +85,7 @@ public class CaseHandle implements Serializable {
 		this.recorderId = recorderId;
 	}
 
+	@Column(length = 255)
 	public String getRemark() {
 		return this.remark;
 	}

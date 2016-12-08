@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Table(name = "room_sort")
 public class RoomSort implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	private Integer sortId;// 主键
 	private String sortName;// 房间类型名称
 	private Integer bedNum;// 床数

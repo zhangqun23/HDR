@@ -3,10 +3,10 @@ package com.mvc.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the goods_info database table.
  * 
+ * @author wanghuimin
+ * @date 2016年12月8日
  */
 @Entity
 @Table(name="goods_info")
@@ -17,41 +17,41 @@ public class GoodsInfo implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(unique=true, nullable=false)
-	private int goods_id;
+	private int goods_id;//物品ID，主键
+	
+	@Column(nullable=false, length=100)
+	private String goods_Name;//物品中文名称
+	
+	@Column(nullable=false, length=100)
+	private String goods_Ename;//物品英文名称
 
 	@Column(length=45)
-	private String code;
+	private String code;//code值，一般根据酒馆而定
 
 	@Lob
-	private String description;
+	private String description;//描述
 
 	@Column(nullable=false)
-	private int display;
-
-	@Column(nullable=false, length=100)
-	private String goods_Ename;
-
-	@Column(nullable=false, length=100)
-	private String goods_Name;
+	private int display;//显示标志，1显示、0不显示
 
 	@Column(length=100)
-	private String goods_Picture;
+	private String goods_Picture;//物品图片
 
 	@Column(nullable=false, length=30)
-	private String goods_Price;
+	private String goods_Price;//物品价钱
 
 	@Column(nullable=false, length=30)
-	private String goods_Typeid;
+	private String goods_Typeid;//物品类型
 
 	@Column(nullable=false)
-	private int goodsOrder;
+	private int goodsOrder;//显示排序
 
 	@Column(nullable=false)
-	private int gWith;
+	private int gWith;//图片宽度
 
-	private int maxNum;
+	private int maxNum;//最大可用数量，-1代表不限使用数量
 
-	private int newOrder;
+	private int newOrder;//耗品领用排序
 
 	@Column(nullable=false, length=45)
 	private String PC_Code;

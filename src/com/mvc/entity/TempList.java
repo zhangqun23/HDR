@@ -11,45 +11,24 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "temp_list")
-public class TempList{
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(unique = true, nullable = false)
+public class TempList {
 	private Integer id;// 主键
-
-	@ManyToOne
-	@JoinColumn(name = "goods_id")
 	private GoodsInfo goodsId;// 物品ID，同goods_info中的Goods_Id对应
-
-	@ManyToOne
-	@JoinColumn(name = "staff_id")
 	private StaffInfo staffId;// 员工ID，同staff_info中的staff_id对应
-
-	@Column(name = "area_no", length = 255)
 	private String areaNo;// 房间所属区域
-
-	@Column(name = "call_id", nullable = false, length = 14)
 	private String callId;// 所属任务的ID，同call_info中的call_id对应
-
 	private Integer isdeleted;// 删除标志位，1删除、0未删除
-
-	@Column(nullable = false)
 	private Integer num;// 物品使用数量
-
-	@Column(name = "order_type", nullable = false)
 	private Integer orderType;// 物品类型
-
-	@Column(name = "room_no", length = 10)
 	private String roomNo;// 任务所属房间号码
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "used_time", nullable = false)
 	private Date usedTime;// 使用时间
 
 	public TempList() {
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
 	}
@@ -58,6 +37,7 @@ public class TempList{
 		this.id = id;
 	}
 
+	@Column(name = "area_no", length = 255)
 	public String getAreaNo() {
 		return this.areaNo;
 	}
@@ -66,6 +46,7 @@ public class TempList{
 		this.areaNo = areaNo;
 	}
 
+	@Column(name = "call_id", nullable = false, length = 14)
 	public String getCallId() {
 		return this.callId;
 	}
@@ -82,6 +63,7 @@ public class TempList{
 		this.isdeleted = isdeleted;
 	}
 
+	@Column(nullable = false)
 	public Integer getNum() {
 		return this.num;
 	}
@@ -90,6 +72,7 @@ public class TempList{
 		this.num = num;
 	}
 
+	@Column(name = "order_type", nullable = false)
 	public Integer getOrderType() {
 		return this.orderType;
 	}
@@ -98,6 +81,7 @@ public class TempList{
 		this.orderType = orderType;
 	}
 
+	@Column(name = "room_no", length = 10)
 	public String getRoomNo() {
 		return this.roomNo;
 	}
@@ -106,6 +90,8 @@ public class TempList{
 		this.roomNo = roomNo;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "goods_id")
 	public GoodsInfo getGoodsId() {
 		return goodsId;
 	}
@@ -114,6 +100,8 @@ public class TempList{
 		this.goodsId = goodsId;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "staff_id")
 	public StaffInfo getStaffId() {
 		return staffId;
 	}
@@ -122,6 +110,8 @@ public class TempList{
 		this.staffId = staffId;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "used_time", nullable = false)
 	public Date getUsedTime() {
 		return this.usedTime;
 	}

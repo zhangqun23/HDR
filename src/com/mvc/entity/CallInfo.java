@@ -1,6 +1,5 @@
 package com.mvc.entity;
 
-import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -12,8 +11,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "call_info")
-public class CallInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class CallInfo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

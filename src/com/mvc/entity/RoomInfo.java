@@ -1,6 +1,5 @@
 package com.mvc.entity;
 
-import java.io.Serializable;
 import javax.persistence.*;
 
 /**
@@ -11,78 +10,36 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "room_info")
-public class RoomInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class RoomInfo {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(unique = true, nullable = false)
 	private Integer rmid;// 主键
-
-	@ManyToOne
-	@JoinColumn(name = "sort_id")
 	private RoomSort roomSort;// 房间类型ID，同room_sort中的sort_id对应
-
-	@Column(name = "room_floor", length = 8)
 	private String roomFloor;// 所在楼层
-
-	@Column(name = "room_floor_info", length = 10)
 	private String roomFloorInfo;// 房间所属区域，同hotel_area中的area_no对应
-
-	@Column(name = "room_id", nullable = false, length = 16)
 	private String roomId;// 房间号
-
-	@Column(name = "room_no", length = 16)
 	private String roomNo;// 房间号
-
-	@Column(name = "clean_status", length = 12)
 	private String cleanStatus;// 房间清洁状态，0脏房、1干净房、2微脏房、3已查干净房
-
-	@Column(name = "room_status", length = 12)
 	private String roomStatus;// 房间状态，V空房、O住人、U维修、S锁房、A临时房态（根据不同的酒馆系统而变）
-
-	@Column(name = "sort_no", nullable = false, length = 10)
 	private String sortNo;// 房间类型编码，同room_sort中的sort_no对应
-
-	@Column(nullable = false)
 	private Integer isdeleted;// 删除标志位，1删除、0未删除
-
-	@Column(name = "room_description", length = 64)
 	private String roomDescription;// 房间描述
-
-	@Column(name = "guest_num", nullable = false)
 	private Integer guestNum;// 客人数
-
-	@Column(length = 100)
 	private String reason;// 维修房、停用房的具体原因
-
-	@Column(nullable = false, length = 128)
 	private String remark;// 备注
-
-	@Column(nullable = false)
 	private Integer alarm;
-
-	@Column(nullable = false)
 	private Integer flag;
-
-	@Column(name = "room_booked")
 	private Integer roomBooked;
-
-	@Column(name = "room_clean")
 	private Integer roomClean;
-
-	@Column(name = "room_online")
 	private Integer roomOnline;
-
-	@Column(name = "room_repair")
 	private Integer roomRepair;
-
-	@Column(name = "tmp_status", length = 8)
 	private String tmpStatus;
 
 	public RoomInfo() {
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique = true, nullable = false)
 	public Integer getRmid() {
 		return this.rmid;
 	}
@@ -91,6 +48,7 @@ public class RoomInfo implements Serializable {
 		this.rmid = rmid;
 	}
 
+	@Column(nullable = false)
 	public Integer getAlarm() {
 		return this.alarm;
 	}
@@ -99,6 +57,7 @@ public class RoomInfo implements Serializable {
 		this.alarm = alarm;
 	}
 
+	@Column(name = "clean_status", length = 12)
 	public String getCleanStatus() {
 		return this.cleanStatus;
 	}
@@ -107,6 +66,7 @@ public class RoomInfo implements Serializable {
 		this.cleanStatus = cleanStatus;
 	}
 
+	@Column(nullable = false)
 	public Integer getFlag() {
 		return this.flag;
 	}
@@ -115,6 +75,7 @@ public class RoomInfo implements Serializable {
 		this.flag = flag;
 	}
 
+	@Column(name = "guest_num", nullable = false)
 	public Integer getGuestNum() {
 		return this.guestNum;
 	}
@@ -123,6 +84,7 @@ public class RoomInfo implements Serializable {
 		this.guestNum = guestNum;
 	}
 
+	@Column(nullable = false)
 	public Integer getIsdeleted() {
 		return this.isdeleted;
 	}
@@ -131,6 +93,7 @@ public class RoomInfo implements Serializable {
 		this.isdeleted = isdeleted;
 	}
 
+	@Column(length = 100)
 	public String getReason() {
 		return this.reason;
 	}
@@ -139,6 +102,7 @@ public class RoomInfo implements Serializable {
 		this.reason = reason;
 	}
 
+	@Column(nullable = false, length = 128)
 	public String getRemark() {
 		return this.remark;
 	}
@@ -147,6 +111,7 @@ public class RoomInfo implements Serializable {
 		this.remark = remark;
 	}
 
+	@Column(name = "room_booked")
 	public Integer getRoomBooked() {
 		return this.roomBooked;
 	}
@@ -155,6 +120,7 @@ public class RoomInfo implements Serializable {
 		this.roomBooked = roomBooked;
 	}
 
+	@Column(name = "room_clean")
 	public Integer getRoomClean() {
 		return this.roomClean;
 	}
@@ -163,6 +129,7 @@ public class RoomInfo implements Serializable {
 		this.roomClean = roomClean;
 	}
 
+	@Column(name = "room_description", length = 64)
 	public String getRoomDescription() {
 		return this.roomDescription;
 	}
@@ -171,6 +138,7 @@ public class RoomInfo implements Serializable {
 		this.roomDescription = roomDescription;
 	}
 
+	@Column(name = "room_floor", length = 8)
 	public String getRoomFloor() {
 		return this.roomFloor;
 	}
@@ -179,6 +147,7 @@ public class RoomInfo implements Serializable {
 		this.roomFloor = roomFloor;
 	}
 
+	@Column(name = "room_floor_info", length = 10)
 	public String getRoomFloorInfo() {
 		return this.roomFloorInfo;
 	}
@@ -187,6 +156,7 @@ public class RoomInfo implements Serializable {
 		this.roomFloorInfo = roomFloorInfo;
 	}
 
+	@Column(name = "room_id", nullable = false, length = 16)
 	public String getRoomId() {
 		return this.roomId;
 	}
@@ -195,6 +165,7 @@ public class RoomInfo implements Serializable {
 		this.roomId = roomId;
 	}
 
+	@Column(name = "room_no", length = 16)
 	public String getRoomNo() {
 		return this.roomNo;
 	}
@@ -203,6 +174,7 @@ public class RoomInfo implements Serializable {
 		this.roomNo = roomNo;
 	}
 
+	@Column(name = "room_online")
 	public Integer getRoomOnline() {
 		return this.roomOnline;
 	}
@@ -211,6 +183,7 @@ public class RoomInfo implements Serializable {
 		this.roomOnline = roomOnline;
 	}
 
+	@Column(name = "room_repair")
 	public Integer getRoomRepair() {
 		return this.roomRepair;
 	}
@@ -219,6 +192,7 @@ public class RoomInfo implements Serializable {
 		this.roomRepair = roomRepair;
 	}
 
+	@Column(name = "room_status", length = 12)
 	public String getRoomStatus() {
 		return this.roomStatus;
 	}
@@ -227,6 +201,8 @@ public class RoomInfo implements Serializable {
 		this.roomStatus = roomStatus;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "sort_id")
 	public RoomSort getRoomSort() {
 		return this.roomSort;
 	}
@@ -235,6 +211,7 @@ public class RoomInfo implements Serializable {
 		this.roomSort = roomSort;
 	}
 
+	@Column(name = "sort_no", nullable = false, length = 10)
 	public String getSortNo() {
 		return this.sortNo;
 	}
@@ -243,6 +220,7 @@ public class RoomInfo implements Serializable {
 		this.sortNo = sortNo;
 	}
 
+	@Column(name = "tmp_status", length = 8)
 	public String getTmpStatus() {
 		return this.tmpStatus;
 	}

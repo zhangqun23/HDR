@@ -3,63 +3,63 @@ package com.mvc.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the room_sort database table.
+ * 房间类型
  * 
+ * @author zjn
+ * @date 2016年12月8日
  */
 @Entity
-@Table(name="room_sort")
-@NamedQuery(name="RoomSort.findAll", query="SELECT r FROM RoomSort r")
+@Table(name = "room_sort")
 public class RoomSort implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="sort_id", unique=true, nullable=false)
-	private int sortId;//主键
-	
-	@Column(name="sort_name", length=16)
-	private String sortName;//房间类型名称
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "sort_id", unique = true, nullable = false)
+	private Integer sortId;// 主键
 
-	@Column(name="bed_num")
-	private int bedNum;//床数
+	@Column(name = "sort_name", length = 16)
+	private String sortName;// 房间类型名称
 
-	private int isdeleted;//记录删除标志位，1删除、0未删除
+	@Column(name = "bed_num")
+	private Integer bedNum;// 床数
 
-	@Column(name="room_pic", length=128)
-	private String roomPic;//房间图片
+	private Integer isdeleted;// 记录删除标志位，1删除、0未删除
 
-	@Column(name="sort_no", nullable=false, length=10)
-	private String sortNo;//房间类型编码
+	@Column(name = "room_pic", length = 128)
+	private String roomPic;// 房间图片
 
-	@Column(nullable=false)
-	private int weight;//图片宽度
+	@Column(name = "sort_no", nullable = false, length = 10)
+	private String sortNo;// 房间类型编码
+
+	@Column(nullable = false)
+	private Integer weight;// 图片宽度
 
 	public RoomSort() {
 	}
 
-	public int getSortId() {
+	public Integer getSortId() {
 		return this.sortId;
 	}
 
-	public void setSortId(int sortId) {
+	public void setSortId(Integer sortId) {
 		this.sortId = sortId;
 	}
 
-	public int getBedNum() {
+	public Integer getBedNum() {
 		return this.bedNum;
 	}
 
-	public void setBedNum(int bedNum) {
+	public void setBedNum(Integer bedNum) {
 		this.bedNum = bedNum;
 	}
 
-	public int getIsdeleted() {
+	public Integer getIsdeleted() {
 		return this.isdeleted;
 	}
 
-	public void setIsdeleted(int isdeleted) {
+	public void setIsdeleted(Integer isdeleted) {
 		this.isdeleted = isdeleted;
 	}
 
@@ -87,11 +87,11 @@ public class RoomSort implements Serializable {
 		this.sortNo = sortNo;
 	}
 
-	public int getWeight() {
+	public Integer getWeight() {
 		return this.weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
 

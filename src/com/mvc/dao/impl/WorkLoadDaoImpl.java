@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.WorkLoadDao;
+import com.mvc.entity.RoomInfo;
 
 /**
  * 工作量相关的dao层接口实现
@@ -28,14 +29,14 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	public Integer count() {
+	public List<RoomInfo> count() {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select count(*) from room_sort ";
-		Query query = em.createNativeQuery(countSql);
+		String countSql = " select * from room_info ";
+		Query query = em.createNativeQuery(countSql, RoomInfo.class);
 		@SuppressWarnings("unchecked")
-		List<Object> totalRow = query.getResultList();
+		List<RoomInfo> list = query.getResultList();
 		em.close();
-		return Integer.parseInt(totalRow.get(0).toString());
+		return list;
 	}
 
 }

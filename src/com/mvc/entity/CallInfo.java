@@ -5,12 +5,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * The persistent class for the call_info database table.
+ * 服务信息
  * 
+ * @author zjn
+ * @date 2016年12月8日
  */
 @Entity
 @Table(name = "call_info")
-@NamedQuery(name = "CallInfo.findAll", query = "SELECT c FROM CallInfo c")
 public class CallInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -34,13 +35,13 @@ public class CallInfo implements Serializable {
 	private String callStates;// 当前该任务的状态
 
 	@Column(nullable = false)
-	private int isdeleted;// 该条是否删除，1删除、0正常
+	private Integer isdeleted;// 该条是否删除，1删除、0正常
 
 	@Column(name = "alert_num")
-	private int alertNum;// 报警次数
+	private Integer alertNum;// 报警次数
 
 	@Column(name = "build_flag", nullable = false)
-	private int buildFlag;// 任务是否建立的标志，1建立、0未建立
+	private Integer buildFlag;// 任务是否建立的标志，1建立、0未建立
 
 	@Column(name = "call_recorder", length = 15)
 	private String callRecorder;// 记录人姓名
@@ -61,8 +62,8 @@ public class CallInfo implements Serializable {
 	@Column(name = "customer_service_flag")
 	private byte customerServiceFlag;// 对客对内的标志，1对客、0对内
 
-	@Column(name = "is_print", nullable = false)
-	private int isPrint;// 是否打印，1打印、0不打印
+	@Column(name = "is_prInteger", nullable = false)
+	private Integer isPrInteger;// 是否打印，1打印、0不打印
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_alert_time", nullable = false)
@@ -107,19 +108,19 @@ public class CallInfo implements Serializable {
 		this.callId = callId;
 	}
 
-	public int getAlertNum() {
+	public Integer getAlertNum() {
 		return this.alertNum;
 	}
 
-	public void setAlertNum(int alertNum) {
+	public void setAlertNum(Integer alertNum) {
 		this.alertNum = alertNum;
 	}
 
-	public int getBuildFlag() {
+	public Integer getBuildFlag() {
 		return this.buildFlag;
 	}
 
-	public void setBuildFlag(int buildFlag) {
+	public void setBuildFlag(Integer buildFlag) {
 		this.buildFlag = buildFlag;
 	}
 
@@ -179,19 +180,19 @@ public class CallInfo implements Serializable {
 		this.customerServiceFlag = customerServiceFlag;
 	}
 
-	public int getIsPrint() {
-		return this.isPrint;
+	public Integer getIsPrInteger() {
+		return this.isPrInteger;
 	}
 
-	public void setIsPrint(int isPrint) {
-		this.isPrint = isPrint;
+	public void setIsPrInteger(Integer isPrInteger) {
+		this.isPrInteger = isPrInteger;
 	}
 
-	public int getIsdeleted() {
+	public Integer getIsdeleted() {
 		return this.isdeleted;
 	}
 
-	public void setIsdeleted(int isdeleted) {
+	public void setIsdeleted(Integer isdeleted) {
 		this.isdeleted = isdeleted;
 	}
 

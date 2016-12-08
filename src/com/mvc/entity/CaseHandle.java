@@ -4,59 +4,60 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
- * The persistent class for the case_handle database table.
+ * 任务处理
  * 
+ * @author wangrui
+ * @date 2016年12月8日
  */
 @Entity
-@Table(name="case_handle")
-@NamedQuery(name="CaseHandle.findAll", query="SELECT c FROM CaseHandle c")
+@Table(name = "case_handle")
 public class CaseHandle implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="record_id", unique=true, nullable=false)
-	private int recordId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "record_id", unique = true, nullable = false)
+	private Integer recordId;
 
-	@Column(name="case_id", nullable=false, length=16)
-	private String caseId;
+	@ManyToOne
+	@JoinColumn(name = "case_id")
+	private CaseInfo caseInfo;
 
 	@Lob
-	@Column(name="handle_message")
+	@Column(name = "handle_message")
 	private String handleMessage;
 
-	@Column(name="record_sort", nullable=false, length=16)
+	@Column(name = "record_sort", nullable = false, length = 16)
 	private String recordSort;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="record_time", nullable=false)
+	@Column(name = "record_time", nullable = false)
 	private Date recordTime;
 
-	@Column(name="recorder_id", nullable=false, length=16)
+	@Column(name = "recorder_id", nullable = false, length = 16)
 	private String recorderId;
 
-	@Column(length=255)
+	@Column(length = 255)
 	private String remark;
 
 	public CaseHandle() {
 	}
 
-	public int getRecordId() {
+	public Integer getRecordId() {
 		return this.recordId;
 	}
 
-	public void setRecordId(int recordId) {
+	public void setRecordId(Integer recordId) {
 		this.recordId = recordId;
 	}
 
-	public String getCaseId() {
-		return this.caseId;
+	public CaseInfo getCaseInfo() {
+		return caseInfo;
 	}
 
-	public void setCaseId(String caseId) {
-		this.caseId = caseId;
+	public void setCaseInfo(CaseInfo caseInfo) {
+		this.caseInfo = caseInfo;
 	}
 
 	public String getHandleMessage() {

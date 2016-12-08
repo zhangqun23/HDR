@@ -21,6 +21,7 @@ public class TempList implements Serializable {
 	@Column(unique=true, nullable=false)
 	private int id;//主键
 	
+<<<<<<< HEAD
 	@ManyToOne
 	@JoinColumn(name="goods_id")
 	private GoodsInfo goodsId;//物品ID，同goods_info中的Goods_Id对应
@@ -28,6 +29,17 @@ public class TempList implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "staff_id")
 	private StaffInfo staffId;//员工ID，同staff_info中的staff_id对应
+=======
+	@OneToMany
+	@JoinColumn(name="goods_id")
+	@Column(name="goods_id", nullable=false, length=45)
+	private String goodsId;//物品ID，同goods_info中的Goods_Id对应
+	
+	@OneToMany
+	@JoinColumn(name = "staff_id")
+	@Column(name="staff_id", nullable=false)
+	private int staffId;//员工ID，同staff_info中的staff_id对应
+>>>>>>> 841c1c3b5a0f7d24c2b7b099140bddec2cddd944
 
 	@Column(name="area_no", length=255)
 	private String areaNo;//房间所属区域

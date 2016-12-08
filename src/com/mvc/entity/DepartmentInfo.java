@@ -5,6 +5,8 @@ import javax.persistence.*;
 /**
  * 部门信息
  * 
+ * @author zhangqun
+ * @date 2016年12月8日
  */
 @Entity
 @Table(name = "department_info")

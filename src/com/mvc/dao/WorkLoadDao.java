@@ -5,6 +5,7 @@ package com.mvc.dao;
 
 import java.util.List;
 
+import com.mvc.entity.GoodsInfo;
 import com.mvc.entity.RoomInfo;
 
 /**
@@ -15,6 +16,9 @@ import com.mvc.entity.RoomInfo;
  */
 public interface WorkLoadDao {
 
-	 List<RoomInfo> count();
+	List<RoomInfo> count();
+
+	// huiminjun
+	List<GoodsInfo> count0();
 
 }

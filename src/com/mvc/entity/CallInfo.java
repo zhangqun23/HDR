@@ -60,8 +60,8 @@ public class CallInfo {
 	@Column(name = "customer_service_flag")
 	private byte customerServiceFlag;// 对客对内的标志，1对客、0对内
 
-	@Column(name = "is_prInteger", nullable = false)
-	private Integer isPrInteger;// 是否打印，1打印、0不打印
+	@Column(name = "is_print", nullable = false)
+	private Integer is_print;// 是否打印，1打印、0不打印
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_alert_time", nullable = false)
@@ -178,12 +178,12 @@ public class CallInfo {
 		this.customerServiceFlag = customerServiceFlag;
 	}
 
-	public Integer getIsPrInteger() {
-		return this.isPrInteger;
+	public Integer getIs_print() {
+		return is_print;
 	}
 
-	public void setIsPrInteger(Integer isPrInteger) {
-		this.isPrInteger = isPrInteger;
+	public void setIs_print(Integer is_print) {
+		this.is_print = is_print;
 	}
 
 	public Integer getIsdeleted() {

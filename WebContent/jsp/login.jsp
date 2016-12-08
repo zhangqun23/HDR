@@ -38,6 +38,7 @@
 	<div class="loginbody">
 
 		<span class="systemlogo"></span> <a href="/HDR//workLoad/test.do">测试测试</a>
+			<a href="/HDR//workLoad/test0.do">就是爱你</a>
 
 		<div class="loginbox">
 			<form action="/HDR/login/login.do" method="post" id="login-form">

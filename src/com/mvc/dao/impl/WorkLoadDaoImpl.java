@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.mchange.util.ObjectCache;
 import com.mvc.dao.WorkLoadDao;
+import com.mvc.entity.GoodsInfo;
 import com.mvc.entity.RoomInfo;
 
 /**
@@ -35,6 +37,17 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		Query query = em.createNativeQuery(countSql, RoomInfo.class);
 		@SuppressWarnings("unchecked")
 		List<RoomInfo> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	//huiminjun试验
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<GoodsInfo> count0() {
+		EntityManager em = emf.createEntityManager();
+		String countSql = " select * from goods_info ";
+		Query query = em.createNativeQuery(countSql,GoodsInfo.class);
+		List<GoodsInfo> list = query.getResultList();
 		em.close();
 		return list;
 	}

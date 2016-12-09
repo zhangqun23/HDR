@@ -15,13 +15,13 @@ import java.util.Date;
 public class CaseHandle implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Integer recordId;
-	private CaseInfo caseInfo;
-	private String handleMessage;
-	private String recordSort;
-	private Date recordTime;
-	private String recorderId;
-	private String remark;
+	private Integer recordId;// ID
+	private CaseInfo caseInfo;// 对应case_info中的case_id
+	private String handleMessage;// 消息处理具体描述
+	private String recordSort;// 记录类型，新建任务、接受任务、取消任务、关闭任务、创建查房
+	private Date recordTime;// 记录时间
+	private String recorderId;// 记录人ID，对应staff_info中的staff_id
+	private String remark;// 备注信息
 
 	public CaseHandle() {
 	}

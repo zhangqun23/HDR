@@ -28,31 +28,31 @@ import javax.persistence.TemporalType;
 public class CaseInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String caseId;
-	private String authorName;
-	private CallInfo callInfo;
-	private StaffInfo author;
-	private Integer caseRank;
-	private String caseRemark;
-	private String caseStates;
-	private String checkAuthorName;
-	private String closeReason;
-	private Date closeTime;
-	private DepartmentInfo departmentInfo;
-	private Integer flag;
-	private Integer givenTime;
-	private Integer isChecked;
-	private Byte isPdaRepair;
-	private Byte isRemind;
-	private Byte isTransmited;
-	private Integer isAlertModel;
-	private Date lastAlertTime;
-	private Date openTime;
-	private Integer planFlg;
-	private StaffInfo recorder;
-	private String refuseReason;
-	private String repairSortId;
-	private String transmitPerson;
+	private String caseId;// ID
+	private String authorName;// 负责人姓名
+	private CallInfo callInfo;// 同call_info中的call_id对应。。。。。。。。。
+	private StaffInfo author;// 任务负责人ID，同staff_info中的staff_id对应。。。
+	private Integer caseRank;// 任务等级
+	private String caseRemark;// 任务备注信息
+	private String caseStates;// 任务状态，新建、处理中、申请关闭、关闭
+	private String checkAuthorName;// 任务验收人名字
+	private String closeReason;// 任务关闭原因
+	private Date closeTime;// 任务关闭时间
+	private DepartmentInfo departmentInfo;// 该任务隶属于部门的部门ID，同department_info中的department_id对应。。
+	private Integer flag;// 报警标志，0：未报警，1、2、3、99代表不同等级的报警
+	private Integer givenTime;// 任务给定完成时间，默认单位为分钟
+	private Integer isChecked;// 该例行打扫任务是否检查，1：检查，0：未检查
+	private Byte isPdaRepair;// 是否是通过PDA报修的
+	private Byte isRemind;// 对于送餐服务员是否提醒收餐具
+	private Byte isTransmited;// 是否是转交任务，1：是，0：否
+	private Integer isAlertModel;// 报警模板
+	private Date lastAlertTime;// 上一次报警时间
+	private Date openTime;// 任务开始时间
+	private Integer planFlg;// 计划任务的标志
+	private StaffInfo recorder;// 记录人ID，同staff_info中的staff_id对应。。。
+	private String refuseReason;// 任务驳回原因
+	private String repairSortId;// 具体报修任务ID，同engineer_case_sort中的sort_id对应
+	private String transmitPerson;// 转交任务接收人ID，同staff_info中的staff_id对应
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

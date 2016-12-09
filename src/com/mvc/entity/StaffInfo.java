@@ -24,27 +24,27 @@ import javax.persistence.TemporalType;
 public class StaffInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Integer staff_id;
-	private Byte caseChecker;
-	private String deviceId;
-	private Byte is_personal;
-	private Integer isDeleted;
-	private Integer isOnline;
-	private Integer isTest;
-	private Date last_login_time;
-	private Date last_Online_time;
-	private String service_floor;
-	private Integer staff_Browse;
-	private String staff_name;
-	private String staff_no;
-	private String staff_note;
-	private Integer staff_OnDuty;
-	private String staff_pwd;
-	private Integer staffRight;
-	private String staff_role1;
-	private String staff_tel;
-	private Integer taskNumber;
-	private String used_pda_no;
+	private Integer staff_id;// ID
+	private Byte caseChecker;// 任务验收人标志，1：是，0：否
+	private String deviceId;// 设备号
+	private Byte is_personal;// 是否个人用
+	private Integer isDeleted;// 删除标志位，1：删除，0：未删除
+	private Integer isOnline;// 在线标志位，1：在线，0：离线，2超时，3：休息
+	private Integer isTest;// 是否是测试账号
+	private Date last_login_time;// 上一次手机登录时间
+	private Date last_Online_time;// 上一次手机在线时间
+	private String service_floor;// 登录区域
+	private Integer staff_Browse;// 废弃-------
+	private String staff_name;// 用户名
+	private String staff_no;// 工号
+	private String staff_note;// 用户说明
+	private Integer staff_OnDuty;// 废弃-------
+	private String staff_pwd;// 用户密码
+	private Integer staffRight;// 用户权限，0：管理员，1：高级，2：普通
+	private String staff_role1;// (用户角色)，废弃-------
+	private String staff_tel;// 用户电话
+	private Integer taskNumber;// 当前任务数量
+	private String used_pda_no;// 手机绑定的PDA号码
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

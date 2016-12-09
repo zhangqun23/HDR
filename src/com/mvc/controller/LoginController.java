@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.base.constants.PageNameConstants;
 import com.base.constants.SessionKeyConstants;
 import com.utils.HttpRedirectUtil;
 
@@ -63,6 +62,6 @@ public class LoginController {
 		cookie.setMaxAge(30 * 60);
 		cookie.setPath("/");
 		response.addCookie(cookie);
-		return HttpRedirectUtil.redirectStr(PageNameConstants.TOLOGIN);
+		return HttpRedirectUtil.redirectStr("toLoginPage.do");
 	}
 }

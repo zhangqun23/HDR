@@ -3,6 +3,8 @@
  */
 package com.mvc.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,6 +15,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mvc.dao.WorkLoadDao;
+import com.mvc.entity.GoodsInfo;
+import com.mvc.entity.RoomInfo;
 
 /**
  * 工作量相关报表
@@ -29,8 +33,14 @@ public class WorkLoadController {
 
 	@RequestMapping("/test.do")
 	public void test(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
-		Integer count = workLoadDao.count();
-		System.out.println("count:" + count);
+		List<RoomInfo> count = workLoadDao.count();
+		System.out.println("getSortName:" + count.get(0).getRoomSort().getSortName());
 	}
+	@RequestMapping("/test0.do")
+	public void test0(HttpSession session, HttpServletRequest request, ModelMap model, HttpServletResponse res) {
+		List<GoodsInfo> count = workLoadDao.count0();
+		System.out.println("count:" + count.get(0).getpcCode());
+	}
+
 
 }

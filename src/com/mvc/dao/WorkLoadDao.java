@@ -3,6 +3,11 @@
  */
 package com.mvc.dao;
 
+import java.util.List;
+
+import com.mvc.entity.GoodsInfo;
+import com.mvc.entity.RoomInfo;
+
 /**
  * 工作量相关的dao层接口
  * 
@@ -11,6 +16,9 @@ package com.mvc.dao;
  */
 public interface WorkLoadDao {
 
-	Integer count();
+	List<RoomInfo> count();
+
+	// huiminjun
+	List<GoodsInfo> count0();
 
 }

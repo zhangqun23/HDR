@@ -230,8 +230,7 @@ public class CallInfo implements Serializable {
 		this.repairPersonTel = repairPersonTel;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "room_id", referencedColumnName = "room_id")
+
 	public RoomInfo getRoomInfo() {
 		return this.roomInfo;
 	}
@@ -258,8 +257,6 @@ public class CallInfo implements Serializable {
 		this.serviceFloor = serviceFloor;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "service_id")
 	public ServiceItem getServiceItem() {
 		return this.serviceItem;
 	}

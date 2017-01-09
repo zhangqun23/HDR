@@ -22,6 +22,9 @@ Chart.prototype.init = function() {
 						title : {
 							text : this.title
 						},
+						subtitle : {
+							text : this.title
+						},
 						tooltip : {
 							pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
 						},

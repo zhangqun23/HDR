@@ -27,12 +27,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	@Override
 	public List<WorkHouse> selectWorkHouse() {
 		List<CaseInfo> list = workHouseDao.selectWorkHouse();
-		CaseInfo caseInfo = list.get(0);
-		StaffInfo staffInfo = caseInfo.getAuthor();
-		if (staffInfo != null) {
-			String name = staffInfo.getStaff_name();
-			System.out.println(name);
-		}
+//		CaseInfo caseInfo = list.get(0);
+//		StaffInfo staffInfo = caseInfo.getAuthor();
+//		if (staffInfo != null) {
+//			String name = staffInfo.getStaff_name();
+//			System.out.println(name);
+//		}
 		return null;
 	}
 

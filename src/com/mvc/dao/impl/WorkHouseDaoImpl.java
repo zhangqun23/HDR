@@ -31,7 +31,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 	public List<CaseInfo> selectWorkHouse() {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from case_info cs where case_id='CA20140101003'");
+		sql.append("select * from case_info cs where open_time between '2016-07-01' and '2016-07-08' ");
 		Query query = em.createNativeQuery(sql.toString(), CaseInfo.class);
 		List<CaseInfo> list = query.getResultList();
 		em.close();

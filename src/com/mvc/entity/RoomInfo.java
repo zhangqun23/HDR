@@ -205,8 +205,7 @@ public class RoomInfo implements Serializable {
 		this.roomStatus = roomStatus;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "sort_id")
+
 	public RoomSort getRoomSort() {
 		return this.roomSort;
 	}

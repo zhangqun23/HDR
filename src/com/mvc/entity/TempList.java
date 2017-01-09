@@ -90,8 +90,7 @@ public class TempList {
 		this.roomNo = roomNo;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "goods_id")
+	
 	public GoodsInfo getGoodsId() {
 		return goodsId;
 	}
@@ -100,8 +99,7 @@ public class TempList {
 		this.goodsId = goodsId;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "staff_id")
+	
 	public StaffInfo getStaffId() {
 		return staffId;
 	}

@@ -6,14 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -75,8 +71,7 @@ public class CaseInfo implements Serializable {
 		this.authorName = authorName;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "call_id")
+
 	public CallInfo getCallInfo() {
 		return callInfo;
 	}
@@ -85,8 +80,7 @@ public class CaseInfo implements Serializable {
 		this.callInfo = callInfo;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "case_author")
+	
 	public StaffInfo getAuthor() {
 		return author;
 	}
@@ -150,8 +144,7 @@ public class CaseInfo implements Serializable {
 		this.closeTime = closeTime;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "depart_id")
+	
 	public DepartmentInfo getDepartmentInfo() {
 		return departmentInfo;
 	}
@@ -252,8 +245,7 @@ public class CaseInfo implements Serializable {
 		this.planFlg = planFlg;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "recorder_id")
+	
 	public StaffInfo getRecorder() {
 		return recorder;
 	}

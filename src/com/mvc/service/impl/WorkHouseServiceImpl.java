@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import com.mvc.dao.WorkHouseDao;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.service.WorkHouseService;
-import com.utils.Pager;
+import com.utils.CollectionUtil;
+import com.utils.StringUtil;
 
 /**
  * 部门员工做房统计业务层实现
@@ -28,16 +29,10 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 	// 查询员工做房
 	@Override
-	public List<WorkHouse> selectWorkHouse(Map<String, Object> map, Pager pager) {
-		List<Object> listSource = workHouseDao.selectWorkHouse(map, pager);
+	public List<WorkHouse> selectWorkHouse(Map<String, Object> map) {
+		List<Object> listSource = workHouseDao.selectWorkHouse(map);
 		Iterator<Object> it = listSource.iterator();
 		List<WorkHouse> listGoal = objToWorkHouse(it);
-
-		// List<Contract> listSum = contractDao.findContByParaNoBack(map,
-		// pager);
-		// Iterator<Contract> itSum = listSum.iterator();
-		// NoBackContForm noBackContForm = noBackSum(itSum);
-		// listGoal.add(noBackContForm);
 
 		return listGoal;
 	}
@@ -46,12 +41,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	@Override
 	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path) {
 		// List<WorkHouse> list = workHouseDao.selectWorkHouse();
-
-		return null;
-	}
-
-	@Override
-	public Pager pagerTotalWorkHouse(Map<String, Object> map, Integer page) {
 
 		return null;
 	}
@@ -65,16 +54,46 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			i++;
 			obj = (Object[]) it.next();
 			workHouse = new WorkHouse();
-			workHouse.setOrderNum(i);
+			workHouse.setOrderNum(String.valueOf(i));
 			workHouse.setStaff_name(obj[0].toString());
 			workHouse.setStaff_no(obj[1].toString());
-			workHouse.setTotal_time_dust(obj[2].toString());
-			workHouse.setTotal_time_night(obj[3].toString());
-			workHouse.setTotal_time_leave(obj[4].toString());
+			workHouse.setNum_dust(obj[2].toString());// 抹尘房数量
+			workHouse.setTotal_time_dust(obj[3].toString());// 抹尘房总用时
+			workHouse.setNum_night(obj[4].toString());// 过夜房数量
+			workHouse.setTotal_time_night(obj[5].toString());// 过夜房总用时
+			workHouse.setNum_leave(obj[6].toString());// 离退房数量
+			workHouse.setTotal_time_leave(obj[7].toString());// 离退房总用时
 
+			workHouse.setAvg_time_dust(StringUtil.divide(obj[3].toString(), obj[2].toString()));// 抹尘房平均用时
+			workHouse.setAvg_time_night(StringUtil.divide(obj[5].toString(), obj[4].toString()));// 过夜房平均用时
+			workHouse.setAvg_time_leave(StringUtil.divide(obj[7].toString(), obj[6].toString()));// 离退房平均用时
+
+			listGoal.add(workHouse);
 		}
+		// 分别对抹尘房、过夜房、离退房排序并编号
+		sortAndWrite(listGoal, "avg_time_dust", false, "rank_dust");
+		sortAndWrite(listGoal, "avg_time_night", false, "rank_night");
+		sortAndWrite(listGoal, "avg_time_leave", false, "rank_leave");
+		CollectionUtil.sort(listGoal, "orderNum", true);// 最后按序号升序排列
 
 		return listGoal;
+	}
+
+	/**
+	 * 排序并插入序号
+	 * 
+	 * @param list
+	 * @param filedName
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @param writeField
+	 *            向指定字段插入序号
+	 */
+	private void sortAndWrite(List<WorkHouse> list, String filedName, boolean ascFlag, String writeField) {
+		CollectionUtil.sort(list, filedName, ascFlag);
+		CollectionUtil<WorkHouse> collectionUtil = new CollectionUtil<WorkHouse>();
+		collectionUtil.writeSort(list, writeField);
 	}
 
 }

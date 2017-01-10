@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.service.WorkHouseService;
-import com.utils.Pager;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -42,13 +41,11 @@ public class WorkHouseController {
 	@RequestMapping("/selectWorkHouseBylimits.do")
 	public @ResponseBody String selectWorkHouse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
-		Integer page = Integer.parseInt(request.getParameter("page"));// 指定页码
-
+		
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		Pager pager = workHouseService.pagerTotalWorkHouse(map, page);
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		List<WorkHouse> list = workHouseService.selectWorkHouse(map, pager);
+		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
 		jsonObject.put("list", list);
+		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -96,15 +93,9 @@ public class WorkHouseController {
 	 * @return
 	 */
 	private Map<String, Object> JsonObjToMap(JSONObject jsonObject) {
-		Integer cleanType = null;
 		String roomType = null;
 		String startTime = null;
 		String endTime = null;
-		if (jsonObject.containsKey("cleanType")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("cleanType"))) {
-				cleanType = Integer.valueOf(jsonObject.getString("cleanType"));// 打扫类型
-			}
-		}
 		if (jsonObject.containsKey("roomType")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("roomType"))) {
 				roomType = jsonObject.getString("roomType");// 房间类型
@@ -122,7 +113,6 @@ public class WorkHouseController {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("cleanType", cleanType);
 		map.put("roomType", roomType);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);

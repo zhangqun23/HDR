@@ -12,7 +12,7 @@ public class WorkHouse implements Serializable {
 
 	private static final long serialVersionUID = -1122213927463011548L;
 
-	private Integer orderNum;// 序号
+	private String orderNum;// 序号
 	private String staff_name;// 员工姓名
 	private String staff_no;// 员工编号
 	/***** 抹尘房 *****/
@@ -31,11 +31,11 @@ public class WorkHouse implements Serializable {
 	private String avg_time_leave;// 平均用时
 	private String rank_leave;// 排名
 
-	public Integer getOrderNum() {
+	public String getOrderNum() {
 		return orderNum;
 	}
 
-	public void setOrderNum(Integer orderNum) {
+	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
 	}
 

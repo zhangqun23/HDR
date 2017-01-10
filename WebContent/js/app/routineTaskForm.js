@@ -136,7 +136,7 @@ app
 							// zq查找时间季度默认值
 							reportForm.quarters = [ {
 								id : 0,
-								type : "全部"
+								type : "全年"
 							}, {
 								id : 1,
 								type : "一季度"
@@ -185,13 +185,12 @@ app
 							// zq公共函数终
 							// zq根据条件查找做房时间列表
 							reportForm.selectWorkHouseByLimits = function() {
-
 								var workHouseLimit = JSON
 										.stringify(reportForm.limit);
 								services.selectWorkHouseByLimits({
 									limit : workHouseLimit
 								}).success(function(data) {
-									reportForm.workHouseList=data.list;
+									reportForm.workHouseList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
@@ -202,7 +201,7 @@ app
 
 							// zq根据查询条件绘制员工做房用时分析折线图
 							reportForm.selectUserWorkHouseByLimits = function() {
-							
+								console.log($("#sss").text());
 								var userWorkHouseLimit = JSON
 										.stringify(reportForm.whalimit);
 								console.log(userWorkHouseLimit);
@@ -216,6 +215,39 @@ app
 															+ reportForm.whalimit.roomType
 															+ reportForm.cleanType
 															+ "做房用时分析折线图";
+													var xAxis = [];
+													var yLine = "做房用时/分钟";
+													var nowQuarter = reportForm.whalimit.quarter;
+													switch (nowQuarter) {
+													case 0:
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														break;
+													case 1:
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														break;
+													case 2:
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														break;
+													case 3:
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														break;
+													case 4:
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														break;
+													}
+													allAverageData = [];// 全体员工做房时间的平均Data
+													averageData = [];
+													var lineData = [];
+
 												});
 							}
 							// zq换页

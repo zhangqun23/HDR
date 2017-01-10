@@ -22,9 +22,9 @@
 								ng-repeat="q in quarters">{{q.type}}</option>
 					</select></li>
 					<li><label>房间类型</label><select class="dfselect layoutStyle"
-						style="width: 73px" ng-model="whalimit.roomType" name="roomType" id="sss"
+						style="width: 140px" ng-model="whalimit.roomType" name="roomType" id="sss"
 						required><option value="">请选择</option>
-							<option value="{{r.id}}" ng-repeat="r in roomTypes">{{r.type}}</option></select></li>
+							<option value="{{r.sortId}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
 					<li><label>打扫类型</label><select class="dfselect layoutStyle"
 						style="width: 73px" ng-model="whalimit.cleanType" name="cleanType"
 						required>
@@ -45,24 +45,6 @@
 		</div>
 
 	</div>
-
-	<table class="tablelist tablestyle">
-		<thead>
-			<tr>
-				<th class="width5" rowspan="2"></th>
-				<th class="width5" rowspan="2"></th>
-				<th class="width5" rowspan="2"></th>
-				<th class="width5" colspan="4"></th>
-				<th class="width5" colspan="4"></th>
-				<th class="width5" colspan="4"></th>
-
-			</tr>
-
-		</thead>
-
-	</table>
-	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-<!-- 	<div class="tcdPageCode">页码容器</div> -->
 </div>
 
 <div id="lineChart1"

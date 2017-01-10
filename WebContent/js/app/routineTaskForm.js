@@ -91,7 +91,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.getRoomSorts = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'reportFormController/getRoomSorts.do',
+			url : baseUrl + 'reportForm/getRoomSorts.do',
 			data : data
 		});
 	};
@@ -99,7 +99,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectAllStaffs = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'reportFormController/selectAllStaffs.do',
+			url : baseUrl + 'reportForm/selectAllStaffs.do',
 			data : data
 		});
 	};
@@ -191,6 +191,7 @@ app
 								services.selectWorkHouseByLimits({
 									limit : workHouseLimit
 								}).success(function(data) {
+									reportForm.workHouseList=data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {

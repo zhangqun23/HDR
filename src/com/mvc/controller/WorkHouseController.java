@@ -44,6 +44,7 @@ public class WorkHouseController {
 		
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
+		jsonObject=new JSONObject();
 		jsonObject.put("list", list);
 		System.out.println(jsonObject.toString());
 		return jsonObject.toString();

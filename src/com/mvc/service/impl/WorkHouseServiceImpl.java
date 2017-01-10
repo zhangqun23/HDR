@@ -49,12 +49,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		List<WorkHouse> listGoal = new ArrayList<WorkHouse>();
 		Object[] obj = null;
 		WorkHouse workHouse = null;
-		int i = 0;
 		while (it.hasNext()) {
-			i++;
 			obj = (Object[]) it.next();
 			workHouse = new WorkHouse();
-			workHouse.setOrderNum(String.valueOf(i));
 			workHouse.setStaff_name(obj[0].toString());
 			workHouse.setStaff_no(obj[1].toString());
 			workHouse.setNum_dust(obj[2].toString());// 抹尘房数量
@@ -74,7 +71,15 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		sortAndWrite(listGoal, "avg_time_dust", false, "rank_dust");
 		sortAndWrite(listGoal, "avg_time_night", false, "rank_night");
 		sortAndWrite(listGoal, "avg_time_leave", false, "rank_leave");
-		CollectionUtil.sort(listGoal, "orderNum", true);// 最后按序号升序排列
+
+		Iterator<WorkHouse> itGoal = listGoal.iterator();
+		int i = 0;
+		workHouse = null;
+		while (itGoal.hasNext()) {
+			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
+			workHouse = (WorkHouse) itGoal.next();
+			workHouse.setOrderNum(String.valueOf(i));
+		}
 
 		return listGoal;
 	}

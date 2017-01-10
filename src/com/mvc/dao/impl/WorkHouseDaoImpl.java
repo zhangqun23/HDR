@@ -74,7 +74,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 			sql.append(" and cs.sort_no='" + roomType + "'");
 		}
 		if (startTime != null && endTime != null) {
-			sql.append(" and cs.open_time between '" + startTime + "'" + " and'" + endTime + "'");
+			sql.append(" and cs.open_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
 		return sql.toString();
 	}

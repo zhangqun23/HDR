@@ -1,6 +1,9 @@
 package com.utils;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * 字符串工具类
@@ -107,6 +110,50 @@ public class StringUtil {
 		BigDecimal b1 = new BigDecimal(s1);
 		BigDecimal b2 = new BigDecimal(s2);
 		return b1.multiply(b2).toString();
+	}
+
+	/**
+	 * 获取日期当前月份的第一天
+	 * 
+	 * @param dateStr
+	 *            yyyy-MM
+	 * @return yyyy-MM-dd 00:00:00
+	 */
+	public static String monthFirstDay(String dateStr) {
+		String str = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(sdf.parse(dateStr + "-01"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		calendar.set(Calendar.DATE, 1);
+		str = sdf.format(calendar.getTime()) + " 00:00:00";
+		return str;
+	}
+
+	/**
+	 * 获取日期当前月份的第一天
+	 * 
+	 * @param dateStr
+	 *            yyyy-MM
+	 * @return yyyy-MM-dd 23:59:59
+	 */
+	public static String monthLastDay(String dateStr) {
+		String str = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(sdf.parse(dateStr + "-01"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		calendar.set(Calendar.DATE, 1);
+		calendar.add(Calendar.MONTH, 1);
+		calendar.add(Calendar.DATE, -1);
+		str = sdf.format(calendar.getTime()) + " 23:59:59";
+		return str;
 	}
 
 }

@@ -41,10 +41,10 @@ public class WorkHouseController {
 	@RequestMapping("/selectWorkHouseBylimits.do")
 	public @ResponseBody String selectWorkHouse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
-		
+
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
-		jsonObject=new JSONObject();
+		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
@@ -104,12 +104,12 @@ public class WorkHouseController {
 		}
 		if (jsonObject.containsKey("startTime")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("startTime"))) {
-				startTime = jsonObject.getString("startTime");// 开始时间
+				startTime = StringUtil.monthFirstDay(jsonObject.getString("startTime"));// 开始时间
 			}
 		}
 		if (jsonObject.containsKey("endTime")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("endTime"))) {
-				endTime = jsonObject.getString("endTime");// 结束时间
+				endTime = StringUtil.monthLastDay(jsonObject.getString("endTime"));// 结束时间
 			}
 		}
 

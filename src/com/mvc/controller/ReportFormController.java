@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mvc.entity.RoomSort;
+import com.mvc.entity.StaffInfo;
 import com.mvc.service.ReportFormService;
 
 import net.sf.json.JSONObject;
@@ -35,6 +36,14 @@ public class ReportFormController {
 	public @ResponseBody String selectRoomSort(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<RoomSort> list = reportFormService.selectRoomSort();
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
+	@RequestMapping("/selectAllStaffs.do")
+	public @ResponseBody String selectAllStaff(HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		List<StaffInfo> list = reportFormService.selectAllStaff();
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}

@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mvc.entity.RoomSort;
-import com.mvc.repository.ReportFormRepository;
+import com.mvc.entity.StaffInfo;
+import com.mvc.repository.RoomSortRepository;
+import com.mvc.repository.StaffInfoRepository;
 import com.mvc.service.ReportFormService;
 
 /**
@@ -19,11 +21,19 @@ import com.mvc.service.ReportFormService;
 public class ReportFormServiceImpl implements ReportFormService {
 
 	@Autowired
-	ReportFormRepository reportFormRepository;
+	RoomSortRepository roomSortRepository;
+	@Autowired
+	StaffInfoRepository staffInfoRepository;
 
 	@Override
 	public List<RoomSort> selectRoomSort() {
-		List<RoomSort> list = reportFormRepository.findAll();
+		List<RoomSort> list = roomSortRepository.findAll();
+		return list;
+	}
+
+	@Override
+	public List<StaffInfo> selectAllStaff() {
+		List<StaffInfo> list = staffInfoRepository.findAll();
 		return list;
 	}
 

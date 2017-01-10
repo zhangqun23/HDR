@@ -96,10 +96,10 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	};
 	// 获取全体成员
-	services.selectAllStaffs = function(data) {
+	services.selectRoomStaffs = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'reportForm/selectAllStaffs.do',
+			url : baseUrl + 'reportForm/selectRoomStaffs.do',
 			data : data
 		});
 	};
@@ -282,8 +282,8 @@ app
 									reportForm.roomTypes = data.list;
 								});
 							}
-							function selectAllStaffs() {
-								services.selectAllStaffs().success(
+							function selectRoomStaffs() {
+								services.selectRoomStaffs().success(
 										function(data) {
 											reportForm.staffs = data.list;
 										});
@@ -306,7 +306,7 @@ app
 									selectRoomSorts();
 								} else if ($location.path().indexOf(
 										'/workHouseAnalyseForm') == 0) {
-									selectAllStaffs();
+									selectRoomStaffs();
 									selectRoomSorts();
 									allAverageData = [];// 全体员工做房时间的平均Data
 

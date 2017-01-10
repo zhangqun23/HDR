@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mvc.dao.ReportFormDao;
 import com.mvc.entity.RoomSort;
 import com.mvc.entity.StaffInfo;
 import com.mvc.repository.RoomSortRepository;
-import com.mvc.repository.StaffInfoRepository;
 import com.mvc.service.ReportFormService;
 
 /**
@@ -23,7 +23,7 @@ public class ReportFormServiceImpl implements ReportFormService {
 	@Autowired
 	RoomSortRepository roomSortRepository;
 	@Autowired
-	StaffInfoRepository staffInfoRepository;
+	ReportFormDao reportFormDao;
 
 	@Override
 	public List<RoomSort> selectRoomSort() {
@@ -32,8 +32,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 	}
 
 	@Override
-	public List<StaffInfo> selectAllStaff() {
-		List<StaffInfo> list = staffInfoRepository.findAll();
+	public List<StaffInfo> selectRoomStaff() {
+		List<StaffInfo> list = reportFormDao.selectRoomStaff("客房部");
 		return list;
 	}
 

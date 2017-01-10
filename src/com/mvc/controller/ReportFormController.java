@@ -40,10 +40,10 @@ public class ReportFormController {
 		return jsonObject.toString();
 	}
 
-	@RequestMapping("/selectAllStaffs.do")
-	public @ResponseBody String selectAllStaff(HttpServletRequest request) {
+	@RequestMapping("/selectRoomStaffs.do")
+	public @ResponseBody String selectRoomStaff(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
-		List<StaffInfo> list = reportFormService.selectAllStaff();
+		List<StaffInfo> list = reportFormService.selectRoomStaff();
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}

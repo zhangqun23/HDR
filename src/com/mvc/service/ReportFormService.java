@@ -17,5 +17,5 @@ public interface ReportFormService {
 	List<RoomSort> selectRoomSort();
 
 	// 获取人员列表
-	List<StaffInfo> selectAllStaff();
+	List<StaffInfo> selectRoomStaff();
 }

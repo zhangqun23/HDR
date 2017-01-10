@@ -1,8 +1,9 @@
 package com.mvc.dao;
 
 import java.util.List;
+import java.util.Map;
 
-import com.mvc.entity.CaseInfo;
+import com.utils.Pager;
 
 /**
  * 部门员工做房统计数据持久层
@@ -13,5 +14,5 @@ import com.mvc.entity.CaseInfo;
 public interface WorkHouseDao {
 
 	// 查询员工做房
-	List<CaseInfo> selectWorkHouse();
+	List<Object> selectWorkHouse(Map<String, Object> map, Pager pager);
 }

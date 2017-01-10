@@ -69,12 +69,16 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 		String roomType = (String) map.get("roomType");
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
+		String deptId = (String) map.get("deptId");
 
 		if (roomType != null) {
 			sql.append(" and cs.sort_no='" + roomType + "'");
 		}
 		if (startTime != null && endTime != null) {
 			sql.append(" and cs.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		if (deptId != null) {
+			sql.append(" and cs.depart_id='" + deptId + "'");
 		}
 		return sql.toString();
 	}

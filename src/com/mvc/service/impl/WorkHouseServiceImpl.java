@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkHouseDao;
+import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.WorkHouse;
+import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
 import com.utils.StringUtil;
@@ -26,10 +28,15 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 	@Autowired
 	WorkHouseDao workHouseDao;
+	@Autowired
+	DepartmentInfoRepository departmentInfoRepository;
 
 	// 查询员工做房
 	@Override
 	public List<WorkHouse> selectWorkHouse(Map<String, Object> map) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+
 		List<Object> listSource = workHouseDao.selectWorkHouse(map);
 		Iterator<Object> it = listSource.iterator();
 		List<WorkHouse> listGoal = objToWorkHouse(it);
@@ -45,6 +52,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return null;
 	}
 
+	// 计算及排序
 	private List<WorkHouse> objToWorkHouse(Iterator<Object> it) {
 		List<WorkHouse> listGoal = new ArrayList<WorkHouse>();
 		Object[] obj = null;

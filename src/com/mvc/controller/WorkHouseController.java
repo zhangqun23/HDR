@@ -121,4 +121,63 @@ public class WorkHouseController {
 		return map;
 	}
 
+	/**
+	 * 将JsonObject转换成Map
+	 * 
+	 * @param jsonObject
+	 * @return
+	 */
+	// private Map<String, Object> JsonObjToMapUser(JSONObject jsonObject) {
+	// String roomType = null;
+	// String checkYear = null;
+	// String endTime = null;
+	// if (jsonObject.containsKey("checkYear")) {
+	// if (StringUtil.strIsNotEmpty(jsonObject.getString("checkYear"))) {
+	// checkYear = jsonObject.getString("checkYear");// 年份
+	// }
+	// }
+	// if (jsonObject.containsKey("quarter")) {
+	// if (StringUtil.strIsNotEmpty(jsonObject.getString("quarter"))) {
+	// roomType = jsonObject.getString("quarter");// 房间类型
+	// }
+	// }
+	// if (jsonObject.containsKey("roomType")) {
+	// if (StringUtil.strIsNotEmpty(jsonObject.getString("roomType"))) {
+	// roomType = jsonObject.getString("roomType");// 房间类型
+	// }
+	// }
+	// if (jsonObject.containsKey("roomType")) {
+	// if (StringUtil.strIsNotEmpty(jsonObject.getString("roomType"))) {
+	// roomType = jsonObject.getString("roomType");// 房间类型
+	// }
+	// }
+	// if (jsonObject.containsKey("roomType")) {
+	// if (StringUtil.strIsNotEmpty(jsonObject.getString("roomType"))) {
+	// roomType = jsonObject.getString("roomType");// 房间类型
+	// }
+	// }
+	//
+	// Map<String, Object> map = new HashMap<String, Object>();
+	// map.put("roomType", roomType);
+	// map.put("startTime", startTime);
+	// map.put("endTime", endTime);
+	//
+	// return map;
+	// }
+
+	/**
+	 * 获取单个用户做房用时（---后期用缓存优化）
+	 * 
+	 * @param request
+	 * @return
+	 */
+	// public @ResponseBody String
+	// selectUserWorkHouseByLimits(HttpServletRequest request) {
+	// JSONObject jsonObject =
+	// JSONObject.fromObject(request.getParameter("limit"));
+	//
+	// Map<String, Object> map = JsonObjToMapUser(jsonObject);
+	// return null;
+	// }
+
 }

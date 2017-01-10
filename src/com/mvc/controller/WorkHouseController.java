@@ -1,5 +1,9 @@
 package com.mvc.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +45,10 @@ public class WorkHouseController {
 	@RequestMapping("/selectWorkHouseBylimits.do")
 	public @ResponseBody String selectWorkHouse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
-		
+
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
-		jsonObject=new JSONObject();
+		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
@@ -102,15 +106,30 @@ public class WorkHouseController {
 				roomType = jsonObject.getString("roomType");// 房间类型
 			}
 		}
-		if (jsonObject.containsKey("startTime")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("startTime"))) {
-				startTime = jsonObject.getString("startTime");// 开始时间
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+		Calendar calendar = null;
+		Date date = null;
+		try {
+
+			if (jsonObject.containsKey("startTime")) {
+				if (StringUtil.strIsNotEmpty(jsonObject.getString("startTime"))) {
+					date = dateFormat.parse(startTime);
+					calendar = Calendar.getInstance();
+					calendar.setTime(date);
+					System.out.println("转换前：" + jsonObject.getString("startTime"));
+					startTime = (new SimpleDateFormat("yyyy-MM-dd")).format(calendar.getTime());
+					System.out.println("转换后：" + startTime);
+					startTime = jsonObject.getString("startTime");// 开始时间
+				}
 			}
-		}
-		if (jsonObject.containsKey("endTime")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("endTime"))) {
-				endTime = jsonObject.getString("endTime");// 结束时间
+			if (jsonObject.containsKey("endTime")) {
+				if (StringUtil.strIsNotEmpty(jsonObject.getString("endTime"))) {
+					endTime = jsonObject.getString("endTime");// 结束时间
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();

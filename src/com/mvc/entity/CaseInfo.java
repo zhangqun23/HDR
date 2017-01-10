@@ -23,19 +23,19 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "case_info")
 public class CaseInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 9106893449010052531L;
 
 	private String caseId;// ID
 	private String authorName;// 负责人姓名
-	private CallInfo callInfo;// 同call_info中的call_id对应。。。。。。。。。
-	private StaffInfo author;// 任务负责人ID，同staff_info中的staff_id对应。。。
+	private String call_id;// 同call_info中的call_id对应。。。。。。。。。
+	private String case_author;// 任务负责人ID，同staff_info中的staff_id对应。。。
 	private Integer caseRank;// 任务等级
 	private String caseRemark;// 任务备注信息
 	private String caseStates;// 任务状态，新建、处理中、申请关闭、关闭
 	private String checkAuthorName;// 任务验收人名字
 	private String closeReason;// 任务关闭原因
 	private Date closeTime;// 任务关闭时间
-	private DepartmentInfo departmentInfo;// 该任务隶属于部门的部门ID，同department_info中的department_id对应。。
+	private String depart_id;// 该任务隶属于部门的部门ID，同department_info中的department_id对应。。
 	private Integer flag;// 报警标志，0：未报警，1、2、3、99代表不同等级的报警
 	private Integer givenTime;// 任务给定完成时间，默认单位为分钟
 	private Integer isChecked;// 该例行打扫任务是否检查，1：检查，0：未检查
@@ -46,7 +46,7 @@ public class CaseInfo implements Serializable {
 	private Date lastAlertTime;// 上一次报警时间
 	private Date openTime;// 任务开始时间
 	private Integer planFlg;// 计划任务的标志
-	private StaffInfo recorder;// 记录人ID，同staff_info中的staff_id对应。。。
+	private String recorder_id;// 记录人ID，同staff_info中的staff_id对应。。。
 	private String refuseReason;// 任务驳回原因
 	private String repairSortId;// 具体报修任务ID，同engineer_case_sort中的sort_id对应
 	private String transmitPerson;// 转交任务接收人ID，同staff_info中的staff_id对应
@@ -71,22 +71,20 @@ public class CaseInfo implements Serializable {
 		this.authorName = authorName;
 	}
 
-
-	public CallInfo getCallInfo() {
-		return callInfo;
+	public String getCall_id() {
+		return call_id;
 	}
 
-	public void setCallInfo(CallInfo callInfo) {
-		this.callInfo = callInfo;
+	public void setCall_id(String call_id) {
+		this.call_id = call_id;
 	}
 
-	
-	public StaffInfo getAuthor() {
-		return author;
+	public String getCase_author() {
+		return case_author;
 	}
 
-	public void setAuthor(StaffInfo author) {
-		this.author = author;
+	public void setCase_author(String case_author) {
+		this.case_author = case_author;
 	}
 
 	@Column(name = "case_rank", nullable = false)
@@ -144,13 +142,12 @@ public class CaseInfo implements Serializable {
 		this.closeTime = closeTime;
 	}
 
-	
-	public DepartmentInfo getDepartmentInfo() {
-		return departmentInfo;
+	public String getDepart_id() {
+		return depart_id;
 	}
 
-	public void setDepartmentInfo(DepartmentInfo departmentInfo) {
-		this.departmentInfo = departmentInfo;
+	public void setDepart_id(String depart_id) {
+		this.depart_id = depart_id;
 	}
 
 	@Column(nullable = false)
@@ -245,13 +242,12 @@ public class CaseInfo implements Serializable {
 		this.planFlg = planFlg;
 	}
 
-	
-	public StaffInfo getRecorder() {
-		return recorder;
+	public String getRecorder_id() {
+		return recorder_id;
 	}
 
-	public void setRecorder(StaffInfo recorder) {
-		this.recorder = recorder;
+	public void setRecorder_id(String recorder_id) {
+		this.recorder_id = recorder_id;
 	}
 
 	@Lob

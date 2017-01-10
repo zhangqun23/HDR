@@ -1,5 +1,7 @@
 package com.utils;
 
+import java.math.BigDecimal;
+
 /**
  * 字符串工具类
  * 
@@ -50,4 +52,61 @@ public class StringUtil {
 		}
 		return flag;
 	}
+
+	/**
+	 * 相加
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return s1+s2
+	 */
+	public static String add(String s1, String s2) {
+		BigDecimal b1 = new BigDecimal(s1);
+		BigDecimal b2 = new BigDecimal(s2);
+		return b1.add(b2).toString();
+	}
+
+	/**
+	 * 相减
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return s1-s2
+	 */
+	public static String sub(String s1, String s2) {
+		BigDecimal b1 = new BigDecimal(s1);
+		BigDecimal b2 = new BigDecimal(s2);
+		return b1.subtract(b2).toString();
+	}
+
+	/**
+	 * 相除
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return s1/s2
+	 */
+	public static String divide(String s1, String s2) {
+		String str = "0";
+		if (!s2.equals("0")) {
+			BigDecimal b1 = new BigDecimal(s1);
+			BigDecimal b2 = new BigDecimal(s2);
+			str = b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).toString();// 四舍五入，保留2位小数
+		}
+		return str;
+	}
+
+	/**
+	 * 相乘
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return s1*s2
+	 */
+	public static String multiply(String s1, String s2) {
+		BigDecimal b1 = new BigDecimal(s1);
+		BigDecimal b2 = new BigDecimal(s2);
+		return b1.multiply(b2).toString();
+	}
+
 }

@@ -37,8 +37,7 @@ public class CaseHandle implements Serializable {
 		this.recordId = recordId;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "case_id")
+	
 	public CaseInfo getCaseInfo() {
 		return caseInfo;
 	}

@@ -263,10 +263,10 @@ app
 													var userData = [];
 													for ( var item in data.list) {
 														userData
-																.push(data.list[item].use_time);
+																.push(data.list[item]);
 													}
 													switch (nowQuarter) {
-													case 0:
+													case '0':
 														xAxis = [ '1月', '2月',
 																'3月', '4月',
 																'5月', '6月',

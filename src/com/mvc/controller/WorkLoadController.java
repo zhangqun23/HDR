@@ -53,10 +53,18 @@ public class WorkLoadController {
 	public @ResponseBody String getWorkLoadSummaryList(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 
-		String startDate = "2016-01-01";
-		String endDate = "2017-01-20";
+		// String startDate = "2016-01-01";
+		// String endDate = "2017-01-20";
+		List<WorkLoad> workLoadList = null;
+		String startDate = "";
+		String endDate = "";
 
-		List<WorkLoad> workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
+		}
 		for (int i = 0; i < workLoadList.size(); i++) {
 			System.out.println("结果：");
 			System.out.println(workLoadList.get(i).getStaffName() + workLoadList.get(i).getStaffNo() + ": 抹尘房"
@@ -79,35 +87,45 @@ public class WorkLoadController {
 	@RequestMapping("/exportWorkLoadSummaryList.do")
 	public ResponseEntity<byte[]> exportWorkLoadSummaryList(HttpServletRequest request, HttpServletResponse response) {
 
-		String startDate = "2016-01-01";
-		String endDate = "2017-01-20";
+		// String startDate = "2016-01-01";
+		// String endDate = "2017-01-20";
 
 		WordHelper wh = new WordHelper();
-		String fileName = "客房部员工工作量汇总表.docx";
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
-
-		// 获取列表信息
-		List<WorkLoad> workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
+		ResponseEntity<byte[]> byteArr = null;
+		List<WorkLoad> workLoadList = null;
 		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
-		listMap.put("0", workLoadList);// 注意：key存放该list在word中表格的索引，value存放list
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		String startDate = "";
+		String endDate = "";
 
-		// 获取文本数据
-		Map<String, Object> contentMap = new HashMap<String, Object>();
-		contentMap.put("${startDate}", startDate);
-		contentMap.put("${endDate}", endDate);
-
-		try {
-			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, out);
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
 		}
-		ResponseEntity<byte[]> byteArr = FileHelper.downloadFile(fileName, path);
+		if (workLoadList != null) {
+			String fileName = "客房部员工工作量汇总表.docx";
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			String modelPath = request.getSession().getServletContext()
+					.getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
+
+			// 获取列表和文本信息
+			listMap.put("0", workLoadList);// 注意：key存放该list在word中表格的索引，value存放list
+			contentMap.put("${startDate}", startDate);
+			contentMap.put("${endDate}", endDate);
+			try {
+				OutputStream out = new FileOutputStream(path);// 保存路径
+				wh.export2007Word(modelPath, listMap, contentMap, out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byteArr = FileHelper.downloadFile(fileName, path);
+		}
 		return byteArr;
 	}
 
@@ -121,9 +139,8 @@ public class WorkLoadController {
 	public @ResponseBody String getWorkLoadAnalyse(HttpServletRequest request) {
 
 		JSONObject jsonObject = new JSONObject();
-		String startDate = "2016-01-01 00:00:00";
-		String endDate = "2017-01-20 23:59:00";
-		String staffNo = "125";
+		String date = "2017";
+		String dateFlag = "0";
 
 		jsonObject.put("data", null);
 		return jsonObject.toString();
@@ -201,13 +218,20 @@ public class WorkLoadController {
 	public @ResponseBody String getWorkLoadLevelList(HttpServletRequest request) {
 
 		JSONObject jsonObject = new JSONObject();
-		String startDate = "2016-01-01";
-		String endDate = "2017-01-20";
+		List<WorkLoadLevel> workLoadLevelList = null;
+		String startDate = "";
+		String endDate = "";
 
-		List<WorkLoadLevel> WorkLoadLevelList = workLoadService.getWorkLoadLevelList(startDate, endDate);
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			workLoadLevelList = workLoadService.getWorkLoadLevelList(startDate, endDate);
+		}
 
-		jsonObject.put("WorkLoadLevelList", WorkLoadLevelList);
+		jsonObject.put("WorkLoadLevelList", workLoadLevelList);
 		return jsonObject.toString();
+
 	}
 
 	/**
@@ -221,36 +245,44 @@ public class WorkLoadController {
 	@RequestMapping("/exportWorkLoadLevelList.do")
 	public ResponseEntity<byte[]> exportWorkLoadLevelList(HttpServletRequest request, HttpServletResponse response) {
 
-		String startDate = "2016-01-01";
-		String endDate = "2017-01-20";
-
 		WordHelper wh = new WordHelper();
-		String fileName = "客房部所有员工工作量饱和度分析表.docx";
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadLevelList.docx");// 模板路径
-
-		// 获取列表信息
-		List<WorkLoadLevel> workLoadList = workLoadService.getWorkLoadLevelList(startDate, endDate);
+		ResponseEntity<byte[]> byteArr = null;
+		List<WorkLoadLevel> workLoadList = null;
 		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
-		listMap.put("0", workLoadList);// 注意：key存放该list在word中表格的索引，value存放list
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		String startDate = "";
+		String endDate = "";
 
-		// 获取文本数据
-		Map<String, Object> contentMap = new HashMap<String, Object>();
-		contentMap.put("${startDate}", startDate);
-		contentMap.put("${endDate}", endDate);
-		contentMap.put("${analysisResult}", "所有员工工作量超出额定工作量，且超出幅度过高，因此建议将额定工作量调整至35");
-
-		try {
-			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, out);
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			workLoadList = workLoadService.getWorkLoadLevelList(startDate, endDate);
 		}
-		ResponseEntity<byte[]> byteArr = FileHelper.downloadFile(fileName, path);
+		if (workLoadList != null) {
+			String fileName = "客房部所有员工工作量饱和度分析表.docx";
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			String modelPath = request.getSession().getServletContext()
+					.getRealPath("word\\" + "workLoadLevelList.docx");// 模板路径
+
+			// 获取列表和文本信息
+			listMap.put("0", workLoadList);// 注意：key存放该list在word中表格的索引，value存放list
+			contentMap.put("${startDate}", startDate);
+			contentMap.put("${endDate}", endDate);
+			contentMap.put("${analysisResult}", "所有员工工作量超出额定工作量，且超出幅度过高，因此建议将额定工作量调整至35");
+
+			try {
+				OutputStream out = new FileOutputStream(path);// 保存路径
+				wh.export2007Word(modelPath, listMap, contentMap, out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byteArr = FileHelper.downloadFile(fileName, path);
+		}
 		return byteArr;
 	}
 }

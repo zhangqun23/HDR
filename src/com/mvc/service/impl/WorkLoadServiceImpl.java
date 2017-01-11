@@ -57,7 +57,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			listGoal.add(workLoad);
 		}
 		// 按员工实际工作量进行排序并编号
-		sortAndWrite(listGoal, "staffNo", true, "rank");
+		sortAndWrite(listGoal, "actualLoad", true, "rank");
 
 		Iterator<WorkLoad> itGoal = listGoal.iterator();
 		int i = 0;
@@ -83,12 +83,12 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		WorkLoadLevel workLoadLevel = null;
 
 		for (int i = 0; i < it.size(); i++) {
-			Float beyondLevel = null;
+			// Float beyondLevel = null;
 			String actualLoad = it.get(i).getActualLoad();
 			String beyondLoad = it.get(i).getBeyondLoad();
 			workLoadLevel = new WorkLoadLevel();
 
-			workLoadLevel.setOrderNum(String.valueOf(i+1));
+			workLoadLevel.setOrderNum(String.valueOf(i + 1));
 			workLoadLevel.setStaffNo(it.get(i).getStaffNo());
 			workLoadLevel.setStaffName(it.get(i).getStaffName());
 			workLoadLevel.setActualLoad(actualLoad);

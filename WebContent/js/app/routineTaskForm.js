@@ -80,6 +80,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/workHouseAnalyseForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workHouseAnalyseForm.html',
 		controller : 'ReportController'
+	}).when('/workEfficiencyForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workEfficiencyForm.html',
+		controller : 'ReportController'
 	})
 } ]);
 app.constant('baseUrl', '/HDR/');
@@ -101,7 +104,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// 获取全体成员
+	// zq获取全体成员
 	services.selectRoomStaffs = function(data) {
 		return $http({
 			method : 'post',
@@ -163,12 +166,17 @@ app
 								roomType : ""
 							};
 							// zq做房用时分析界面设置条件
-							reportForm.whalimit = {
+							reportForm.whaLimit = {
 								checkYear : "",
 								quarter : "0",
 								roomType : "",
 								cleanType : "0",
 								staffId : ""
+							};
+							// zq做房用时分析界面设置条件
+							reportForm.wefLimit = {
+								startTime : "",
+								endTime : ""
 							};
 							// zq公共函数始
 							function preventDefault(e) {
@@ -199,7 +207,7 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
-								if ( reportForm.limit.roomType == "") {
+								if (reportForm.limit.roomType == "") {
 									alert("请选择房间类型！");
 									return false;
 								}
@@ -218,20 +226,20 @@ app
 							}
 							// zq根据查询条件绘制员工做房用时分析折线图
 							reportForm.selectUserWorkHouseByLimits = function() {
-								if (reportForm.whalimit.checkYear == "") {
+								if (reportForm.whaLimit.checkYear == "") {
 									alert("请填写查询年份！");
 									return false;
 								}
-								if (reportForm.whalimit.roomType == "") {
-								alert("请选择房间类型！");
-								return false;
-							}
-								if (reportForm.whalimit.staffId == "") {
-								alert("请选择查询员工！");
-								return false;
-							}
+								if (reportForm.whaLimit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
+								if (reportForm.whaLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
 								var userWorkHouseLimit = JSON
-										.stringify(reportForm.whalimit);
+										.stringify(reportForm.whaLimit);
 								services
 										.selectUserWorkHouseByLimits({
 											limit : userWorkHouseLimit
@@ -240,14 +248,14 @@ app
 												function(data) {
 													var title = "客房员工 "
 															+ " "
-															+ getSelectedRoomType(reportForm.whalimit.roomType)
+															+ getSelectedRoomType(reportForm.whaLimit.roomType)
 															+ " "
-															+ getSelectedCleanType(reportForm.whalimit.cleanType)
+															+ getSelectedCleanType(reportForm.whaLimit.cleanType)
 															+ " " + "做房用时分析折线图";// 折线图标题显示
 													var xAxis = [];// 横坐标显示
 													var yAxis = "做房用时/分钟";// 纵坐标显示
-													var nowQuarter = reportForm.whalimit.quarter;// 当前的选择季度
-													var lineName = getSelectedStaff(reportForm.whalimit.staffId)
+													var nowQuarter = reportForm.whaLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(reportForm.whaLimit.staffId)
 															+ "员工做房用时";
 													var lineData = [];// 最终传入chart1中的data
 													allAverageData = [];// 全体员工做房时间的平均Data
@@ -347,7 +355,7 @@ app
 									});
 								}
 							}
-							// 折线图公用函数
+							// zq折线图公用函数
 							function lineChartForm(data, elementId, title,
 									lx_Axis, ly_title) {
 								var chart1 = new LineChart({
@@ -362,30 +370,30 @@ app
 								$('#chart1-svg').val(
 										$("#lineChart1").highcharts().getSVG());
 							}
-							// 获取房间类型下拉表
+							// zq获取房间类型下拉表
 							function selectRoomSorts() {
 								services.getRoomSorts().success(function(data) {
 									reportForm.roomTypes = data.list;
 								});
 							}
-							// 查询客服人员列表
+							// zq查询客服人员列表
 							function selectRoomStaffs() {
 								services.selectRoomStaffs().success(
 										function(data) {
 											reportForm.staffs = data.list;
 										});
 							}
-							// 获取所选房间类型
-							function getSelectedRoomType(roomSortId) {
+							// zq获取所选房间类型
+							function getSelectedRoomType(roomSortNo) {
 								var type = "";
 								for ( var item in reportForm.roomTypes) {
-									if (reportForm.roomTypes[item].sortId == roomSortId) {
+									if (reportForm.roomTypes[item].sortNo == roomSortNo) {
 										type = reportForm.roomTypes[item].sortName;
 									}
 								}
 								return type;
 							}
-							// 获取所选打扫类型
+							// zq获取所选打扫类型
 							function getSelectedCleanType(cleanTypeId) {
 								var type = "";
 								switch (cleanTypeId) {
@@ -401,7 +409,7 @@ app
 								}
 								return type;
 							}
-							// 获取所选用户
+							// zq获取所选用户
 							function getSelectedStaff(staffId) {
 								var staffName = "";
 								for ( var item in reportForm.staffs) {
@@ -416,14 +424,14 @@ app
 							reportForm.xianshi = function() {
 								var title = "客房员工 "
 										+ " "
-										+ getSelectedRoomType(reportForm.whalimit.roomType)
+										+ getSelectedRoomType(reportForm.whaLimit.roomType)
 										+ " "
-										+ getSelectedCleanType(reportForm.whalimit.cleanType)
+										+ getSelectedCleanType(reportForm.whaLimit.cleanType)
 										+ " " + "做房用时分析折线图";// 折线图标题显示
 								var xAxis = [];// 横坐标显示
 								var yAxis = "做房用时/分钟";// 纵坐标显示
-								var nowQuarter = reportForm.whalimit.quarter;// 当前的选择季度
-								var lineName = getSelectedStaff(reportForm.whalimit.staffId)
+								var nowQuarter = reportForm.whaLimit.quarter;// 当前的选择季度
+								var lineName = getSelectedStaff(reportForm.whaLimit.staffId)
 										+ "员工做房用时";
 								var lineData = [];// 最终传入chart1中的data
 								allAverageData = [];// 全体员工做房时间的平均Data
@@ -466,6 +474,16 @@ app
 										xAxis, yAxis);
 
 							}
+							// 员工做房效率统计
+							reportForm.selectWorkEfficiencyByLimits = function() {
+								var workEfficiencyLimit = JSON
+										.stringify(reportForm.wefLimit);
+								services.selectWorkEfficiencyByLimits({
+									limit : workEfficiencyLimits
+								}).success(function(data) {
+								});
+
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -491,6 +509,9 @@ app
 
 								} else if ($location.path().indexOf(
 										'/reportForm') == 0) {
+
+								} else if ($location.path().indexOf(
+										'/workEfficiencyForm') == 0) {
 
 								}
 							}

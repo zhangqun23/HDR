@@ -19,7 +19,8 @@
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
 				<li id="doRoomAnalyse"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseAnalyseForm">做房用时分析</a><i></i></li>
-				<li id="doHomeEffic"><cite></cite> <a href="">做房效率统计</a><i></i></li>
+				<li id="doHomeEffic"><cite></cite> <a
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workEfficiencyForm">做房效率统计</a><i></i></li>
 				<li id="suppplyUsage"><cite></cite> <a href="">客用品使用量统计</a><i></i></li>
 				<li id="leaderCheckHome"><cite></cite> <a href="">领班查房工作量/用时统计</a><i></i></li>
 			</ul>

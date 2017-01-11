@@ -39,6 +39,15 @@
 				<span><img src="${ctx}/images/leftico04.png" /></span>对客服务统计
 			</div>
 			<ul class="menuson">
+				<li><cite></cite> <a
+					href="${ctx}/customerService/toDepInfoPage.do#/depWorkloadStatistics">部门总工作量统计</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/customerService/toStaffWorkloadPage.do#/staffWorkloadStatistics">员工工作量统计</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/customerService/toTypePage.do#/typeStatistics">服务类型统计</a><i></i></li>
+				<li><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/infoStatistics">布草/消耗品统计</a><i></i></li>
+
 				<li><cite></cite> <a href="">员工工作量/排名</a><i></i></li>
 				<li><cite></cite> <a href="">用时/排名</a><i></i></li>
 				<li><cite></cite> <a href="">服务时间分布图</a><i></i></li>

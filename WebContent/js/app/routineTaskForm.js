@@ -191,6 +191,18 @@ app
 							// zq公共函数终
 							// zq根据条件查找做房时间列表
 							reportForm.selectWorkHouseByLimits = function() {
+								if (reportForm.limit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.limit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if ( reportForm.limit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
 								var workHouseLimit = JSON
 										.stringify(reportForm.limit);
 								services.selectWorkHouseByLimits({
@@ -204,26 +216,47 @@ app
 									}
 								});
 							}
-
 							// zq根据查询条件绘制员工做房用时分析折线图
 							reportForm.selectUserWorkHouseByLimits = function() {
-								console.log($("#sss").text());
+								if (reportForm.whalimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (reportForm.whalimit.roomType == "") {
+								alert("请选择房间类型！");
+								return false;
+							}
+								if (reportForm.whalimit.staffId == "") {
+								alert("请选择查询员工！");
+								return false;
+							}
 								var userWorkHouseLimit = JSON
 										.stringify(reportForm.whalimit);
-								console.log(userWorkHouseLimit);
 								services
 										.selectUserWorkHouseByLimits({
 											limit : userWorkHouseLimit
 										})
 										.success(
 												function(data) {
-													var title = "客房员工"
-															+ reportForm.whalimit.roomType
-															+ reportForm.cleanType
-															+ "做房用时分析折线图";
-													var xAxis = [];
-													var yLine = "做房用时/分钟";
-													var nowQuarter = reportForm.whalimit.quarter;
+													var title = "客房员工 "
+															+ " "
+															+ getSelectedRoomType(reportForm.whalimit.roomType)
+															+ " "
+															+ getSelectedCleanType(reportForm.whalimit.cleanType)
+															+ " " + "做房用时分析折线图";// 折线图标题显示
+													var xAxis = [];// 横坐标显示
+													var yAxis = "做房用时/分钟";// 纵坐标显示
+													var nowQuarter = reportForm.whalimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(reportForm.whalimit.staffId)
+															+ "员工做房用时";
+													var lineData = [];// 最终传入chart1中的data
+													allAverageData = [];// 全体员工做房时间的平均Data
+													averageData = [];// 个人平均用时
+													var userData = [];
+													for ( var item in data.list) {
+														userData
+																.push(data.list[item].use_time);
+													}
 													switch (nowQuarter) {
 													case 0:
 														xAxis = [ '1月', '2月',
@@ -232,30 +265,75 @@ app
 																'7月', '8月',
 																'9月', '10月',
 																'11月', '12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																12);
+														averageData = getAverageData(
+																data.averWorkTime,
+																12);
 														break;
-													case 1:
+													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
 														break;
-													case 2:
+													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
 														break;
-													case 3:
+													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
 														break;
-													case 4:
+													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
 														break;
 													}
-													allAverageData = [];// 全体员工做房时间的平均Data
-													averageData = [];
-													var lineData = [];
-
+													combine(lineData, "个人平均用时",
+															averageData);
+													combine(lineData, "全体平均用时",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+													lineChartForm(lineData,
+															"#lineChart1",
+															title, xAxis, yAxis);
 												});
 							}
+							// zq生成平均值的数组
+							function getAverageData(data, number) {
+								var arr = [];
+								for (var i = 0; i < number; i++) {
+									arr.push(data);
+								}
+								return arr;
+
+							}
+
 							// zq换页
 							function pageTurn(totalPage, page, Func) {
 								var $pages = $(".tcdPageCode");
@@ -281,6 +359,8 @@ app
 									subTitle : ''
 								});
 								chart1.init();
+								$('#chart1-svg').val(
+										$("#lineChart1").highcharts().getSVG());
 							}
 							// 获取房间类型下拉表
 							function selectRoomSorts() {
@@ -288,11 +368,103 @@ app
 									reportForm.roomTypes = data.list;
 								});
 							}
+							// 查询客服人员列表
 							function selectRoomStaffs() {
 								services.selectRoomStaffs().success(
 										function(data) {
 											reportForm.staffs = data.list;
 										});
+							}
+							// 获取所选房间类型
+							function getSelectedRoomType(roomSortId) {
+								var type = "";
+								for ( var item in reportForm.roomTypes) {
+									if (reportForm.roomTypes[item].sortId == roomSortId) {
+										type = reportForm.roomTypes[item].sortName;
+									}
+								}
+								return type;
+							}
+							// 获取所选打扫类型
+							function getSelectedCleanType(cleanTypeId) {
+								var type = "";
+								switch (cleanTypeId) {
+								case '0':
+									type = "抹尘房";
+									break;
+								case '1':
+									type = "离退房";
+									break;
+								case '2':
+									type = "过夜房";
+									break;
+								}
+								return type;
+							}
+							// 获取所选用户
+							function getSelectedStaff(staffId) {
+								var staffName = "";
+								for ( var item in reportForm.staffs) {
+									if (reportForm.staffs[item].staff_id == staffId) {
+										staffName = reportForm.staffs[item].staff_no
+												+ reportForm.staffs[item].staff_name;
+									}
+								}
+								return staffName;
+							}
+
+							reportForm.xianshi = function() {
+								var title = "客房员工 "
+										+ " "
+										+ getSelectedRoomType(reportForm.whalimit.roomType)
+										+ " "
+										+ getSelectedCleanType(reportForm.whalimit.cleanType)
+										+ " " + "做房用时分析折线图";// 折线图标题显示
+								var xAxis = [];// 横坐标显示
+								var yAxis = "做房用时/分钟";// 纵坐标显示
+								var nowQuarter = reportForm.whalimit.quarter;// 当前的选择季度
+								var lineName = getSelectedStaff(reportForm.whalimit.staffId)
+										+ "员工做房用时";
+								var lineData = [];// 最终传入chart1中的data
+								allAverageData = [];// 全体员工做房时间的平均Data
+								averageData = [];// 个人平均用时
+								switch (nowQuarter) {
+								case '0':
+									xAxis = [ '1月', '2月', '3月', '4月', '5月',
+											'6月', '7月', '8月', '9月', '10月',
+											'11月', '12月' ];
+									allAverageData = getAverageData(23, 12);
+									averageData = getAverageData(22, 12);
+									break;
+								case '1':
+									xAxis = [ '1月', '2月', '3月' ];
+									allAverageData = getAverageData(22, 3);
+									averageData = getAverageData(24, 3);
+									break;
+								case '2':
+									xAxis = [ '4月', '5月', '6月' ];
+									allAverageData = getAverageData(24, 3);
+									averageData = getAverageData(23, 3);
+									break;
+								case '3':
+									xAxis = [ '7月', '8月', '9月' ];
+									allAverageData = getAverageData(22, 3);
+									averageData = getAverageData(21, 3);
+									break;
+								case '4':
+									xAxis = [ '10月', '11月', '12月' ];
+									allAverageData = getAverageData(22, 3);
+									averageData = getAverageData(25, 3);
+									break;
+								}
+								console.log("hengzhou" + xAxis);
+								console.log("heng" + averageData);
+								console.log("zhou" + allAverageData);
+								combine(lineData, "个人平均用时", averageData);
+								combine(lineData, "全体平均用时", allAverageData);
+								lineChartForm(lineData, "#lineChart1", title,
+										xAxis, yAxis);
+
 							}
 							// zq初始化
 							function initData() {
@@ -310,27 +482,13 @@ app
 												});
 								if ($location.path().indexOf('/workHouseForm') == 0) {
 									selectRoomSorts();
+
 								} else if ($location.path().indexOf(
 										'/workHouseAnalyseForm') == 0) {
 									selectRoomStaffs();
 									selectRoomSorts();
 									allAverageData = [];// 全体员工做房时间的平均Data
 
-									var lineData = [];
-									allAverageData = [ 20, 20, 20, 20, 20, 20,
-											20, 20, 20, 20, 20, 20 ];
-									var ss = [ 34, 2, 56, 23, 20, 34, 12, 23,
-											34, 45, 23, 20 ];
-									combine(lineData, "全体员工平均用时",
-											allAverageData);
-									combine(lineData, "张三", ss);
-									var xLine = [ '1月', '2月', '3月', '4月', '5月',
-											'6月', '7月', '8月', '9月', '10月',
-											'11月', '12月' ];
-									var yLine = "做房用时/分钟";
-									lineChartForm(lineData, "#lineChart1",
-											"客房员工标准间做房时间统计表（单位：分钟）", xLine,
-											yLine);
 								} else if ($location.path().indexOf(
 										'/reportForm') == 0) {
 

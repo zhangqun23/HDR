@@ -11,9 +11,10 @@ public class WorkLoad {
 	private String orderNum;// 序号
 	private String staffName;// 员工姓名
 	private String staffNo;// 员工编号
-	private String cleanRoom;// 抹尘房
-	private String overnightRoom;// 过夜房
-	private String checkoutRoom;// 离退房
+	private String cleanRoom;// 抹尘房0
+	private String checkoutRoom;// 离退房1
+	private String overnightRoom;// 过夜房2
+
 	private String ratedLoad;// 额定工作量
 	private String actualLoad;// 实际工作量
 	private String beyondLoad;// 超出工作量

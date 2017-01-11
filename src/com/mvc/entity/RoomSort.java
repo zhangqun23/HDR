@@ -22,9 +22,6 @@ public class RoomSort implements Serializable {
 	private String sortNo;// 房间类型编码
 	private Integer weight;// 图片宽度
 
-	public RoomSort() {
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "sort_id", unique = true, nullable = false)

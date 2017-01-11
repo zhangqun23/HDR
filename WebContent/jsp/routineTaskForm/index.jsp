@@ -5,7 +5,7 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section id="reportForm" ng-app="reportForm" class="main">
+<section id="routineTaskForm" ng-app="routineTaskForm" class="main">
 	<div ng-view></div>
 </section>
 <jsp:include page="/jsp/left.jsp" />
@@ -15,7 +15,7 @@
 <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"
 	type="text/javascript" charset="utf-8"></script>
 <script src="${ctx}/js/app/chart.js"></script>
-<script src="${ctx}/js/app/reportForm.js"></script>
+<script src="${ctx}/js/app/routineTaskForm.js"></script>
 <script src="${ctx}/js/lib/My97DatePicker/WdatePicker.js"></script>
 <script>
 	$(function() {

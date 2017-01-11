@@ -1,7 +1,7 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">首页</a></li>
+		<li><a href="">对客服务/部门总工作量统计</a></li>
 	</ul>
 </div>
 
@@ -12,16 +12,12 @@
 			<form action="exportUnGetContListBylimits.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止年月</label><input type="text" name="startTime"
+					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "><label>—</label><input
 						type="text" name="endTime" ng-model="endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "></li>
-					<li><label>房间类型</label><select class="dfselect layoutStyle"
-						style="width: 73px" ng-model="limit.roomType" name="userId"><option
-								value="">请选择</option>
-							<option value="{{user.user_id}}" ng-repeat="types in roomTypes"></option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectUnGetContListBylimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -37,12 +33,14 @@
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
-				<th class="width15">项目名称</th>
-				<th class="width15">业主单位</th>
-				<th class="width10">合同金额(万元)</th>
-				<th class="width10">经手人</th>
-				<th class="width10">负责人</th>
-
+				<th class="width15">部门</th>
+				<th class="width15">服务数量</th>
+				<th class="width10">超时服务</th>
+				<th class="width10">超时率</th>
+				<th class="width10">总用时</th>
+				<th class="width5">平均用时</th>
+				<th class="width15">总数排名</th>
+				<th class="width15">超时率排名</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -53,18 +51,14 @@
 				<td></td>
 				<td></td>
 				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 		</tbody>
 	</table>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-	<div class="tcdPageCode">页码容器</div>
 </div>
-
-<div id="lineChart1"
-	style="min-width: 400px; width: 1000px; height: 400px"></div>
-<textarea id="chart1-svg" style="width: 1600px; height: 80px;"></textarea>
-<div id="histogram" style="min-width: 400px; height: 400px"></div>
-<div id="pieChart1" style="min-width: 400px; height: 400px"></div>
 
 
 

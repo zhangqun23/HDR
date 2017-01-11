@@ -267,7 +267,7 @@ app
 													var userData = [];
 													for ( var item in data.list) {
 														userData
-																.push(data.list[item].use_time);
+																.push(data.list[item]);
 													}
 													switch (nowQuarter) {
 													case '0':

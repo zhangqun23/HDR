@@ -9,7 +9,7 @@
 
 	<div>
 		<div>
-			<form action="exportUnGetContListBylimits.do" method="post"
+			<form action="exportDepWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
@@ -19,7 +19,7 @@
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectUnGetContListBylimits()"></li>
+						type="button" value="查询" ng-click="selectDepWorkload()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -33,18 +33,18 @@
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
-				<th class="width15">部门</th>
-				<th class="width15">服务数量</th>
+				<th class="width10">部门</th>
+				<th class="width10">服务数量</th>
 				<th class="width10">超时服务</th>
 				<th class="width10">超时率</th>
 				<th class="width10">总用时</th>
-				<th class="width5">平均用时</th>
-				<th class="width15">总数排名</th>
-				<th class="width15">超时率排名</th>
+				<th class="width10">平均用时</th>
+				<th class="width10">总数排名</th>
+				<th class="width10">超时率排名</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="unGet in unGetContForms">
+			<tr ng-repeat="depWorkload in depWorkloads">
 				<td></td>
 				<td></td>
 				<td></td>

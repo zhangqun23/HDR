@@ -113,7 +113,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 	private void sortAndWrite(List<WorkLoad> list, String filedName, boolean ascFlag, String writeField) {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		CollectionUtil<WorkLoad> collectionUtil = new CollectionUtil<WorkLoad>();
-		collectionUtil.workLoadWriteSort(list, writeField);
+		collectionUtil.writeSort(list, writeField);
 	}
 
 }

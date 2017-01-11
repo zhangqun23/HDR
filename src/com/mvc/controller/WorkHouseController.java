@@ -121,4 +121,68 @@ public class WorkHouseController {
 		return map;
 	}
 
+	/**
+	 * 将JsonObject转换成Map，单个用户
+	 * 
+	 * @param jsonObject
+	 * @return
+	 */
+	private Map<String, Object> JsonObjToMapUser(JSONObject jsonObject) {
+		String checkYear = null;
+		String quarter = null;
+		String roomType = null;
+		String cleanType = null;
+		String staffId = null;
+		if (jsonObject.containsKey("checkYear")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("checkYear"))) {
+				checkYear = jsonObject.getString("checkYear");// 年份
+			}
+		}
+		if (jsonObject.containsKey("quarter")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("quarter"))) {
+				quarter = jsonObject.getString("quarter");// 季度
+			}
+		}
+		if (jsonObject.containsKey("roomType")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("roomType"))) {
+				roomType = jsonObject.getString("roomType");// 房间类型
+			}
+		}
+		if (jsonObject.containsKey("cleanType")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("cleanType"))) {
+				cleanType = jsonObject.getString("cleanType");// 打扫类型
+			}
+		}
+		if (jsonObject.containsKey("staffId")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("staffId"))) {
+				staffId = jsonObject.getString("staffId");// 员工ID
+			}
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("checkYear", checkYear);
+		map.put("quarter", quarter);
+		map.put("roomType", roomType);
+		map.put("cleanType", cleanType);
+		map.put("staffId", staffId);
+
+		return map;
+	}
+
+	/**
+	 * 获取单个用户做房用时（---后期用缓存优化）
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectUserWorkHouseByLimits.do")
+	public @ResponseBody String selectUserWorkHouseByLimits(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
+
+		Map<String, Object> map = JsonObjToMapUser(jsonObject);
+		String str = workHouseService.selectUserWorkHouseByLimits(map);
+		System.out.println("做房用时分析：" + str);
+		return str;
+	}
+
 }

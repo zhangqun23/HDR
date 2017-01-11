@@ -156,4 +156,64 @@ public class StringUtil {
 		return str;
 	}
 
+	/**
+	 * 获取季度第一天
+	 * 
+	 * @param year
+	 *            yyyy
+	 * @param quarter
+	 *            0-全年,1/2/3/4代表各季度
+	 * @return yyyy-MM-dd 00:00:00
+	 */
+	public static String quarterFirstDay(String year, String quarter) {
+		String str = "";
+		Integer intQuart = Integer.valueOf(quarter);
+		switch (intQuart) {
+		case 0:
+			str = year + "-01";
+			break;
+		case 1:
+		case 2:
+		case 3:
+			str = year + "-0" + String.valueOf((intQuart - 1) * 3 + 1);
+			break;
+		case 4:
+			str = year + "-10";
+			break;
+		default:
+			break;
+		}
+		str = monthFirstDay(str);
+		return str;
+	}
+
+	/**
+	 * 获取季度最后一天
+	 * 
+	 * @param year
+	 *            yyyy
+	 * @param quarter
+	 *            0-全年,1/2/3/4代表各季度
+	 * @return yyyy-MM-dd 23:59:59
+	 */
+	public static String quarterLastDay(String year, String quarter) {
+		String str = "";
+		Integer intQuart = Integer.valueOf(quarter);
+		switch (intQuart) {
+		case 0:
+		case 4:
+			str = year + "-12";
+			break;
+		case 1:
+		case 2:
+		case 3:
+			str = year + "-0" + String.valueOf(intQuart * 3);
+			break;
+		default:
+			break;
+		}
+		str = monthLastDay(str);
+		return str;
+	}
+
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.dao.impl;
 
 import java.util.List;
@@ -13,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.mchange.util.ObjectCache;
 import com.mvc.dao.WorkLoadDao;
-import com.mvc.entity.GoodsInfo;
-import com.mvc.entity.RoomInfo;
 
 /**
  * 工作量相关的dao层接口实现
@@ -31,23 +25,49 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	public List<RoomInfo> count() {
-		EntityManager em = emf.createEntityManager();
-		String countSql = " select * from room_info ";
-		Query query = em.createNativeQuery(countSql, RoomInfo.class);
-		@SuppressWarnings("unchecked")
-		List<RoomInfo> list = query.getResultList();
-		em.close();
-		return list;
-	}
-	//huiminjun试验
-	@SuppressWarnings("unchecked")
+	// 获取员工打扫各类房间的数量列表
 	@Override
-	public List<GoodsInfo> count0() {
+	public List<Object> getRoomNumByPrame(String startTime, String endTime) {
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select * from goods_info ";
-		Query query = em.createNativeQuery(countSql,GoodsInfo.class);
-		List<GoodsInfo> list = query.getResultList();
+		StringBuilder selectSql = new StringBuilder();
+		String serviceSort = "  a.service_sort='例行打扫' ";
+		selectSql.append(" select p.staff_name,p.staff_id,aa1.clean_num ,aa2.checkout_num ,aa3.overnight_num ");
+		selectSql.append(
+				" from (select b.staff_name,b.staff_id from case_info a left join staff_info b on a.case_author=b.Staff_id where ");
+		selectSql.append(serviceSort);
+		if (startTime != null && endTime != null) {
+			selectSql.append(" and (a.close_time between '" + startTime + "' and '" + endTime + "') ");
+		}
+		selectSql.append(" group by  staff_id) as p ");
+
+		selectSql.append(
+				" left join (select case_author, coalesce(sum(actual_workload),0) clean_num from case_info a where a.clean_type=0 and ");
+		selectSql.append(serviceSort);
+		if (startTime != null && endTime != null) {
+			selectSql.append(" and (a.close_time between '" + startTime + "' and '" + endTime + "') ");
+		}
+		selectSql.append(" group by case_author) as aa1 on p.staff_id=aa1.case_author ");
+
+		selectSql.append(
+				" left join (select case_author,coalesce(sum(actual_workload),0) checkout_num  from case_info a where a.clean_type=1 and ");
+		selectSql.append(serviceSort);
+		if (startTime != null && endTime != null) {
+			selectSql.append(" and (a.close_time between '" + startTime + "' and '" + endTime + "') ");
+		}
+		selectSql.append(" group by case_author) as aa2 on p.staff_id=aa2.case_author");
+
+		selectSql.append(
+				" left join (select case_author, coalesce(sum(actual_workload),0) overnight_num from case_info a where a.clean_type=2 and ");
+		selectSql.append(serviceSort);
+		if (startTime != null && endTime != null) {
+			selectSql.append(" and (a.close_time between '" + startTime + "' and '" + endTime + "') ");
+		}
+		selectSql.append(" group by case_author) as aa3 on p.staff_id=aa3.case_author ");
+
+		System.out.println("selectSql:" + selectSql);
+		Query query = em.createNativeQuery(selectSql.toString());
+		@SuppressWarnings("unchecked")
+		List<Object> list = query.getResultList();
 		em.close();
 		return list;
 	}

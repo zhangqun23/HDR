@@ -1,6 +1,7 @@
 package com.mvc.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,34 +25,78 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 	@Autowired
 	WorkLoadDao workLoadDao;
 
-	// 获取所有员工工作量汇总列表信息
+	// 获取所有员工工作量汇总列表
 	@Override
 	public List<WorkLoad> getWorkLoadSummaryList(String startTime, String endTime) {
+
+		List<Object> listSource = workLoadDao.getWorkRecordSummary(startTime, endTime);
+		Iterator<Object> it = listSource.iterator();
+		List<WorkLoad> listGoal = objToWorkLoad(it);
+
+		return listGoal;
+	}
+
+	private List<WorkLoad> objToWorkLoad(Iterator<Object> it) {
+		List<WorkLoad> listGoal = new ArrayList<WorkLoad>();
+		Object[] obj = null;
 		WorkLoad workLoad = null;
-		List<Object> objectList = workLoadDao.getRoomNumByPrame(startTime, endTime);
 
-		List<WorkLoad> workLoadList = new ArrayList<WorkLoad>();
-		for (int i = 0; i < objectList.size(); i++) {
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
 			workLoad = new WorkLoad();
-			Integer orderNum = i + 1;
-			workLoad.setOrderNum(orderNum.toString());
 
-			Object[] object = (Object[]) objectList.get(i);
-			workLoad.setStaffName(object[0].toString());
-			workLoad.setStaffNo(object[1].toString());
-			if (object[2] != null && !object[2].equals(0.0))
-				workLoad.setCleanRoom(object[2].toString());
-			if (object[3] != null && !object[3].equals(0.0))
-				workLoad.setCheckoutRoom(object[3].toString());
-			if (object[4] != null && !object[4].equals(0.0))
-				workLoad.setOvernightRoom(object[4].toString());
-			workLoadList.add(workLoad);
+			workLoad.setStaffNo(obj[0].toString());
+			workLoad.setStaffName(obj[1].toString());
+			workLoad.setCleanRoom(obj[2].toString());// 抹尘房总工作量
+			workLoad.setCheckoutRoom(obj[3].toString());// 离退房总工作量
+			workLoad.setOvernightRoom(obj[4].toString());// 过夜房总工作量
+
+			workLoad.setActualLoad(obj[5].toString());// 实际总工作量
+			workLoad.setBeyondLoad(obj[6].toString());// 超出总工作量
+
+			listGoal.add(workLoad);
 		}
+		// 按员工实际工作量进行排序并编号
+		sortAndWrite(listGoal, "staffNo", true, "rank");
 
-		// 分别对抹尘房、过夜房、离退房排序并编号
-		sortAndWrite(workLoadList, "staffNo", false, "rank");
+		Iterator<WorkLoad> itGoal = listGoal.iterator();
+		int i = 0;
+		workLoad = null;
+		while (itGoal.hasNext()) {
+			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
+			workLoad = (WorkLoad) itGoal.next();
+			workLoad.setOrderNum(String.valueOf(i));
+		}
+		return listGoal;
+	}
 
-		return workLoadList;
+	// 获取所有员工工作量饱和度分析列表
+	@Override
+	public List<WorkLoadLevel> getWorkLoadLevelList(String startTime, String endTime) {
+		List<WorkLoad> workLoadList = getWorkLoadSummaryList(startTime, endTime);
+		List<WorkLoadLevel> listGoal = toWorkLoadList(workLoadList);
+		return listGoal;
+	}
+
+	private List<WorkLoadLevel> toWorkLoadList(List<WorkLoad> it) {
+		List<WorkLoadLevel> listGoal = new ArrayList<WorkLoadLevel>();
+		WorkLoadLevel workLoadLevel = null;
+
+		for (int i = 0; i < it.size(); i++) {
+			Float beyondLevel = null;
+			String actualLoad = it.get(i).getActualLoad();
+			String beyondLoad = it.get(i).getBeyondLoad();
+			workLoadLevel = new WorkLoadLevel();
+
+			workLoadLevel.setOrderNum(String.valueOf(i+1));
+			workLoadLevel.setStaffNo(it.get(i).getStaffNo());
+			workLoadLevel.setStaffName(it.get(i).getStaffName());
+			workLoadLevel.setActualLoad(actualLoad);
+			workLoadLevel.setBeyondLoad(beyondLoad);
+
+			listGoal.add(workLoadLevel);
+		}
+		return listGoal;
 	}
 
 	/**
@@ -69,12 +114,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		CollectionUtil<WorkLoad> collectionUtil = new CollectionUtil<WorkLoad>();
 		collectionUtil.workLoadWriteSort(list, writeField);
-	}
-
-	// 获取所有员工工作量饱和度分析列表
-	@Override
-	public List<WorkLoadLevel> getWorkLoadLevelList(String startTime, String endTime) {
-		return null;
 	}
 
 }

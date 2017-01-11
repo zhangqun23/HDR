@@ -71,9 +71,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			workHouse.setNum_leave(obj[6].toString());// 离退房数量
 			workHouse.setTotal_time_leave(obj[7].toString());// 离退房总用时
 
-			workHouse.setAvg_time_dust(StringUtil.divide(obj[3].toString(), obj[2].toString()));// 抹尘房平均用时
-			workHouse.setAvg_time_night(StringUtil.divide(obj[5].toString(), obj[4].toString()));// 过夜房平均用时
-			workHouse.setAvg_time_leave(StringUtil.divide(obj[7].toString(), obj[6].toString()));// 离退房平均用时
+			String avg_time_dust = StringUtil.divide(obj[3].toString(), obj[2].toString());
+			workHouse.setAvg_time_dust(Float.valueOf(avg_time_dust));// 抹尘房平均用时
+			String avg_time_night = StringUtil.divide(obj[5].toString(), obj[4].toString());
+			workHouse.setAvg_time_night(Float.valueOf(avg_time_night));// 过夜房平均用时
+			String avg_time_leave = StringUtil.divide(obj[7].toString(), obj[6].toString());
+			workHouse.setAvg_time_leave(Float.valueOf(avg_time_leave));// 离退房平均用时
 
 			listGoal.add(workHouse);
 		}
@@ -98,7 +101,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	 * 排序并插入序号
 	 * 
 	 * @param list
-	 * @param filedName
+	 * @param filedNamezg
 	 *            按指定字段排序
 	 * @param ascFlag
 	 *            true升序,false降序

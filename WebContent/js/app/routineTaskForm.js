@@ -222,6 +222,10 @@ app
 													var lineData = [];// 最终传入chart1中的data
 													allAverageData = [];// 全体员工做房时间的平均Data
 													averageData = [];// 个人平均用时
+													var userData=[];
+													for(var item in data.list){
+														userData.push(data.list[item].use_time);
+													}
 													switch (nowQuarter) {
 													case 0:
 														xAxis = [ '1月', '2月',
@@ -283,7 +287,7 @@ app
 													combine(lineData, "全体平均用时",
 															allAverageData);
 													combine(lineData, lineName,
-															data.list);
+															userData);
 													lineChartForm(lineData,
 															"#lineChart1",
 															title, xAxis, yAxis);

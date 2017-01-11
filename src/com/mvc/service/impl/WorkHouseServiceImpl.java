@@ -125,16 +125,18 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String endTime = StringUtil.quarterLastDay(year, quarter);
 			map.put("startTime", startTime);
 			map.put("endTime", endTime);
-			startMonth = startTime.substring(startTime.indexOf("-"), 6);// 截取月份
-			endMonth = endTime.substring(endTime.indexOf("-"), 6);
+			startMonth = startTime.substring(startTime.indexOf("-") + 1, 7);// 截取月份
+			endMonth = endTime.substring(endTime.indexOf("-") + 1, 7);
 		}
 
 		List<Object> monthList = workHouseDao.selectMonthWorkTime(map);// 获取员工每个月做房用时
-		List<String> monthListStr = perMonth(monthList, startMonth, endMonth);
+		List<Integer> monthListStr = perMonth(monthList, startMonth, endMonth);
 		jsonObject.put("list", monthListStr);
 
 		String staffId = (String) map.remove("staffId");// 去掉staffId
 		Object[] obj = null;
+		String averWorkTime = null;
+		Boolean flag = true;
 		Long sumNum = (long) 0;
 		Long sumTime = (long) 0;
 		List<Object> averList = workHouseDao.selectAllAverWorkTime(map);// 获取全体员工平均做房用时
@@ -143,13 +145,16 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			obj = (Object[]) it.next();
 			sumNum += Long.valueOf(obj[1].toString());
 			sumTime += Long.valueOf(obj[2].toString());
-			if (obj[0].toString().trim().equals(staffId)) {
-				String averWorkTime = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均做房用时
-				jsonObject.put("averWorkTime", averWorkTime);
+			if (flag) {
+				if (obj[0].toString().trim().equals(staffId)) {
+					averWorkTime = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均做房用时
+					flag = false;
+				}
 			}
 		}
+		jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
 		String allAverWorkTime = StringUtil.divide(sumTime.toString(), sumNum.toString());
-		jsonObject.put("allAverWorkTime", allAverWorkTime);// 全体员工平均做房用时
+		jsonObject.put("allAverWorkTime", Float.valueOf(allAverWorkTime));// 全体员工平均做房用时
 
 		return jsonObject.toString();
 	}
@@ -162,21 +167,26 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	 * @param endMonth
 	 * @return
 	 */
-	private List<String> perMonth(List<Object> list, String startMonth, String endMonth) {
-		List<String> listGoal = new ArrayList<String>();
+	private List<Integer> perMonth(List<Object> list, String startMonth, String endMonth) {
+		List<Integer> listGoal = new ArrayList<Integer>();
 		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth);
+			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer size = list.size();
 
 			Object[] obj = null;
 			Integer month = null;
-			for (int i = 0, j = 0; i < list.size() && j < len; i++, j++) {
-				obj = (Object[]) list.get(i);
-				month = Integer.valueOf(obj[0].toString());
-				if (month == j) {
-					listGoal.add(obj[1].toString());
+			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+				if (i < size) {
+					obj = (Object[]) list.get(i);
+					month = Integer.valueOf(obj[0].toString());
+					if (month == j) {
+						listGoal.add(Integer.valueOf(obj[1].toString()));
+					} else {
+						listGoal.add(0);
+						i--;
+					}
 				} else {
-					listGoal.add("0");
-					i--;
+					listGoal.add(0);
 				}
 			}
 		}

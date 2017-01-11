@@ -83,7 +83,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 			sql.append(" and cs.depart_id='" + deptId + "'");
 		}
 		if (cleanType != null) {
-			sql.append(" and cs.clean_type='" + cleanType + "'");
+			sql.append(" and cs.clean_type=" + cleanType);
 		}
 		if (staffId != null) {
 			sql.append(" and cs.case_author='" + staffId + "'");

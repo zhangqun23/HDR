@@ -10,6 +10,7 @@ import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.service.WorkLoadService;
+import com.utils.CollectionUtil;
 
 /**
  * 工作量相关的service层接口实现
@@ -26,13 +27,12 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 	// 获取所有员工工作量汇总列表信息
 	@Override
 	public List<WorkLoad> getWorkLoadSummaryList(String startTime, String endTime) {
-
+		WorkLoad workLoad = null;
 		List<Object> objectList = workLoadDao.getRoomNumByPrame(startTime, endTime);
 
 		List<WorkLoad> workLoadList = new ArrayList<WorkLoad>();
 		for (int i = 0; i < objectList.size(); i++) {
-			WorkLoad workLoad = new WorkLoad();
-
+			workLoad = new WorkLoad();
 			Integer orderNum = i + 1;
 			workLoad.setOrderNum(orderNum.toString());
 
@@ -47,13 +47,33 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 				workLoad.setOvernightRoom(object[4].toString());
 			workLoadList.add(workLoad);
 		}
+
+		// 分别对抹尘房、过夜房、离退房排序并编号
+		sortAndWrite(workLoadList, "staffNo", false, "rank");
+
 		return workLoadList;
+	}
+
+	/**
+	 * 排序并插入序号
+	 * 
+	 * @param list
+	 * @param filedName
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @param writeField
+	 *            向指定字段插入序号
+	 */
+	private void sortAndWrite(List<WorkLoad> list, String filedName, boolean ascFlag, String writeField) {
+		CollectionUtil.sort(list, filedName, ascFlag);
+		CollectionUtil<WorkLoad> collectionUtil = new CollectionUtil<WorkLoad>();
+		collectionUtil.workLoadWriteSort(list, writeField);
 	}
 
 	// 获取所有员工工作量饱和度分析列表
 	@Override
 	public List<WorkLoadLevel> getWorkLoadLevelList(String startTime, String endTime) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

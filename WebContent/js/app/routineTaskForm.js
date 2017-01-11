@@ -124,6 +124,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	// zq获取做房效率列表
+	services.selectWorkEfficiencyByLimits = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workHouse/selectWorkEfficiencyByLimits.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 app
@@ -177,10 +185,16 @@ app
 								cleanType : "0",
 								staffId : ""
 							};
-							// zq做房用时分析界面设置条件
+							// zq做房效率统计界面设置条件
 							reportForm.wefLimit = {
 								startTime : "",
 								endTime : ""
+							};
+							// zq做房效率分析界面设置条件
+							reportForm.weafLimit = {
+								checkYear : "",
+								quarter : "0",
+								staffId : ""
 							};
 							// zq公共函数始
 							function preventDefault(e) {
@@ -213,6 +227,11 @@ app
 								}
 								if (reportForm.limit.roomType == "") {
 									alert("请选择房间类型！");
+									return false;
+								}
+								if (compareDateTime(reportForm.limit.startTime,
+										reportForm.limit.endTime)) {
+									alert("截止时间不能大于开始时间！");
 									return false;
 								}
 								var workHouseLimit = JSON
@@ -262,8 +281,8 @@ app
 													var lineName = getSelectedStaff(reportForm.whaLimit.staffId)
 															+ "员工做房用时";
 													var lineData = [];// 最终传入chart1中的data
-													allAverageData = [];// 全体员工做房时间的平均Data
-													averageData = [];// 个人平均用时
+													var allAverageData = [];// 全体员工做房时间的平均Data
+													var averageData = [];// 个人平均用时
 													var userData = [];
 													for ( var item in data.list) {
 														userData
@@ -334,6 +353,12 @@ app
 													lineChartForm(lineData,
 															"#lineChart1",
 															title, xAxis, yAxis);
+													$('#chart1-svg')
+															.val(
+																	$(
+																			"#lineChart1")
+																			.highcharts()
+																			.getSVG());
 												});
 							}
 							// zq生成平均值的数组
@@ -371,8 +396,7 @@ app
 									subTitle : ''
 								});
 								chart1.init();
-								$('#chart1-svg').val(
-										$("#lineChart1").highcharts().getSVG());
+
 							}
 							// zq获取房间类型下拉表
 							function selectRoomSorts() {
@@ -435,6 +459,12 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
+								if (compareDateTime(
+										reportForm.wefLimit.startTime,
+										reportForm.wefLimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
 								var workEfficiencyLimit = JSON
 										.stringify(reportForm.wefLimit);
 								services.selectWorkEfficiencyByLimits({
@@ -449,9 +479,125 @@ app
 								});
 
 							}
-							//zq员工做房效率折线图
-							reportForm.selectWorkEfficiencyByLimits=function(){
-								
+							// zq员工做房效率折线图
+							reportForm.selectUserWorkEfficiencyByLimits = function() {
+								if (reportForm.weafLimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (reportForm.weafLimit.quarter == "") {
+									alert("请选择查询季度！");
+									return false;
+								}
+								if (reportForm.weafLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								var workEffAnalyseLimit = JSON
+										.stringify(reportForm.weafLimit);
+								services
+										.selectUserWorkEfficiencyByLimits({
+											limit : workEffAnalyseLimit
+										})
+										.success(
+												function(data) {
+													var title = "客房员工工作效率分析折线图";// 折线图标题显示
+													var xAxis = [];// 横坐标显示
+													var yAxis = "做房效率";// 纵坐标显示
+													var nowQuarter = reportForm.weafLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(reportForm.weafLimit.staffId)
+															+ "员工做房效率";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工做房效率的平均Data
+													var averageData = [];// 个人平均做房效率
+													var userData = [];
+													for ( var item in data.list) {
+														userData
+																.push(data.list[item]);
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkEfficiency,
+																12);
+														averageData = getAverageData(
+																data.averWorkEfficiency,
+																12);
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkEfficiency,
+																3);
+														averageData = getAverageData(
+																data.averWorkEfficiency,
+																3);
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkEfficiency,
+																3);
+														averageData = getAverageData(
+																data.averWorkEfficiency,
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkEfficiency,
+																3);
+														averageData = getAverageData(
+																data.averWorkEfficiency,
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkEfficiency,
+																3);
+														averageData = getAverageData(
+																data.averWorkEfficiency,
+																3);
+														break;
+													}
+													lineData = [];
+													combine(lineData, "个人平均效率",
+															averageData);
+													combine(lineData, "全体平均效率",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+													lineChartForm(lineData,
+															"#lineChart1",
+															title, xAxis, yAxis);
+													$('#chart1-svg')
+															.val(
+																	$(
+																			"#lineChart1")
+																			.highcharts()
+																			.getSVG());
+												});
+							}
+							// zq比较两个时间的大小
+							function compareDateTime(startDate, endDate) {
+								var date1 = new Date(startDate);
+								var date2 = new Date(endDate);
+								if (date2.getTime() < date1.getTime()) {
+									return true;
+								} else {
+									return false;
+								}
 							}
 							// zq初始化
 							function initData() {
@@ -474,7 +620,6 @@ app
 										'/workHouseAnalyseForm') == 0) {
 									selectRoomStaffs();
 									selectRoomSorts();
-									allAverageData = [];// 全体员工做房时间的平均Data
 
 								} else if ($location.path().indexOf(
 										'/reportForm') == 0) {

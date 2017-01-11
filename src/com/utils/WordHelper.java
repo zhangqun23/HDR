@@ -56,14 +56,16 @@ public class WordHelper<T> {
 			generateWord(doc, contentMap);
 
 			// 解析map中的多个list，并根据表头动态生成word表格
-			Iterator<Entry<String, Object>> it = listMap.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry<String, Object> entry = it.next();
-				Integer tableOrder = Integer.valueOf(entry.getKey());
-				Object val = entry.getValue();
-				Collection<T> list = (Collection<T>) val;
-				// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
-				dynamicWord(doc, list, tableOrder);
+			if (listMap != null) {
+				Iterator<Entry<String, Object>> it = listMap.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry<String, Object> entry = it.next();
+					Integer tableOrder = Integer.valueOf(entry.getKey());
+					Object val = entry.getValue();
+					Collection<T> list = (Collection<T>) val;
+					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
+					dynamicWord(doc, list, tableOrder);
+				}
 			}
 			write2007Out(doc, out);
 		} catch (FileNotFoundException e) {

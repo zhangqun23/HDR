@@ -65,8 +65,14 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 
 // 路由配置
 app.config([ '$routeProvider', function($routeProvider) {
-	$routeProvider.when('/reportForm', {
-		templateUrl : '/HDR/jsp/routineTaskForm/reportForm.html',
+	$routeProvider.when('/workloadForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workloadForm.html',
+		controller : 'ReportController'
+	}).when('/workloadAnalysis', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workloadAnalysis.html',
+		controller : 'ReportController'
+	}).when('/workloadSaturationForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workloadSaturationForm.html',
 		controller : 'ReportController'
 	}).when('/workHouseForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workHouseForm.html',

@@ -118,15 +118,20 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 		String year = (String) map.remove("checkYear");
 		String quarter = (String) map.remove("quarter");
+		String startMonth = null;
+		String endMonth = null;
 		if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
 			String startTime = StringUtil.quarterFirstDay(year, quarter);
 			String endTime = StringUtil.quarterLastDay(year, quarter);
 			map.put("startTime", startTime);
 			map.put("endTime", endTime);
+			startMonth = startTime.substring(startTime.indexOf("-"), 6);// 截取月份
+			endMonth = endTime.substring(endTime.indexOf("-"), 6);
 		}
 
 		List<Object> monthList = workHouseDao.selectMonthWorkTime(map);// 获取员工每个月做房用时
-		jsonObject.put("list", monthList);
+		List<String> monthListStr = perMonth(monthList, startMonth, endMonth);
+		jsonObject.put("list", monthListStr);
 
 		String staffId = (String) map.remove("staffId");// 去掉staffId
 		Object[] obj = null;
@@ -147,6 +152,35 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		jsonObject.put("allAverWorkTime", allAverWorkTime);// 全体员工平均做房用时
 
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 去掉月份列，缺少的月份的列置为0
+	 * 
+	 * @param list
+	 * @param startMonth
+	 * @param endMonth
+	 * @return
+	 */
+	private List<String> perMonth(List<Object> list, String startMonth, String endMonth) {
+		List<String> listGoal = new ArrayList<String>();
+		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
+			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth);
+
+			Object[] obj = null;
+			Integer month = null;
+			for (int i = 0, j = 0; i < list.size() && j < len; i++, j++) {
+				obj = (Object[]) list.get(i);
+				month = Integer.valueOf(obj[0].toString());
+				if (month == j) {
+					listGoal.add(obj[1].toString());
+				} else {
+					listGoal.add("0");
+					i--;
+				}
+			}
+		}
+		return listGoal;
 	}
 
 }

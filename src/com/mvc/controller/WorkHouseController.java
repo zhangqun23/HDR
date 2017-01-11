@@ -181,6 +181,7 @@ public class WorkHouseController {
 
 		Map<String, Object> map = JsonObjToMapUser(jsonObject);
 		String str = workHouseService.selectUserWorkHouseByLimits(map);
+		System.out.println("做房用时分析：" + str);
 		return str;
 	}
 

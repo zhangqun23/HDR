@@ -185,6 +185,18 @@ app
 							// zq公共函数终
 							// zq根据条件查找做房时间列表
 							reportForm.selectWorkHouseByLimits = function() {
+								if (reportForm.limit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.limit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if ( reportForm.limit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
 								var workHouseLimit = JSON
 										.stringify(reportForm.limit);
 								services.selectWorkHouseByLimits({
@@ -200,6 +212,18 @@ app
 							}
 							// zq根据查询条件绘制员工做房用时分析折线图
 							reportForm.selectUserWorkHouseByLimits = function() {
+								if (reportForm.whalimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (reportForm.whalimit.roomType == "") {
+								alert("请选择房间类型！");
+								return false;
+							}
+								if (reportForm.whalimit.staffId == "") {
+								alert("请选择查询员工！");
+								return false;
+							}
 								var userWorkHouseLimit = JSON
 										.stringify(reportForm.whalimit);
 								services
@@ -222,9 +246,10 @@ app
 													var lineData = [];// 最终传入chart1中的data
 													allAverageData = [];// 全体员工做房时间的平均Data
 													averageData = [];// 个人平均用时
-													var userData=[];
-													for(var item in data.list){
-														userData.push(data.list[item].use_time);
+													var userData = [];
+													for ( var item in data.list) {
+														userData
+																.push(data.list[item].use_time);
 													}
 													switch (nowQuarter) {
 													case 0:
@@ -328,12 +353,8 @@ app
 									subTitle : ''
 								});
 								chart1.init();
-								$('#chart1-svg')
-								.val(
-										$(
-												"#lineChart1")
-												.highcharts()
-												.getSVG());	
+								$('#chart1-svg').val(
+										$("#lineChart1").highcharts().getSVG());
 							}
 							// 获取房间类型下拉表
 							function selectRoomSorts() {

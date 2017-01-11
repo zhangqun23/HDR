@@ -83,8 +83,12 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/workEfficiencyForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workEfficiencyForm.html',
 		controller : 'ReportController'
+	}).when('/workEffAnalyseForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workEffAnalyseForm.html',
+		controller : 'ReportController'
 	})
 } ]);
+
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
@@ -266,7 +270,7 @@ app
 																.push(data.list[item].use_time);
 													}
 													switch (nowQuarter) {
-													case 0:
+													case '0':
 														xAxis = [ '1月', '2月',
 																'3月', '4月',
 																'5月', '6月',
@@ -421,68 +425,33 @@ app
 								return staffName;
 							}
 
-							reportForm.xianshi = function() {
-								var title = "客房员工 "
-										+ " "
-										+ getSelectedRoomType(reportForm.whaLimit.roomType)
-										+ " "
-										+ getSelectedCleanType(reportForm.whaLimit.cleanType)
-										+ " " + "做房用时分析折线图";// 折线图标题显示
-								var xAxis = [];// 横坐标显示
-								var yAxis = "做房用时/分钟";// 纵坐标显示
-								var nowQuarter = reportForm.whaLimit.quarter;// 当前的选择季度
-								var lineName = getSelectedStaff(reportForm.whaLimit.staffId)
-										+ "员工做房用时";
-								var lineData = [];// 最终传入chart1中的data
-								allAverageData = [];// 全体员工做房时间的平均Data
-								averageData = [];// 个人平均用时
-								switch (nowQuarter) {
-								case '0':
-									xAxis = [ '1月', '2月', '3月', '4月', '5月',
-											'6月', '7月', '8月', '9月', '10月',
-											'11月', '12月' ];
-									allAverageData = getAverageData(23, 12);
-									averageData = getAverageData(22, 12);
-									break;
-								case '1':
-									xAxis = [ '1月', '2月', '3月' ];
-									allAverageData = getAverageData(22, 3);
-									averageData = getAverageData(24, 3);
-									break;
-								case '2':
-									xAxis = [ '4月', '5月', '6月' ];
-									allAverageData = getAverageData(24, 3);
-									averageData = getAverageData(23, 3);
-									break;
-								case '3':
-									xAxis = [ '7月', '8月', '9月' ];
-									allAverageData = getAverageData(22, 3);
-									averageData = getAverageData(21, 3);
-									break;
-								case '4':
-									xAxis = [ '10月', '11月', '12月' ];
-									allAverageData = getAverageData(22, 3);
-									averageData = getAverageData(25, 3);
-									break;
-								}
-								console.log("hengzhou" + xAxis);
-								console.log("heng" + averageData);
-								console.log("zhou" + allAverageData);
-								combine(lineData, "个人平均用时", averageData);
-								combine(lineData, "全体平均用时", allAverageData);
-								lineChartForm(lineData, "#lineChart1", title,
-										xAxis, yAxis);
-
-							}
-							// 员工做房效率统计
+							// zq员工做房效率统计
 							reportForm.selectWorkEfficiencyByLimits = function() {
+								if (reportForm.wefLimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.wefLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
 								var workEfficiencyLimit = JSON
 										.stringify(reportForm.wefLimit);
 								services.selectWorkEfficiencyByLimits({
-									limit : workEfficiencyLimits
+									limit : workEfficiencyLimit
 								}).success(function(data) {
+									reportForm.workEfficiencyList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
 								});
 
+							}
+							//zq员工做房效率折线图
+							reportForm.selectWorkEfficiencyByLimits=function(){
+								
 							}
 							// zq初始化
 							function initData() {
@@ -513,6 +482,10 @@ app
 								} else if ($location.path().indexOf(
 										'/workEfficiencyForm') == 0) {
 
+								} else if ($location.path().indexOf(
+										'/workEffAnalyseForm') == 0) {
+									selectRoomStaffs();
+									selectRoomSorts();
 								}
 							}
 							initData();

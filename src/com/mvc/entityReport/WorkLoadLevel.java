@@ -11,7 +11,7 @@ public class WorkLoadLevel {
 	private String orderNum;// 序号
 	private String staffName;// 员工姓名
 	private String staffNo;// 员工编号
-	private String ratedLoad;// 额定工作量
+	// private String ratedLoad;// 额定工作量
 	private String actualLoad;// 实际工作量
 	private String beyondLoad;// 超出工作量
 	private String outOfRang;// 超出幅度
@@ -40,13 +40,13 @@ public class WorkLoadLevel {
 		this.staffNo = staffNo;
 	}
 
-	public String getRatedLoad() {
-		return ratedLoad;
-	}
-
-	public void setRatedLoad(String ratedLoad) {
-		this.ratedLoad = ratedLoad;
-	}
+	// public String getRatedLoad() {
+	// return ratedLoad;
+	// }
+	//
+	// public void setRatedLoad(String ratedLoad) {
+	// this.ratedLoad = ratedLoad;
+	// }
 
 	public String getActualLoad() {
 		return actualLoad;

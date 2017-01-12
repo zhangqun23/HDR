@@ -74,18 +74,17 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/typeForm', {
 		templateUrl : '/HDR/jsp/customerService/typeForm.html',
 		controller : 'CustomerServiceController'
-	}).when('/linenExpendForm', {
+	})
+	.when('/linenExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/linenExpendForm.html',
 		controller : 'CustomerServiceController'
-	}) 
-	.when('/roomExpendForm', {
+	}).when('/roomExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/roomExpendForm.html',
 		controller : 'CustomerServiceController'
-	}) 
-	.when('/washExpendForm', {
+	}).when('/washExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/washExpendForm.html',
 		controller : 'CustomerServiceController'
-	}) 
+	})
 } ]);
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
@@ -95,33 +94,23 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectDep = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'CustomerServiceInformation/selectDep.do',
+			url : baseUrl + 'user/selectDep.do',
 			data : data
 		});
-	
-	    };
-	 // wq选择统计时间区间
-		services.selectExpendTimeByLimits = function(data) {
-			return $http({
-				method : 'post',
-				url : baseUrl + 'CustomerServiceInformation/selectExpendTimeBylimits.do',
-				data : data
-				});
-			};
-			//wq选择报表类型
-		    services.getformType = function(data) {
-			    return $http({
-				    method : 'post',
-				    url : baseUrl + 'CustomerServiceInformation/getformType.do',
-				    data : data
-			    });
-	    return services;
-	
 	};
+	 // wq选择布草消耗
+	services.selectExpendFormByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'expendForm/selectExpendFormBylimits.do',
+			data : data
+			});
+		};
 
 	return services;
 } ]);
-app.controller(
+app
+		.controller(
 				'CustomerServiceController',
 				[
 						'$scope',
@@ -129,7 +118,12 @@ app.controller(
 						'$location',
 						function($scope, services, $location) {
 							var reportForm = $scope;
-							
+							// wq布草统计界面设置条件
+							reportForm.limit = {
+								startTime : "",
+								endTime : "",
+								formType : ""
+							};
 							// wq选择报表类型默认值
 							reportForm.formTypes = [ {
 								id : 0,
@@ -141,17 +135,7 @@ app.controller(
 								id : 2,
 								type : "对客服务"
 							} ];
-								//wq界面初始条件设置
-							reportForm.limit = {
-								formType : "0",
-								};
-								// wq布草和耗品统计界面设置条件
-							reportForm.limit = {
-								startTime : "",
-								endTime : "",
-								formType : ""
-							};
-					
+
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)
@@ -162,25 +146,28 @@ app.controller(
 									return false;
 								}
 							}
-				
-								
-								// wq根据条件查找布草消耗列表
-							reportForm.selectExpendTimeByLimits = function() {
-								if (linenExpendForm.limit.startTime == "") {
+							// wq根据条件查找布草消耗列表
+							reportForm.selectExpendFormByLimits = function() {
+								if (reportForm.limit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
 								}
-								if (linenExpendForm.limit.endTime == "") {
+								if (reportForm.limit.endTime == "") {
 									alert("请选择截止时间！");
 									return false;
 								}
-								if ( linenExpendForm.limit.formType == "") {
+								if (compareDateTime(reportForm.limit.startTime,
+										reportForm.limit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.limit.formType == "") {
 									alert("请选择报表类型！");
 									return false;
 								}
 								var expendFormLimit = JSON
 										.stringify(expendForm.limit);
-								services.selectExpendTimeByLimits({
+								services.selectExpendFormByLimits({
 									limit : expendFormLimit
 								}).success(function(data) {
 									reportForm.expendFormList = data.list;
@@ -191,7 +178,16 @@ app.controller(
 									}
 								});
 							} 
-							
+							// wq比较两个时间的大小
+							function compareDateTime(startDate, endDate) {
+								var date1 = new Date(startDate);
+								var date2 = new Date(endDate);
+								if (date2.getTime() < date1.getTime()) {
+									return true;
+								} else {
+									return false;
+								}
+							}
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -201,19 +197,7 @@ app.controller(
 								} else if ($location.path().indexOf(
 										'/typeForm') == 0) {
 									 
-								}else if($location.path().indexOf(
-								'/linenExpendForm') == 0){
-									
 								}
-								
 							}
 							initData();
-						}
-						
-						
-						
-						]);
-
-		
-					
-
+						} ]);

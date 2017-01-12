@@ -12,18 +12,18 @@
 			<form action="exportDepWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "><label>—</label><input
-						type="text" name="endTime" ng-model="endTime"
+					<li><label>起止日期</label><input type="text" name="limit.startTime"
+						ng-model="limit.startTime" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="limit.endTime" ng-model="limit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
-					style="width: 140px" ng-model="limit.formType" name="formType"
+					style="width: 140px" ng-model="limit.formType" name="limit.formType"
 					required><option value="">请选择</option>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectlinenExpend()"></li>
+						type="button" value="查询" ng-click="selectExpendFormByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>

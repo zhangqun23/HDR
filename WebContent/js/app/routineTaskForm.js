@@ -132,6 +132,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	services.selectUserWorkEfficiencyByLimits = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workHouse/selectUserWorkEfficiencyByLimits.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -196,6 +203,8 @@ app
 								quarter : "0",
 								staffId : ""
 							};
+							// 获取房间类型名称
+							reportForm.sortName = "";
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -601,7 +610,7 @@ app
 							}
 							// zq当房型下拉框变化时获取房型名字
 							reportForm.getSortNameByNo = function() {
-								var no=$("#roomSortType").val();
+								var no = $("#roomSortType").val();
 								reportForm.sortName = getSelectedRoomType(no);
 							}
 							// zq初始化

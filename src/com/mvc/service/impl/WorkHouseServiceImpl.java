@@ -10,10 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkHouseDao;
+import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.WorkHouse;
+import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
 import com.utils.StringUtil;
+
+import net.sf.json.JSONObject;
 
 /**
  * 部门员工做房统计业务层实现
@@ -26,10 +30,15 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 	@Autowired
 	WorkHouseDao workHouseDao;
+	@Autowired
+	DepartmentInfoRepository departmentInfoRepository;
 
 	// 查询员工做房
 	@Override
 	public List<WorkHouse> selectWorkHouse(Map<String, Object> map) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+
 		List<Object> listSource = workHouseDao.selectWorkHouse(map);
 		Iterator<Object> it = listSource.iterator();
 		List<WorkHouse> listGoal = objToWorkHouse(it);
@@ -45,6 +54,7 @@ a
 		return null;
 	}
 
+	// 计算及排序
 	private List<WorkHouse> objToWorkHouse(Iterator<Object> it) {
 		List<WorkHouse> listGoal = new ArrayList<WorkHouse>();
 		Object[] obj = null;
@@ -99,6 +109,88 @@ a
 		CollectionUtil.sort(list, filedName, ascFlag);
 		CollectionUtil<WorkHouse> collectionUtil = new CollectionUtil<WorkHouse>();
 		collectionUtil.writeSort(list, writeField);
+	}
+
+	// 获取单个用户做房用时
+	@Override
+	public String selectUserWorkHouseByLimits(Map<String, Object> map) {
+		JSONObject jsonObject = new JSONObject();
+
+		String year = (String) map.remove("checkYear");
+		String quarter = (String) map.remove("quarter");
+		String startMonth = null;
+		String endMonth = null;
+		if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
+			String startTime = StringUtil.quarterFirstDay(year, quarter);
+			String endTime = StringUtil.quarterLastDay(year, quarter);
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
+			startMonth = startTime.substring(startTime.indexOf("-") + 1, 7);// 截取月份
+			endMonth = endTime.substring(endTime.indexOf("-") + 1, 7);
+		}
+
+		List<Object> monthList = workHouseDao.selectMonthWorkTime(map);// 获取员工每个月做房用时
+		List<Integer> monthListStr = perMonth(monthList, startMonth, endMonth);
+		jsonObject.put("list", monthListStr);
+
+		String staffId = (String) map.remove("staffId");// 去掉staffId
+		Object[] obj = null;
+		String averWorkTime = null;
+		Boolean flag = true;
+		Long sumNum = (long) 0;
+		Long sumTime = (long) 0;
+		List<Object> averList = workHouseDao.selectAllAverWorkTime(map);// 获取全体员工平均做房用时
+		Iterator<Object> it = averList.iterator();
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
+			sumNum += Long.valueOf(obj[1].toString());
+			sumTime += Long.valueOf(obj[2].toString());
+			if (flag) {
+				if (obj[0].toString().trim().equals(staffId)) {
+					averWorkTime = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均做房用时
+					flag = false;
+				}
+			}
+		}
+		jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
+		String allAverWorkTime = StringUtil.divide(sumTime.toString(), sumNum.toString());
+		jsonObject.put("allAverWorkTime", Float.valueOf(allAverWorkTime));// 全体员工平均做房用时
+
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 去掉月份列，缺少的月份的列置为0
+	 * 
+	 * @param list
+	 * @param startMonth
+	 * @param endMonth
+	 * @return
+	 */
+	private List<Integer> perMonth(List<Object> list, String startMonth, String endMonth) {
+		List<Integer> listGoal = new ArrayList<Integer>();
+		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
+			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer size = list.size();
+
+			Object[] obj = null;
+			Integer month = null;
+			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+				if (i < size) {
+					obj = (Object[]) list.get(i);
+					month = Integer.valueOf(obj[0].toString());
+					if (month == j) {
+						listGoal.add(Integer.valueOf(obj[1].toString()));
+					} else {
+						listGoal.add(0);
+						i--;
+					}
+				} else {
+					listGoal.add(0);
+				}
+			}
+		}
+		return listGoal;
 	}
 
 }

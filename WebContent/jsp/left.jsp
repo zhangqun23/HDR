@@ -10,19 +10,19 @@
 			</div>
 			<ul id="report-ul" class="menuson">
 				<li id="workLoad"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadForm">员工工作量统计</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workloadForm">员工工作量统计</a><i></i></li>
 				<li id="workLoad"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadAnalysis">员工工作量分析</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workloadAnalysis">员工工作量分析</a><i></i></li>
 				<li id="workLoad"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadSaturationForm">员工工作量饱和度分析</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workloadSaturationForm">员工工作量饱和度分析</a><i></i></li>
 				<li id="doRoomTime"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
 				<li id="doRoomAnalyse"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseAnalyseForm">做房用时分析</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workHouseAnalyseForm">做房用时分析</a><i></i></li>
 				<li id="doHomeEffic"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workEfficiencyForm">做房效率统计</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workEfficiencyForm">做房效率统计</a><i></i></li>
 					<li id="doHomeEffic"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workEffAnalyseForm">做房效率分析</a><i></i></li>
+					href="${ctx}/workHouse/toReportFormPage.do#/workEffAnalyseForm">做房效率分析</a><i></i></li>
 				<li id="suppplyUsage"><cite></cite> <a href="">客用品使用量统计</a><i></i></li>
 				<li id="leaderCheckHome"><cite></cite> <a href="">领班查房工作量/用时统计</a><i></i></li>
 			</ul>

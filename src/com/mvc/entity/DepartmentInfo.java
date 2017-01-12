@@ -1,38 +1,33 @@
 package com.mvc.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the department_info database table.
+ * 部门信息
  * 
+ * @author zhangqun
+ * @date 2016年12月8日
  */
 @Entity
-@Table(name="department_info")
-@NamedQuery(name="DepartmentInfo.findAll", query="SELECT d FROM DepartmentInfo d")
+@Table(name = "department_info")
 public class DepartmentInfo implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="department_id", unique=true, nullable=false, length=16)
-	private String departmentId;
-
-	@Column(name="department_name", length=32)
-	private String departmentName;
-
-	@Column(name="department_note", length=144)
-	private String departmentNote;
-
-	private int isdeleted;
-
-	@Column(name="parent_id", length=16)
-	private String parentId;
+	private String departmentId;// 部门ID，主键
+	private String departmentName;// 部门名称
+	private String departmentNote;// 部门说明
+	private Integer isdeleted;// 删除标志位，1删除，0未删除
+	private String parentId;// 所属父类ID
 
 	public DepartmentInfo() {
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "department_id", unique = true, nullable = false, length = 16)
 	public String getDepartmentId() {
 		return this.departmentId;
 	}
@@ -41,6 +36,7 @@ public class DepartmentInfo implements Serializable {
 		this.departmentId = departmentId;
 	}
 
+	@Column(name = "department_name", length = 32)
 	public String getDepartmentName() {
 		return this.departmentName;
 	}
@@ -49,6 +45,7 @@ public class DepartmentInfo implements Serializable {
 		this.departmentName = departmentName;
 	}
 
+	@Column(name = "department_note", length = 144)
 	public String getDepartmentNote() {
 		return this.departmentNote;
 	}
@@ -57,14 +54,15 @@ public class DepartmentInfo implements Serializable {
 		this.departmentNote = departmentNote;
 	}
 
-	public int getIsdeleted() {
+	public Integer getIsdeleted() {
 		return this.isdeleted;
 	}
 
-	public void setIsdeleted(int isdeleted) {
+	public void setIsdeleted(Integer isdeleted) {
 		this.isdeleted = isdeleted;
 	}
 
+	@Column(name = "parent_id", length = 16)
 	public String getParentId() {
 		return this.parentId;
 	}

@@ -71,7 +71,7 @@
 }
 
 .width3 {
-	width:3%;
+	width: 3%;
 }
 
 .width5 {
@@ -198,11 +198,13 @@
 	height: 30px;
 	margin-left: 5px;
 }
-.dateLayoutStyle{
+
+.dateLayoutStyle {
 	width: 90px;
 	height: 30px;
 	margin-left: 5px;
 }
+
 .projectListLimit li {
 	display: inline-block !important;
 	margin-top: 4px;
@@ -211,4 +213,8 @@
 
 .oneinline {
 	display: inline-block !important;
+}
+
+.tablestyle th{
+	text-align: center;
 }

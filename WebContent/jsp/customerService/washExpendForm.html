@@ -1,0 +1,96 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="">对客服务/卫生间易消耗品统计</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div>
+		<div>
+			<form action="exportDepWorkload.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>起止日期</label><input type="text" name="startTime"
+						ng-model="startTime" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "><label>—</label><input
+						type="text" name="endTime" ng-model="endTime"
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "></li>
+					<li><label>选择报表类型</label><select class="dfselect layoutStyle"
+					    style="width: 140px" ng-model="limit.formType" name="formType"
+					    required><option value="">请选择</option>
+						<option value="{{c.id}}" ng-repeat="c in formTypes">{{c.type}}</option></select></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectinfoCount()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+
+	</div>
+
+	<table class="tablelist">
+		<thead>
+			<tr>
+				<th class="a">序号</th>
+				<th class="a">房号</th>
+				<th class="a">牙具</th>
+				<th class="a">卷纸</th>
+		        <th class="a">洗发液</th>
+		        <th class="a">沐浴液</th>
+		        <th class="a">洗发素</th>
+		        <th class="a">润肤露</th>
+		        <th class="a">护理包</th>
+		        <th class="a">黑垃圾袋</th>
+		        <th class="a">抽纸</th>
+		        <th class="a">卫生袋</th>
+		        <th class="a">浴帽</th>
+		        <th class="a">剃须刨</th>
+		        <th class="a">梳子</th>
+		        <th class="a">擦鞋布</th>
+		        <th class="a">手皂</th>
+		        <th class="a">指甲锉</th>
+		        <th class="a">干花</th>
+		        <th class="a">浴盐</th>
+		        <th class="a">百洁布</th>
+		        <th class="a">橡皮手套</th>
+		        <th class="a">洗涤灵</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+</div>
+
+
+

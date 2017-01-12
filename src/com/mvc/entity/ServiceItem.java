@@ -1,68 +1,49 @@
 package com.mvc.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the service_items database table.
+ * 服务类型
  * 
+ * @author zjn
+ * @date 2016年12月8日
  */
 @Entity
-@Table(name="service_items")
-@NamedQuery(name="ServiceItem.findAll", query="SELECT s FROM ServiceItem s")
+@Table(name = "service_items")
 public class ServiceItem implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
-	private int serviceId;
-
-	@Column(name="depart_id", length=32)
-	private String departId;
-
-	@Column(nullable=false)
-	private int display;
-
-	@Column(nullable=false)
-	private int fatherId;
-
-	@Column(name="given_time", length=25)
-	private String givenTime;
-
-	@Column(name="is_customer_service", nullable=false)
-	private byte isCustomerService;
-
-	@Column(nullable=false)
-	private int isCharge;
-
-	@Column(name="need_check", nullable=false)
-	private byte needCheck;
-
-	@Column(name="parent_name", length=64)
-	private String parentName;
-
-	@Column(name="service_name", nullable=false, length=64)
-	private String serviceName;
-
-	@Column(name="show_order")
-	private int showOrder;
-
-	@Column(length=64)
-	private String typeId;
+	private Integer serviceId;
+	private String serviceName;// 服务类型
+	private String departId;// 所属部门，同department_info中depart_id对应
+	private Integer display;// 显示标志，1显示、0不显示
+	private Integer fatherId;// 父类ID
+	private String givenTime;// 给定完成时间，默认单位为分钟
+	private byte isCustomerService;// 对客标志，1对客、0对内、2既对客又对内
+	private Integer isCharge;// 该服务是否收费，0不收费、1收费、2收费+服务费
+	private byte needCheck;// 是否需要验收，1是0否
+	private String parentName;// 父类名称
+	private Integer showOrder;// 排序
+	private String typeId;// 服务对应的分类，同goods_type中的Goods_TpeId对应
 
 	public ServiceItem() {
 	}
 
-	public int getServiceId() {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "serviceid",unique = true, nullable = false)
+	public Integer getServiceId() {
 		return this.serviceId;
 	}
 
-	public void setServiceId(int serviceId) {
+	public void setServiceId(Integer serviceId) {
 		this.serviceId = serviceId;
 	}
 
+	@Column(name = "depart_id", length = 32)
 	public String getDepartId() {
 		return this.departId;
 	}
@@ -71,22 +52,25 @@ public class ServiceItem implements Serializable {
 		this.departId = departId;
 	}
 
-	public int getDisplay() {
+	@Column(nullable = false)
+	public Integer getDisplay() {
 		return this.display;
 	}
 
-	public void setDisplay(int display) {
+	public void setDisplay(Integer display) {
 		this.display = display;
 	}
 
-	public int getFatherId() {
+	@Column(name = "fatherid",nullable = false)
+	public Integer getFatherId() {
 		return this.fatherId;
 	}
 
-	public void setFatherId(int fatherId) {
+	public void setFatherId(Integer fatherId) {
 		this.fatherId = fatherId;
 	}
 
+	@Column(name = "given_time", length = 25)
 	public String getGivenTime() {
 		return this.givenTime;
 	}
@@ -95,6 +79,7 @@ public class ServiceItem implements Serializable {
 		this.givenTime = givenTime;
 	}
 
+	@Column(name = "is_customer_service", nullable = false)
 	public byte getIsCustomerService() {
 		return this.isCustomerService;
 	}
@@ -103,14 +88,16 @@ public class ServiceItem implements Serializable {
 		this.isCustomerService = isCustomerService;
 	}
 
-	public int getIsCharge() {
+	@Column(name = "ischarge",nullable = false)
+	public Integer getIsCharge() {
 		return this.isCharge;
 	}
 
-	public void setIsCharge(int isCharge) {
+	public void setIsCharge(Integer isCharge) {
 		this.isCharge = isCharge;
 	}
 
+	@Column(name = "need_check", nullable = false)
 	public byte getNeedCheck() {
 		return this.needCheck;
 	}
@@ -119,6 +106,7 @@ public class ServiceItem implements Serializable {
 		this.needCheck = needCheck;
 	}
 
+	@Column(name = "parent_name", length = 64)
 	public String getParentName() {
 		return this.parentName;
 	}
@@ -127,6 +115,7 @@ public class ServiceItem implements Serializable {
 		this.parentName = parentName;
 	}
 
+	@Column(name = "service_name", nullable = false, length = 64)
 	public String getServiceName() {
 		return this.serviceName;
 	}
@@ -135,14 +124,16 @@ public class ServiceItem implements Serializable {
 		this.serviceName = serviceName;
 	}
 
-	public int getShowOrder() {
+	@Column(name = "show_order")
+	public Integer getShowOrder() {
 		return this.showOrder;
 	}
 
-	public void setShowOrder(int showOrder) {
+	public void setShowOrder(Integer showOrder) {
 		this.showOrder = showOrder;
 	}
 
+	@Column(name = "typeid",length = 64)
 	public String getTypeId() {
 		return this.typeId;
 	}

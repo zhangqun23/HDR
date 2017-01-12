@@ -10,15 +10,18 @@
 			</div>
 			<ul id="report-ul" class="menuson">
 				<li id="workLoad"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/reportForm">工作量统计</a><i></i></li>
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadForm">员工工作量统计</a><i></i></li>
+				<li id="workLoad"><cite></cite> <a
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadAnalysis">员工工作量分析</a><i></i></li>
+				<li id="workLoad"><cite></cite> <a
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadSaturationForm">员工工作量饱和度分析</a><i></i></li>
 				<li id="doRoomTime"><cite></cite> <a
-					href="${ctx}/reportForm/toReportFormPage.do#/reportForm">做房用时统计</a><i></i></li>
-				<li id="doHomeEffic"><cite></cite> <a
-					href="">做房效率统计</a><i></i></li>
-				<li id="suppplyUsage"><cite></cite> <a
-					href="">客用品使用量统计</a><i></i></li>
-				<li id="leaderCheckHome"><cite></cite> <a
-					href="">领班查房工作量/用时统计</a><i></i></li>
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
+				<li id="doRoomAnalyse"><cite></cite> <a
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseAnalyseForm">做房用时分析</a><i></i></li>
+				<li id="doHomeEffic"><cite></cite> <a href="">做房效率统计</a><i></i></li>
+				<li id="suppplyUsage"><cite></cite> <a href="">客用品使用量统计</a><i></i></li>
+				<li id="leaderCheckHome"><cite></cite> <a href="">领班查房工作量/用时统计</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 查退房工作量/用时统计 -->
@@ -29,10 +32,8 @@
 			<ul id="checkHome-ul" class="menuson">
 				<li id="checkHomeWork"><cite></cite> <a
 					href="${ctx}/reportForm2/toReportFormPage.do#/reportForm2">查房工作量</a><i></i></li>
-				<li id="checkHomeEffic"><cite></cite> <a
-					href="">查房效率</a><i></i></li>
-				<li id="checkHomeTime"><cite></cite> <a
-					href="">查房时间分布图</a><i></i></li>
+				<li id="checkHomeEffic"><cite></cite> <a href="">查房效率</a><i></i></li>
+				<li id="checkHomeTime"><cite></cite> <a href="">查房时间分布图</a><i></i></li>
 			</ul>
 		</dd>
 
@@ -43,17 +44,17 @@
 			</div>
 			<ul class="menuson">
 				<li><cite></cite> <a
-					href="">员工工作量/排名</a><i></i></li>
+					href="${ctx}/customerService/toReportFormPage.do#/depWorkloadForm">部门总工作量统计</a><i></i></li>
 				<li><cite></cite> <a
-					href="">用时/排名</a><i></i></li>
+					href="${ctx}/customerService/toReportFormPage.do#/staffWorkloadForm">员工工作量统计</a><i></i></li>
 				<li><cite></cite> <a
-					href="">服务时间分布图</a><i></i></li>
-				<li><cite></cite> <a
-					href="">服务数量/排名</a><i></i></li>
-				<li><cite></cite> <a
-					href="">租借物数量/排名</a><i></i></li>
-				<li><cite></cite> <a
-					href="">消费品数量/排名</a><i></i></li>
+					href="${ctx}/customerService/toReportFormPage.do#/typeForm">服务类型统计</a><i></i></li>
+				<li id="linenExpend"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/linenExpendForm">布草统计</a><i></i></li>
+				<li id="roomExpend"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/roomExpendForm">房间耗品统计</a><i></i></li>
+				<li id="washExpend"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/washExpendForm">卫生间易耗品统计</a><i></i></li>
 			</ul>
 
 		</dd>

@@ -74,6 +74,26 @@
 	<!-- Spring Data Jpa配置 -->
 	<jpa:repositories base-package="com.mvc.repository"
 		entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+
+	<!-- 配置事务属性 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="REQUIRED" />
+			<!-- <tx:method name="update*" propagation="REQUIRED" /> -->
+			<tx:method name="add*" propagation="REQUIRED" />
+			<!--<tx:method name="delete*" propagation="REQUIRED" /> -->
+			<tx:method name="count*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置事务切点 -->
+	<aop:config>
+		<aop:pointcut id="bussinessService" expression="execution(* com.mvc.service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="bussinessService" />
+	</aop:config>
+
 </beans>
 
 

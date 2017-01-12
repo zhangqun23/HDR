@@ -1,89 +1,57 @@
 package com.mvc.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
-
 /**
- * The persistent class for the goods_info database table.
+ * 物品
  * 
+ * @author wanghuimin
+ * @date 2016年12月8日
  */
 @Entity
-@Table(name="goods_info")
-@NamedQuery(name="GoodsInfo.findAll", query="SELECT g FROM GoodsInfo g")
+@Table(name = "goods_info")
 public class GoodsInfo implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
-	private int goods_id;
-
-	@Column(length=45)
-	private String code;
-
-	@Lob
-	private String description;
-
-	@Column(nullable=false)
-	private int display;
-
-	@Column(nullable=false, length=100)
-	private String goods_Ename;
-
-	@Column(nullable=false, length=100)
-	private String goods_Name;
-
-	@Column(length=100)
-	private String goods_Picture;
-
-	@Column(nullable=false, length=30)
-	private String goods_Price;
-
-	@Column(nullable=false, length=30)
-	private String goods_Typeid;
-
-	@Column(nullable=false)
-	private int goodsOrder;
-
-	@Column(nullable=false)
-	private int gWith;
-
-	private int maxNum;
-
-	private int newOrder;
-
-	@Column(nullable=false, length=45)
-	private String PC_Code;
-
-	@Column(length=145)
-	private String spec_cn;
-
-	@Column(length=145)
-	private String spec_en;
-
-	@Column(nullable=false)
-	private int totalOrder;
-
-	@Column(length=20)
-	private String unit_cn;
-
-	@Column(length=30)
-	private String unit_en;
-
-	private int useNum;
+	private Integer goodsId;// 物品ID，主键
+	private String goodsName;// 物品中文名称
+	private String goodsEname;// 物品英文名称
+	private String code;// code值，一般根据酒馆而定
+	private String description;// 描述
+	private Integer display;// 显示标志，1显示、0不显示
+	private String goodsPicture;// 物品图片
+	private String goodsPrice;// 物品价钱
+	private String goodsTypeid;// 物品类型
+	private Integer goodsOrder;// 显示排序
+	private Integer gWith;// 图片宽度
+	private Integer maxNum;// 最大可用数量，-1代表不限使用数量
+	private Integer newOrder;// 耗品领用排序
+	private String pcCode;
+	private String specCn;
+	private String specEn;
+	private Integer totalOrder;
+	private String unitCn;
+	private String unitEn;
+	private Integer useNum;
 
 	public GoodsInfo() {
 	}
 
-	public int getGoods_id() {
-		return this.goods_id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="goods_id")
+	public Integer getGoodsId() {
+		return this.goodsId;
 	}
 
-	public void setGoods_id(int goods_id) {
-		this.goods_id = goods_id;
+	public void setGoodsId(Integer goodsId) {
+		this.goodsId = goodsId;
 	}
 
+	@Column(length = 45)
 	public String getCode() {
 		return this.code;
 	}
@@ -92,6 +60,7 @@ public class GoodsInfo implements Serializable {
 		this.code = code;
 	}
 
+	@Lob
 	public String getDescription() {
 		return this.description;
 	}
@@ -100,139 +69,154 @@ public class GoodsInfo implements Serializable {
 		this.description = description;
 	}
 
-	public int getDisplay() {
+	@Column(nullable = false)
+	public Integer getDisplay() {
 		return this.display;
 	}
 
-	public void setDisplay(int display) {
+	public void setDisplay(Integer display) {
 		this.display = display;
 	}
 
-	public String getGoods_Ename() {
-		return this.goods_Ename;
+	@Column(name="goods_ename",nullable = false, length = 100)
+	public String getGoodsEname() {
+		return this.goodsEname;
 	}
 
-	public void setGoods_Ename(String goods_Ename) {
-		this.goods_Ename = goods_Ename;
+	public void setGoodsEname(String goodsEname) {
+		this.goodsEname = goodsEname;
 	}
 
-	public String getGoods_Name() {
-		return this.goods_Name;
+	@Column(name="goods_name",nullable = false, length = 100)
+	public String getGoodsName() {
+		return this.goodsName;
 	}
 
-	public void setGoods_Name(String goods_Name) {
-		this.goods_Name = goods_Name;
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
 	}
 
-	public String getGoods_Picture() {
-		return this.goods_Picture;
+	@Column(name="goods_picture",length = 100)
+	public String getGoodsPicture() {
+		return this.goodsPicture;
 	}
 
-	public void setGoods_Picture(String goods_Picture) {
-		this.goods_Picture = goods_Picture;
+	public void setGoodsPicture(String goodsPicture) {
+		this.goodsPicture = goodsPicture;
 	}
 
-	public String getGoods_Price() {
-		return this.goods_Price;
+	@Column(name="goods_price",nullable = false, length = 30)
+	public String getGoodsPrice() {
+		return this.goodsPrice;
 	}
 
-	public void setGoods_Price(String goods_Price) {
-		this.goods_Price = goods_Price;
+	public void setGoodsPrice(String goodsPrice) {
+		this.goodsPrice = goodsPrice;
 	}
 
-	public String getGoods_Typeid() {
-		return this.goods_Typeid;
+	@Column(name="goods_typeid",nullable = false, length = 30)
+	public String getGoodsTypeid() {
+		return this.goodsTypeid;
 	}
 
-	public void setGoods_Typeid(String goods_Typeid) {
-		this.goods_Typeid = goods_Typeid;
+	public void setGoodsTypeid(String goodsTypeid) {
+		this.goodsTypeid = goodsTypeid;
 	}
 
-	public int getGoodsOrder() {
+	@Column(name="goodsorder",nullable = false)
+	public Integer getGoodsOrder() {
 		return this.goodsOrder;
 	}
 
-	public void setGoodsOrder(int goodsOrder) {
+	public void setGoodsOrder(Integer goodsOrder) {
 		this.goodsOrder = goodsOrder;
 	}
 
-	public int getGWith() {
+	@Column(name="gwith",nullable = false)
+	public Integer getGWith() {
 		return this.gWith;
 	}
 
-	public void setGWith(int gWith) {
+	public void setGWith(Integer gWith) {
 		this.gWith = gWith;
 	}
 
-	public int getMaxNum() {
+	@Column(name="maxnum")
+	public Integer getMaxNum() {
 		return this.maxNum;
 	}
 
-	public void setMaxNum(int maxNum) {
+	public void setMaxNum(Integer maxNum) {
 		this.maxNum = maxNum;
 	}
-
-	public int getNewOrder() {
+	@Column(name="neworder")
+	public Integer getNewOrder() {
 		return this.newOrder;
 	}
 
-	public void setNewOrder(int newOrder) {
+	public void setNewOrder(Integer newOrder) {
 		this.newOrder = newOrder;
 	}
 
-	public String getPC_Code() {
-		return this.PC_Code;
+	@Column(name="pc_code",nullable = false, length = 45)
+	public String getpcCode() {
+		return this.pcCode;
 	}
 
-	public void setPC_Code(String PC_Code) {
-		this.PC_Code = PC_Code;
+	public void setpcCode(String pcCode) {
+		this.pcCode = pcCode;
 	}
 
-	public String getSpec_cn() {
-		return this.spec_cn;
+	@Column(name="spec_cn",length = 145)
+	public String getSpecCn() {
+		return this.specCn;
 	}
 
-	public void setSpec_cn(String spec_cn) {
-		this.spec_cn = spec_cn;
+	public void setSpecCn(String specCn) {
+		this.specCn = specCn;
 	}
 
-	public String getSpec_en() {
-		return this.spec_en;
+	@Column(name="spec_en",length = 145)
+	public String getSpecEn() {
+		return this.specEn;
 	}
 
-	public void setSpec_en(String spec_en) {
-		this.spec_en = spec_en;
+	public void setSpecEn(String specEn) {
+		this.specEn = specEn;
 	}
 
-	public int getTotalOrder() {
+	@Column(name="totalorder",nullable = false)
+	public Integer getTotalOrder() {
 		return this.totalOrder;
 	}
 
-	public void setTotalOrder(int totalOrder) {
+	public void setTotalOrder(Integer totalOrder) {
 		this.totalOrder = totalOrder;
 	}
 
-	public String getUnit_cn() {
-		return this.unit_cn;
+	@Column(name="unit_cn",length = 20)
+	public String getUnitCn() {
+		return this.unitCn;
 	}
 
-	public void setUnit_cn(String unit_cn) {
-		this.unit_cn = unit_cn;
+	public void setUnitCn(String unitCn) {
+		this.unitCn = unitCn;
 	}
 
-	public String getUnit_en() {
-		return this.unit_en;
+	@Column(name="unit_en",length = 30)
+	public String getUnitEn() {
+		return this.unitEn;
 	}
 
-	public void setUnit_en(String unit_en) {
-		this.unit_en = unit_en;
+	public void setUnitEn(String unitEn) {
+		this.unitEn = unitEn;
 	}
-
-	public int getUseNum() {
+	@Column(name="usenum")
+	public Integer getUseNum() {
 		return this.useNum;
 	}
 
-	public void setUseNum(int useNum) {
+	public void setUseNum(Integer useNum) {
 		this.useNum = useNum;
 	}
 

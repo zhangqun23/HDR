@@ -599,6 +599,11 @@ app
 									return false;
 								}
 							}
+							// zq当房型下拉框变化时获取房型名字
+							reportForm.getSortNameByNo = function() {
+								var no=$("#roomSortType").val();
+								reportForm.sortName = getSelectedRoomType(no);
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -664,3 +669,15 @@ app
 									});
 
 						} ]);
+
+// 小数过滤器
+app.filter('numFloat', function() {
+	return function(input) {
+		if (!input) {
+			var number = parseFloat('0').toFixed(2);
+		} else {
+			var number = parseFloat(input).toFixed(2);
+		}
+		return number;
+	}
+});

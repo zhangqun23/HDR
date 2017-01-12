@@ -32,6 +32,11 @@ public class WorkHouseController {
 	@Autowired
 	WorkHouseService workHouseService;
 
+	@RequestMapping("/toReportFormPage.do")
+	public String InvoiceReceivePage() {
+		return "routineTaskForm/index";
+	}
+
 	/**
 	 * 查询员工做房效率
 	 * 

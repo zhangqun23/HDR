@@ -46,7 +46,6 @@ public class WorkHouseController {
 		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
-		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -56,17 +55,17 @@ public class WorkHouseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/exportWorkHouse.do")
+	@RequestMapping("/exportWorkHouseBylimits.do")
 	public ResponseEntity<byte[]> exportWorkHouse(HttpServletRequest request) {
-		Integer cleanType = null;
 		String roomType = null;
+		String sortName = null;
 		String startTime = null;
 		String endTime = null;
-		if (StringUtil.strIsNotEmpty(request.getParameter("cleanType"))) {
-			cleanType = Integer.valueOf(request.getParameter("cleanType"));// 打扫类型
-		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("roomType"))) {
-			roomType = request.getParameter("roomType");// 房间类型
+			roomType = request.getParameter("roomType");// 房间类型(sort_no)
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("sortName"))) {
+			sortName = request.getParameter("sortName");// 房间类型名称(sort_name)
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
 			startTime = request.getParameter("startTime");// 开始时间
@@ -76,8 +75,8 @@ public class WorkHouseController {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("cleanType", cleanType);
 		map.put("roomType", roomType);
+		map.put("sortName", sortName);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 

@@ -1,6 +1,9 @@
 package com.mvc.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,9 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
+import com.utils.FileHelper;
 import com.utils.StringUtil;
+import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
 
@@ -49,9 +54,44 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	// 部门员工做房用时统计
 	@Override
 	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path) {
-		// List<WorkHouse> list = workHouseDao.selectWorkHouse();
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+		String sortName = (String) map.remove("sortName");
 
-		return null;
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			String fileName = "客房部员工" + sortName + "做房时间统计表.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workHouseDao.selectWorkHouse(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkHouse> listGoal = objToWorkHouse(it);
+
+			WorkHouse sum = sumWorkHouse(listGoal);// 合计
+			listGoal.add(sum);
+
+			// 测试
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("list", listGoal);
+			System.out.println("导出list:" + jsonObject.toString());
+
+			Map<String, Object> listMap = new HashMap<String, Object>();
+			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("${sortName}", sortName);
+			contentMap.put("${startTime}", (String) map.get("startTime"));
+			contentMap.put("${endTime}", (String) map.get("endTime"));
+
+			wh.export2007Word(path, listMap, contentMap, out);// 生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return byteArr;
 	}
 
 	// 计算及排序
@@ -194,6 +234,53 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			}
 		}
 		return listGoal;
+	}
+
+	/**
+	 * list求和
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private WorkHouse sumWorkHouse(List<WorkHouse> list) {
+		WorkHouse sum = new WorkHouse();
+		Iterator<WorkHouse> it = list.iterator();
+
+		Long sum_num_dust = (long) 0;// 抹尘房
+		Long sum_total_time_dust = (long) 0;
+		Float sum_avg_time_dust = 0f;
+		Long sum_num_night = (long) 0;// 过夜房
+		Long sum_total_time_night = (long) 0;
+		Float sum_avg_time_night = 0f;
+		Long sum_num_leave = (long) 0;// 离退房
+		Long sum_total_time_leave = (long) 0;
+		Float sum_avg_time_leave = 0f;
+
+		WorkHouse workHouse = null;
+		while (it.hasNext()) {
+			workHouse = it.next();
+			sum_num_dust += Integer.valueOf(workHouse.getNum_dust());// 抹尘房
+			sum_total_time_dust += Integer.valueOf(workHouse.getTotal_time_dust());
+			sum_avg_time_dust += workHouse.getAvg_time_dust();
+			sum_num_night += Integer.valueOf(workHouse.getNum_night());// 过夜房
+			sum_total_time_night += Integer.valueOf(workHouse.getTotal_time_night());
+			sum_avg_time_night += workHouse.getAvg_time_night();
+			sum_num_leave += Integer.valueOf(workHouse.getNum_leave());// 离退房
+			sum_total_time_leave += Integer.valueOf(workHouse.getTotal_time_leave());
+			sum_avg_time_leave += workHouse.getAvg_time_leave();
+		}
+		sum.setOrderNum("合计");
+		sum.setNum_dust(String.valueOf(sum_num_dust));// 抹尘房
+		sum.setTotal_time_dust(String.valueOf(sum_total_time_dust));
+		sum.setAvg_time_dust(Float.valueOf(sum_avg_time_dust));
+		sum.setNum_night(String.valueOf(sum_num_night));// 过夜房
+		sum.setTotal_time_night(String.valueOf(sum_total_time_night));
+		sum.setAvg_time_night(Float.valueOf(sum_avg_time_night));
+		sum.setNum_leave(String.valueOf(sum_num_leave));// 离退房
+		sum.setTotal_time_leave(String.valueOf(sum_total_time_leave));
+		sum.setAvg_time_leave(Float.valueOf(sum_avg_time_leave));
+
+		return sum;
 	}
 
 }

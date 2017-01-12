@@ -52,8 +52,13 @@
 					href="${ctx}/customerService/toReportFormPage.do#/staffWorkloadForm">员工工作量统计</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/typeForm">服务类型统计</a><i></i></li>
-				<li><cite></cite> <a
-					href="${ctx}/customerService/toReportFormPage.do#/infoStatistics">布草/消耗品统计</a><i></i></li>
+				<li id="linenExpend"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/linenExpendForm">布草统计</a><i></i></li>
+				<li id="roomExpend"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/roomExpendForm">房间耗品统计</a><i></i></li>
+				<li id="washExpend"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/washExpendForm">卫生间易耗品统计</a><i></i></li>
+
 			</ul>
 
 		</dd>

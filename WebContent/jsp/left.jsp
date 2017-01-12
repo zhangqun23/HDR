@@ -45,7 +45,7 @@
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>对客服务统计
 			</div>
-			<ul class="menuson">
+			<ul id="customerService-ul" class="menuson">
 				<li><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/depWorkloadForm">部门总工作量统计</a><i></i></li>
 				<li><cite></cite> <a

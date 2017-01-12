@@ -73,10 +73,10 @@ public class WorkHouseController {
 			sortName = request.getParameter("sortName");// 房间类型名称(sort_name)
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
-			startTime = request.getParameter("startTime");// 开始时间
+			startTime = StringUtil.monthFirstDay(request.getParameter("startTime"));// 开始时间
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
-			endTime = request.getParameter("endTime");// 结束时间
+			endTime = StringUtil.monthLastDay(request.getParameter("endTime"));// 结束时间
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -86,7 +86,8 @@ public class WorkHouseController {
 		map.put("endTime", endTime);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path);
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKHOUSE_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path, tempPath);
 
 		return byteArr;
 	}

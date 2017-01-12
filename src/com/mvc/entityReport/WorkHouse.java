@@ -1,16 +1,12 @@
 package com.mvc.entityReport;
 
-import java.io.Serializable;
-
 /**
  * 部门员工做房统计实体
  * 
  * @author wangrui
  * @date 2016-12-08
  */
-public class WorkHouse implements Serializable {
-
-	private static final long serialVersionUID = -1122213927463011548L;
+public class WorkHouse {
 
 	private String orderNum;// 序号
 	private String staff_name;// 员工姓名

@@ -53,7 +53,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 	// 部门员工做房用时统计
 	@Override
-	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path) {
+	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
 		map.put("deptId", departmentInfo.getDepartmentId());
 		String sortName = (String) map.remove("sortName");
@@ -81,10 +81,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			contentMap.put("${sortName}", sortName);
-			contentMap.put("${startTime}", (String) map.get("startTime"));
-			contentMap.put("${endTime}", (String) map.get("endTime"));
+			String startTime = (String) map.get("startTime");
+			String endTime = (String) map.get("endTime");
+			contentMap.put("${startTime}", startTime.substring(0, 7));
+			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(path, listMap, contentMap, out);// 生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {

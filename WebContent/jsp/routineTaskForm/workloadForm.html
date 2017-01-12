@@ -23,7 +23,7 @@
 								value="">请选择</option>
 							<option value="{{r.sortId}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectWorkHouseByLimits()"></li>
+						type="button" value="查询" ng-click="selectWorkloadByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -37,14 +37,14 @@
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
-				<th class="width5">员工姓名</th>
-				<th class="width5">员工编号</th>
-				<th class="width5">抹尘房</th>
-				<th class="width5">过夜房</th>
-				<th class="width5">离退房</th>
-				<th class="width5">实际工作量</th>
-				<th class="width5">超出工作量</th>
-				<th class="width5">排名</th>
+				<th class="width10">员工姓名</th>
+				<th class="width10">员工编号</th>
+				<th class="width10">抹尘房</th>
+				<th class="width10">过夜房</th>
+				<th class="width10">离退房</th>
+				<th class="width10">实际工作量</th>
+				<th class="width10">超出工作量</th>
+				<th class="width10">排名</th>
 
 			</tr>
 		</thead>

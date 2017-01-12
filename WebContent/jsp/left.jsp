@@ -11,9 +11,9 @@
 			<ul id="report-ul" class="menuson">
 				<li id="workLoad"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadForm">员工工作量统计</a><i></i></li>
-				<li id="workLoad"><cite></cite> <a
+				<li id="workLoadAnalysis"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadAnalysis">员工工作量分析</a><i></i></li>
-				<li id="workLoad"><cite></cite> <a
+				<li id="workloadSaturation"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadSaturationForm">员工工作量饱和度分析</a><i></i></li>
 				<li id="doRoomTime"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
@@ -43,11 +43,11 @@
 				<span><img src="${ctx}/images/leftico04.png" /></span>对客服务统计
 			</div>
 			<ul class="menuson">
-				<li><cite></cite> <a
+				<li id="depWorkload"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/depWorkloadForm">部门总工作量统计</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="staffWorkload"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/staffWorkloadForm">员工工作量统计</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="type"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/typeForm">服务类型统计</a><i></i></li>
 				<li><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/infoStatistics">布草/消耗品统计</a><i></i></li>

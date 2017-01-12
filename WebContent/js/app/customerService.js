@@ -111,6 +111,11 @@ app
 								}
 							}
 
+							
+							
+							
+							
+							
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -123,4 +128,6 @@ app
 								}
 							}
 							initData();
-						} ]);
+						}
+						
+						]);

@@ -12,9 +12,6 @@ import org.apache.commons.collections.comparators.ComparableComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.collections.comparators.NullComparator;
 
-import com.mvc.entityReport.WorkHouse;
-import com.mvc.entityReport.WorkLoad;
-
 /**
  * 集合公共类
  * 
@@ -81,33 +78,12 @@ public class CollectionUtil<T> {
 	 * @return
 	 */
 	public List<T> writeSort(List<T> list, String fieldName) {
+		T t = null;
+		Field field = null;
 		try {
-			Field field = WorkHouse.class.getDeclaredField(fieldName);
-			T t = null;
 			for (int i = 0; i < list.size(); i++) {
 				t = list.get(i);
-				field.setAccessible(true);// 成员变量为private,必须进行此操作
-				field.set(t, String.valueOf(i + 1));// 赋值
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return list;
-	}
-
-	/**
-	 * 向已排序的list中实体的某字段插入序号
-	 * 
-	 * @param list
-	 * @param fieldName
-	 * @return
-	 */
-	public List<T> workLoadWriteSort(List<T> list, String fieldName) {
-		try {
-			Field field = WorkLoad.class.getDeclaredField(fieldName);
-			T t = null;
-			for (int i = 0; i < list.size(); i++) {
-				t = list.get(i);
+				field = t.getClass().getDeclaredField(fieldName);
 				field.setAccessible(true);// 成员变量为private,必须进行此操作
 				field.set(t, String.valueOf(i + 1));// 赋值
 			}

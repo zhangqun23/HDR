@@ -88,6 +88,24 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	 // wq选择统计时间区间
+	services.selectExpendTimeByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'CustomerServiceInformation/selectExpendTimeBylimits.do',
+			data : data
+			});
+		};
+		//wq选择报表类型
+	    services.getformType = function(data) {
+		    return $http({
+			    method : 'post',
+			    url : baseUrl + 'CustomerServiceInformation/getformType.do',
+			    data : data
+		    });
+
+	};
+
 
 	return services;
 } ]);
@@ -100,6 +118,28 @@ app
 						'$location',
 						function($scope, services, $location) {
 							var reportForm = $scope;
+							// wq选择报表类型默认值
+							reportForm.formTypes = [ {
+								id : 0,
+								type : "过夜房"
+							}, {
+								id : 1,
+								type : "离退房"
+							}, {
+								id : 2,
+								type : "对客服务"
+							} ];
+								//wq界面初始条件设置
+							reportForm.limit = {
+								formType : "0",
+								};
+								// wq布草和耗品统计界面设置条件
+							reportForm.limit = {
+								startTime : "",
+								endTime : "",
+								formType : ""
+							};
+
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)
@@ -110,12 +150,34 @@ app
 									return false;
 								}
 							}
+							// wq根据条件查找布草消耗列表
+							reportForm.selectExpendTimeByLimits = function() {
+								if (linenExpendForm.limit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (linenExpendForm.limit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if ( linenExpendForm.limit.formType == "") {
+									alert("请选择报表类型！");
+									return false;
+								}
+								var expendFormLimit = JSON
+										.stringify(expendForm.limit);
+								services.selectExpendTimeByLimits({
+									limit : expendFormLimit
+								}).success(function(data) {
+									reportForm.expendFormList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							} 
 
-							
-							
-							
-							
-							
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -128,6 +190,4 @@ app
 								}
 							}
 							initData();
-						}
-						
-						]);
+						} ]);

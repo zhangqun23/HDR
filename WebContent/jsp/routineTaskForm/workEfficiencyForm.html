@@ -1,0 +1,60 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="">首页</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div>
+		<div>
+			<form action="exportWorkEfficiencyBylimits.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>起止年月</label><input type="text" name="startTime"
+						ng-model="wefLimit.startTime" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="endTime" ng-model="wefLimit.endTime"
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectWorkEfficiencyByLimits()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+	</div>
+
+	<table class="tablelist tablestyle">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width5">员工</th>
+				<th class="width5">编号</th>
+				<th class="width7">做房时间（分钟）</th>
+				<th class="width7">当班时间（分钟）</th>
+				<th class="width5">效率</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="we in workEfficiencyList">
+				<td>{{we.orderNum}}</td>
+				<td>{{we.staff_name}}</td>
+				<td>{{we.staff_no}}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<!-- <div class="tcdPageCode">页码容器</div> -->
+</div>
+
+
+
+
+

@@ -35,8 +35,9 @@
 			<ul id="checkOrRobHome-ul" class="menuson">
 				<li id="robHomeEfficiency"><cite></cite> <a
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEfficiencyForm">抢房效率统计</a><i></i></li>
-				<li id="checkHomeEffic"><cite></cite> <a href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEfficiencyForm">查房效率</a><i></i></li>
-				<li id="checkHomeTime"><cite></cite> <a href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEfficiencyForm">查房时间分布图</a><i></i></li>
+				<li id="robHomeEffAnalyse"><cite></cite> <a
+					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEffAnalyseForm">抢房效率分析</a><i></i></li>
+				<li id="checkHomeTime"><cite></cite> <a href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkEfficiencyForm">领班查房效率统计</a><i></i></li>
 			</ul>
 		</dd>
 

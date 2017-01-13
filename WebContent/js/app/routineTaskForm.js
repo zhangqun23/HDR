@@ -92,7 +92,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	// zq获取做房用时列表
+	// zq获取做房用时列表A
 	services.selectWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -116,7 +116,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// zq获取单个用户的做房用时
+	// zq获取单个用户的做房用时B
 	services.selectUserWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -124,7 +124,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
-	// zq获取做房效率列表
+	// zq获取做房效率列表A
 	services.selectWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
@@ -132,6 +132,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	//zq获取个人做房效率B
 	services.selectUserWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',

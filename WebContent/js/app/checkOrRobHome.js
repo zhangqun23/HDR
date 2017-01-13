@@ -68,6 +68,12 @@ app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/robEfficiencyForm', {
 		templateUrl : '/HDR/jsp/checkOrRobHome/robEfficiencyForm.html',
 		controller : 'CheckOrRobHomeController'
+	}).when('/robEffAnalyseForm', {
+		templateUrl : '/HDR/jsp/checkOrRobHome/robEffAnalyseForm.html',
+		controller : 'CheckOrRobHomeController'
+	}).when('/checkEfficiencyForm', {
+		templateUrl : '/HDR/jsp/checkOrRobHome/checkEfficiencyForm.html',
+		controller : 'CheckOrRobHomeController'
 	})
 } ]);
 
@@ -103,6 +109,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'checkOrRobHome/selectRobDetailByLimits.do',
+			data : data
+		});
+	}
+	// zq获取个人抢房工作效率折线图
+	services.selectRobEffAnalyseByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'checkOrRobHome/selectRobEffAnalyseByLimits.do',
 			data : data
 		});
 	}
@@ -146,11 +160,19 @@ app
 								id : 4,
 								type : "四季度"
 							} ];
-							// 抢房效率查询限制条件
+							// 抢房效率统计查询限制条件
 							checkRob.reLimit = {
 								startTime : "",
 								endTime : "",
 								roomType : ""
+							}
+							// 抢房效率分析查询限制条件
+							checkRob.reaLimit = {
+								checkYear : "",
+								quarter : "0",
+								roomType : "",
+								cleanType : "0",
+								staffId : ""
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
@@ -276,7 +298,7 @@ app
 								var no = $("#roomSortType").val();
 								checkRob.sortName = getSelectedRoomType(no);
 							}
-							// zq查询抢房效率统计列表
+							// zq查询抢房明细表
 							checkRob.selectRobDetailByLimits = function() {
 								if (checkRob.reLimit.startTime == "") {
 									alert("请选择开始时间！");
@@ -302,7 +324,7 @@ app
 													getRobDetailByLimits);
 										});
 							}
-							// 抢房效率统计表换页查询函数
+							// zq抢房明细表
 							function getRobDetailByLimits(p) {
 								services.selectRobDetailByLimits({
 									limit : robEfficiencyLimit,
@@ -311,7 +333,7 @@ app
 									checkRob.robDetailList = data.list;
 								});
 							}
-							// zq客房员工抢房明细表
+							// zq客房员工抢房效率统计表
 							function selectRobEfficiencyByLimits() {
 								robEfficiencyLimit = JSON
 										.stringify(checkRob.reLimit);
@@ -321,6 +343,120 @@ app
 								}).success(function(data) {
 									checkRob.robEfficiencyList = data.list;
 								});
+							}
+							// zq抢房效率折线图
+							checkRob.selectRobEffAnalyseByLimits = function() {
+								if (checkRob.reaLimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (checkRob.reaLimit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
+								if (checkRob.reaLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								var robEffAnalyseLimit = JSON
+										.stringify(checkRob.reaLimit);
+								services
+										.selectRobEffAnalyseByLimits({
+											limit : robEffAnalyseLimit
+										})
+										.success(
+												function(data) {
+													var title = "客房员工 "
+															+ " "
+															+ getSelectedRoomType(checkRob.reaLimit.roomType)
+															+ " " + "抢房效率分析折线图";// 折线图标题显示
+													var xAxis = [];// 横坐标显示
+													var yAxis = "抢房效率";// 纵坐标显示
+													var nowQuarter = reportForm.reaLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(checkRob.reaLimit.staffId)
+															+ "员工抢房效率";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工抢房效率的平均Data
+													var averageData = [];// 个人平均抢房效率
+													var userData = [];
+													for ( var item in data.list) {
+														userData
+																.push(data.list[item]);
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																12);
+														averageData = getAverageData(
+																data.averWorkTime,
+																12);
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkTime,
+																3);
+														averageData = getAverageData(
+																data.averWorkTime,
+																3);
+														break;
+													}
+													combine(lineData,
+															"个人平均抢房效率",
+															averageData);
+													combine(lineData,
+															"全体平均抢房效率",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+													lineChartForm(lineData,
+															"#lineChart1",
+															title, xAxis, yAxis);
+													$('#chart1-svg')
+															.val(
+																	$(
+																			"#lineChart1")
+																			.highcharts()
+																			.getSVG());
+												});
 							}
 							// zq初始化
 							function initData() {
@@ -340,6 +476,13 @@ app
 										'/robEfficiencyForm') == 0) {
 									selectRoomSorts();
 
+								} else if ($location.path().indexOf(
+										'/robEffAnalyseForm') == 0) {
+									selectRoomSorts();
+									selectRoomStaffs();
+								} else if ($location.path().indexOf(
+										'/checkEfficiencyForm') == 0) {
+									selectRoomSorts();
 								}
 							}
 							initData();

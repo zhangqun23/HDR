@@ -9,12 +9,12 @@
 				<span><img src="${ctx}/images/leftico01.png" /></span>例行任务统计
 			</div>
 			<ul id="report-ul" class="menuson">
-				<li id="workLoad"><cite></cite> <a
+				<li id="workload"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadForm">员工工作量统计</a><i></i></li>
-				<li id="workLoad"><cite></cite> <a
+				<li id="workloadAnalysis"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadAnalysis">员工工作量分析</a><i></i></li>
-				<li id="workLoad"><cite></cite> <a
-					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadSaturationForm">员工工作量饱和度分析</a><i></i></li>
+				<li id="workloadLevelForm"><cite></cite> <a
+					href="${ctx}/routineTaskForm/toReportFormPage.do#/workloadLevelForm">员工工作量饱和度分析</a><i></i></li>
 				<li id="doRoomTime"><cite></cite> <a
 					href="${ctx}/routineTaskForm/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
 				<li id="doRoomAnalyse"><cite></cite> <a
@@ -46,11 +46,11 @@
 				<span><img src="${ctx}/images/leftico04.png" /></span>对客服务统计
 			</div>
 			<ul id="customerService-ul" class="menuson">
-				<li><cite></cite> <a
+				<li id="depWorkload"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/depWorkloadForm">部门总工作量统计</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="staffWorkload"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/staffWorkloadForm">员工工作量统计</a><i></i></li>
-				<li><cite></cite> <a
+				<li id="type"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/typeForm">服务类型统计</a><i></i></li>
 				<li id="linenExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/linenExpendForm">布草统计</a><i></i></li>

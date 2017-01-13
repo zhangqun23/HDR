@@ -13,7 +13,8 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
-						ng-model="wefLimit.startTime" required class="dfselect dateLayoutStyle"
+						ng-model="wefLimit.startTime" required
+						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
 						type="text" name="endTime" ng-model="wefLimit.endTime" required
 						class="dfselect dateLayoutStyle"
@@ -31,12 +32,14 @@
 	<table class="tablelist tablestyle">
 		<thead>
 			<tr>
-				<th class="width5">序号</th>
+				<th class="width3">序号</th>
 				<th class="width5">员工</th>
 				<th class="width5">编号</th>
-				<th class="width7">做房时间（分钟）</th>
 				<th class="width7">当班时间（分钟）</th>
-				<th class="width5">效率</th>
+				<th class="width7">做房时间（分钟）</th>
+				<th class="width5">做房效率</th>
+				<th class="width7">做房+客服（分钟）</th>
+				<th class="width5">工作效率</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -44,6 +47,8 @@
 				<td>{{we.orderNum}}</td>
 				<td>{{we.staff_name}}</td>
 				<td>{{we.staff_no}}</td>
+				<td></td>
+				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>

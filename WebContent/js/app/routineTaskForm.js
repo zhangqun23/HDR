@@ -125,7 +125,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	}
 	// zq获取做房效率列表
-	services.selectWorkEfficiencyByLimits = function(data) {
+	services.selectWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'workHouse/selectWorkEfficiencyByLimits.do',

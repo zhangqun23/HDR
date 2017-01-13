@@ -21,8 +21,6 @@
 				</select></li>
 				<li><label>房间类型</label><select class="dfselect layoutStyle"
 					style="width: 140px" ng-model="whaLimit.roomType" name="roomType"
-					required><option value="">请选择</option>
-						<option value="{{r.sortNo}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
 					required id="roomSortType"  ng-change="getSortNameByNo()"><option value="">请选择</option>
 						<option value="{{r.sortNo}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
 				<li><input type="text" name="sortName" class="hidden" ng-model="sortName"></li>

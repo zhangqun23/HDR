@@ -1,10 +1,5 @@
 package com.mvc.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,10 +19,7 @@ import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.entityReport.WorkLoadMonth;
 import com.mvc.service.WorkLoadService;
-import com.utils.FileHelper;
 import com.utils.StringUtil;
-import com.utils.SvgPngConverter;
-import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
 
@@ -90,28 +81,28 @@ public class WorkLoadController {
 	@RequestMapping("/exportWorkLoadSummaryList.do")
 	public ResponseEntity<byte[]> exportWorkLoadSummaryList(HttpServletRequest request, HttpServletResponse response) {
 
-		String startDate = "2016-01-01";
-		String endDate = "2018-01-20";
+		// String startDate = "2016-01-01";
+		// String endDate = "2018-01-20";
 		ResponseEntity<byte[]> byteArr = null;
+		String startDate = "";
+		String endDate = "";
 
-		// String startDate = "";
-		// String endDate = "";
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+			String modelPath = request.getSession().getServletContext()
+					.getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
 
-		// if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-		// && StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-		// startDate = request.getParameter("startDate");
-		// endDate = request.getParameter("endDate");
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("startDate", startDate);
+			map.put("endDate", endDate);
+			map.put("path", path);
+			map.put("modelPath", modelPath);
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("path", path);
-		map.put("modelPath", modelPath);
-
-		byteArr = workLoadService.exportWorkLoadSummaryList(map);
-		// }
+			byteArr = workLoadService.exportWorkLoadSummaryList(map);
+		}
 		return byteArr;
 	}
 
@@ -151,25 +142,27 @@ public class WorkLoadController {
 	@RequestMapping("/exportWorkLoadLevelList.do")
 	public ResponseEntity<byte[]> exportWorkLoadLevelList(HttpServletRequest request, HttpServletResponse response) {
 
-		String startDate = "2016-01-01";
-		String endDate = "2018-01-20";
 		ResponseEntity<byte[]> byteArr = null;
-		// String startDate = "";
-		// String endDate = "";
+		// String startDate = "2016-01-01";
+		// String endDate = "2018-01-20";
+		String startDate = "";
+		String endDate = "";
 
-		// if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-		// && StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadLevelList.docx");// 模板路径
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+			String modelPath = request.getSession().getServletContext()
+					.getRealPath("word\\" + "workLoadLevelList.docx");// 模板路径
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("path", path);
-		map.put("modelPath", modelPath);
-		byteArr = workLoadService.exportWorkLoadLevelList(map);
-		// }
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("startDate", startDate);
+			map.put("endDate", endDate);
+			map.put("path", path);
+			map.put("modelPath", modelPath);
+			byteArr = workLoadService.exportWorkLoadLevelList(map);
+		}
 		return byteArr;
+
 	}
 
 	/**
@@ -185,25 +178,33 @@ public class WorkLoadController {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> map = new HashMap<String, String>();
-		String checkYear = "2017";
-		String quarter = "0";
-		String staffId = "511";
+		// String checkYear = "2017";
+		// String quarter = "0";
+		// String staffId = "511";
+		String checkYear = "";
+		String quarter = "";
+		String staffId = "";
 
-		map.put("checkYear", checkYear);
-		map.put("quarter", quarter);
-		map.put("staffId", staffId);
-		result = workLoadService.getWorkLoadAnalyseInfo(map);
-		List<WorkLoadMonth> workLoadMonths = (List<WorkLoadMonth>) result.get("workLoadMonths");
-		System.out.println("allAverageData:" + result.get("allAverageData"));
-		System.out.println("averageData:" + result.get("averageData"));
-		for (int i = 0; i < workLoadMonths.size(); i++) {
-			System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";" + workLoadMonths.get(i).getActualLoad()
-					+ ";" + workLoadMonths.get(i).getRatedLoad());
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
+
+			map.put("checkYear", checkYear);
+			map.put("quarter", quarter);
+			map.put("staffId", staffId);
+			result = workLoadService.getWorkLoadAnalyseInfo(map);
+			List<WorkLoadMonth> workLoadMonths = (List<WorkLoadMonth>) result.get("workLoadMonths");
+			System.out.println("allAverageData:" + result.get("allAverageData"));
+			System.out.println("averageData:" + result.get("averageData"));
+			for (int i = 0; i < workLoadMonths.size(); i++) {
+				System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";"
+						+ workLoadMonths.get(i).getActualLoad() + ";" + workLoadMonths.get(i).getRatedLoad());
+			}
+
+			jsonObject.put("allAverageData", (String) result.get("allAverageData"));
+			jsonObject.put("averageData", (String) result.get("averageData"));
+			jsonObject.put("workLoadMonths", workLoadMonths);
 		}
-
-		jsonObject.put("allAverageData", (String) result.get("allAverageData"));
-		jsonObject.put("averageData", (String) result.get("averageData"));
-		jsonObject.put("workLoadMonths", workLoadMonths);
 		return jsonObject.toString();
 	}
 
@@ -214,58 +215,39 @@ public class WorkLoadController {
 	 * @param response
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping("/exportWorkLoadAnalyse.do")
 	public ResponseEntity<byte[]> exportWorkLoadAnalyse(HttpServletRequest request, HttpServletResponse response) {
 
-		WordHelper wh = new WordHelper();
-		String fileName = "客房部单个员工工作量分析表.docx";
+		String svg = "";
+		String checkYear = "";
+		String quarter = "";
+		String staffId = "";
+		ResponseEntity<byte[]> byteArr = null;
+		Map<String, String> map = new HashMap<String, String>();
+
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadAnalyse.docx");// 模板路径
+		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
 
-		Map<String, Object> contentMap = new HashMap<String, Object>();
-		contentMap.put("${staffName}", "张三");
-		contentMap.put("${date}", "2017");
+		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
 
-		// 图片相关
-		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");
-		String svg = request.getParameter("chartSVGStr");
+			svg = request.getParameter("chartSVGStr");
+			checkYear = request.getParameter("checkYear");
+			quarter = request.getParameter("quarter");
+			staffId = request.getParameter("staffId");
 
-		if (StringUtil.strIsNotEmpty(svg)) {
-			String picName = "pic.png";
-			String picPath = FileHelper.transPath(picName, picCataPath);// 解析后的上传路径
-			try {
-				// 图片svgCode转化为png格式，并保存到picPath
-				SvgPngConverter.convertToPng(svg, picPath);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (TranscoderException e1) {
-				e1.printStackTrace();
-			}
-			Map<String, Object> picMap = new HashMap<String, Object>();
-			picMap.put("width", 420);
-			picMap.put("height", 280);
-			picMap.put("type", "png");
-			try {
-				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			contentMap.put("${pic}", picMap);
+			map.put("path", path);
+			map.put("modelPath", modelPath);
+			map.put("picCataPath", picCataPath);
+			map.put("svg", svg);
+			map.put("checkYear", checkYear);
+			map.put("quarter", quarter);
+			map.put("staffId", staffId);
+			byteArr = workLoadService.exportWorkLoadAnalyse(map);
 		}
-
-		try {
-			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, out);
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		ResponseEntity<byte[]> byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
 	}
 }

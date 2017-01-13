@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.service;
 
 import java.util.List;
@@ -33,4 +30,7 @@ public interface WorkLoadService {
 
 	// 获取员工工作量分析图所需数据
 	Map<String, Object> getWorkLoadAnalyseInfo(Map<String, String> map);
+
+	// 导出员工工作量分析图
+	ResponseEntity<byte[]> exportWorkLoadAnalyse(Map<String, String> map);
 }

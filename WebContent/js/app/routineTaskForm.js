@@ -125,7 +125,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	}
 	// zq获取做房效率列表
-	services.selectWorkEfficiencyByLimits = function() {
+	services.selectWorkEfficiencyByLimits = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'workHouse/selectWorkEfficiencyByLimits.do',
@@ -601,7 +601,7 @@ app
 							}
 							// zq当房型下拉框变化时获取房型名字
 							reportForm.getSortNameByNo = function() {
-								var no=$("#roomSortType").val();
+								var no = $("#roomSortType").val();
 								reportForm.sortName = getSelectedRoomType(no);
 							}
 							// zq初始化

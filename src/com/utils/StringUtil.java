@@ -216,4 +216,37 @@ public class StringUtil {
 		return str;
 	}
 
+	/**
+	 * 将Float型字符串转换成%形式
+	 * 
+	 * @param strFloat
+	 * @return
+	 */
+	public static String strFloatToPer(String strFloat) {
+		String str = "";
+		Float f = Float.valueOf(strFloat);
+		str = f * 100 + "%";
+		return str;
+	}
+
+	/**
+	 * 当天0时刻
+	 * 
+	 * @param str
+	 * @return yyyy-MM-dd 00:00:00
+	 */
+	public static String dayFirstTime(String str) {
+		return str + " 00:00:00";
+	}
+
+	/**
+	 * 当天最后时间
+	 * 
+	 * @param str
+	 * @return yyyy-MM-dd 23:59:59
+	 */
+	public static String dayLastTime(String str) {
+		return str + " 23:59:59";
+	}
+
 }

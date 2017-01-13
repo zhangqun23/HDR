@@ -59,10 +59,9 @@ public class WordHelper<T> {
 			in = new FileInputStream(new File(path));
 			doc = new XWPFDocument(in);
 
-			if (contentMap != null) {
-				// 替换模版中的变量(包含添加图片)
-				generateWord(doc, contentMap);
-			}
+			// 替换模版中的变量(包含添加图片)
+			generateWord(doc, contentMap);
+
 			// 解析map中的多个list，并根据表头动态生成word表格
 			if (listMap != null) {
 				Iterator<Entry<String, Object>> it = listMap.entrySet().iterator();

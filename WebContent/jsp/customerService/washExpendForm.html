@@ -13,17 +13,17 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="limit.startTime" class="dfselect dateLayoutStyle"
+						ng-model="wlimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="limit.endTime"
+						type="text" name="endTime" ng-model="wlimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><label>选择报表类型</label><select class="dfselect layoutStyle"
-					    style="width: 140px" ng-model="limit.formType" name="formType"
-					    required><option value="">请选择</option>
+					    style="width: 140px" ng-model="wlimit.formType" name="formType"
+					    required>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectExpendFormByLimits()"></li>
+						type="button" value="查询" ng-click="selectWashExpendFormByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>

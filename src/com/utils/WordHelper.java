@@ -31,7 +31,6 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 
 public class WordHelper<T> {
 
@@ -39,18 +38,12 @@ public class WordHelper<T> {
 	 * 导出2007版word（模板）
 	 * 
 	 * @param path
-	 *            模板路径
 	 * @param listMap
-	 *            表格内容
 	 * @param contentMap
-	 *            特定字符串替换
-	 * @param rowNum
-	 *            表头行数
 	 * @param out
-	 *            输出
 	 */
 	@SuppressWarnings("unchecked")
-	public void export2007Word(String path, Map<String, Object> listMap, Map<String, Object> contentMap, Integer rowNum,
+	public void export2007Word(String path, Map<String, Object> listMap, Map<String, Object> contentMap,
 			OutputStream out) {
 		// 读取模板
 		FileInputStream in = null;
@@ -71,7 +64,7 @@ public class WordHelper<T> {
 					Object val = entry.getValue();
 					Collection<T> list = (Collection<T>) val;
 					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
-					dynamicWord(doc, list, tableOrder, rowNum);
+					dynamicWord(doc, list, tableOrder);
 				}
 			}
 			write2007Out(doc, out);
@@ -87,26 +80,18 @@ public class WordHelper<T> {
 	 * 
 	 * @param doc
 	 * @param list
-	 * @param tableOrder
-	 * @param rowNum
-	 *            表头行数
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum) {
+	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder) {
 		try {
 			List<XWPFTable> tables = doc.getTables();
-			XWPFTable table = tables.get(tableOrder);// 变量
-			XWPFTableRow row0 = table.getRow(0);// 表头第一行
-			XWPFTableRow row = table.getRow(rowNum - 1);// 表头最后一行
+			XWPFTable table = tables.get(tableOrder);// 变量******
+			XWPFTableRow row = table.getRow(0);
 			List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
-			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头第一行
-			List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
+			List<XWPFTableCell> cells = row.getTableCells();// 表头
 			XWPFTableCell cell = null;
 			CTTcPr cellPr = null;
-			int colNum0 = cells0.size();
 			int colNum = cells.size();
-			int Dvalue = colNum - colNum0;// 多行表头时，列的差值
-
 			for (int i = 0; i < colNum; i++) {
 				cell = cells.get(i);
 				cellPr = cell.getCTTc().getTcPr();
@@ -116,12 +101,7 @@ public class WordHelper<T> {
 
 			Iterator<T> it = list.iterator();
 			while (it.hasNext()) {
-				row = table.createRow();// 默认按第一行的列数创建行
-				if (Dvalue > 0) {// 差值>0：创建行时，追加单元格
-					for (int m = 0; m < Dvalue; m++) {
-						row.createCell();
-					}
-				}
+				row = table.createRow();
 				T t = (T) it.next();
 				Field[] fields = t.getClass().getDeclaredFields();
 				cells = row.getTableCells();
@@ -136,9 +116,8 @@ public class WordHelper<T> {
 					if (value != null) {
 						cell.setText(String.valueOf(value));// 写入单元格内容
 					}
-					cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
+					cellPr = cell.getCTTc().addNewTcPr();
 					cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
-					cellPr.addNewVAlign().setVal(STVerticalJc.CENTER);// 表格内容垂直居中
 				}
 			}
 		} catch (Exception e) {

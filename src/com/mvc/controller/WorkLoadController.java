@@ -117,7 +117,7 @@ public class WorkLoadController {
 			contentMap.put("${endDate}", endDate);
 			try {
 				OutputStream out = new FileOutputStream(path);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+				wh.export2007Word(modelPath, listMap, contentMap, out);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -196,7 +196,7 @@ public class WorkLoadController {
 
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, 1, out);
+			wh.export2007Word(modelPath, null, contentMap, out);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -274,7 +274,7 @@ public class WorkLoadController {
 
 			try {
 				OutputStream out = new FileOutputStream(path);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+				wh.export2007Word(modelPath, listMap, contentMap, out);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

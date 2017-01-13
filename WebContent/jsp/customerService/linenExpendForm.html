@@ -12,18 +12,18 @@
 			<form action="exportDepWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止日期</label><input type="text" name="limit.startTime"
-						ng-model="limit.startTime" class="dfselect dateLayoutStyle"
+					<li><label>起止日期</label><input type="text" name="llimit.startTime"
+						ng-model="llimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="limit.endTime" ng-model="limit.endTime"
+						type="text" name="llimit.endTime" ng-model="llimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
-					style="width: 140px" ng-model="limit.formType" name="limit.formType"
-					required><option value="">请选择</option>
+					style="width: 140px" ng-model="llimit.formType" name="llimit.formType"
+					required>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectExpendFormByLimits()"></li>
+						type="button" value="查询" ng-click="selectLinenExpendFormByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -55,23 +55,23 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+			<tr ng-repeat="linen in LinenExpend">
+				<td>linen.orderNum</td>
+				<td>linen.room_id</td>
+				<td>linen.bato_num</td>
+				<td>linen.facl_num</td>
+				<td>linen.besh_num</td>
+				<td>linen.hato_num</td>
+				<td>linen.medo_num</td>
+				<td>linen.flto_num</td>
+				<td>linen.baro_num</td>
+				<td>linen.slba_num</td>
+				<td>linen.duto_num</td>
+				<td>linen.pill_num</td>
+				<td>linen.shop_num</td>
+				<td>linen.laba_num</td>
+				<td>linen.piin_num</td>
+				<td>linen.blan_num</td>
 			</tr>
 		</tbody>
 	</table>

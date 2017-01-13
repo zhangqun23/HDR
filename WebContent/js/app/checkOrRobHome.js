@@ -162,6 +162,7 @@ app
 							} ];
 							// 抢房效率统计查询限制条件
 							checkRob.reLimit = {
+								tableType : "0",
 								startTime : "",
 								endTime : "",
 								roomType : ""
@@ -171,7 +172,6 @@ app
 								checkYear : "",
 								quarter : "0",
 								roomType : "",
-								cleanType : "0",
 								staffId : ""
 							}
 							// 获取房间类型名称
@@ -299,7 +299,7 @@ app
 								checkRob.sortName = getSelectedRoomType(no);
 							}
 							// zq查询抢房明细表
-							checkRob.selectRobDetailByLimits = function() {
+							checkRob.selectRobByLimits = function() {
 								if (checkRob.reLimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
@@ -314,17 +314,31 @@ app
 								}
 								robEfficiencyLimit = JSON
 										.stringify(checkRob.reLimit);
-								services.selectRobDetailByLimits({
-									limit : robEfficiencyLimit,
-									page : nowPage
-								}).success(
-										function(data) {
-											checkRob.robDetailList = data.list;
-											pageTurn(data.totalPage, 1,
-													getRobDetailByLimits);
-										});
+								if (checkRob.reLimit.tableType == '0') {
+									services.selectRobEfficiencyByLimits({
+										limit : robEfficiencyLimit,
+										page : nowPage
+									}).success(function(data) {
+										checkRob.robEfficiencyList = data.list;
+									});
+								} else {
+									services
+											.selectRobDetailByLimits({
+												limit : robEfficiencyLimit,
+												page : nowPage
+											})
+											.success(
+													function(data) {
+														checkRob.robDetailList = data.list;
+														pageTurn(
+																data.totalPage,
+																1,
+																getRobDetailByLimits);
+													});
+								}
+
 							}
-							// zq抢房明细表
+							// zq抢房明细表换页函数
 							function getRobDetailByLimits(p) {
 								services.selectRobDetailByLimits({
 									limit : robEfficiencyLimit,
@@ -333,17 +347,7 @@ app
 									checkRob.robDetailList = data.list;
 								});
 							}
-							// zq客房员工抢房效率统计表
-							function selectRobEfficiencyByLimits() {
-								robEfficiencyLimit = JSON
-										.stringify(checkRob.reLimit);
-								services.selectRobEfficiencyByLimits({
-									limit : robEfficiencyLimit,
-									page : nowPage
-								}).success(function(data) {
-									checkRob.robEfficiencyList = data.list;
-								});
-							}
+
 							// zq抢房效率折线图
 							checkRob.selectRobEffAnalyseByLimits = function() {
 								if (checkRob.reaLimit.checkYear == "") {
@@ -392,50 +396,50 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																data.allAverWorkEfficiency,
 																12);
 														averageData = getAverageData(
-																data.averWorkTime,
+																data.averWorkEfficiency,
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																data.allAverWorkEfficiency,
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																data.averWorkEfficiency,
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																data.allAverWorkEfficiency,
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																data.averWorkEfficiency,
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																data.allAverWorkEfficiency,
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																data.averWorkEfficiency,
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																data.allAverWorkEfficiency,
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																data.averWorkEfficiency,
 																3);
 														break;
 													}
@@ -457,6 +461,18 @@ app
 																			.highcharts()
 																			.getSVG());
 												});
+							}
+							// zq根据选择的报表类型显示不同的报表
+							checkRob.changeTable = function() {
+								var table = $("#tableType").val();
+								if (table == '0') {
+									$("#efficiencyTable").show();
+									$("#detailTable").hide();
+
+								} else {
+									$("#efficiencyTable").hide();
+									$("#detailTable").show();
+								}
 							}
 							// zq初始化
 							function initData() {

@@ -137,6 +137,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 	// lwt例行任务员工工作量统计
 	services.selectWorkloadByLimits = function() {
 		return $http({
@@ -164,6 +165,9 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 
 =======
 	//zq获取个人做房效率B
+=======
+	// zq获取个人做房效率B
+>>>>>>> 1b2f2595d350f5500a60f17a93ce36e0c1229951
 	services.selectUserWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
@@ -561,18 +565,30 @@ app
 										.success(
 												function(data) {
 													var title = "客房员工工作效率分析折线图";// 折线图标题显示
+													var title1 = "客房员工做房效率分析折线图";
 													var xAxis = [];// 横坐标显示
-													var yAxis = "做房效率";// 纵坐标显示
+													var yAxis = "效率";// 纵坐标显示
 													var nowQuarter = reportForm.weafLimit.quarter;// 当前的选择季度
 													var lineName = getSelectedStaff(reportForm.weafLimit.staffId)
+															+ "员工工作效率";
+													var lineName1 = getSelectedStaff(reportForm.weafLimit.staffId)
 															+ "员工做房效率";
 													var lineData = [];// 最终传入chart1中的data
-													var allAverageData = [];// 全体员工做房效率的平均Data
-													var averageData = [];// 个人平均做房效率
-													var userData = [];
+													var lineData1 = [];
+													var allAverageData = [];// 全体员工工作效率的平均Data
+													var averageData = [];// 个人平均工作效率
+													var lineData1 = [];// 最终传入chart1中的data
+													var allAverageData1 = [];// 全体员工做房效率的平均Data
+													var averageData1 = [];// 个人平均做房效率
+													var userData = [];// 个人工作效率
+													var userData1 = [];// 个人做房效率
 													for ( var item in data.list) {
 														userData
 																.push(data.list[item]);
+													}
+													for ( var item in data.list1) {
+														userData1
+																.push(data.list1[item]);
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -588,6 +604,12 @@ app
 														averageData = getAverageData(
 																data.averWorkEfficiency,
 																12);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																12);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
+																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
@@ -597,6 +619,12 @@ app
 																3);
 														averageData = getAverageData(
 																data.averWorkEfficiency,
+																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
 																3);
 														break;
 													case '2':
@@ -608,6 +636,12 @@ app
 														averageData = getAverageData(
 																data.averWorkEfficiency,
 																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
+																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
@@ -617,6 +651,12 @@ app
 																3);
 														averageData = getAverageData(
 																data.averWorkEfficiency,
+																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
 																3);
 														break;
 													case '4':
@@ -628,18 +668,44 @@ app
 														averageData = getAverageData(
 																data.averWorkEfficiency,
 																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
+																3);
 														break;
 													}
-													lineData = [];
-													combine(lineData, "个人平均效率",
+
+													combine(lineData,
+															"个人平均工作效率",
 															averageData);
-													combine(lineData, "全体平均效率",
+													combine(lineData,
+															"全体平均工作效率",
 															allAverageData);
 													combine(lineData, lineName,
 															userData);
+													combine(lineData1,
+															"个人平均做房效率",
+															averageData1);
+													combine(lineData1,
+															"全体平均做房效率",
+															allAverageData1);
+													combine(lineData1,
+															lineName1,
+															userData1);
+													lineChartForm(lineData,
+															"#lineChart",
+															title, xAxis, yAxis);
 													lineChartForm(lineData,
 															"#lineChart1",
 															title, xAxis, yAxis);
+													$('#chart-svg')
+															.val(
+																	$(
+																			"#lineChart")
+																			.highcharts()
+																			.getSVG());
 													$('#chart1-svg')
 															.val(
 																	$(

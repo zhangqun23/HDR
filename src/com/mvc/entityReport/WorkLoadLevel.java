@@ -11,13 +11,10 @@ public class WorkLoadLevel {
 	private String orderNum;// 序号
 	private String staffName;// 员工姓名
 	private String staffNo;// 员工编号
-
-	private String workDays;// 实际工作天数
-	private Float actualLoad;// 实际工作量
-	private Float beyondLoad;// 超出工作量
+	// private String ratedLoad;// 额定工作量
+	private String actualLoad;// 实际工作量
+	private String beyondLoad;// 超出工作量
 	private String outOfRang;// 超出幅度
-
-	private Float ratedLoad;// 额定工作量
 
 	public String getOrderNum() {
 		return orderNum;
@@ -43,19 +40,27 @@ public class WorkLoadLevel {
 		this.staffNo = staffNo;
 	}
 
-	public Float getActualLoad() {
+	// public String getRatedLoad() {
+	// return ratedLoad;
+	// }
+	//
+	// public void setRatedLoad(String ratedLoad) {
+	// this.ratedLoad = ratedLoad;
+	// }
+
+	public String getActualLoad() {
 		return actualLoad;
 	}
 
-	public void setActualLoad(Float actualLoad) {
+	public void setActualLoad(String actualLoad) {
 		this.actualLoad = actualLoad;
 	}
 
-	public Float getBeyondLoad() {
+	public String getBeyondLoad() {
 		return beyondLoad;
 	}
 
-	public void setBeyondLoad(Float beyondLoad) {
+	public void setBeyondLoad(String beyondLoad) {
 		this.beyondLoad = beyondLoad;
 	}
 
@@ -66,21 +71,4 @@ public class WorkLoadLevel {
 	public void setOutOfRang(String outOfRang) {
 		this.outOfRang = outOfRang;
 	}
-
-	public Float getRatedLoad() {
-		return ratedLoad;
-	}
-
-	public void setRatedLoad(Float ratedLoad) {
-		this.ratedLoad = ratedLoad;
-	}
-
-	public String getWorkDays() {
-		return workDays;
-	}
-
-	public void setWorkDays(String workDays) {
-		this.workDays = workDays;
-	}
-
 }

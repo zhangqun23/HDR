@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/checkOrRobHome")
-public class CheckOrRobController {
+public class checkOrRobController {
 
 	@RequestMapping("/toCheckOrRobHomePage.do")
 	public String InvoiceReceivePage() {

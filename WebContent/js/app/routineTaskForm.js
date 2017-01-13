@@ -124,11 +124,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
-<<<<<<< HEAD
-	// zq获取做房效率列表
-=======
 	// zq获取做房效率列表A
->>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 	services.selectWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
@@ -136,38 +132,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-	// lwt例行任务员工工作量统计
-	services.selectWorkloadByLimits = function() {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'workLoad/getWorkLoadSummaryList.do',
-			data : data
-		});
-	}
-	// lwt例行任务员工工作量分析
-	services.selectStaffWorkLoadAnalyse = function() {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'workLoad/getStaffWorkLoadAnalyse.do',
-			data : data
-		});
-	}
-	// lwt例行任务员工工作量饱和度分析
-	services.selectWorkloadLevel = function() {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'workLoad/getWorkLoadLevelList.do',
-			data : data
-		});
-	}
-
-=======
-	//zq获取个人做房效率B
-=======
 	// zq获取个人做房效率B
->>>>>>> 1b2f2595d350f5500a60f17a93ce36e0c1229951
 	services.selectUserWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
@@ -175,7 +140,30 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
->>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
+	// lwt例行任务员工工作量统计
+	services.selectWorkloadByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/getWorkLoadSummaryList.do',
+			data : data
+		});
+	}
+	// lwt例行任务员工工作量分析
+	services.selectStaffWorkLoadAnalyse = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/getStaffWorkLoadAnalyse.do',
+			data : data
+		});
+	}
+	// lwt例行任务员工工作量饱和度分析
+	services.selectWorkloadLevel = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/getWorkLoadLevelList.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 app
@@ -240,11 +228,8 @@ app
 								quarter : "0",
 								staffId : ""
 							};
-<<<<<<< HEAD
-=======
 							// 获取房间类型名称
 							reportForm.sortName = "";
->>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -503,7 +488,6 @@ app
 								if (reportForm.wefLimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
-<<<<<<< HEAD
 								}
 								if (reportForm.wefLimit.endTime == "") {
 									alert("请选择截止时间！");
@@ -515,19 +499,6 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
-=======
-								}
-								if (reportForm.wefLimit.endTime == "") {
-									alert("请选择截止时间！");
-									return false;
-								}
-								if (compareDateTime(
-										reportForm.wefLimit.startTime,
-										reportForm.wefLimit.endTime)) {
-									alert("截止时间不能大于开始时间！");
-									return false;
-								}
->>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 								var workEfficiencyLimit = JSON
 										.stringify(reportForm.wefLimit);
 								services.selectWorkEfficiencyByLimits({
@@ -724,8 +695,12 @@ app
 									return false;
 								}
 							}
-<<<<<<< HEAD
-
+							// zq当房型下拉框变化时获取房型名字
+							reportForm.getSortNameByNo = function() {
+								var no = $("#roomSortType").val();
+								reportForm.sortName = getSelectedRoomType(no);
+							}
+							
 							// lwt例行任务工作量统计界面设置条件
 							reportForm.workloadLimit = {
 								startTime : "",
@@ -735,7 +710,7 @@ app
 							reportForm.staffWorkloadLimit = {
 								checkYear : "",
 								quarter : "0",
-								staffNo : ""
+								staffId : ""
 							};
 							// lwt例行任务工作量饱和度分析设置条件
 							reportForm.workLoadLevelLimit = {
@@ -761,10 +736,12 @@ app
 								var workloadLimit = JSON
 										.stringify(reportForm.workloadLimit);
 								services.selectWorkloadByLimits({
-									limit : workloadLimit
+//									limit : workloadLimit
+									startDate:reportForm.workloadLimit.startTime,
+									endDate:reportForm.workloadLimit.endTime
 								}).success(function(data) {
-									reportForm.workloadList = data.list;
-									if (data.list.length) {
+									reportForm.workloadList = data.workLoadList;
+									if (data.workLoadList.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
@@ -792,10 +769,8 @@ app
 												function(data) {
 													var xAxis = [];// 横坐标显示
 													var yAxis = "工作量";// 纵坐标显示
-													var nowQuarter = reportForm.whaLimit.quarter;// 当前的选择季度
+													var nowQuarter = reportForm.staffWorkloadLimit.quarter;// 当前的选择季度
 													var nowQuarterName = "";
-													var lineName = getSelectedStaff(reportForm.whaLimit.staffId)
-															+ "员工工作量";
 													var lineData = [];// 最终传入chart1中的data
 													var allAverageData = [];// 全体员工工作量的平均Data
 													var averageData = [];// 个人平均工作量
@@ -871,8 +846,8 @@ app
 																3);
 														break;
 													}
-													var title = "员工 "
-															+ getSelectedStaff(reportForm.staffWorkloadLimit.staffId)
+													var title = "员工 "+"("
+															+ getSelectedStaff(reportForm.staffWorkloadLimit.staffId)+")"
 															+ (reportForm.staffWorkloadLimit.checkYear)
 															+ nowQuarterName
 															+ "工作量动态变化趋势图";// 折线图标题显示
@@ -918,10 +893,12 @@ app
 								var workLoadLevelLimit = JSON
 										.stringify(reportForm.workLoadLevelLimit);
 								services.selectWorkloadLevel({
-									limit : workLoadLevelLimit
+									//limit : workLoadLevelLimit
+									startDate:reportForm.workLoadLevelLimit.startTime,
+									endDate:reportForm.workLoadLevelLimit.endTime
 								}).success(function(data) {
-									reportForm.workloadLevels = data.list;
-									if (data.list.length) {
+									reportForm.workloadLevels = data.WorkLoadLevelList;
+									if (data.WorkLoadLevelList.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
@@ -929,13 +906,6 @@ app
 								});
 							}
 
-=======
-							// zq当房型下拉框变化时获取房型名字
-							reportForm.getSortNameByNo = function() {
-								var no = $("#roomSortType").val();
-								reportForm.sortName = getSelectedRoomType(no);
-							}
->>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -968,14 +938,10 @@ app
 										'/workEffAnalyseForm') == 0) {
 									selectRoomStaffs();
 									selectRoomSorts();
-<<<<<<< HEAD
-								} else if ($location.path().indexOf(
+								}else if ($location.path().indexOf(
 										'/workloadAnalysis') == 0) {
 									selectRoomStaffs();
-=======
->>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
-								}
-							}
+							}}
 							initData();
 							// zq控制年
 							var $dateFormat = $(".dateFormatForY");

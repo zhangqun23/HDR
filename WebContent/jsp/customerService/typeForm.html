@@ -13,15 +13,15 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="typeLimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')})) "><label>—</label><input
-						type="text" name="endTime" ng-model="typeLimit.endTime"
+						ng-model="typeLimit.start_time" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="endTime" ng-model="typeLimit.end_time"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><label>部门</label><select class="dfselect layoutStyle"
 						style="width: 73px" ng-model="typeLimit.depart" name="departId"><option
 								value="">请选择</option>
-							<option value="{{user.user_id}}" ng-repeat="types in roomTypes"></option></select></li>
+							<option value="{{depart.departmentId}}" ng-repeat="depart in depts">{{depart.departmentName}}</option></select></li>			
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectType()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"

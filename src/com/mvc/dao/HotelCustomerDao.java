@@ -3,8 +3,6 @@ package com.mvc.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.mvc.entity.StaffInfo;
-
 /**
  * 酒店对客服务信息统计
  * @author wanghuimin
@@ -20,8 +18,5 @@ public interface HotelCustomerDao {
 
 	//查询部门对客服务类型
 	List<Object> findRoomType(Map<String, Object> map);
-
-	//根据部门ID筛选员工信息
-	List<Object> findStaffByDepId(String departid);
 
 }

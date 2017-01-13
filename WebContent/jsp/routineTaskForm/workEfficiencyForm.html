@@ -16,6 +16,9 @@
 						ng-model="wefLimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
 						type="text" name="endTime" ng-model="wefLimit.endTime"
+						ng-model="wefLimit.startTime" required class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="endTime" ng-model="wefLimit.endTime" required
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><input class="btn layoutStyle" style="width: 60px"

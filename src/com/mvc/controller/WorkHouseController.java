@@ -32,6 +32,11 @@ public class WorkHouseController {
 	@Autowired
 	WorkHouseService workHouseService;
 
+	@RequestMapping("/toReportFormPage.do")
+	public String InvoiceReceivePage() {
+		return "routineTaskForm/index";
+	}
+
 	/**
 	 * 查询员工做房效率
 	 * 
@@ -46,7 +51,6 @@ public class WorkHouseController {
 		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
-		System.out.println(jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -56,33 +60,34 @@ public class WorkHouseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/exportWorkHouse.do")
+	@RequestMapping("/exportWorkHouseBylimits.do")
 	public ResponseEntity<byte[]> exportWorkHouse(HttpServletRequest request) {
-		Integer cleanType = null;
 		String roomType = null;
+		String sortName = null;
 		String startTime = null;
 		String endTime = null;
-		if (StringUtil.strIsNotEmpty(request.getParameter("cleanType"))) {
-			cleanType = Integer.valueOf(request.getParameter("cleanType"));// 打扫类型
-		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("roomType"))) {
-			roomType = request.getParameter("roomType");// 房间类型
+			roomType = request.getParameter("roomType");// 房间类型(sort_no)
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("sortName"))) {
+			sortName = request.getParameter("sortName");// 房间类型名称(sort_name)
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
-			startTime = request.getParameter("startTime");// 开始时间
+			startTime = StringUtil.monthFirstDay(request.getParameter("startTime"));// 开始时间
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
-			endTime = request.getParameter("endTime");// 结束时间
+			endTime = StringUtil.monthLastDay(request.getParameter("endTime"));// 结束时间
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("cleanType", cleanType);
 		map.put("roomType", roomType);
+		map.put("sortName", sortName);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path);
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKHOUSE_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path, tempPath);
 
 		return byteArr;
 	}

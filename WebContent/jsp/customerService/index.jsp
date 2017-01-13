@@ -20,7 +20,7 @@
 <script>
 	$(function() {
 		$('dd').find('ul').css("display", "none");
-		$('#report-ul').css("display", "block");
+		$('#customerService-ul').css("display", "block");
 		var currentPage = sessionStorage.getItem("currentPage");
 		if (currentPage) {
 			$("#" + currentPage).addClass("active");

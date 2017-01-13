@@ -92,7 +92,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	// zq获取做房用时列表
+	// zq获取做房用时列表A
 	services.selectWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -116,7 +116,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// zq获取单个用户的做房用时
+	// zq获取单个用户的做房用时B
 	services.selectUserWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -124,7 +124,11 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+<<<<<<< HEAD
 	// zq获取做房效率列表
+=======
+	// zq获取做房效率列表A
+>>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 	services.selectWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
@@ -132,6 +136,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+<<<<<<< HEAD
 	// lwt例行任务员工工作量统计
 	services.selectWorkloadByLimits = function() {
 		return $http({
@@ -157,6 +162,16 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	}
 
+=======
+	//zq获取个人做房效率B
+	services.selectUserWorkEfficiencyByLimits = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workHouse/selectUserWorkEfficiencyByLimits.do',
+			data : data
+		});
+	};
+>>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 	return services;
 } ]);
 app
@@ -221,6 +236,11 @@ app
 								quarter : "0",
 								staffId : ""
 							};
+<<<<<<< HEAD
+=======
+							// 获取房间类型名称
+							reportForm.sortName = "";
+>>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -479,6 +499,7 @@ app
 								if (reportForm.wefLimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
+<<<<<<< HEAD
 								}
 								if (reportForm.wefLimit.endTime == "") {
 									alert("请选择截止时间！");
@@ -490,6 +511,19 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+=======
+								}
+								if (reportForm.wefLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.wefLimit.startTime,
+										reportForm.wefLimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+>>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 								var workEfficiencyLimit = JSON
 										.stringify(reportForm.wefLimit);
 								services.selectWorkEfficiencyByLimits({
@@ -624,6 +658,7 @@ app
 									return false;
 								}
 							}
+<<<<<<< HEAD
 
 							// lwt例行任务工作量统计界面设置条件
 							reportForm.workloadLimit = {
@@ -828,6 +863,13 @@ app
 								});
 							}
 
+=======
+							// zq当房型下拉框变化时获取房型名字
+							reportForm.getSortNameByNo = function() {
+								var no = $("#roomSortType").val();
+								reportForm.sortName = getSelectedRoomType(no);
+							}
+>>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -860,9 +902,12 @@ app
 										'/workEffAnalyseForm') == 0) {
 									selectRoomStaffs();
 									selectRoomSorts();
+<<<<<<< HEAD
 								} else if ($location.path().indexOf(
 										'/workloadAnalysis') == 0) {
 									selectRoomStaffs();
+=======
+>>>>>>> 9fc237252002b192bea07d84d0631ac981b0d129
 								}
 							}
 							initData();
@@ -896,3 +941,15 @@ app
 									});
 
 						} ]);
+
+// 小数过滤器
+app.filter('numFloat', function() {
+	return function(input) {
+		if (!input) {
+			var number = parseFloat('0').toFixed(2);
+		} else {
+			var number = parseFloat(input).toFixed(2);
+		}
+		return number;
+	}
+});

@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2016年12月7日
  */
 @Controller
-@RequestMapping("/routineTaskForm")
-public class routineTaskFormController {
+@RequestMapping("/checkOrRobHome")
+public class CheckOrRobController {
 
-	@RequestMapping("/toReportFormPage.do")
+	@RequestMapping("/toCheckOrRobHomePage.do")
 	public String InvoiceReceivePage() {
-		return "routineTaskForm/index";
+		return "checkOrRobHome/index";
 	}
 
 }

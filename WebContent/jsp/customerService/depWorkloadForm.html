@@ -12,13 +12,13 @@
 			<form action="exportDepWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "><label>—</label><input
-						type="text" name="endTime" ng-model="endTime"
+				<li><label>起止日期</label><input type="text" name="startTime"
+						ng-model="depWorkloadLimit.start_time" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="endTime" ng-model="depWorkloadLimit.end_time"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+				<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectDepWorkload()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
@@ -44,16 +44,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="depWorkload in depWorkloads">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+			<tr ng-repeat="depWorkload in depWorkloadList">
+				<td>{{depWorkload.orderNum}}</td>
+				<td>{{depWorkload.department}}</td>
+				<td>{{depWorkload.serviceLoad}}</td>
+				<td>{{depWorkload.timeOutService}}</td>
+				<td>{{depWorkload.timeOutRate}}</td>
+				<td>{{depWorkload.sumWorkTime}}</td>
+				<td>{{depWorkload.averageWorkTime}}</td>
+				<td>{{depWorkload.serviceLoad_rank}}</td>
+				<td>{{depWorkload.timeOutRate_rank}}</td>
 			</tr>
 		</tbody>
 	</table>

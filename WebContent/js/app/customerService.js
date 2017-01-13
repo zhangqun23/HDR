@@ -74,7 +74,17 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/typeForm', {
 		templateUrl : '/HDR/jsp/customerService/typeForm.html',
 		controller : 'CustomerServiceController'
-	})  
+	})
+	.when('/linenExpendForm', {
+		templateUrl : '/HDR/jsp/customerService/linenExpendForm.html',
+		controller : 'CustomerServiceController'
+	}).when('/roomExpendForm', {
+		templateUrl : '/HDR/jsp/customerService/roomExpendForm.html',
+		controller : 'CustomerServiceController'
+	}).when('/washExpendForm', {
+		templateUrl : '/HDR/jsp/customerService/washExpendForm.html',
+		controller : 'CustomerServiceController'
+	})
 } ]);
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
@@ -88,6 +98,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	 // wq选择布草消耗
+	services.selectExpendFormByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'expendForm/selectExpendFormBylimits.do',
+			data : data
+			});
+		};
 
 	return services;
 } ]);
@@ -100,6 +118,24 @@ app
 						'$location',
 						function($scope, services, $location) {
 							var reportForm = $scope;
+							// wq布草统计界面设置条件
+							reportForm.limit = {
+								startTime : "",
+								endTime : "",
+								formType : ""
+							};
+							// wq选择报表类型默认值
+							reportForm.formTypes = [ {
+								id : 0,
+								type : "过夜房"
+							}, {
+								id : 1,
+								type : "离退房"
+							}, {
+								id : 2,
+								type : "对客服务"
+							} ];
+
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)
@@ -110,7 +146,48 @@ app
 									return false;
 								}
 							}
-
+							// wq根据条件查找布草消耗列表
+							reportForm.selectExpendFormByLimits = function() {
+								if (reportForm.limit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.limit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(reportForm.limit.startTime,
+										reportForm.limit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.limit.formType == "") {
+									alert("请选择报表类型！");
+									return false;
+								}
+								var expendFormLimit = JSON
+										.stringify(expendForm.limit);
+								services.selectExpendFormByLimits({
+									limit : expendFormLimit
+								}).success(function(data) {
+									reportForm.expendFormList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							} 
+							// wq比较两个时间的大小
+							function compareDateTime(startDate, endDate) {
+								var date1 = new Date(startDate);
+								var date2 = new Date(endDate);
+								if (date2.getTime() < date1.getTime()) {
+									return true;
+								} else {
+									return false;
+								}
+							}
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");

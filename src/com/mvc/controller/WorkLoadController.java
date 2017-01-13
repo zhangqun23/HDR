@@ -94,7 +94,6 @@ public class WorkLoadController {
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 			String modelPath = request.getSession().getServletContext()
 					.getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
-
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
 			map.put("endDate", endDate);
@@ -171,7 +170,6 @@ public class WorkLoadController {
 	 * @param request
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/getStaffWorkLoadAnalyse.do")
 	public @ResponseBody String getWorkLoadAnalyse(HttpServletRequest request) {
 

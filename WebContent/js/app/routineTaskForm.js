@@ -92,7 +92,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	// zq获取做房用时列表
+	// zq获取做房用时列表A
 	services.selectWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -116,7 +116,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// zq获取单个用户的做房用时
+	// zq获取单个用户的做房用时B
 	services.selectUserWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -124,7 +124,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
-	// zq获取做房效率列表
+	// zq获取做房效率列表A
 	services.selectWorkEfficiencyByLimits = function() {
 		return $http({
 			method : 'post',
@@ -132,6 +132,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	//zq获取个人做房效率B
+	services.selectUserWorkEfficiencyByLimits = function() {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workHouse/selectUserWorkEfficiencyByLimits.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -196,6 +204,8 @@ app
 								quarter : "0",
 								staffId : ""
 							};
+							// 获取房间类型名称
+							reportForm.sortName = "";
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -601,7 +611,7 @@ app
 							}
 							// zq当房型下拉框变化时获取房型名字
 							reportForm.getSortNameByNo = function() {
-								var no=$("#roomSortType").val();
+								var no = $("#roomSortType").val();
 								reportForm.sortName = getSelectedRoomType(no);
 							}
 							// zq初始化

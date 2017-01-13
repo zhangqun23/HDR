@@ -130,7 +130,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		contentMap.put("${endDate}", endDate);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, out);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -200,7 +200,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, out);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -343,13 +343,13 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		contentMap.put("${staffName}", staffName);
 		contentMap.put("${date}", date);
 		contentMap.put("${pic}", picMap);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, out);
+			wh.export2007Word(modelPath, null, contentMap, 1, out);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

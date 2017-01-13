@@ -1,0 +1,78 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="">首页</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div>
+		<div>
+			<form action="exportRobEfficiencyBylimits.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>起止年月</label><input type="text" name="startTime"
+						ng-model="ceLimit.startTime" required
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="endTime" required ng-model="ceLimit.endTime"
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectCheckEfficiencyByLimits()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+
+	</div>
+	<table class="tablelist tablestyle">
+		<caption align="top" class="tableTitle">客房部领班查房工作效率统计表</caption>
+		<thead>
+			<tr>
+				<th class="width5" rowspan="2">序号</th>
+				<th class="width5" rowspan="2">领班</th>
+				<th class="width5" rowspan="2">编号</th>
+				<th class="width5" colspan="4">过夜房</th>
+				<th class="width5" colspan="4">离退房</th>
+
+			</tr>
+			<tr>
+				<th class="width5">数量</th>
+				<th class="width5">总用时</th>
+				<th class="width5">平均用时</th>
+				<th class="width5">排名</th>
+				<th class="width5">数量</th>
+				<th class="width5">总用时</th>
+				<th class="width5">平均用时</th>
+				<th class="width5">排名</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="c in checkEfficiencyList">
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<!-- <div class="tcdPageCode">页码容器</div> -->
+</div>
+
+
+
+
+

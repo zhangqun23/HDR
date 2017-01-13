@@ -215,6 +215,11 @@
 	display: inline-block !important;
 }
 
-.tablestyle th{
+.tablestyle th {
 	text-align: center;
+}
+
+.tableTitle {
+	font-size:15px;
+	margin-bottom:10px;
 }

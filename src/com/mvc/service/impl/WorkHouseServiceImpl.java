@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkHouseDao;
 import com.mvc.entity.DepartmentInfo;
-import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
@@ -72,6 +71,11 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 			WorkHouse sum = sumWorkHouse(listGoal);// 合计
 			listGoal.add(sum);
+
+			// 测试
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("list", listGoal);
+			System.out.println("导出list:" + jsonObject.toString());
 
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -152,7 +156,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		collectionUtil.writeSort(list, writeField);
 	}
 
-	// 获取单个员工做房用时
+	// 获取单个用户做房用时
 	@Override
 	public String selectUserWorkHouseByLimits(Map<String, Object> map) {
 		JSONObject jsonObject = new JSONObject();
@@ -193,9 +197,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		if (averWorkTime != null) {
-			jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
-		}
+		jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
 		String allAverWorkTime = StringUtil.divide(sumTime.toString(), sumNum.toString());
 		jsonObject.put("allAverWorkTime", Float.valueOf(allAverWorkTime));// 全体员工平均做房用时
 
@@ -281,158 +283,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		sum.setAvg_time_leave(Float.valueOf(sum_avg_time_leave));
 
 		return sum;
-	}
-
-	/**** 员工工作效率报表 ****/
-
-	// 查询员工工作效率
-	@Override
-	public List<WorkEfficiency> selectWorkEffByLimits(Map<String, Object> map) {
-		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
-		map.put("deptId", departmentInfo.getDepartmentId());
-
-		List<Object> listSource = workHouseDao.selectWorkEffByLimits(map);
-		Iterator<Object> it = listSource.iterator();
-		List<WorkEfficiency> listGoal = objToWorkEff(it);
-
-		return listGoal;
-	}
-
-	// 工作效率计算
-	private List<WorkEfficiency> objToWorkEff(Iterator<Object> it) {
-		List<WorkEfficiency> listGoal = new ArrayList<WorkEfficiency>();
-		Object[] obj = null;
-		WorkEfficiency workEff = null;
-		int i = 0;
-		while (it.hasNext()) {
-			i++;
-			obj = (Object[]) it.next();
-			workEff = new WorkEfficiency();
-			workEff.setOrderNum(String.valueOf(i));
-			workEff.setStaff_name(obj[0].toString());
-			workEff.setStaff_no(obj[1].toString());
-			workEff.setWork_time(obj[2].toString());// 当班时间
-			workEff.setHouse_time(obj[3].toString());// 做房时间
-			workEff.setHouse_serv_time(obj[4].toString());// 做房+客服时间
-
-			String house_eff = StringUtil.divide(obj[3].toString(), obj[2].toString());
-			workEff.setHouse_eff(StringUtil.strFloatToPer(house_eff));// 做房效率(%)
-			String house_serv_eff = StringUtil.divide(obj[4].toString(), obj[2].toString());
-			workEff.setHouse_serv_eff(StringUtil.strFloatToPer(house_serv_eff));// 工作(做房+客服)效率(%)
-
-			listGoal.add(workEff);
-		}
-
-		return listGoal;
-	}
-
-	// 获取单个员工工作效率
-	@Override
-	public String selectUserWorkEffByLimits(Map<String, Object> map) {
-		JSONObject jsonObject = new JSONObject();
-
-		String year = (String) map.remove("checkYear");
-		String quarter = (String) map.remove("quarter");
-		String startMonth = null;
-		String endMonth = null;
-		if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
-			String startTime = StringUtil.quarterFirstDay(year, quarter);
-			String endTime = StringUtil.quarterLastDay(year, quarter);
-			map.put("startTime", startTime);
-			map.put("endTime", endTime);
-			startMonth = startTime.substring(startTime.indexOf("-") + 1, 7);// 截取月份
-			endMonth = endTime.substring(endTime.indexOf("-") + 1, 7);
-		}
-
-		List<Object> monthList1 = workHouseDao.selectMonthHouseEff(map);// 获取员工每个月做房效率
-		List<String> monthListStr1 = perMonthEff(monthList1, startMonth, endMonth);
-		jsonObject.put("list1", monthListStr1);
-		List<Object> monthList = workHouseDao.selectMonthWorkEff(map);// 获取员工每个月工作效率
-		List<String> monthListStr = perMonthEff(monthList, startMonth, endMonth);
-		jsonObject.put("list", monthListStr);
-
-		String staffId = (String) map.remove("staffId");// 去掉staffId
-		Object[] obj = null;
-		String averHouseEff = null;
-		Boolean flag = true;
-		Long sumDutyTime = (long) 0;
-		Long sumHouseTime = (long) 0;
-		List<Object> averList = workHouseDao.selectAllAverHouseEff(map);// 获取全体员工平均做房效率
-		Iterator<Object> it = averList.iterator();
-		while (it.hasNext()) {
-			obj = (Object[]) it.next();
-			sumDutyTime += Long.valueOf(obj[1].toString());
-			sumHouseTime += Long.valueOf(obj[2].toString());
-			if (flag) {
-				if (obj[0].toString().trim().equals(staffId)) {
-					averHouseEff = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均做房效率
-					flag = false;
-				}
-			}
-		}
-		jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
-		String allAverHouseEff = StringUtil.divide(sumHouseTime.toString(), sumDutyTime.toString());
-		jsonObject.put("allAverWorkEfficiency1", Float.valueOf(allAverHouseEff));// 全体员工平均做房效率
-
-		obj = null;// 先清空对象，再重新赋值
-		String averWorkEff = null;
-		flag = true;
-		sumDutyTime = (long) 0;
-		Long sumWorkTime = (long) 0;
-		averList = null;
-		it = null;
-		averList = workHouseDao.selectAllAverHouseEff(map);// 获取全体员工平均工作效率
-		it = averList.iterator();
-		while (it.hasNext()) {
-			obj = (Object[]) it.next();
-			sumDutyTime += Long.valueOf(obj[1].toString());
-			sumWorkTime += Long.valueOf(obj[2].toString());
-			if (flag) {
-				if (obj[0].toString().trim().equals(staffId)) {
-					averWorkEff = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均工作效率
-					flag = false;
-				}
-			}
-		}
-		jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
-		String allAverWorkEff = StringUtil.divide(sumWorkTime.toString(), sumDutyTime.toString());
-		jsonObject.put("allAverWorkEfficiency", Float.valueOf(allAverWorkEff));// 全体员工平均工作效率
-
-		return jsonObject.toString();
-	}
-
-	/**
-	 * 去掉月份列，缺少的月份的列置为0，同时计算效率
-	 * 
-	 * @param list
-	 * @param startMonth
-	 * @param endMonth
-	 * @return
-	 */
-	private List<String> perMonthEff(List<Object> list, String startMonth, String endMonth) {
-		List<String> listGoal = new ArrayList<String>();
-		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
-			Integer size = list.size();
-
-			Object[] obj = null;
-			Integer month = null;
-			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
-				if (i < size) {
-					obj = (Object[]) list.get(i);
-					month = Integer.valueOf(obj[0].toString());
-					if (month == j) {
-						listGoal.add(StringUtil.divide(obj[2].toString(), obj[1].toString()));
-					} else {
-						listGoal.add("0");
-						i--;
-					}
-				} else {
-					listGoal.add("0");
-				}
-			}
-		}
-		return listGoal;
 	}
 
 }

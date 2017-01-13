@@ -7,28 +7,31 @@
 
 <div class="rightinfo">
 	<div class="tools" style="">
-		<form action="exportUserWorkEfficiencyBylimits.do" method="post"
+		<form action="exportRobAnalyseByLimits.do" method="post"
 			enctype="multipart/form-data">
 			<ul class="projectListLimit">
 				<li><label>年份</label><input type="text" name="checkYear"
-					ng-model="weafLimit.checkYear"
+					ng-model="reaLimit.checkYear"
 					class="dfselect dateLayoutStyle dateFormatForY" placeholder="2016"
 					required /><span id="errorText" class="error-span">格式错误</span></li>
 				<li><label>季度</label><select class="dfselect layoutStyle"
-					style="width: 73px" ng-model="weafLimit.quarter" name="quarter"
+					style="width: 73px" ng-model="reaLimit.quarter" name="quarter"
 					required><option value="{{q.id}}"
 							ng-repeat="q in quarters">{{q.type}}</option>
 				</select></li>
+				<li><label>房间类型</label><select class="dfselect layoutStyle"
+					style="width: 140px" ng-model="reaLimit.roomType" name="roomType"
+					required id="roomSortType"  ng-change="getSortNameByNo()"><option value="">请选择</option>
+						<option value="{{r.sortNo}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
+				<li><input type="text" name="sortName" class="hidden" ng-model="sortName"></li>
 				<li><label>员工</label><select class="dfselect layoutStyle"
-					style="width: 110px" ng-model="whaLimit.staffId" name="staffId"
+					style="width: 110px" ng-model="reaLimit.staffId" name="staffId"
 					required>
 						<option value="">请选择</option>
 						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
 				</select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
-					type="button" value="查询" ng-click="selectUserWorkEfficiencyByLimits()"></li>
-				<li><input id="chart-svg" name="chartSVGStr" type="text"
-					class="hidden" /></li>
+					type="button" value="查询" ng-click="selectRobEffAnalyseByLimits()"></li>
 				<li><input id="chart1-svg" name="chart1SVGStr" type="text"
 					class="hidden" /></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
@@ -37,8 +40,6 @@
 		</form>
 
 	</div>
-	<div id="lineChart"
-		style="min-width: 400px; width: 1000px; height: 400px"></div>
 	<div id="lineChart1"
 		style="min-width: 400px; width: 1000px; height: 400px"></div>
 </div>

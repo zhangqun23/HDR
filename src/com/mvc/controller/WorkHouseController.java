@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
-import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.service.WorkHouseService;
 import com.utils.StringUtil;
@@ -176,7 +175,7 @@ public class WorkHouseController {
 	}
 
 	/**
-	 * 获取单个员工做房用时（----后期用缓存优化）
+	 * 获取单个用户做房用时（---后期用缓存优化）
 	 * 
 	 * @param request
 	 * @return
@@ -187,68 +186,7 @@ public class WorkHouseController {
 
 		Map<String, Object> map = JsonObjToMapUser(jsonObject);
 		String str = workHouseService.selectUserWorkHouseByLimits(map);
-		return str;
-	}
-
-	/**** 员工工作效率报表 ****/
-
-	/**
-	 * 查询员工工作效率
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("selectWorkEfficiencyByLimits.do")
-	public @ResponseBody String selectWorkEffByLimits(HttpServletRequest request) {
-		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
-
-		Map<String, Object> map = JsonObjToMapEff(jsonObject);
-		List<WorkEfficiency> list = workHouseService.selectWorkEffByLimits(map);
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		System.out.println("工作效率：" + jsonObject.toString());
-		return jsonObject.toString();
-	}
-
-	/**
-	 * 将JsonObject转换成Map，工作效率
-	 * 
-	 * @param jsonObject
-	 * @return
-	 */
-	private Map<String, Object> JsonObjToMapEff(JSONObject jsonObject) {
-		String startTime = null;
-		String endTime = null;
-		if (jsonObject.containsKey("startTime")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("startTime"))) {
-				startTime = StringUtil.dayFirstTime(jsonObject.getString("startTime"));// 开始时间
-			}
-		}
-		if (jsonObject.containsKey("endTime")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("endTime"))) {
-				endTime = StringUtil.dayLastTime(jsonObject.getString("endTime"));// 结束时间
-			}
-		}
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("startTime", startTime);
-		map.put("endTime", endTime);
-
-		return map;
-	}
-
-	/**
-	 * 工作效率分析
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("selectUserWorkEfficiencyByLimits.do")
-	public @ResponseBody String selectUserWorkEffByLimits(HttpServletRequest request) {
-		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
-
-		Map<String, Object> map = JsonObjToMapUser(jsonObject);
-		String str = workHouseService.selectUserWorkEffByLimits(map);
+		System.out.println("做房用时分析：" + str);
 		return str;
 	}
 

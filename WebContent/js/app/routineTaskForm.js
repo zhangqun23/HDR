@@ -125,7 +125,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	}
 	// zq获取做房效率列表A
-	services.selectWorkEfficiencyByLimits = function() {
+	services.selectWorkEfficiencyByLimits = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'workHouse/selectWorkEfficiencyByLimits.do',
@@ -133,7 +133,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		});
 	}
 	// zq获取个人做房效率B
-	services.selectUserWorkEfficiencyByLimits = function() {
+	services.selectUserWorkEfficiencyByLimits = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'workHouse/selectUserWorkEfficiencyByLimits.do',

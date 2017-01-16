@@ -23,7 +23,7 @@
 					required>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectLinenExpendFormByLimits()"></li>
+						type="button" value="查询" ng-click="selectLinenExpendFormByLlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -55,23 +55,23 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="linen in LinenExpend">
-				<td>linen.orderNum</td>
-				<td>linen.room_id</td>
-				<td>linen.bato_num</td>
-				<td>linen.facl_num</td>
-				<td>linen.besh_num</td>
-				<td>linen.hato_num</td>
-				<td>linen.medo_num</td>
-				<td>linen.flto_num</td>
-				<td>linen.baro_num</td>
-				<td>linen.slba_num</td>
-				<td>linen.duto_num</td>
-				<td>linen.pill_num</td>
-				<td>linen.shop_num</td>
-				<td>linen.laba_num</td>
-				<td>linen.piin_num</td>
-				<td>linen.blan_num</td>
+			<tr ng-repeat="linen in linenExpendFormList">
+				<td>{{linen.orderNum}}</td>
+				<td>{{linen.room_id}}</td>
+				<td>{{linen.bato_num}}</td>
+				<td>{{linen.facl_num}}</td>
+				<td>{{linen.besh_num}}</td>
+				<td>{{linen.hato_num}}</td>
+				<td>{{linen.medo_num}}</td>
+				<td>{{linen.flto_num}}</td>
+				<td>{{linen.baro_num}}</td>
+				<td>{{linen.slba_num}}</td>
+				<td>{{linen.duto_num}}</td>
+				<td>{{linen.pill_num}}</td>
+				<td>{{linen.shop_num}}</td>
+				<td>{{linen.laba_num}}</td>
+				<td>{{linen.piin_num}}</td>
+				<td>{{linen.blan_num}}</td>
 			</tr>
 		</tbody>
 	</table>

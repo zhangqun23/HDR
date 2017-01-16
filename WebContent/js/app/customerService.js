@@ -103,21 +103,34 @@ app
 									data : data
 								});
 							};
+							
 							// wq选择布草消耗
-							services.selectExpendFormByLimits = function(data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ 'expendForm/selectExpendFormBylimits.do',
-									data : data
-								});
-							};
-							services.selectLinenExpendFormByLimits = function(
+							services.selectLinenExpendFormByLlimits = function(
 									data) {
 								return $http({
 									method : 'post',
 									url : baseUrl
 											+ 'customerService/selectLinenExpendFormByLlimits.do',
+									data : data
+								});
+							};
+							// wq选择房间耗品
+							services.selectRoomExpendFormByRlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectRoomExpendFormByRlimits.do',
+									data : data
+								});
+							};
+							// wq选择卫生间耗品
+							services.selectWashExpendFormByWlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectWashExpendFormByWlimits.do',
 									data : data
 								});
 							};
@@ -153,13 +166,13 @@ app
 							// wq选择报表类型默认值
 							reportForm.formTypes = [ {
 								id : 0,
-								type : "过夜房"
+								type : "对客服务"
 							}, {
 								id : 1,
 								type : "离退房"
 							}, {
 								id : 2,
-								type : "对客服务"
+								type : "过夜房"
 							} ];
 
 							function preventDefault(e) {
@@ -173,7 +186,7 @@ app
 								}
 							}
 							// wq根据条件查找布草消耗列表
-							reportForm.selectLinenExpendFormByLimits = function() {
+							reportForm.selectLinenExpendFormByLlimits = function() {
 								if (reportForm.llimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
@@ -192,11 +205,12 @@ app
 									alert("请选择报表类型！");
 									return false;
 								}
-								var linenExpendFormLimit = JSON
+								var linenExpendFormLlimit = JSON
 										.stringify(reportForm.llimit);
-								services.selectLinenExpendFormByLimits({
-									llimit : linenExpendFormLimit
+								services.selectLinenExpendFormByLlimits({
+									llimit : linenExpendFormLlimit
 								}).success(function(data) {
+									//alert(data.list.length);
 									reportForm.linenExpendFormList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
@@ -206,7 +220,7 @@ app
 								});
 							}
 							// wq根据条件查找房间耗品消耗列表
-							reportForm.selectRoomExpendFormByLimits = function() {
+							reportForm.selectRoomExpendFormByRlimits = function() {
 								if (reportForm.rlimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
@@ -225,10 +239,10 @@ app
 									alert("请选择报表类型！");
 									return false;
 								}
-								var roomExpendFormLimit = JSON
-										.stringify(roomExpendForm.rlimit);
-								services.selectRoomExpendFormByLimits({
-									rlimit : roomExpendFormLimit
+								var roomExpendFormRlimit = JSON
+										.stringify(reportForm.rlimit);
+								services.selectRoomExpendFormByRlimits({
+									rlimit : roomExpendFormRlimit
 								}).success(function(data) {
 									reportForm.roomExpendFormList = data.list;
 									if (data.list.length) {
@@ -239,7 +253,7 @@ app
 								});
 							}
 							// wq根据条件查找卫生间耗品消耗列表
-							reportForm.selectWashExpendFormByLimits = function() {
+							reportForm.selectWashExpendFormByWlimits = function() {
 								if (reportForm.wlimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
@@ -258,10 +272,10 @@ app
 									alert("请选择报表类型！");
 									return false;
 								}
-								var washExpendFormLimit = JSON
-										.stringify(washExpendForm.llimit);
-								services.selectLinenExpendFormByLimits({
-									wlimit : washExpendFormLimit
+								var washExpendFormWlimit = JSON
+										.stringify(reportForm.wlimit);
+								services.selectLinenExpendFormByWlimits({
+									wlimit : washExpendFormWlimit
 								}).success(function(data) {
 									reportForm.washExpendFormList = data.list;
 									if (data.list.length) {

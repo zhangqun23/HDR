@@ -12,5 +12,7 @@ public interface ExpendFormDao {
 
 	//布草统计
 	List<Object> selectlinenExpend(Map<String, Object> map);
-
+	
+	//房间耗品统计
+	List<Object> selectroomExpend(Map<String, Object> map);
 }

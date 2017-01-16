@@ -1,6 +1,9 @@
 package com.mvc.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +19,9 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
+import com.utils.FileHelper;
 import com.utils.StringUtil;
+import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
 
@@ -49,12 +54,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 	// 部门员工做房用时统计
 	@Override
-<<<<<<< HEAD
-	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path) {
-		// List<WorkHouse> list = workHouseDao.selectWorkHouse();
-
-		return null;
-=======
 	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
 		map.put("deptId", departmentInfo.getDepartmentId());
@@ -91,7 +90,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		}
 
 		return byteArr;
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 	}
 
 	// 计算及排序
@@ -111,9 +109,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			workHouse.setNum_leave(obj[6].toString());// 离退房数量
 			workHouse.setTotal_time_leave(obj[7].toString());// 离退房总用时
 
-			workHouse.setAvg_time_dust(StringUtil.divide(obj[3].toString(), obj[2].toString()));// 抹尘房平均用时
-			workHouse.setAvg_time_night(StringUtil.divide(obj[5].toString(), obj[4].toString()));// 过夜房平均用时
-			workHouse.setAvg_time_leave(StringUtil.divide(obj[7].toString(), obj[6].toString()));// 离退房平均用时
+			String avg_time_dust = StringUtil.divide(obj[3].toString(), obj[2].toString());
+			workHouse.setAvg_time_dust(Float.valueOf(avg_time_dust));// 抹尘房平均用时
+			String avg_time_night = StringUtil.divide(obj[5].toString(), obj[4].toString());
+			workHouse.setAvg_time_night(Float.valueOf(avg_time_night));// 过夜房平均用时
+			String avg_time_leave = StringUtil.divide(obj[7].toString(), obj[6].toString());
+			workHouse.setAvg_time_leave(Float.valueOf(avg_time_leave));// 离退房平均用时
 
 			listGoal.add(workHouse);
 		}
@@ -138,7 +139,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	 * 排序并插入序号
 	 * 
 	 * @param list
-	 * @param filedName
+	 * @param filedNamezg
 	 *            按指定字段排序
 	 * @param ascFlag
 	 *            true升序,false降序
@@ -235,8 +236,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
-<<<<<<< HEAD
-=======
 	/**
 	 * list求和
 	 * 
@@ -371,9 +370,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		if (averHouseEff != null) {
-			jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
-		}
+		jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
 		String allAverHouseEff = StringUtil.divide(sumHouseTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency1", Float.valueOf(allAverHouseEff));// 全体员工平均做房效率
 
@@ -397,9 +394,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		if (averWorkEff != null) {
-			jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
-		}
+		jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
 		String allAverWorkEff = StringUtil.divide(sumWorkTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency", Float.valueOf(allAverWorkEff));// 全体员工平均工作效率
 
@@ -440,5 +435,4 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 }

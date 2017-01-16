@@ -279,11 +279,15 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 	@Override
 	public Map<String, Object> getWorkLoadAnalyseInfo(Map<String, String> map) {
 
+		Integer staffCount = 0;
 		Float averageData = (float) 0;
+		Float allAverageData = (float) 0;
+		Float totalActualWorkLoad = (float) 0;
 		WorkLoadMonth actualLoad = null;
 		Object[] obj = null;
 		Map<String, Object> resultData = new HashMap<String, Object>();
 		List<WorkLoadMonth> workLoadMonths = new ArrayList<WorkLoadMonth>();
+		List<Object> listSorce = new ArrayList<Object>();
 
 		Map<String, Object> dateMap = getDate(map);
 		String startTime = (String) dateMap.get("startTime");
@@ -291,26 +295,27 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		Integer monthNum = (Integer) dateMap.get("monthNum");
 		Integer staffId = Integer.valueOf(map.get("staffId"));
 
-		List<Object> listSorce = workLoadDao.getMonthWorkLoad(startTime, endTime, staffId);
-		Float totalActualWorkLoad = workLoadDao.getTotalActualWorkLoad(startTime, endTime);
-		Integer staffCount = workLoadDao.staffCount(startTime, endTime);
-
-		Iterator<Object> it = listSorce.iterator();
-		while (it.hasNext()) {
-			obj = (Object[]) it.next();
-			actualLoad = new WorkLoadMonth();
-			if (obj[0] != null)
-				actualLoad.setMonth(Integer.valueOf(obj[0].toString()).toString());
-			if (obj[1] != null) {
-				averageData += Float.valueOf(obj[1].toString());
-				actualLoad.setActualLoad(obj[1].toString());
+		staffCount = workLoadDao.staffCount(startTime, endTime);
+		if (staffCount != 0) {
+			listSorce = workLoadDao.getMonthWorkLoad(startTime, endTime, staffId);
+			totalActualWorkLoad = workLoadDao.getTotalActualWorkLoad(startTime, endTime);
+			Iterator<Object> it = listSorce.iterator();
+			while (it.hasNext()) {
+				obj = (Object[]) it.next();
+				actualLoad = new WorkLoadMonth();
+				if (obj[0] != null)
+					actualLoad.setMonth(Integer.valueOf(obj[0].toString()).toString());
+				if (obj[1] != null) {
+					averageData += Float.valueOf(obj[1].toString());
+					actualLoad.setActualLoad(String.format("%.2f", obj[1].toString()));
+				}
+				if (obj[2] != null)
+					actualLoad.setRatedLoad(String.format("%.2f", obj[2].toString()));
+				workLoadMonths.add(actualLoad);
 			}
-			if (obj[2] != null)
-				actualLoad.setRatedLoad(obj[2].toString());
-			workLoadMonths.add(actualLoad);
+			averageData = averageData / monthNum;
+			allAverageData = totalActualWorkLoad / monthNum / staffCount;
 		}
-		averageData = averageData / monthNum;
-		Float allAverageData = totalActualWorkLoad / monthNum / staffCount;
 		resultData.put("allAverageData", String.format("%.2f", allAverageData));
 		resultData.put("averageData", String.format("%.2f", averageData));
 		resultData.put("workLoadMonths", workLoadMonths);

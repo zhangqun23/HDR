@@ -443,34 +443,34 @@ public class WorkLoadController {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> map = new HashMap<String, String>();
-		// String checkYear = "2017";
-		// String quarter = "0";
-		// String staffId = "511";
-		String checkYear = "";
-		String quarter = "";
-		String staffId = "";
-
-		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
-			checkYear = request.getParameter("checkYear");
-			quarter = request.getParameter("quarter");
-			staffId = request.getParameter("staffId");
-			map.put("checkYear", checkYear);
-			map.put("quarter", quarter);
-			map.put("staffId", staffId);
-			result = workLoadService.getWorkLoadAnalyseInfo(map);
-			List<WorkLoadMonth> workLoadMonths = (List<WorkLoadMonth>) result.get("workLoadMonths");
-			System.out.println("allAverageData:" + result.get("allAverageData"));
-			System.out.println("averageData:" + result.get("averageData"));
-			for (int i = 0; i < workLoadMonths.size(); i++) {
-				System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";"
-						+ workLoadMonths.get(i).getActualLoad() + ";" + workLoadMonths.get(i).getRatedLoad());
-			}
-			jsonObject.put("allAverageData", (String) result.get("allAverageData"));
-			jsonObject.put("averageData", (String) result.get("averageData"));
-			jsonObject.put("workLoadMonths", workLoadMonths);
+		String checkYear = "2016";
+		String quarter = "0";
+		String staffId = "511";
+		// String checkYear = "";
+		// String quarter = "";
+		// String staffId = "";
+		//
+		// if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
+		// && StringUtil.strIsNotEmpty(request.getParameter("quarter"))
+		// && StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
+		// checkYear = request.getParameter("checkYear");
+		// quarter = request.getParameter("quarter");
+		// staffId = request.getParameter("staffId");
+		map.put("checkYear", checkYear);
+		map.put("quarter", quarter);
+		map.put("staffId", staffId);
+		result = workLoadService.getWorkLoadAnalyseInfo(map);
+		List<WorkLoadMonth> workLoadMonths = (List<WorkLoadMonth>) result.get("workLoadMonths");
+		System.out.println("allAverageData:" + result.get("allAverageData"));
+		System.out.println("averageData:" + result.get("averageData"));
+		for (int i = 0; i < workLoadMonths.size(); i++) {
+			System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";" + workLoadMonths.get(i).getActualLoad()
+					+ ";" + workLoadMonths.get(i).getRatedLoad());
 		}
+		jsonObject.put("allAverageData", (String) result.get("allAverageData"));
+		jsonObject.put("averageData", (String) result.get("averageData"));
+		jsonObject.put("workLoadMonths", workLoadMonths);
+		// }
 		return jsonObject.toString();
 	}
 

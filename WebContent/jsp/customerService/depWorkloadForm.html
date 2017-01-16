@@ -9,15 +9,15 @@
 
 	<div>
 		<div>
-			<form action="exportDepWorkload.do" method="post"
+			<form action="../customerServiceInformation/exportDepWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 				<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="depWorkloadLimit.start_time" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="depWorkloadLimit.end_time"
+						ng-model="depWorkloadLimit.start_time" required class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
+						type="text" name="endTime" ng-model="depWorkloadLimit.end_time" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectDepWorkload()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"

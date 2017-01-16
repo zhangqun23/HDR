@@ -385,7 +385,7 @@ app
 													var userData = [];
 													for ( var item in data.list) {
 														userData
-																.push(data.list[item]);
+																.push(changeNumType(data.list[item]));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -396,50 +396,50 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																12);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													}
@@ -473,6 +473,24 @@ app
 									$("#efficiencyTable").hide();
 									$("#detailTable").show();
 								}
+							}
+							// zq将小数保留两位小数
+							function changeNumType(number) {
+								if (!number) {
+									var defaultNum = 0;
+									var num = parseFloat(parseFloat(defaultNum)
+											.toFixed(2));
+								} else {
+									var num = parseFloat(parseFloat(number)
+											.toFixed(2));
+								}
+								return num;
+							}
+							// zq获取下拉框得到的员工姓名
+							checkRob.staffName = "";
+							checkRob.getStaffNameById = function() {
+								var name = $("#staffId").val();
+								checkRob.staffName = getSelectedStaff(name);
 							}
 							// zq初始化
 							function initData() {

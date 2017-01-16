@@ -793,7 +793,10 @@ app
 										.stringify(reportForm.staffWorkloadLimit);
 								services
 										.selectStaffWorkLoadAnalyse({
-											limit : staffWorkloadLimit
+											//limit : staffWorkloadLimit
+											checkYear:reportForm.staffWorkloadLimit.checkYear,
+											quarter:reportForm.staffWorkloadLimit.quarter,
+											staffId:reportForm.staffWorkloadLimit.staffId
 										})
 										.success(
 												function(data) {
@@ -807,13 +810,13 @@ app
 													var staffData = [];// 员工工作量
 													var ratedData = [];// 额定工作量
 
-													for ( var item in data.staffData) {
+													for ( var item in data.workLoadMonths) {
 														staffData
-																.push(data.staffData[item]);
+																.push(data.workLoadMonths[item].actualLoad);
 													}
-													for ( var item in data.ratedData) {
+													for ( var item in data.workLoadMonths) {
 														ratedData
-																.push(data.ratedData[item]);
+																.push(data.workLoadMonths[item].ratedLoad);
 													}
 													switch (nowQuarter) {
 													case '0':

@@ -27,6 +27,8 @@ import com.utils.FileHelper;
 import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
+import net.sf.json.JSONObject;
+
 /**
  * 工作量相关的service层接口实现
  * 
@@ -213,44 +215,92 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 	// 获取员工工作量分析图所需数据
 	@Override
-	public Map<String, Object> getWorkLoadAnalyseInfo(Map<String, String> map) {
-
+	public String getWorkLoadAnalyseInfo(Map<String, String> map) {
+		JSONObject jsonObject = new JSONObject();
+		Integer staffCount = 0;
 		Float averageData = (float) 0;
-		WorkLoadMonth actualLoad = null;
-		Object[] obj = null;
-		Map<String, Object> resultData = new HashMap<String, Object>();
+		Float allAverageData = (float) 0;
+		Float totalActualWorkLoad = (float) 0;
 		List<WorkLoadMonth> workLoadMonths = new ArrayList<WorkLoadMonth>();
+		List<Object> listSorce = new ArrayList<Object>();
 
 		Map<String, Object> dateMap = getDate(map);
 		String startTime = (String) dateMap.get("startTime");
 		String endTime = (String) dateMap.get("endTime");
 		Integer monthNum = (Integer) dateMap.get("monthNum");
+		Integer startMonth = (Integer) dateMap.get("startMonth");
+		Integer endMonth = (Integer) dateMap.get("endMonth");
 		Integer staffId = Integer.valueOf(map.get("staffId"));
 
-		List<Object> listSorce = workLoadDao.getMonthWorkLoad(startTime, endTime, staffId);
-		Float totalActualWorkLoad = workLoadDao.getTotalActualWorkLoad(startTime, endTime);
-		Integer staffCount = workLoadDao.staffCount(startTime, endTime);
+		staffCount = workLoadDao.staffCount(startTime, endTime);
+		if (staffCount != 0) {
 
-		Iterator<Object> it = listSorce.iterator();
-		while (it.hasNext()) {
-			obj = (Object[]) it.next();
-			actualLoad = new WorkLoadMonth();
-			if (obj[0] != null)
-				actualLoad.setMonth(Integer.valueOf(obj[0].toString()).toString());
-			if (obj[1] != null) {
-				averageData += Float.valueOf(obj[1].toString());
-				actualLoad.setActualLoad(obj[1].toString());
+			totalActualWorkLoad = workLoadDao.getTotalActualWorkLoad(startTime, endTime);
+			listSorce = workLoadDao.getMonthWorkLoad(startTime, endTime, staffId);
+			workLoadMonths = perMonth(listSorce, startMonth, endMonth);
+			for (int i = 0; i < workLoadMonths.size(); i++) {
+				averageData += workLoadMonths.get(i).getActualLoad();
 			}
-			if (obj[2] != null)
-				actualLoad.setRatedLoad(obj[2].toString());
-			workLoadMonths.add(actualLoad);
+			averageData = averageData / monthNum;
+			allAverageData = totalActualWorkLoad / monthNum / staffCount;
 		}
-		averageData = averageData / monthNum;
-		Float allAverageData = totalActualWorkLoad / monthNum / staffCount;
-		resultData.put("allAverageData", String.format("%.2f", allAverageData));
-		resultData.put("averageData", String.format("%.2f", averageData));
-		resultData.put("workLoadMonths", workLoadMonths);
-		return resultData;
+		System.out.println("allAverageData:" + allAverageData);
+		System.out.println("averageData:" + averageData);
+		for (int i = 0; i < workLoadMonths.size(); i++) {
+			System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";" + workLoadMonths.get(i).getActualLoad()
+					+ ";" + workLoadMonths.get(i).getRatedLoad());
+		}
+		jsonObject.put("allAverageData", allAverageData);
+		jsonObject.put("averageData", averageData);
+		jsonObject.put("workLoadMonths", workLoadMonths);
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 补齐缺少月份，将其字段设为0
+	 * 
+	 * @param list
+	 * @param startMonth
+	 * @param endMonth
+	 * @return
+	 */
+	private List<WorkLoadMonth> perMonth(List<Object> list, Integer startMonth, Integer endMonth) {
+
+		List<WorkLoadMonth> listGoal = new ArrayList<WorkLoadMonth>();
+		WorkLoadMonth actualLoad = null;
+		Integer len = endMonth - startMonth + 1;
+		Integer size = list.size();
+		Object[] obj = null;
+		Integer month = null;
+
+		for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+			actualLoad = new WorkLoadMonth();
+			if (i < size) {
+				obj = (Object[]) list.get(i);
+				month = Integer.valueOf(obj[0].toString());
+				if (month == j) {
+					actualLoad.setMonth(Integer.valueOf(obj[0].toString()));
+					if (obj[1] != null) {
+						actualLoad.setActualLoad(Float.valueOf(obj[1].toString()));
+					}
+					if (obj[2] != null)
+						actualLoad.setRatedLoad(Float.valueOf(obj[2].toString()));
+					listGoal.add(actualLoad);
+				} else {
+					actualLoad.setMonth(j);
+					actualLoad.setActualLoad((float) 0);
+					actualLoad.setRatedLoad((float) 0);
+					listGoal.add(actualLoad);
+					i--;
+				}
+			} else {
+				actualLoad.setMonth(j);
+				actualLoad.setActualLoad((float) 0);
+				actualLoad.setRatedLoad((float) 0);
+				listGoal.add(actualLoad);
+			}
+		}
+		return listGoal;
 	}
 
 	private Map<String, Object> getDate(Map<String, String> map) {
@@ -262,45 +312,56 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		String startTime = "";
 		String endTime = "";
 		String quarterName = "";
+		Integer startMonth = 1;
+		Integer endMonth = 12;
 
 		switch (quarter) {
 		case "0":
-			startTime = checkYear + "-01-01 00:00:00";
-			endTime = checkYear + "-12-31 23:59:59";
-			monthNum = 12;
+			startTime = "-01-01 00:00:00";
+			endTime = "-12-31 23:59:59";
 			quarterName = "全年";
 			break;
 		case "1":
-			startTime = checkYear + "-01-01 00:00:00";
-			endTime = checkYear + "-03-31 23:59:59";
+			startTime = "-01-01 00:00:00";
+			endTime = "-03-31 23:59:59";
 			monthNum = 3;
 			quarterName = "第一季度";
+			startMonth = 1;
+			endMonth = 3;
 			break;
 		case "2":
-			startTime = checkYear + "-04-01 00:00:00";
-			endTime = checkYear + "-06-30 23:59:59";
+			startTime = "-04-01 00:00:00";
+			endTime = "-06-30 23:59:59";
 			monthNum = 3;
 			quarterName = "第二季度";
+			startMonth = 4;
+			endMonth = 6;
 			break;
 		case "3":
-			startTime = checkYear + "-07-01 00:00:00";
-			endTime = checkYear + "-09-30 23:59:59";
+			startTime = "-07-01 00:00:00";
+			endTime = "-09-30 23:59:59";
 			monthNum = 3;
 			quarterName = "第三季度";
+			startMonth = 7;
+			endMonth = 9;
 			break;
 		case "4":
-			startTime = checkYear + "-10-01 00:00:00";
-			endTime = checkYear + "-12-31 23:59:59";
+			startTime = "-10-01 00:00:00";
+			endTime = "-12-31 23:59:59";
 			monthNum = 3;
 			quarterName = "第四季度";
+			startMonth = 10;
+			endMonth = 12;
 			break;
 		default:
 			break;
 		}
-		dateMap.put("startTime", startTime);
-		dateMap.put("endTime", endTime);
+		dateMap.put("startTime", checkYear + startTime);
+		dateMap.put("endTime", checkYear + endTime);
 		dateMap.put("monthNum", monthNum);
 		dateMap.put("quarterName", quarterName);
+		dateMap.put("startMonth", startMonth);
+		dateMap.put("endMonth", endMonth);
 		return dateMap;
 	}
 

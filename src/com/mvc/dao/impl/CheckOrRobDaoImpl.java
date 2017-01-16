@@ -33,7 +33,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("sum(case_info.given_time)/count(1) as given_time_avg,");
 		sql.append("count(1) AS work_count,");
 		sql.append("COALESCE (a.back_num, 0) AS back_num,");
-		sql.append("COALESCE (b.out_time_num, 0) AS out_time_num ");
+		sql.append("COALESCE (b.out_time_num, 0) AS out_time_num, ");
 		sql.append(" sum(case_info.use_time/case_info.given_time)/count(1) as rob_effeciency_avg ");
 		sql.append("FROM case_info ");
 		sql.append("LEFT JOIN call_info ON case_info.call_id = call_info.call_id ");

@@ -1,5 +1,9 @@
 package com.mvc.service.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,20 +11,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.HotelCustomerDao;
+import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
+import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.HotelCustomerService;
 import com.utils.CollectionUtil;
 import com.utils.DoubleFloatUtil;
+import com.utils.FileHelper;
 import com.utils.StringUtil;
+import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
 
-/**
+/** 
  * 酒店对客服务信息统计
  * 
  * @author wanghuimin
@@ -30,6 +39,8 @@ import net.sf.json.JSONObject;
 public class HotelCustomerServiceImpl implements HotelCustomerService {
 	@Autowired
 	HotelCustomerDao hotelCustomerDao;
+	@Autowired
+	DepartmentInfoRepository departmentInfoRepository;
 
 	// 将json转换为Map
 	@Override
@@ -44,7 +55,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		}
 		if (jsonObject.containsKey("end_time")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("end_time"))) {
-				starttime = jsonObject.getString("end_time");
+				endtime = jsonObject.getString("end_time");
 			}
 		}
 		if (jsonObject.containsKey("depart")) {
@@ -87,21 +98,23 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			hoCustomerService.setServiceLoad(obj[1].toString());
 			hoCustomerService.setTimeOutService(obj[2].toString());
 			hoCustomerService.setSumWorkTime(obj[3].toString());
+		
+			String overTime  = StringUtil.divide(obj[2].toString(),obj[1].toString());// 超时率		
+			String overtime=StringUtil.multiply(overTime, "100");
+			hoCustomerService.setTimeOutRate(overtime+"%");
 
-			Integer integer = Integer.valueOf(obj[2].toString()) / Integer.valueOf(obj[1].toString()) * 100;// 超时率
-			String overtime = integer.toString() + "%";
-			hoCustomerService.setTimeOutRate(overtime);
-
-			Integer integer0 = Integer.valueOf(obj[3].toString()) / Integer.valueOf(obj[1].toString());// 平均用时
-			hoCustomerService.setTimeOutRate(integer0.toString());
+			String averagetime =StringUtil.divide(obj[3].toString(), obj[1].toString());// 平均用时
+			hoCustomerService.setAverageWorkTime(averagetime);
+			System.out.println("测试："+averagetime);
 			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[1].toString());// 总计服务数量
 			timeOutService = DoubleFloatUtil.add(timeOutService, obj[2].toString());// 总计超时
 
-			timeOutRate = DoubleFloatUtil.add(timeOutRate, integer.toString());// 总计超时
-			timeOutRate0 = timeOutRate + "%";
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, overtime);// 总计超时率
 
 			listGoal.add(hoCustomerService);
 		}
+		timeOutRate0 = timeOutRate + "%";// (总计超时率)
+		
 		sortAndWrite(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
 		sortAndWrite(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
@@ -110,6 +123,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		hoCustomerService.setServiceLoad(serviceLoad);
 		hoCustomerService.setTimeOutService(timeOutService);
 		hoCustomerService.setTimeOutRate(timeOutRate0);
+		listGoal.add(hoCustomerService);
+		System.out.println(listGoal);
 
 		return listGoal;
 	}
@@ -129,6 +144,49 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		CollectionUtil<HoCustomerService> collectionUtil = new CollectionUtil<HoCustomerService>();
 		collectionUtil.writeSort(list, writeField);
+	}
+
+	// 导出酒店对客服务信息统计表
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportCustomerService(Map<String, Object> map, String path, String modelPath) {
+		ResponseEntity<byte[]> byteww = null;
+		String starttime = (String) map.get("start_time");// 开始时间
+		String endtime = (String) map.get("end_time");// 结束时间
+		List<HoCustomerService> listGoal = null;
+		WordHelper wh = new WordHelper();
+
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
+
+		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
+			List<Object> listSource = hotelCustomerDao.findHotelService(map);
+			Iterator<Object> it = listSource.iterator();
+			listGoal = listsourceToListGoal(it);
+		}
+		if (listGoal != null) {
+			String fileName = "酒店对客服务信息统计表.docx";
+			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
+
+			// 获取列表和文本信息
+			listMap.put("0", listGoal);
+			contentMap.put("${starttime}", starttime);
+			contentMap.put("${endtime}", starttime);
+
+			try {
+				OutputStream out = new FileOutputStream(path0);// 保存路径
+				wh.export2007Word(modelPath,listMap,contentMap,1,out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byteww = FileHelper.downloadFile(fileName, path0);
+
+		}
+
+		return byteww;
 	}
 	/*
 	 * ***********************************王慧敏报表1*******************************
@@ -164,21 +222,23 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			houseCustomerServiceLoad.setServiceLoad(obj[2].toString());
 			houseCustomerServiceLoad.setTimeOutService(obj[3].toString());
 			houseCustomerServiceLoad.setSumWorkTime(obj[4].toString());
-			Integer integer0 = Integer.valueOf(obj[4].toString()) / Integer.valueOf(obj[2].toString());// 平均用时
-			houseCustomerServiceLoad.setAverageWorkTime(integer0.toString());
+			String averagetime=StringUtil.divide(obj[4].toString(), obj[2].toString());// 平均用时
+			houseCustomerServiceLoad.setAverageWorkTime(averagetime);
 
-			Integer integer = Integer.valueOf(obj[3].toString()) / Integer.valueOf(obj[2].toString()) * 100;// 超时率
-			String overtime = integer.toString() + "%";
-			houseCustomerServiceLoad.setTimeOutRate(overtime);
+			String overTime=StringUtil.divide(obj[3].toString(), obj[2].toString());// 超时率
+			String overtime=StringUtil.multiply(overTime, "100");
+			houseCustomerServiceLoad.setTimeOutRate(overtime+"%");
 
 			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[2].toString());// 总计服务数量
 
 			timeOutService = DoubleFloatUtil.add(timeOutService, obj[3].toString());// 总计超时
-			timeOutRate = DoubleFloatUtil.add(timeOutRate, integer.toString());// 总计超时率
-			timeOutRate0 = timeOutRate + "%";
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, overtime);// 总计超时率
+			
 
 			listGoal.add(houseCustomerServiceLoad);
 		}
+		timeOutRate0 = timeOutRate + "%";//(总计超时率)
+		
 		sortAndWrite0(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
 		sortAndWrite0(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
@@ -187,6 +247,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		houseCustomerServiceLoad.setServiceLoad(serviceLoad);// 总计服务数量
 		houseCustomerServiceLoad.setTimeOutService(timeOutService);// 总计超时
 		houseCustomerServiceLoad.setTimeOutRate(timeOutRate0);// 总计超时率
+		listGoal.add(houseCustomerServiceLoad);
 
 		return listGoal;
 	}
@@ -208,10 +269,59 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		CollectionUtil<HouseCustomerServiceLoad> collectionUtil = new CollectionUtil<HouseCustomerServiceLoad>();
 		collectionUtil.writeSort(list, writeField);
 	}
+
+	// 导出部门对客服务工作量统计表
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportRoomWorkload(Map<String, Object> map, String path, String modelPath) {
+		ResponseEntity<byte[]> byteww = null;
+		String starttime = (String) map.get("start_time");// 开始时间
+		String endtime = (String) map.get("end_time");// 结束时间
+		List<HouseCustomerServiceLoad> listGoal = null;
+		WordHelper wh = new WordHelper();
+
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
+
+		String department = null;// 部门名称
+		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
+			List<Object> listSource = hotelCustomerDao.findDepartmentLoad(map);
+			Object[] objOne = (Object[]) listSource.get(0);
+			department = objOne[5].toString();
+			Iterator<Object> it = listSource.iterator();
+			listGoal = listloadToListGoal(it);
+		}
+		
+		if (listGoal != null) {
+			String fileName = department + "对客服务信息统计表.docx";
+			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
+
+			// 获取列表和文本信息
+			listMap.put("0", listGoal);
+			contentMap.put("${starttime}", starttime);
+			contentMap.put("${endtime}", starttime);
+			contentMap.put("${depart}", department);
+
+			try {
+				OutputStream out = new FileOutputStream(path0);// 保存路径
+				wh.export2007Word(modelPath, listMap, contentMap,1,out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byteww = FileHelper.downloadFile(fileName, path0);
+
+		}
+
+		return byteww;
+	}
 	/*
 	 * ***********************************王慧敏报表2*******************************
 	 */
 
+	// 查询部门对客服务类型统计
 	@Override
 	public List<HouseCustomerServiceType> findRoomType(Map<String, Object> map) {
 		List<Object> listSource = hotelCustomerDao.findRoomType(map);
@@ -239,20 +349,23 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			houseCustomerServiceType.setServiceLoad(obj[1].toString());
 			houseCustomerServiceType.setGiveTime(obj[2].toString());
 			houseCustomerServiceType.setTimeOutServiceLoad(obj[4].toString());
-			Integer integer0 = Integer.valueOf(obj[3].toString()) / Integer.valueOf(obj[1].toString());// 平均用时
-			houseCustomerServiceType.setAverageWorkTime(integer0.toString());
+			String averagertime=StringUtil.divide(obj[3].toString(), obj[1].toString());// 平均用时
+			houseCustomerServiceType.setAverageWorkTime(averagertime);
 
-			Integer integer = Integer.valueOf(obj[4].toString()) / Integer.valueOf(obj[1].toString()) * 100;// 超时率
-			String overtime = integer.toString() + "%";
-			houseCustomerServiceType.setTimeOutRate(overtime);
+			String overTime=StringUtil.divide(obj[4].toString(), obj[1].toString());// 超时率
+			String overtime=StringUtil.multiply(overTime, "100");
+			houseCustomerServiceType.setTimeOutRate(overtime+"%");
 
 			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[1].toString());// 总计服务数量
 			timeOutService = DoubleFloatUtil.add(timeOutService, obj[4].toString());// 总计超时
-			timeOutRate = DoubleFloatUtil.add(timeOutRate, integer.toString());// 总计超时率
-			timeOutRate0 = timeOutRate + "%";
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, overtime);// 总计超时率
+			
 
 			listGoal.add(houseCustomerServiceType);
 		}
+		
+		timeOutRate0 = timeOutRate + "%";// (总计超时率)
+		
 		sortAndWrite1(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
 		sortAndWrite1(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
@@ -261,6 +374,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		houseCustomerServiceType.setServiceLoad(serviceLoad);// 总计服务数量
 		houseCustomerServiceType.setTimeOutServiceLoad(timeOutService);// 总计超时
 		houseCustomerServiceType.setTimeOutRate(timeOutRate0);// 总计超时率
+		listGoal.add(houseCustomerServiceType);
 
 		return listGoal;
 	}
@@ -281,6 +395,68 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		CollectionUtil<HouseCustomerServiceType> collectionUtil = new CollectionUtil<HouseCustomerServiceType>();
 		collectionUtil.writeSort(list, writeField);
+	}
+	// 导出部门对客服务服务类型统计表
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path, String modelPath) {
+		ResponseEntity<byte[]> byteww = null;
+		String starttime = (String) map.get("start_time");// 开始时间
+		String endtime = (String) map.get("end_time");// 结束时间
+		List<HouseCustomerServiceType> listGoal = null;
+		WordHelper wh = new WordHelper();
+
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
+
+		String department = null;//部门名称
+		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
+			List<Object> listSource = hotelCustomerDao.findRoomType(map);
+			Object[] objOne = (Object[]) listSource.get(0);
+			department = objOne[5].toString();
+			Iterator<Object> it = listSource.iterator();
+			listGoal = listtypeToListGoal(it);		
+
+		}
+		if (listGoal != null) {
+			String fileName = department + "对客服务服务类型统计表.docx";
+			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
+
+			// 获取列表和文本信息
+			listMap.put("0", listGoal);
+			contentMap.put("${starttime}", starttime);
+			contentMap.put("${endtime}", starttime);
+			contentMap.put("${depart}", department);
+
+			try {
+				OutputStream out = new FileOutputStream(path0);// 保存路径
+				wh.export2007Word(modelPath, listMap, contentMap,1,out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byteww = FileHelper.downloadFile(fileName, path0);
+
+		}
+
+		return byteww;
+	}
+
+	/*
+	 * ***********************************王慧敏报表需求*******************************
+	 */
+	// 查询部门列表
+	@Override
+	public List<DepartmentInfo> findDep() {
+		return departmentInfoRepository.selectDep();
+	}
+
+	// 根据部门ID筛选员工信息
+	@Override
+	public List<Object> findStaffByDepId(String departid) {
+		return hotelCustomerDao.findStaffByDepId(departid);
 	}
 
 }

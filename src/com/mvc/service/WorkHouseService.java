@@ -22,6 +22,9 @@ public interface WorkHouseService {
 	// 部门员工做房用时统计
 	ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path, String tempPath);
 
+	// 部门员工做房用时分析导出
+	ResponseEntity<byte[]> exportWorkHouseAna(Map<String, Object> map, String path, String tempPath, String picPath);
+
 	// 获取单个员工做房用时
 	String selectUserWorkHouseByLimits(Map<String, Object> map);
 

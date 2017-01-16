@@ -44,7 +44,6 @@
 				<th class="width5" colspan="3">抹尘房</th>
 				<th class="width5" colspan="3">过夜房</th>
 				<th class="width5" colspan="3">离退房</th>
-
 			</tr>
 			<tr>
 				<th class="width5">数量</th>
@@ -60,18 +59,18 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="r in workRejectList">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td>{{r.orderNum}}</td>
+				<td>{{r.staff_name}}</td>
+				<td>{{r.staff_no}}</td>
+				<td>{{r.num_dust}}</td>
+				<td>{{r.reject_dust}}</td>
+				<td>{{r.reject_dust_eff}}</td>
+				<td>{{r.num_night}}</td>
+				<td>{{r.reject_night}}</td>
+				<td>{{r.reject_night_eff}}</td>
+				<td>{{r.num_leave}}</td>
+				<td>{{r.reject_leave}}</td>
+				<td>{{r.reject_leave_eff}}</td>
 			</tr>
 		</tbody>
 	</table>

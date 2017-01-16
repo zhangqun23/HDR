@@ -292,8 +292,8 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String picPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
 		map.put("deptId", departmentInfo.getDepartmentId());
-		String sortName = (String) map.remove("sortName");
-		String roomType = (String) map.get("roomType");
+		String staffName = (String) map.get("staffName");
+		String sortName = (String) map.get("sortName");
 		String cleanType = (String) map.get("cleanType");
 		String cleanTypeStr = CleanType.intToStr(Integer.valueOf(cleanType));
 		String year = (String) map.get("checkYear");
@@ -302,17 +302,19 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工" + sortName + roomType + cleanTypeStr + "做房用时分析.docx";
+			String fileName = "客房部员工" + sortName + cleanTypeStr + "做房用时分析.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
 			Map<String, Object> contentMap = new HashMap<String, Object>();
-			contentMap.put("${sortName}", sortName);
-			contentMap.put("${roomType}", roomType);
+			contentMap.put("${staffName}", staffName);
+			contentMap.put("${roomType}", sortName);// 房间类型名称
 			contentMap.put("${cleanType}", cleanTypeStr);
 			if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
 				String startTime = StringUtil.quarterFirstDay(year, quarter);
 				String endTime = StringUtil.quarterLastDay(year, quarter);
+				startTime = startTime.substring(0, 11);// 保留到天
+				endTime = endTime.substring(0, 11);
 				contentMap.put("${startTime}", startTime);
 				contentMap.put("${endTime}", endTime);
 			}
@@ -326,12 +328,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			}
 			Map<String, Object> picMap = null;
 			picMap = new HashMap<String, Object>();
-			picMap.put("width", 420);
-			picMap.put("height", 280);
+			picMap.put("width", 500);
+			picMap.put("height", 320);
 			picMap.put("type", "png");
 			try {
 				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为png格式，并保存到服务器
-				picMap.put("picContent", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
+				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

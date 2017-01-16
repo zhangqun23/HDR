@@ -791,7 +791,10 @@ app
 										.stringify(reportForm.staffWorkloadLimit);
 								services
 										.selectStaffWorkLoadAnalyse({
-											limit : staffWorkloadLimit
+											//limit : staffWorkloadLimit
+											checkYear:reportForm.staffWorkloadLimit.checkYear,
+											quarter:reportForm.staffWorkloadLimit.quarter,
+											staffId:reportForm.staffWorkloadLimit.staffId
 										})
 										.success(
 												function(data) {
@@ -807,11 +810,11 @@ app
 
 													for ( var item in data.staffData) {
 														staffData
-																.push(data.staffData[item]);
+																.push(data.workLoadMonths[item].actualLoad);
 													}
 													for ( var item in data.ratedData) {
 														ratedData
-																.push(data.ratedData[item]);
+																.push(data.workLoadMonths[item].ratedLoad);
 													}
 													switch (nowQuarter) {
 													case '0':

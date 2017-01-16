@@ -13,11 +13,11 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
-						ng-model="workLoadLevelLimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="workLoadLevelLimit.endTime"
+						ng-model="workLoadLevelLimit.startTime" required class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
+						type="text" name="endTime" ng-model="workLoadLevelLimit.endTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkloadLevel()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -47,9 +47,9 @@
 				<td>{{level.orderNum}}</td>
 				<td>{{level.staffName}}</td>
 				<td>{{level.staffNo}}</td>
-				<td>{{level.ratedLoad}}</td>
-				<td>{{level.actualLoad}}</td>
-				<td>{{level.beyondLoad}}</td>
+				<td>{{level.ratedLoad| numFloat}}</td>
+				<td>{{level.actualLoad| numFloat}}</td>
+				<td>{{level.beyondLoad| numFloat}}</td>
 				<td>{{level.outOfRang}}</td>
 			</tr>
 		</tbody>

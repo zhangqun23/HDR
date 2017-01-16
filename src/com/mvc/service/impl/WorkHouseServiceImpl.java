@@ -332,7 +332,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			picMap.put("height", 320);
 			picMap.put("type", "png");
 			try {
-				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为 png格式，并保存到服务器
+				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为png格式，并保存到服务器
 				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
 			} catch (Exception ex) {
 				ex.printStackTrace();

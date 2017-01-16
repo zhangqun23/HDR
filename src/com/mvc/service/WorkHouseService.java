@@ -35,4 +35,10 @@ public interface WorkHouseService {
 
 	// 获取单个员工工作效率
 	String selectUserWorkEffByLimits(Map<String, Object> map);
+
+	// 部门员工工作效率统计导出
+	ResponseEntity<byte[]> exportWorkEffByLimits(Map<String, Object> map, String path, String tempPath);
+
+	// 部门员工工作效率分析导出
+	ResponseEntity<byte[]> exportWorkEffAna(Map<String, Object> map, String path, String tempPath, String picPath);
 }

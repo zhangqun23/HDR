@@ -29,5 +29,9 @@ public class ReportFormConstants {
 	public static final String WORKHOUSE_PATH = DICTIONARY + "workHouse.docx";
 	// 部门员工做房用时分析
 	public static final String WORKHOUSEANA_PATH = DICTIONARY + "houseAnalyse.docx";
+	// 部门员工工作效率统计表
+	public static final String WORKEFF_PATH = DICTIONARY + "workEff.docx";
+	// 部门员工工作效率分析
+	public static final String WORKEFFANA_PATH = DICTIONARY + "workEffAna.docx";
 
 }

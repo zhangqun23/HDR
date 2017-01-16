@@ -1,5 +1,6 @@
 package com.mvc.service.impl;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.base.enums.CleanType;
 import com.mvc.dao.WorkHouseDao;
 import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.WorkEfficiency;
@@ -21,6 +23,7 @@ import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
+import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
@@ -283,6 +286,67 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return sum;
 	}
 
+	// 部门员工做房用时分析导出
+	@Override
+	public ResponseEntity<byte[]> exportWorkHouseAna(Map<String, Object> map, String path, String tempPath,
+			String picPath) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+		String sortName = (String) map.remove("sortName");
+		String roomType = (String) map.get("roomType");
+		String cleanType = (String) map.get("cleanType");
+		String cleanTypeStr = CleanType.intToStr(Integer.valueOf(cleanType));
+		String year = (String) map.get("checkYear");
+		String quarter = (String) map.get("quarter");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			String fileName = "客房部员工" + sortName + roomType + cleanTypeStr + "做房用时分析.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("${sortName}", sortName);
+			contentMap.put("${roomType}", roomType);
+			contentMap.put("${cleanType}", cleanTypeStr);
+			if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
+				String startTime = StringUtil.quarterFirstDay(year, quarter);
+				String endTime = StringUtil.quarterLastDay(year, quarter);
+				contentMap.put("${startTime}", startTime);
+				contentMap.put("${endTime}", endTime);
+			}
+
+			// 图片相关
+			String svg1 = (String) map.get("chart1SVGStr");
+			String picName1 = null;
+			if (StringUtil.strIsNotEmpty(svg1)) {
+				picName1 = "pic1.png";
+				picPath = FileHelper.transPath(picName1, picPath);
+			}
+			Map<String, Object> picMap = null;
+			picMap = new HashMap<String, Object>();
+			picMap.put("width", 420);
+			picMap.put("height", 280);
+			picMap.put("type", "png");
+			try {
+				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为png格式，并保存到服务器
+				picMap.put("picContent", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			contentMap.put("${pic1}", picMap);
+
+			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
 	/**** 员工工作效率报表 ****/
 
 	// 查询员工工作效率
@@ -370,7 +434,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
+		if (averHouseEff != null) {
+			jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
+		}
 		String allAverHouseEff = StringUtil.divide(sumHouseTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency1", Float.valueOf(allAverHouseEff));// 全体员工平均做房效率
 
@@ -394,7 +460,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
+		if (averWorkEff != null) {
+			jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
+		}
 		String allAverWorkEff = StringUtil.divide(sumWorkTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency", Float.valueOf(allAverWorkEff));// 全体员工平均工作效率
 

@@ -25,7 +25,9 @@ public class ReportFormConstants {
 	// 客房部员工工作量饱和度分析表word模版
 	public static final String WORDLOADLEVEL_PATH = DICTIONARY + "WorkLoadLevel.docx";
 
-	//部门员工做房用时统计表
+	// 部门员工做房用时统计表
 	public static final String WORKHOUSE_PATH = DICTIONARY + "workHouse.docx";
-	
+	// 部门员工做房用时分析
+	public static final String WORKHOUSEANA_PATH = DICTIONARY + "houseAnalyse.docx";
+
 }

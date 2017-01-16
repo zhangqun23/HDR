@@ -10,31 +10,31 @@ package com.mvc.entityReport;
  * @date 2017年1月12日
  */
 public class WorkLoadMonth {
-	private String month;// 月份
-	private String actualLoad;// 该月份实际总工作量
-	private String ratedLoad;// 该月份额定总工作量
+	private Integer month;// 月份
+	private Float actualLoad;// 该月份实际总工作量
+	private Float ratedLoad;// 该月份额定总工作量
 
-	public String getMonth() {
+	public Integer getMonth() {
 		return month;
 	}
 
-	public void setMonth(String month) {
+	public void setMonth(Integer month) {
 		this.month = month;
 	}
 
-	public String getActualLoad() {
+	public Float getActualLoad() {
 		return actualLoad;
 	}
 
-	public void setActualLoad(String actualLoad) {
+	public void setActualLoad(Float actualLoad) {
 		this.actualLoad = actualLoad;
 	}
 
-	public String getRatedLoad() {
+	public Float getRatedLoad() {
 		return ratedLoad;
 	}
 
-	public void setRatedLoad(String ratedLoad) {
+	public void setRatedLoad(Float ratedLoad) {
 		this.ratedLoad = ratedLoad;
 	}
 

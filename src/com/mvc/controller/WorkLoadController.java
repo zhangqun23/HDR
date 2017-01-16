@@ -17,7 +17,6 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
-import com.mvc.entityReport.WorkLoadMonth;
 import com.mvc.service.WorkLoadService;
 import com.utils.StringUtil;
 
@@ -48,8 +47,6 @@ public class WorkLoadController {
 	public @ResponseBody String getWorkLoadSummaryList(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 
-		// String startDate = "2016-01-01";
-		// String endDate = "2017-01-20";
 		List<WorkLoad> workLoadList = null;
 		String startDate = "";
 		String endDate = "";
@@ -59,12 +56,6 @@ public class WorkLoadController {
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
 			workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
-		}
-		for (int i = 0; i < workLoadList.size(); i++) {
-			System.out.println("结果：");
-			System.out.println(workLoadList.get(i).getStaffName() + workLoadList.get(i).getStaffNo() + ": 抹尘房"
-					+ workLoadList.get(i).getCleanRoom() + ";过夜房" + workLoadList.get(i).getOvernightRoom() + ";离退房"
-					+ workLoadList.get(i).getCheckoutRoom());
 		}
 
 		jsonObject.put("workLoadList", workLoadList);
@@ -81,8 +72,6 @@ public class WorkLoadController {
 	@RequestMapping("/exportWorkLoadSummaryList.do")
 	public ResponseEntity<byte[]> exportWorkLoadSummaryList(HttpServletRequest request, HttpServletResponse response) {
 
-		// String startDate = "2016-01-01";
-		// String endDate = "2018-01-20";
 		ResponseEntity<byte[]> byteArr = null;
 		String startDate = "";
 		String endDate = "";
@@ -144,8 +133,6 @@ public class WorkLoadController {
 	public ResponseEntity<byte[]> exportWorkLoadLevelList(HttpServletRequest request, HttpServletResponse response) {
 
 		ResponseEntity<byte[]> byteArr = null;
-		// String startDate = "2016-01-01";
-		// String endDate = "2018-01-20";
 		String startDate = "";
 		String endDate = "";
 
@@ -175,42 +162,30 @@ public class WorkLoadController {
 	 * @param request
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/getStaffWorkLoadAnalyse.do")
 	public @ResponseBody String getWorkLoadAnalyse(HttpServletRequest request) {
-
-		JSONObject jsonObject = new JSONObject();
-		Map<String, Object> result = new HashMap<String, Object>();
+		String str = "";
 		Map<String, String> map = new HashMap<String, String>();
-		String checkYear = "2016";
-		String quarter = "0";
-		String staffId = "511";
-		// String checkYear = "";
-		// String quarter = "";
-		// String staffId = "";
-		//
-		// if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
-		// && StringUtil.strIsNotEmpty(request.getParameter("quarter"))
-		// && StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
-		// checkYear = request.getParameter("checkYear");
-		// quarter = request.getParameter("quarter");
-		// staffId = request.getParameter("staffId");
-		map.put("checkYear", checkYear);
-		map.put("quarter", quarter);
-		map.put("staffId", staffId);
-		result = workLoadService.getWorkLoadAnalyseInfo(map);
-		List<WorkLoadMonth> workLoadMonths = (List<WorkLoadMonth>) result.get("workLoadMonths");
-		System.out.println("allAverageData:" + result.get("allAverageData"));
-		System.out.println("averageData:" + result.get("averageData"));
-		for (int i = 0; i < workLoadMonths.size(); i++) {
-			System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";" + workLoadMonths.get(i).getActualLoad()
-					+ ";" + workLoadMonths.get(i).getRatedLoad());
+		// String checkYear = "2017";
+		// String quarter = "1";
+		// String staffId = "511";
+		String checkYear = "";
+		String quarter = "";
+		String staffId = "";
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
+			checkYear = request.getParameter("checkYear");
+			quarter = request.getParameter("quarter");
+			staffId = request.getParameter("staffId");
+			map.put("checkYear", checkYear);
+			map.put("quarter", quarter);
+			map.put("staffId", staffId);
+
+			str = workLoadService.getWorkLoadAnalyseInfo(map);
 		}
-		jsonObject.put("allAverageData", (String) result.get("allAverageData"));
-		jsonObject.put("averageData", (String) result.get("averageData"));
-		jsonObject.put("workLoadMonths", workLoadMonths);
-		// }
-		return jsonObject.toString();
+		return str;
 	}
 
 	/**

@@ -200,9 +200,9 @@ public class WorkHouseController {
 	public ResponseEntity<byte[]> exportUserWorkHouseByLimits(HttpServletRequest request) {
 		String checkYear = null;
 		String quarter = null;
-		String roomType = null;
+		String sortName = null;
 		String cleanType = null;
-		String staffId = null;
+		String staffName = null;
 		String chart1SVGStr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
@@ -211,14 +211,14 @@ public class WorkHouseController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("quarter"))) {
 			quarter = request.getParameter("quarter");// 季度
 		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("roomType"))) {
-			roomType = request.getParameter("roomType");// 房间类型
+		if (StringUtil.strIsNotEmpty(request.getParameter("sortName"))) {
+			sortName = request.getParameter("sortName");// 房间类型名称(sort_name)
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("cleanType"))) {
 			cleanType = request.getParameter("cleanType");// 打扫类型
 		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
-			staffId = request.getParameter("staffId");// 员工ID
+		if (StringUtil.strIsNotEmpty(request.getParameter("staffName"))) {
+			staffName = request.getParameter("staffName");// 员工姓名
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))) {
 			chart1SVGStr = request.getParameter("chart1SVGStr");// SVG图片字符串
@@ -227,9 +227,9 @@ public class WorkHouseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("checkYear", checkYear);
 		map.put("quarter", quarter);
-		map.put("roomType", roomType);
+		map.put("sortName", sortName);
 		map.put("cleanType", cleanType);
-		map.put("staffId", staffId);
+		map.put("staffName", staffName);
 		map.put("chart1SVGStr", chart1SVGStr);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径

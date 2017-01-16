@@ -521,3 +521,10 @@ app.controller('CustomerServiceController', [
 			}
 			initData();
 		} ]);
+//lwt:小数转换为百分数过滤器
+app.filter('numPercent', function() {
+	return function(input) {
+		var number=(input*100).toFixed(2)+"%";
+		return number;
+	}
+});

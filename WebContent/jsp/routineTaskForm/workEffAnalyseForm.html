@@ -2,12 +2,20 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
+<<<<<<< HEAD
+=======
+		<li><a href="">做房效率分析</a></li>
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	</ul>
 </div>
 
 <div class="rightinfo">
 	<div class="tools" style="">
+<<<<<<< HEAD
 		<form action="exportUserWorkHouseBylimits.do" method="post"
+=======
+		<form action="exportUserWorkEfficiencyBylimits.do" method="post"
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 			enctype="multipart/form-data">
 			<ul class="projectListLimit">
 				<li><label>年份</label><input type="text" name="checkYear"
@@ -20,20 +28,38 @@
 							ng-repeat="q in quarters">{{q.type}}</option>
 				</select></li>
 				<li><label>员工</label><select class="dfselect layoutStyle"
+<<<<<<< HEAD
 					style="width: 110px" ng-model="whaLimit.staffId" name="staffId"
+=======
+					style="width: 110px" ng-model="weafLimit.staffId" name="staffId"
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 					required>
 						<option value="">请选择</option>
 						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
 				</select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
+<<<<<<< HEAD
 					type="button" value="查询" ng-click="selectUserWorkHouseByLimits()"></li>
 				<li><input id="chart1-svg" name="chart1SVGStr" type="text" class="hidden" /></li>
+=======
+					type="button" value="查询"
+					ng-click="selectUserWorkEfficiencyByLimits()"></li>
+				<li><input id="chart-svg" name="chartSVGStr" type="text"
+					class="hidden" /></li>
+				<li><input id="chart1-svg" name="chart1SVGStr" type="text"
+					class="hidden" /></li>
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 				<li><input class="btn layoutStyle" style="width: 60px"
 					type="submit" value="导出"></li>
 			</ul>
 		</form>
 
 	</div>
+<<<<<<< HEAD
+=======
+	<div id="lineChart"
+		style="min-width: 400px; width: 1000px; height: 400px"></div>
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	<div id="lineChart1"
 		style="min-width: 400px; width: 1000px; height: 400px"></div>
 </div>

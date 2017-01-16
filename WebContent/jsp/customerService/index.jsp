@@ -20,7 +20,11 @@
 <script>
 	$(function() {
 		$('dd').find('ul').css("display", "none");
+<<<<<<< HEAD
 		$('#report-ul').css("display", "block");
+=======
+		$('#customerService-ul').css("display", "block");
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		var currentPage = sessionStorage.getItem("currentPage");
 		if (currentPage) {
 			$("#" + currentPage).addClass("active");

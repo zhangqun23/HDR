@@ -20,10 +20,17 @@
 							ng-repeat="q in quarters">{{q.type}}</option>
 				</select></li>
 				<li><label>员工</label><select class="dfselect layoutStyle"
+<<<<<<< HEAD
 					style="width: 110px" ng-model="staffWorkloadLimit.staffId" name="staffNo"
 					required>
 						<option value="">请选择</option>
 						<option value="{{s.staff_no}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
+=======
+					style="width: 110px" ng-model="staffWorkloadLimit.staffId" name="staffId"
+					required>
+						<option value="">请选择</option>
+						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 				</select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
 					type="button" value="查询" ng-click="selectStaffWorkLoadAnalyse()"></li>

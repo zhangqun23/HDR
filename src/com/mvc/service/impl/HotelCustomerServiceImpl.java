@@ -1,9 +1,12 @@
 package com.mvc.service.impl;
 
+<<<<<<< HEAD
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,22 @@ import com.utils.WordHelper;
 import net.sf.json.JSONObject;
 
 /** 
+=======
+import org.springframework.stereotype.Service;
+
+import com.mvc.dao.HotelCustomerDao;
+import com.mvc.entityReport.HoCustomerService;
+import com.mvc.entityReport.HouseCustomerServiceLoad;
+import com.mvc.entityReport.HouseCustomerServiceType;
+import com.mvc.service.HotelCustomerService;
+import com.utils.CollectionUtil;
+import com.utils.DoubleFloatUtil;
+import com.utils.StringUtil;
+
+import net.sf.json.JSONObject;
+
+/**
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
  * 酒店对客服务信息统计
  * 
  * @author wanghuimin
@@ -39,8 +59,11 @@ import net.sf.json.JSONObject;
 public class HotelCustomerServiceImpl implements HotelCustomerService {
 	@Autowired
 	HotelCustomerDao hotelCustomerDao;
+<<<<<<< HEAD
 	@Autowired
 	DepartmentInfoRepository departmentInfoRepository;
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 	// 将json转换为Map
 	@Override
@@ -55,7 +78,11 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		}
 		if (jsonObject.containsKey("end_time")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("end_time"))) {
+<<<<<<< HEAD
 				endtime = jsonObject.getString("end_time");
+=======
+				starttime = jsonObject.getString("end_time");
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 			}
 		}
 		if (jsonObject.containsKey("depart")) {
@@ -98,6 +125,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			hoCustomerService.setServiceLoad(obj[1].toString());
 			hoCustomerService.setTimeOutService(obj[2].toString());
 			hoCustomerService.setSumWorkTime(obj[3].toString());
+<<<<<<< HEAD
 		
 			String overTime  = StringUtil.divide(obj[2].toString(),obj[1].toString());// 超时率		
 			String overtime=StringUtil.multiply(overTime, "100");
@@ -115,6 +143,23 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		}
 		timeOutRate0 = timeOutRate + "%";// (总计超时率)
 		
+=======
+
+			Integer integer = Integer.valueOf(obj[2].toString()) / Integer.valueOf(obj[1].toString()) * 100;// 超时率
+			String overtime = integer.toString() + "%";
+			hoCustomerService.setTimeOutRate(overtime);
+
+			Integer integer0 = Integer.valueOf(obj[3].toString()) / Integer.valueOf(obj[1].toString());// 平均用时
+			hoCustomerService.setTimeOutRate(integer0.toString());
+			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[1].toString());// 总计服务数量
+			timeOutService = DoubleFloatUtil.add(timeOutService, obj[2].toString());// 总计超时
+
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, integer.toString());// 总计超时
+			timeOutRate0 = timeOutRate + "%";
+
+			listGoal.add(hoCustomerService);
+		}
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		sortAndWrite(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
 		sortAndWrite(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
@@ -123,8 +168,11 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		hoCustomerService.setServiceLoad(serviceLoad);
 		hoCustomerService.setTimeOutService(timeOutService);
 		hoCustomerService.setTimeOutRate(timeOutRate0);
+<<<<<<< HEAD
 		listGoal.add(hoCustomerService);
 		System.out.println(listGoal);
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 		return listGoal;
 	}
@@ -145,6 +193,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		CollectionUtil<HoCustomerService> collectionUtil = new CollectionUtil<HoCustomerService>();
 		collectionUtil.writeSort(list, writeField);
 	}
+<<<<<<< HEAD
 
 	// 导出酒店对客服务信息统计表
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -188,6 +237,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 
 		return byteww;
 	}
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	/*
 	 * ***********************************王慧敏报表1*******************************
 	 */
@@ -222,16 +273,26 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			houseCustomerServiceLoad.setServiceLoad(obj[2].toString());
 			houseCustomerServiceLoad.setTimeOutService(obj[3].toString());
 			houseCustomerServiceLoad.setSumWorkTime(obj[4].toString());
+<<<<<<< HEAD
 			String averagetime=StringUtil.divide(obj[4].toString(), obj[2].toString());// 平均用时
 			houseCustomerServiceLoad.setAverageWorkTime(averagetime);
 
 			String overTime=StringUtil.divide(obj[3].toString(), obj[2].toString());// 超时率
 			String overtime=StringUtil.multiply(overTime, "100");
 			houseCustomerServiceLoad.setTimeOutRate(overtime+"%");
+=======
+			Integer integer0 = Integer.valueOf(obj[4].toString()) / Integer.valueOf(obj[2].toString());// 平均用时
+			houseCustomerServiceLoad.setAverageWorkTime(integer0.toString());
+
+			Integer integer = Integer.valueOf(obj[3].toString()) / Integer.valueOf(obj[2].toString()) * 100;// 超时率
+			String overtime = integer.toString() + "%";
+			houseCustomerServiceLoad.setTimeOutRate(overtime);
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[2].toString());// 总计服务数量
 
 			timeOutService = DoubleFloatUtil.add(timeOutService, obj[3].toString());// 总计超时
+<<<<<<< HEAD
 			timeOutRate = DoubleFloatUtil.add(timeOutRate, overtime);// 总计超时率
 			
 
@@ -239,6 +300,13 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		}
 		timeOutRate0 = timeOutRate + "%";//(总计超时率)
 		
+=======
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, integer.toString());// 总计超时率
+			timeOutRate0 = timeOutRate + "%";
+
+			listGoal.add(houseCustomerServiceLoad);
+		}
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		sortAndWrite0(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
 		sortAndWrite0(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
@@ -247,7 +315,10 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		houseCustomerServiceLoad.setServiceLoad(serviceLoad);// 总计服务数量
 		houseCustomerServiceLoad.setTimeOutService(timeOutService);// 总计超时
 		houseCustomerServiceLoad.setTimeOutRate(timeOutRate0);// 总计超时率
+<<<<<<< HEAD
 		listGoal.add(houseCustomerServiceLoad);
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 		return listGoal;
 	}
@@ -269,6 +340,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		CollectionUtil<HouseCustomerServiceLoad> collectionUtil = new CollectionUtil<HouseCustomerServiceLoad>();
 		collectionUtil.writeSort(list, writeField);
 	}
+<<<<<<< HEAD
 
 	// 导出部门对客服务工作量统计表
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -317,11 +389,16 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 
 		return byteww;
 	}
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	/*
 	 * ***********************************王慧敏报表2*******************************
 	 */
 
+<<<<<<< HEAD
 	// 查询部门对客服务类型统计
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	@Override
 	public List<HouseCustomerServiceType> findRoomType(Map<String, Object> map) {
 		List<Object> listSource = hotelCustomerDao.findRoomType(map);
@@ -349,6 +426,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			houseCustomerServiceType.setServiceLoad(obj[1].toString());
 			houseCustomerServiceType.setGiveTime(obj[2].toString());
 			houseCustomerServiceType.setTimeOutServiceLoad(obj[4].toString());
+<<<<<<< HEAD
 			String averagertime=StringUtil.divide(obj[3].toString(), obj[1].toString());// 平均用时
 			houseCustomerServiceType.setAverageWorkTime(averagertime);
 
@@ -366,6 +444,22 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		
 		timeOutRate0 = timeOutRate + "%";// (总计超时率)
 		
+=======
+			Integer integer0 = Integer.valueOf(obj[3].toString()) / Integer.valueOf(obj[1].toString());// 平均用时
+			houseCustomerServiceType.setAverageWorkTime(integer0.toString());
+
+			Integer integer = Integer.valueOf(obj[4].toString()) / Integer.valueOf(obj[1].toString()) * 100;// 超时率
+			String overtime = integer.toString() + "%";
+			houseCustomerServiceType.setTimeOutRate(overtime);
+
+			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[1].toString());// 总计服务数量
+			timeOutService = DoubleFloatUtil.add(timeOutService, obj[4].toString());// 总计超时
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, integer.toString());// 总计超时率
+			timeOutRate0 = timeOutRate + "%";
+
+			listGoal.add(houseCustomerServiceType);
+		}
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		sortAndWrite1(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
 		sortAndWrite1(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
@@ -374,7 +468,10 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		houseCustomerServiceType.setServiceLoad(serviceLoad);// 总计服务数量
 		houseCustomerServiceType.setTimeOutServiceLoad(timeOutService);// 总计超时
 		houseCustomerServiceType.setTimeOutRate(timeOutRate0);// 总计超时率
+<<<<<<< HEAD
 		listGoal.add(houseCustomerServiceType);
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 		return listGoal;
 	}
@@ -396,6 +493,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		CollectionUtil<HouseCustomerServiceType> collectionUtil = new CollectionUtil<HouseCustomerServiceType>();
 		collectionUtil.writeSort(list, writeField);
 	}
+<<<<<<< HEAD
 	// 导出部门对客服务服务类型统计表
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -458,5 +556,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 	public List<Object> findStaffByDepId(String departid) {
 		return hotelCustomerDao.findStaffByDepId(departid);
 	}
+=======
+>>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 }

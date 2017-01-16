@@ -26,6 +26,7 @@
 						type="button" value="查询" ng-click="selectType()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
+					<li><input id="barJsonStr" name="barJsonStr" type="text" class="hidden" /></li>	
 				</ul>
 
 			</form>
@@ -63,8 +64,8 @@
 	</table>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 </div>
+<div id="barJson" style="width: 550px; height: 400px; margin: 0 auto"></div>
 
-柱状图
 
 
 

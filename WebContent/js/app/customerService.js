@@ -456,6 +456,27 @@ app.controller('CustomerServiceController', [
 					}
 				});
 			}
+			// lwt为生成条形图拼data
+			function combine(da, name, arr) {
+				var ss = new Object();
+				ss.name = name;
+				ss.data = arr;
+				da.push(ss);
+			}
+			// lwt条形图公用函数
+			function lineChartForm(data, elementId, title,
+					lx_Axis, ly_title) {
+				var chart1 = new LineChart({
+					elementId : elementId,
+					title : title,
+					data : data,
+					lx_Axis : lx_Axis,
+					ly_title : ly_title,
+					subTitle : ''
+				});
+				chart1.init();
+
+			}
 			// 初始化
 			function initData() {
 				console.log("初始化页面信息");

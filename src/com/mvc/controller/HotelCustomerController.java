@@ -28,7 +28,7 @@ import net.sf.json.JSONObject;
  */
 @Controller
 @RequestMapping("/customerServiceInformation")
-public class CustomerServiceInformationController {
+public class HotelCustomerController {
 	@Autowired
 	HotelCustomerService hotelCustomerService;
 	

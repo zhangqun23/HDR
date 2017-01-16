@@ -9,13 +9,13 @@
 
 	<div>
 		<div>
-			<form action="exportWorkLoadLevelList.do" method="post"
+			<form action="../workLoad/exportWorkLoadLevelList.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止年月</label><input type="text" name="startTime"
+					<li><label>起止年月</label><input type="text" name="startDate"
 						ng-model="workLoadLevelLimit.startTime" required class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endTime" ng-model="workLoadLevelLimit.endTime" required
+						type="text" name="endDate" ng-model="workLoadLevelLimit.endTime" required
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -35,6 +35,7 @@
 				<th class="width10">序号</th>
 				<th class="width10">员工姓名</th>
 				<th class="width10">员工编号</th>
+				<th class="width10">工作天数</th>
 				<th class="width10">额定工作量</th>
 				<th class="width10">实际工作量</th>
 				<th class="width10">超出工作量</th>
@@ -47,6 +48,7 @@
 				<td>{{level.orderNum}}</td>
 				<td>{{level.staffName}}</td>
 				<td>{{level.staffNo}}</td>
+				<td>{{level.workDays}}</td>
 				<td>{{level.ratedLoad| numFloat}}</td>
 				<td>{{level.actualLoad| numFloat}}</td>
 				<td>{{level.beyondLoad| numFloat}}</td>

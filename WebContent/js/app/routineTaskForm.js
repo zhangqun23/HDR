@@ -811,12 +811,10 @@ app
 													var ratedData = [];// 额定工作量
 
 													for ( var item in data.workLoadMonths) {
-														alert("员工工作量:"+data.workLoadMonths[item].actualLoad);
 														staffData
 																.push(data.workLoadMonths[item].actualLoad);
 													}
 													for ( var item in data.workLoadMonths) {
-														alert("额定:"+data.workLoadMonths[item].ratedLoad);
 														ratedData
 																.push(data.workLoadMonths[item].ratedLoad);
 													}

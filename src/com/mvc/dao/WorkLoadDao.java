@@ -1,12 +1,6 @@
-/**
- * 
- */
 package com.mvc.dao;
 
 import java.util.List;
-
-import com.mvc.entity.GoodsInfo;
-import com.mvc.entity.RoomInfo;
 
 /**
  * 工作量相关的dao层接口
@@ -16,9 +10,7 @@ import com.mvc.entity.RoomInfo;
  */
 public interface WorkLoadDao {
 
-	List<RoomInfo> count();
-
-	// huiminjun
-	List<GoodsInfo> count0();
+	// 获取员工工作量汇总列表
+	List<Object> getWorkRecordSummary(String startTime, String endTime);
 
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.dao.impl;
 
 import java.util.List;
@@ -13,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.mchange.util.ObjectCache;
 import com.mvc.dao.WorkLoadDao;
-import com.mvc.entity.GoodsInfo;
-import com.mvc.entity.RoomInfo;
 
 /**
  * 工作量相关的dao层接口实现
@@ -31,23 +25,25 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
-	public List<RoomInfo> count() {
-		EntityManager em = emf.createEntityManager();
-		String countSql = " select * from room_info ";
-		Query query = em.createNativeQuery(countSql, RoomInfo.class);
-		@SuppressWarnings("unchecked")
-		List<RoomInfo> list = query.getResultList();
-		em.close();
-		return list;
-	}
-	//huiminjun试验
-	@SuppressWarnings("unchecked")
+	// 获取员工打扫各类房间的数量列表
 	@Override
-	public List<GoodsInfo> count0() {
+	public List<Object> getWorkRecordSummary(String startTime, String endTime) {
+
 		EntityManager em = emf.createEntityManager();
-		String countSql = " select * from goods_info ";
-		Query query = em.createNativeQuery(countSql,GoodsInfo.class);
-		List<GoodsInfo> list = query.getResultList();
+		StringBuilder selectSql = new StringBuilder();
+		startTime = startTime + " 00:00:00";
+		endTime = endTime + " 23:59:59";
+
+		selectSql.append(
+				"select staff_no,staff_name,coalesce(sum(clean_room_workload),0) clean_room, coalesce(sum(checkout_room_workload),0) checkout_room,coalesce(sum(overnight_room_workload),0)overnight_room,coalesce(sum(actual_load),0)actual_load,coalesce(sum(beyond_load),0) beyond_load");
+		selectSql.append(" from work_record ");
+		selectSql.append(" where close_time between '" + startTime + "' and '" + endTime + "'");
+		selectSql.append(" group by staff_id ");
+		System.out.println("selectSql:" + selectSql);
+
+		Query query = em.createNativeQuery(selectSql.toString());
+		@SuppressWarnings("unchecked")
+		List<Object> list = query.getResultList();
 		em.close();
 		return list;
 	}

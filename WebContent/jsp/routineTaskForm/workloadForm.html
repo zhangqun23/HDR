@@ -1,0 +1,66 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="">例行任务统计/员工工作量统计</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div>
+		<div>
+			<form action="exportWorkLoadSummaryList.do" method="post"
+				enctype="multipart/form-data">
+				<ul class="projectListLimit">
+					<li><label>起止日期</label><input type="text" name="startTime"
+						ng-model="workloadLimit.startTime" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						type="text" name="endTime" ng-model="workloadLimit.endTime"
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+				    <li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click="selectWorkloadByLimits()"></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="submit" value="导出"></li>
+				</ul>
+
+			</form>
+		</div>
+
+	</div>
+
+	<table class="tablelist tablestyle">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">员工姓名</th>
+				<th class="width10">员工编号</th>
+				<th class="width10">抹尘房</th>
+				<th class="width10">过夜房</th>
+				<th class="width10">离退房</th>
+				<th class="width10">实际工作量</th>
+				<th class="width10">超出工作量</th>
+				<th class="width10">排名</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="workload in workloadList">
+				<td>workload.orderNum</td>
+				<td>workload.staffName</td>
+				<td>workload.staffNo</td>
+				<td>workload.cleanRoom</td>
+				<td>workload.overnightRoom</td>
+				<td>workload.checkoutRoom</td>
+				<td>workload.actualLoad</td>
+				<td>workload.beyondLoad</td>
+				<td>workload.rank</td>
+			</tr>
+		</tbody>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<div class="tcdPageCode">页码容器</div>
+</div>
+
+
+

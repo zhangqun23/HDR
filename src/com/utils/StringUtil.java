@@ -216,6 +216,7 @@ public class StringUtil {
 		return str;
 	}
 
+
 	/**
 	 * 将Float型字符串转换成%形式
 	 * 

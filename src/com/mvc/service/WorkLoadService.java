@@ -29,7 +29,7 @@ public interface WorkLoadService {
 	ResponseEntity<byte[]> exportWorkLoadLevelList(Map<String, Object> map);
 
 	// 获取员工工作量分析图所需数据
-	Map<String, Object> getWorkLoadAnalyseInfo(Map<String, String> map);
+	String getWorkLoadAnalyseInfo(Map<String, String> map);
 
 	// 导出员工工作量分析图
 	ResponseEntity<byte[]> exportWorkLoadAnalyse(Map<String, String> map);

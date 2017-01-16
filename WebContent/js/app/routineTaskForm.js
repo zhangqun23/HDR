@@ -1087,7 +1087,7 @@ app
 							// zq扇形图公用函数
 							function pieChartForm(elementId, title, dataName,
 									data) {
-								var chart1 = new LineChart({
+								var chart1 = new Chart({
 									elementId : elementId,
 									title : title,
 									data : data,
@@ -1097,12 +1097,14 @@ app
 							}
 							// zq将小数保留两位小数
 							function changeNumType(number) {
+								alert("number"+number);
 								if (!number) {
-									var number = parseFloat('0').toFixed(2);
+									var num = parseFloat('0').toFixed(2);
 								} else {
-									var number = parseFloat(input).toFixed(2);
+									var num = parseFloat(number).toFixed(2);
 								}
-								return number;
+								alert("num"+num);
+								return num;
 							}
 							// zq初始化
 							function initData() {

@@ -451,9 +451,29 @@ app.controller('CustomerServiceController', [
 					reportForm.typeList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;
+						
+						var title =  getSelectedDepartName(reportForm.typeLimit.depart)+"对客服务类型条形图分析";// 条形图标题显示
+						var xAxis = [];// 横坐标显示
+						var yAxis = "单位:数量";// 纵坐标显示
+						var barData = [];//最终传入bar1中的data
+						var serviceLoads = [];
+						for ( var item in data.list) {
+							if(data.list[item].serviceType!=''){
+							xAxis.push(data.list[item].serviceType);
+							serviceLoads.push(parseInt(data.list[item].serviceLoad));}
+						}
+						combine(barData,'服务完成数量',serviceLoads);
+						barForm(barData,"#bar1",title,xAxis,yAxis);
+						$('#bar-svg')
+						.val(
+								$(
+										"#bar1")
+										.highcharts()
+										.getSVG());
 					} else {
 						reportForm.listIsShow = true;
 					}
+				
 				});
 			}
 			// lwt为生成条形图拼data
@@ -465,17 +485,27 @@ app.controller('CustomerServiceController', [
 			}
 			// lwt条形图公用函数
 			function barForm(data, elementId, title,
-					lx_Axis, ly_title) {
+					x_Axis, y_title) {
 				var bar1 = new BarChart({
 					elementId : elementId,
 					title : title,
-					data : data,
-					lx_Axis : lx_Axis,
-					ly_title : ly_title,
-					subTitle : ''
+					subTitle : '',
+					hx_Axis : x_Axis,
+					hy_title : y_title,
+					unit:'',
+					data : data
 				});
-				chart1.init();
-
+				bar1.init();
+			}
+			// lwt获取所选部门的名称
+			function getSelectedDepartName(departId) {
+				var departName = "";
+				for ( var item in reportForm.depts) {
+					if (reportForm.depts[item].departmentId == departId) {
+						departName = reportForm.depts[item].departmentName;
+					}
+				}
+				return departName;
 			}
 			// 初始化
 			function initData() {

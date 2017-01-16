@@ -101,7 +101,6 @@ public class WorkLoadController {
 			map.put("endDate", endDate);
 			map.put("path", path);
 			map.put("modelPath", modelPath);
-
 			byteArr = workLoadService.exportWorkLoadSummaryList(map);
 		}
 		return byteArr;
@@ -207,7 +206,6 @@ public class WorkLoadController {
 				System.out.println("结果：" + workLoadMonths.get(i).getMonth() + ";"
 						+ workLoadMonths.get(i).getActualLoad() + ";" + workLoadMonths.get(i).getRatedLoad());
 			}
-
 			jsonObject.put("allAverageData", (String) result.get("allAverageData"));
 			jsonObject.put("averageData", (String) result.get("averageData"));
 			jsonObject.put("workLoadMonths", workLoadMonths);

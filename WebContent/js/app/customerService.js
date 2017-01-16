@@ -464,9 +464,9 @@ app.controller('CustomerServiceController', [
 				da.push(ss);
 			}
 			// lwt条形图公用函数
-			function lineChartForm(data, elementId, title,
+			function barForm(data, elementId, title,
 					lx_Axis, ly_title) {
-				var chart1 = new LineChart({
+				var bar1 = new BarChart({
 					elementId : elementId,
 					title : title,
 					data : data,

@@ -148,3 +148,74 @@ Histogram.prototype.init = function() {
 						series : this.data
 					});
 }
+function BarChart(data) {
+	this.elementId = data.elementId;
+	this.title = data.title;
+	this.subTitle = data.subTitle;
+	this.x_Axis = data.hx_Axis;
+	this.y_title = data.hy_title;
+	this.unit = data.unit;
+	this.data=data.data;
+}
+BarChart.prototype.init = function() {
+	$(this.elementId)
+			.highcharts(
+					{
+						chart : {
+							type : 'bar'
+						},
+						title : {
+							text : this.title
+						},
+						subtitle : {
+							text : this.subTitle
+						},
+						xAxis : {
+							categories : this.x_Axis,
+							title : {
+								text : null
+							}
+						},
+						yAxis : {
+							min : 0,
+							title : {
+								text : this.y_title,
+								align : 'high'
+							},
+							labels : {
+								overflow : 'justify'
+							}
+						},
+						tooltip : {
+							valueSuffix : this.unit
+						},
+						plotOptions : {
+							bar : {
+								dataLabels : {
+									enabled : true
+								}
+							}
+						},
+						legend : {
+							layout : 'vertical',
+							align : 'right',
+							verticalAlign : 'top',
+							x : -40,
+							y : 100,
+							floating : true,
+							borderWidth : 1,
+							backgroundColor : ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+							shadow : true
+						},
+						credits : {
+							enabled : false
+						},
+
+						series : this.data
+							/*[ {
+							name : 'Year 1800',
+							data : [ 107, 31, 635, 203, 2 ]
+						} ]*/
+
+					});
+}

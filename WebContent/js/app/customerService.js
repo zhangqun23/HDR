@@ -86,6 +86,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 	})
 } ]);
 app.constant('baseUrl', '/HDR/');
+<<<<<<< HEAD
 app
 		.factory(
 				'services',
@@ -94,6 +95,63 @@ app
 						'baseUrl',
 						function($http, baseUrl) {
 							var services = {};
+=======
+app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
+	var services = {};
+	 // wq选择布草消耗
+	services.selectExpendFormByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'expendForm/selectExpendFormBylimits.do',
+			data : data
+			});
+		};
+	// lwt:查询部门对客服务工作量
+	services.selectDepWorkload = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl
+					+ 'customerServiceInformation/selectDepWorkload.do',
+			data : data
+	});
+	};
+	// lwt:查询员工对客服务工作量
+	services.selectStaffWorkload = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl
+					+ 'customerServiceInformation/selectStaffWorkload.do',
+			data : data
+		});
+	};
+	// lwt:查询客房部对客服务类型统计
+	services.selectType = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl
+					+ 'customerServiceInformation/selectType.do',
+			data : data
+		});
+	};	
+	//lwt:查询部门列表
+	services.selectDepart = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl
+					+ 'customerServiceInformation/selectDep.do',
+			data : data
+		});
+	};	
+	//lwt:根据部门ID筛选出员工列表
+	services.selectStaffByDepId = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl
+					+ 'customerServiceInformation/selectStaffByDepId.do',
+			data : data
+		});
+	};
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 
 							// lwt:筛选出部门
 							services.selectDep = function(data) {
@@ -295,15 +353,151 @@ app
 									return false;
 								}
 							}
+							// lwt对客服务部门设置条件
+							reportForm.depWorkloadLimit = {
+								start_time : "",
+								end_time : ""
+							};
+							// lwt对客服务员工工作量统计设置条件
+							reportForm.staffWorkloadLimit = {
+								start_time : "",
+								end_time : "",
+								depart : ""
+							}
+							// lwt对客服务类型统计
+							reportForm.typeLimit = {
+								start_time : "",
+								end_time : "",
+								depart : ""
+
+							}
+							// lwt查询部门列表
+							function selectDepart() {
+								services.selectDepart().success(
+										function(data) {
+											reportForm.depts = data;
+										});
+							}
+							// lwt根据部门id筛选出员工列表
+							function selectStaffByDepId() {
+								services.selectStaffByDepId().success(
+										function(data) {
+											reportForm.staffs = data.list;
+										});
+							}
+							// lwt根据条件查找部门对客服务工作量
+							reportForm.selectDepWorkload = function() {
+								if (reportForm.depWorkloadLimit.start_time == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.depWorkloadLimit.end_time == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(reportForm.depWorkloadLimit.start_time,
+										reportForm.depWorkloadLimit.end_time)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								var depWorkloadLimit = JSON
+										.stringify(reportForm.depWorkloadLimit);
+								services.selectDepWorkload({
+									limit : depWorkloadLimit
+								}).success(function(data) {
+									reportForm.depWorkloadList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+							// lwt根据条件查找员工对客服务工作量
+							reportForm.selectStaffWorkload = function() {
+								if (reportForm.staffWorkloadLimit.start_time == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.staffWorkloadLimit.end_time == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(reportForm.staffWorkloadLimit.start_time,
+										reportForm.staffWorkloadLimit.end_time)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.staffWorkloadLimit.depart == "") {
+									alert("请选择部门！");
+									return false;
+								}
+
+								var staffWorkloadLimit = JSON
+										.stringify(reportForm.staffWorkloadLimit);
+								services.selectStaffWorkload({
+									limit : staffWorkloadLimit
+								}).success(function(data) {
+									reportForm.staffWorkloadList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+
+							// lwt根据条件查找服务类型统计
+							reportForm.selectType = function() {
+								if (reportForm.typeLimit.start_time == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.typeLimit.end_time == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(reportForm.typeLimit.start_time,
+										reportForm.typeLimit.end_time)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.typeLimit.depart == "") {
+									alert("请选择部门！");
+									return false;
+								}
+
+								var typeLimit = JSON.stringify(reportForm.typeLimit);
+								services.selectType({
+									limit : typeLimit
+								}).success(function(data) {
+									reportForm.typeList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
+<<<<<<< HEAD
 								if ($location.path().indexOf(
 										'/staffWorkloadForm') == 0) {
 
 								} else if ($location.path()
 										.indexOf('/typeForm') == 0) {
 
+=======
+								if ($location.path().indexOf('/staffWorkloadForm') == 0) {
+									selectDepart();
+									selectStaffByDepId();
+									
+								} else if ($location.path().indexOf(
+										'/typeForm') == 0) {
+									selectDepart();
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 								}
 							}
 							initData();

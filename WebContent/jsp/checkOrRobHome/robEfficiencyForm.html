@@ -2,6 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
+		<li><a href="">抢房效率统计</a></li>
 	</ul>
 </div>
 
@@ -9,27 +10,52 @@
 
 	<div>
 		<div>
+<<<<<<< HEAD
 			<form action="exportWorkHouseBylimits.do" method="post"
+=======
+			<form action="exportRobBylimits.do" method="post"
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
+					<li><label>报表类型</label><select class="dfselect layoutStyle"
+						style="width: 140px" ng-model="reLimit.tableType" required
+						name="tableType" id="tableType" ng-change="changeTable()">
+							<option value="0">抢房效率表</option>
+							<option value="1">抢房明细表</option>
+					</select></li>
 					<li><label>起止年月</label><input type="text" name="startTime"
+<<<<<<< HEAD
 						ng-model="limit.startTime" class="dfselect dateLayoutStyle"
+=======
+						ng-model="reLimit.startTime" required
+						class="dfselect dateLayoutStyle"
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
 						type="text" name="endTime" ng-model="limit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><label>房间类型</label><select class="dfselect layoutStyle"
+<<<<<<< HEAD
 						style="width: 140px" ng-model="limit.roomType" name="roomType"><option
+=======
+						style="width: 140px" ng-model="reLimit.roomType" required
+						name="roomType" id="roomSortType" ng-change="getSortNameByNo()"><option
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 								value="">请选择</option>
 							<option value="{{r.sortNo}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
+<<<<<<< HEAD
 						type="button" value="查询" ng-click="selectWorkHouseByLimits()"></li>
+=======
+						type="button" value="查询" ng-click="selectRobByLimits()"></li>
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
 
 			</form>
 		</div>
+<<<<<<< HEAD
 		<div style="clear: both"></div>
 		<ul style="text-align: right">
 			<li><span>用时单位：分钟</span></li>
@@ -37,6 +63,15 @@
 	</div>
 
 	<table class="tablelist tablestyle">
+=======
+
+	</div>
+	<table class="tablelist tablestyle" id="efficiencyTable">
+		<caption align="top" class="tableTitle">
+			<div class="tableTitle">客房部员工抢房 {{sortName}} 工作效率统计表</div>
+			<div>统计时间：{{reLimit.startTime}}&nbsp;至 &nbsp;{{reLimit.endTime}}</div>
+		</caption>
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 		<thead>
 			<tr>
 				<th class="width5" rowspan="2">序号</th>
@@ -84,8 +119,40 @@
 			</tr>
 		</tbody>
 	</table>
+	<table class="tablelist tablestyle hidden" id="detailTable">
+		<caption align="top" class="tableTitle">客房部员工抢房 {{sortName}}
+			明细表</caption>
+		<thead>
+			<tr>
+				<th class="width3">序号</th>
+				<th class="width5">房号</th>
+				<th class="width7">做房时间（分钟）</th>
+				<th class="width7">给定时间(分钟)</th>
+				<th class="width5">效率</th>
+				<th class="width7">完成员工</th>
+				<th class="width5">驳回次数</th>
+				<th class="width5">检查用时（分钟）</th>
+				<th class="width7">检查人</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="r in robDetailList">
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+				<td>{{}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="tcdPageCode">页码容器</div>
+
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-	<!-- <div class="tcdPageCode">页码容器</div> -->
+
 </div>
 
 

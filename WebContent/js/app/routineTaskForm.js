@@ -71,8 +71,8 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/workloadAnalysis', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workloadAnalysis.html',
 		controller : 'ReportController'
-	}).when('/workloadSaturationForm', {
-		templateUrl : '/HDR/jsp/routineTaskForm/workloadSaturationForm.html',
+	}).when('/workloadLevelForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workloadLevelForm.html',
 		controller : 'ReportController'
 	}).when('/workHouseForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workHouseForm.html',
@@ -86,13 +86,19 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/workEffAnalyseForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workEffAnalyseForm.html',
 		controller : 'ReportController'
+	}).when('/workRejectForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workRejectForm.html',
+		controller : 'ReportController'
+	}).when('/workRejectAnalyseForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workRejectAnalyseForm.html',
+		controller : 'ReportController'
 	})
 } ]);
 
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	// zq获取做房用时列表
+	// zq获取做房用时列表A
 	services.selectWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -116,7 +122,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// zq获取单个用户的做房用时
+	// zq获取单个用户的做房用时B
 	services.selectUserWorkHouseByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -124,14 +130,56 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
-	// zq获取做房效率列表
-	services.selectWorkEfficiencyByLimits = function() {
+	// zq获取做房效率列表A
+	services.selectWorkEfficiencyByLimits = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'workHouse/selectWorkEfficiencyByLimits.do',
 			data : data
 		});
 	}
+<<<<<<< HEAD
+=======
+	// zq获取个人做房效率B
+	services.selectUserWorkEfficiencyByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workHouse/selectUserWorkEfficiencyByLimits.do',
+			data : data
+		});
+	};
+	// lwt例行任务员工工作量统计
+	services.selectWorkloadByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/getWorkLoadSummaryList.do',
+			data : data
+		});
+	}
+	// lwt例行任务员工工作量分析
+	services.selectStaffWorkLoadAnalyse = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/getStaffWorkLoadAnalyse.do',
+			data : data
+		});
+	}
+	// lwt例行任务员工工作量饱和度分析
+	services.selectWorkloadLevel = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/getWorkLoadLevelList.do',
+			data : data
+		});
+	}
+	services.selectWorkRejectByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/selectWorkRejectByLimits.do',
+			data : data
+		});
+	};
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 	return services;
 } ]);
 app
@@ -196,6 +244,22 @@ app
 								quarter : "0",
 								staffId : ""
 							};
+<<<<<<< HEAD
+=======
+							// 获取房间类型名称
+							reportForm.sortName = "";
+							// zq驳回率统计
+							reportForm.wrLimit = {
+								startTime : "",
+								endTime : ""
+							}
+							// zq驳回率分析折线图条件
+							reportForm.wraLimit = {
+								checkYear : "",
+								quarter : "0",
+								staffId : ""
+							}
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -502,18 +566,30 @@ app
 										.success(
 												function(data) {
 													var title = "客房员工工作效率分析折线图";// 折线图标题显示
+													var title1 = "客房员工做房效率分析折线图";
 													var xAxis = [];// 横坐标显示
-													var yAxis = "做房效率";// 纵坐标显示
+													var yAxis = "效率";// 纵坐标显示
 													var nowQuarter = reportForm.weafLimit.quarter;// 当前的选择季度
 													var lineName = getSelectedStaff(reportForm.weafLimit.staffId)
+															+ "员工工作效率";
+													var lineName1 = getSelectedStaff(reportForm.weafLimit.staffId)
 															+ "员工做房效率";
 													var lineData = [];// 最终传入chart1中的data
-													var allAverageData = [];// 全体员工做房效率的平均Data
-													var averageData = [];// 个人平均做房效率
-													var userData = [];
+													var lineData1 = [];
+													var allAverageData = [];// 全体员工工作效率的平均Data
+													var averageData = [];// 个人平均工作效率
+													var lineData1 = [];// 最终传入chart1中的data
+													var allAverageData1 = [];// 全体员工做房效率的平均Data
+													var averageData1 = [];// 个人平均做房效率
+													var userData = [];// 个人工作效率
+													var userData1 = [];// 个人做房效率
 													for ( var item in data.list) {
 														userData
 																.push(data.list[item]);
+													}
+													for ( var item in data.list1) {
+														userData1
+																.push(data.list1[item]);
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -529,6 +605,12 @@ app
 														averageData = getAverageData(
 																data.averWorkEfficiency,
 																12);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																12);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
+																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
@@ -538,6 +620,12 @@ app
 																3);
 														averageData = getAverageData(
 																data.averWorkEfficiency,
+																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
 																3);
 														break;
 													case '2':
@@ -549,6 +637,12 @@ app
 														averageData = getAverageData(
 																data.averWorkEfficiency,
 																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
+																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
@@ -558,6 +652,12 @@ app
 																3);
 														averageData = getAverageData(
 																data.averWorkEfficiency,
+																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
 																3);
 														break;
 													case '4':
@@ -569,18 +669,44 @@ app
 														averageData = getAverageData(
 																data.averWorkEfficiency,
 																3);
+														allAverageData1 = getAverageData(
+																data.allAverWorkEfficiency1,
+																3);
+														averageData1 = getAverageData(
+																data.averWorkEfficiency1,
+																3);
 														break;
 													}
-													lineData = [];
-													combine(lineData, "个人平均效率",
+
+													combine(lineData,
+															"个人平均工作效率",
 															averageData);
-													combine(lineData, "全体平均效率",
+													combine(lineData,
+															"全体平均工作效率",
 															allAverageData);
 													combine(lineData, lineName,
 															userData);
+													combine(lineData1,
+															"个人平均做房效率",
+															averageData1);
+													combine(lineData1,
+															"全体平均做房效率",
+															allAverageData1);
+													combine(lineData1,
+															lineName1,
+															userData1);
+													lineChartForm(lineData,
+															"#lineChart",
+															title, xAxis, yAxis);
 													lineChartForm(lineData,
 															"#lineChart1",
 															title, xAxis, yAxis);
+													$('#chart-svg')
+															.val(
+																	$(
+																			"#lineChart")
+																			.highcharts()
+																			.getSVG());
 													$('#chart1-svg')
 															.val(
 																	$(
@@ -604,6 +730,376 @@ app
 								var no=$("#roomSortType").val();
 								reportForm.sortName = getSelectedRoomType(no);
 							}
+
+							// lwt例行任务工作量统计界面设置条件
+							reportForm.workloadLimit = {
+								startTime : "",
+								endTime : ""
+							};
+							// lwt例行任务工作量分析界面设置条件
+							reportForm.staffWorkloadLimit = {
+								checkYear : "",
+								quarter : "0",
+								staffId : ""
+							};
+							// lwt例行任务工作量饱和度分析设置条件
+							reportForm.workLoadLevelLimit = {
+								startTime : "",
+								endTime : ""
+							};
+							// lwt根据条件查找例行任务工作量统计
+							reportForm.selectWorkloadByLimits = function() {
+								if (reportForm.workloadLimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.workloadLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.workloadLimit.startTime,
+										reportForm.workloadLimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								var workloadLimit = JSON
+										.stringify(reportForm.workloadLimit);
+								services
+										.selectWorkloadByLimits(
+												{
+													// limit : workloadLimit
+													startDate : reportForm.workloadLimit.startTime,
+													endDate : reportForm.workloadLimit.endTime
+												})
+										.success(
+												function(data) {
+													reportForm.workloadList = data.workLoadList;
+													if (data.workLoadList.length) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+												});
+							}
+
+							// lwt根据条件分析员工的工作量
+							reportForm.selectStaffWorkLoadAnalyse = function() {
+								if (reportForm.staffWorkloadLimit.checkYear == "") {
+									alert("请填写年份！");
+									return false;
+								}
+								if (reportForm.staffWorkloadLimit.staffId == "") {
+									alert("请选择员工！");
+									return false;
+								}
+								var staffWorkloadLimit = JSON
+										.stringify(reportForm.staffWorkloadLimit);
+								services
+										.selectStaffWorkLoadAnalyse({
+											limit : staffWorkloadLimit
+										})
+										.success(
+												function(data) {
+													var xAxis = [];// 横坐标显示
+													var yAxis = "工作量";// 纵坐标显示
+													var nowQuarter = reportForm.staffWorkloadLimit.quarter;// 当前的选择季度
+													var nowQuarterName = "";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工工作量的平均Data
+													var averageData = [];// 个人平均工作量
+													var staffData = [];// 员工工作量
+													var ratedData = [];// 额定工作量
+
+													for ( var item in data.staffData) {
+														staffData
+																.push(data.staffData[item]);
+													}
+													for ( var item in data.ratedData) {
+														ratedData
+																.push(data.ratedData[item]);
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														nowQuarterName = "全年";
+														allAverageData = getAverageData(
+																data.allAverageData,
+																12);
+														averageData = getAverageData(
+																data.averageData,
+																12);
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														nowQuarterName = "第一季度";
+														allAverageData = getAverageData(
+																data.allAverageData,
+																3);
+														averageData = getAverageData(
+																data.averageData,
+																3);
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														nowQuarterName = "第二季度";
+														allAverageData = getAverageData(
+																data.allAverageData,
+																3);
+														averageData = getAverageData(
+																data.averageData,
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														nowQuarterName = "第三季度";
+														allAverageData = getAverageData(
+																data.allAverageData,
+																3);
+														averageData = getAverageData(
+																data.averageData,
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														nowQuarterName = "第四季度";
+														allAverageData = getAverageData(
+																data.allAverageData,
+																3);
+														averageData = getAverageData(
+																data.averageData,
+																3);
+														break;
+													}
+													var title = "员工 "
+															+ "("
+															+ getSelectedStaff(reportForm.staffWorkloadLimit.staffId)
+															+ ")"
+															+ (reportForm.staffWorkloadLimit.checkYear)
+															+ nowQuarterName
+															+ "工作量动态变化趋势图";// 折线图标题显示
+
+													combine(lineData, "员工工作量",
+															staffData);
+													combine(lineData, "额定工作量",
+															ratedData);
+													combine(lineData,
+															"全体平均工作量",
+															allAverageData);
+													combine(lineData,
+															"个人平均工作量",
+															averageData);
+
+													lineChartForm(lineData,
+															"#lineChart1",
+															title, xAxis, yAxis);
+													$('#chart1-svg')
+															.val(
+																	$(
+																			"#lineChart1")
+																			.highcharts()
+																			.getSVG());
+												});
+							}
+							// lwt例行任务工作量饱和度分析
+							reportForm.selectWorkloadLevel = function() {
+								if (reportForm.workLoadLevelLimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.workLoadLevelLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.workLoadLevelLimit.startTime,
+										reportForm.workLoadLevelLimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								var workLoadLevelLimit = JSON
+										.stringify(reportForm.workLoadLevelLimit);
+								services
+										.selectWorkloadLevel(
+												{
+													// limit :
+													// workLoadLevelLimit
+													startDate : reportForm.workLoadLevelLimit.startTime,
+													endDate : reportForm.workLoadLevelLimit.endTime
+												})
+										.success(
+												function(data) {
+													reportForm.workloadLevels = data.WorkLoadLevelList;
+													if (data.WorkLoadLevelList.length) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+												});
+							}
+							// zq做房驳回率统计
+							reportForm.selectWorkRejectByLimits = function() {
+								if (reportForm.wrLimit.startTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.wrLimit.endTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								var workRejectLimit = JSON
+										.stringify(reportForm.wrLimit);
+								services.selectWorkRejectByLimits({
+									limit : workRejectLimit
+								}).success(function(data) {
+									reportForm.workRejectList = data.list;
+								});
+							}
+							// zq做房驳回率折线图扇形图
+							reportForm.selectWorkRejectAnalyseByLimits = function() {
+								if (reportForm.wraLimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (reportForm.wraLimit.quarter == "") {
+									alert("请选择查询季度！");
+									return false;
+								}
+								if (reportForm.wraLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								var workRejectAnalyseLimit = JSON
+										.stringify(reportForm.wraLimit);
+								services
+										.selectWorkRejectAnalyseByLimits({
+											limit : workRejectAnalyseLimit
+										})
+										.success(
+												function(data) {
+													var title = "员工（"
+															+ getSelectedStaff(reportForm.wraLimit.staffId)
+															+ "）"
+															+ reportForm.wraLimit.checkYear
+															+ "年度"
+															+ reportForm.wraLimit.quarter
+															+ "做房驳回率趋势图";// 折线图标题显示
+													var title1 = "驳回原因汇总";
+													var xAxis = [];// 横坐标显示
+													var yAxis = "效率";// 纵坐标显示
+													var nowQuarter = reportForm.wraLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(reportForm.wraLimit.staffId)
+															+ "员工做房驳回率";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工做房驳回率的平均Data
+													var averageData = [];// 个人平均做房驳回率
+													var userData = [];// 个人工作效率
+													for ( var item in data.list) {
+														userData
+																.push(data.list[item]);
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																12);
+														averageData = getAverageData(
+																data.averWorkReject,
+																12);
+
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+														break;
+													}
+
+													combine(lineData,
+															"个人平均工作效率",
+															averageData);
+													combine(lineData,
+															"全体平均工作效率",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+
+													lineChartForm(lineData,
+															"#lineChart",
+															title, xAxis, yAxis);
+
+													$('#chart-svg')
+															.val(
+																	$(
+																			"#lineChart")
+																			.highcharts()
+																			.getSVG());
+
+												});
+							}
+							// zq扇形图公用函数
+							function pieChartForm(elementId, title, dataName,
+									data) {
+								var chart1 = new LineChart({
+									elementId : elementId,
+									title : title,
+									data : data,
+									name : dataName
+								});
+								chart1.init();
+							}
+
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -636,6 +1132,15 @@ app
 										'/workEffAnalyseForm') == 0) {
 									selectRoomStaffs();
 									selectRoomSorts();
+								} else if ($location.path().indexOf(
+										'/workloadAnalysis') == 0) {
+									selectRoomStaffs();
+								} else if ($location.path().indexOf(
+										'/workRejectForm') == 0) {
+
+								} else if ($location.path().indexOf(
+										'/workRejectAnalyseForm') == 0) {
+									selectRoomStaffs();
 								}
 							}
 							initData();

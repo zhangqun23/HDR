@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mvc.entityReport.LinenExpend;
 import com.mvc.entityReport.RoomExpend;
 import com.mvc.service.ExpendFormService;
-
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
-
 
 /**
  * 
@@ -28,7 +26,7 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/customerService")
 public class ExpendFormController {
-	
+
 	@Autowired
 	ExpendFormService expendFormService;
 
@@ -36,7 +34,7 @@ public class ExpendFormController {
 	public String InvoiceReceivePage() {
 		return "customerService/index";
 	}
-	
+
 	/**
 	 * 布草统计
 	 * 
@@ -53,7 +51,7 @@ public class ExpendFormController {
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}
-	
+
 	/**
 	 * 房间耗品统计
 	 * 
@@ -70,24 +68,23 @@ public class ExpendFormController {
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}
-	
+
 	/**
 	 * 卫生间耗品统计
 	 * 
 	 * @param request
 	 * @return
 	 */
-	/*@RequestMapping("/selectWashExpendFormByWlimits.do")
-	public @ResponseBody String selectWashExpendForm(HttpServletRequest request) {
-		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("wlimit"));
+	/*
+	 * @RequestMapping("/selectWashExpendFormByWlimits.do") public @ResponseBody
+	 * String selectWashExpendForm(HttpServletRequest request) { JSONObject
+	 * jsonObject = JSONObject.fromObject(request.getParameter("wlimit"));
+	 * 
+	 * Map<String, Object> map = JsonObjToMap(jsonObject); List<RoomExpend> list
+	 * = expendFormService.selectWashExpend(map); jsonObject = new JSONObject();
+	 * jsonObject.put("list", list); return jsonObject.toString(); }
+	 */
 
-		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<RoomExpend> list = expendFormService.selectWashExpend(map);
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
-	}*/
-	
 	/**
 	 * 将JsonObject转换成Map
 	 * 
@@ -122,6 +119,4 @@ public class ExpendFormController {
 		return map;
 	}
 
-
 }
-

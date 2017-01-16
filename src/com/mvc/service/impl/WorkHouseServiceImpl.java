@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkHouseDao;
 import com.mvc.entity.DepartmentInfo;
-<<<<<<< HEAD
-=======
 import com.mvc.entityReport.WorkEfficiency;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
@@ -25,8 +22,6 @@ import com.utils.CollectionUtil;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
 import com.utils.WordHelper;
-
-import net.sf.json.JSONObject;
 
 import net.sf.json.JSONObject;
 
@@ -157,11 +152,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		collectionUtil.writeSort(list, writeField);
 	}
 
-<<<<<<< HEAD
-	// 获取单个用户做房用时
-=======
 	// 获取单个员工做房用时
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	@Override
 	public String selectUserWorkHouseByLimits(Map<String, Object> map) {
 		JSONObject jsonObject = new JSONObject();
@@ -202,13 +193,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-<<<<<<< HEAD
-		jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
-=======
 		if (averWorkTime != null) {
 			jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
 		}
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		String allAverWorkTime = StringUtil.divide(sumTime.toString(), sumNum.toString());
 		jsonObject.put("allAverWorkTime", Float.valueOf(allAverWorkTime));// 全体员工平均做房用时
 
@@ -249,8 +236,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
-<<<<<<< HEAD
-=======
 	/**
 	 * list求和
 	 * 
@@ -450,5 +435,4 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 }

@@ -216,8 +216,7 @@ public class StringUtil {
 		return str;
 	}
 
-<<<<<<< HEAD
-=======
+
 	/**
 	 * 将Float型字符串转换成%形式
 	 * 
@@ -251,5 +250,4 @@ public class StringUtil {
 		return str + " 23:59:59";
 	}
 
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 }

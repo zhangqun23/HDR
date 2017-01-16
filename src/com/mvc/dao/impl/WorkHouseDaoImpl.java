@@ -131,15 +131,10 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(
-<<<<<<< HEAD
-				"select cs.case_author,coalesce(count(1),0) num,coalesce(sum(cs.use_time),0) use_time from case_info cs");
-		sql.append(" where 1=1 " + sqlLimit + " group by cs.case_author");
-=======
 				"select cs.case_author,coalesce(count(1),0) num,coalesce(sum(cs.use_time),0) use_time from case_info cs ");
 		sql.append(
 				"left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
 		sql.append(" where si.parent_name='计划任务' " + sqlLimit + " group by cs.case_author");
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
@@ -155,10 +150,6 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(
-<<<<<<< HEAD
-				"select DATE_FORMAT(cs.open_time,'%m') months,coalesce(sum(cs.use_time),0) use_time from case_info cs");
-		sql.append(" where 1=1 " + sqlLimit + " group by months");
-=======
 				"select DATE_FORMAT(cs.open_time,'%m') months,coalesce(sum(cs.use_time),0) use_time from case_info cs ");
 		sql.append(
 				"left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
@@ -347,7 +338,6 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 				"left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
 		sql.append("where si.parent_namein('计划任务','客房服务') " + sqlLimit
 				+ " group by cs.case_author) as b on b.case_author=a.staff_id");
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();

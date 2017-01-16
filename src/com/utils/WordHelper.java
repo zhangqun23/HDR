@@ -71,11 +71,7 @@ public class WordHelper<T> {
 					Object val = entry.getValue();
 					Collection<T> list = (Collection<T>) val;
 					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
-<<<<<<< HEAD
-					dynamicWord(doc, list, tableOrder);
-=======
 					dynamicWord(doc, list, tableOrder, rowNum);
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 				}
 			}
 			write2007Out(doc, out);

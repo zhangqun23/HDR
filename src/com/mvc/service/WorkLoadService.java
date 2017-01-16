@@ -1,12 +1,9 @@
 package com.mvc.service;
 
 import java.util.List;
-<<<<<<< HEAD
-=======
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
@@ -22,10 +19,6 @@ public interface WorkLoadService {
 	// 获取所有员工工作量汇总列表信息
 	List<WorkLoad> getWorkLoadSummaryList(String startTime, String endTime);
 
-<<<<<<< HEAD
-	// 获取所有员工工作量饱和度分析列表
-	List<WorkLoadLevel> getWorkLoadLevelList(String startTime, String endTime);
-=======
 	// 导出所有员工工作量汇总表
 	ResponseEntity<byte[]> exportWorkLoadSummaryList(Map<String, Object> map);
 
@@ -40,5 +33,4 @@ public interface WorkLoadService {
 
 	// 导出员工工作量分析图
 	ResponseEntity<byte[]> exportWorkLoadAnalyse(Map<String, String> map);
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 }

@@ -19,8 +19,6 @@ public interface WorkHouseDao {
 
 	// 获取员工每个月做房用时
 	List<Object> selectMonthWorkTime(Map<String, Object> map);
-<<<<<<< HEAD
-=======
 
 	/**** 员工工作效率报表 ****/
 
@@ -38,5 +36,4 @@ public interface WorkHouseDao {
 
 	// 获取全体员工平均工作效率
 	List<Object> selectAllAverWorkEff(Map<String, Object> map);
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 }

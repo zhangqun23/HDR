@@ -27,25 +27,6 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 	EntityManagerFactory emf;
 
 	// 获取员工打扫各类房间的数量列表
-<<<<<<< HEAD
-	@Override
-	public List<Object> getWorkRecordSummary(String startTime, String endTime) {
-
-		EntityManager em = emf.createEntityManager();
-		StringBuilder selectSql = new StringBuilder();
-		startTime = startTime + " 00:00:00";
-		endTime = endTime + " 23:59:59";
-
-		selectSql.append(
-				"select staff_no,staff_name,coalesce(sum(clean_room_workload),0) clean_room, coalesce(sum(checkout_room_workload),0) checkout_room,coalesce(sum(overnight_room_workload),0)overnight_room,coalesce(sum(actual_load),0)actual_load,coalesce(sum(beyond_load),0) beyond_load");
-		selectSql.append(" from work_record ");
-		selectSql.append(" where close_time between '" + startTime + "' and '" + endTime + "'");
-		selectSql.append(" group by staff_id ");
-		System.out.println("selectSql:" + selectSql);
-
-		Query query = em.createNativeQuery(selectSql.toString());
-		@SuppressWarnings("unchecked")
-=======
 	@Override
 	public List<Object> getWorkRecordSummary(String startTime, String endTime) {
 
@@ -102,7 +83,6 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		sql.append(" group by months");
 
 		Query query = em.createNativeQuery(sql.toString());
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		List<Object> list = query.getResultList();
 		em.close();
 		return list;

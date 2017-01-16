@@ -12,20 +12,6 @@
 			<form action="exportDepWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-<<<<<<< HEAD
-					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "><label>—</label><input
-						type="text" name="endTime" ng-model="endTime"
-						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true'})) "></li>
-					<li><label>选择报表类型</label><select class="dfselect layoutStyle"
-					    style="width: 140px" ng-model="limit.formType" name="formType"
-					    required><option value="">请选择</option>
-						<option value="{{c.id}}" ng-repeat="c in formTypes">{{c.type}}</option></select></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectinfoCount()"></li>
-=======
 					<li><label>起止日期</label><input type="text" name="rlimit.startTime"
 						ng-model="rlimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
@@ -38,7 +24,6 @@
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectRoomExpendFormByRlimits()"></li>
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -51,79 +36,6 @@
 	<table class="tablelist">
 		<thead>
 			<tr>
-<<<<<<< HEAD
-				<th class="a">序号</th>
-				<th class="a">房号</th>
-				<th class="a">防毒面具</th>
-				<th class="a">送餐牌</th>
-		        <th class="a">雨伞</th>
-		        <th class="a">请勿打扰牌</th>
-		        <th class="a">儿童拖鞋</th>
-		        <th class="a">杯垫</th>
-		        <th class="a">擦鞋布</th>
-		        <th class="a">咖啡</th>
-		        <th class="a">伴侣</th>
-		        <th class="a">白糖</th>
-		        <th class="a">低卡糖</th>
-		        <th class="a">袋泡茶</th>
-		        <th class="a">火柴</th>
-		        <th class="a">立顿红茶</th>
-		        <th class="a">立顿绿茶</th>
-		        <th class="a">洗衣单</th>
-		        <th class="a">手提袋</th>
-		        <th class="a">针线包</th>
-		        <th class="a">铅笔</th>
-		        <th class="a">圆珠笔</th>
-		        <th class="a">环保卡</th>
-		        <th class="a">电视节目单</th>
-		        <th class="a">彩色曲别针</th>
-		        <th class="a">地图</th>
-		        <th class="a">便签</th>
-		        <th class="a">面巾纸</th>
-		        <th class="a">普通信封</th>
-		        <th class="a">航空信封</th>
-		        <th class="a">意见书</th>
-		        <th class="a">信纸</th>
-		        <th class="a">橡皮</th>
-		        <th class="a">尺子</th>
-		        <th class="a">即扫牌</th>
-		        <th class="a">回形针</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-=======
 				<th class="a" rowspan="2">序号</th>
 				<th class="a" rowspan="2">房号</th>
 				<th class="a">雨伞</th>
@@ -205,7 +117,6 @@
 				<td>{{chsl_num}}</td>
 				<td>{{cocl_num}}</td>
 				<td>{{arel_num}}</td>
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 			</tr>
 		</tbody>
 	</table>

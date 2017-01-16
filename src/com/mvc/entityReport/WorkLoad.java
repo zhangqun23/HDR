@@ -11,15 +11,6 @@ public class WorkLoad {
 	private String orderNum;// 序号
 	private String staffName;// 员工姓名
 	private String staffNo;// 员工编号
-<<<<<<< HEAD
-	private String cleanRoom;// 抹尘房0
-	private String checkoutRoom;// 离退房1
-	private String overnightRoom;// 过夜房2
-
-//	private String ratedLoad;// 额定工作量
-	private String actualLoad;// 实际工作量
-	private String beyondLoad;// 超出工作量
-=======
 
 	private Float cleanRoom;// 抹尘房0
 	private Float checkoutRoom;// 离退房1
@@ -27,7 +18,6 @@ public class WorkLoad {
 
 	private Float actualLoad;// 实际工作量
 	private Float beyondLoad;// 超出工作量
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	private String rank;// 排名
 
 	private Float ratedLoad;// 额定工作量
@@ -81,15 +71,6 @@ public class WorkLoad {
 		this.overnightRoom = overnightRoom;
 	}
 
-<<<<<<< HEAD
-//	public String getRatedLoad() {
-//		return ratedLoad;
-//	}
-//
-//	public void setRatedLoad(String ratedLoad) {
-//		this.ratedLoad = ratedLoad;
-//	}
-=======
 	public Float getRatedLoad() {
 		return ratedLoad;
 	}
@@ -97,7 +78,6 @@ public class WorkLoad {
 	public void setRatedLoad(Float ratedLoad) {
 		this.ratedLoad = ratedLoad;
 	}
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 	public Float getActualLoad() {
 		return actualLoad;

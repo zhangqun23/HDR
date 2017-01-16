@@ -176,11 +176,7 @@ public class WorkHouseController {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * 获取单个用户做房用时（---后期用缓存优化）
-=======
 	 * 获取单个员工做房用时（---后期用缓存优化）
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	 * 
 	 * @param request
 	 * @return
@@ -191,9 +187,6 @@ public class WorkHouseController {
 
 		Map<String, Object> map = JsonObjToMapUser(jsonObject);
 		String str = workHouseService.selectUserWorkHouseByLimits(map);
-<<<<<<< HEAD
-		System.out.println("做房用时分析：" + str);
-=======
 		return str;
 	}
 
@@ -256,7 +249,6 @@ public class WorkHouseController {
 
 		Map<String, Object> map = JsonObjToMapUser(jsonObject);
 		String str = workHouseService.selectUserWorkEffByLimits(map);
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		return str;
 	}
 

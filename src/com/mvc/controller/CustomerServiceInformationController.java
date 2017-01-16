@@ -6,21 +6,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
 import org.springframework.http.ResponseEntity;
-=======
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-<<<<<<< HEAD
 import com.alibaba.fastjson.JSON;
 import com.base.constants.ReportFormConstants;
 import com.mvc.entity.DepartmentInfo;
-=======
-import com.base.constants.ReportFormConstants;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
@@ -43,11 +36,7 @@ public class CustomerServiceInformationController {
 	/**
 	 * 查询酒店对客服务信息统计
 	 */
-<<<<<<< HEAD
 	@RequestMapping("/selectDepWorkload.do")
-=======
-	@RequestMapping("/selectHotelCustomerService.do")
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	public @ResponseBody String selectHotelCustomerService(HttpServletRequest request){
 		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
@@ -58,7 +47,6 @@ public class CustomerServiceInformationController {
 		
 		return jsonObject.toString();	
 	}
-<<<<<<< HEAD
 	/**
 	 * 导出酒店对客服务信息统计表
 	 */
@@ -78,19 +66,13 @@ public class CustomerServiceInformationController {
 	
 	
 	
-=======
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	/*
 	 * ***********************************王慧敏报表1*******************************
 	 */
 	/**
 	 * 查询客房部对客服务工作量统计
 	 */
-<<<<<<< HEAD
 	@RequestMapping("/selectStaffWorkload.do")
-=======
-	@RequestMapping("/selectRoomWorkload.do")
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	public @ResponseBody String selectRoomWorkload(HttpServletRequest request){
 		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
@@ -101,7 +83,6 @@ public class CustomerServiceInformationController {
 		
 		return jsonObject.toString();	
 	}
-<<<<<<< HEAD
 	/**
 	 * 导出部门对客服务工作量统计表
 	 */
@@ -116,21 +97,13 @@ public class CustomerServiceInformationController {
 		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomWorkload(map, path,modelPath);		
 		return byteArr;	
 	}
-=======
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	/*
 	 * ***********************************王慧敏报表2*******************************
 	 */
 	/**
-<<<<<<< HEAD
 	 * 查询部门对客服务类型统计
 	 */
 	@RequestMapping("/selectType.do")
-=======
-	 * 查询客房部对客服务工作量统计
-	 */
-	@RequestMapping("/selectRoomType.do")
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	public @ResponseBody String selectRoomType(HttpServletRequest request){
 		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
@@ -138,7 +111,6 @@ public class CustomerServiceInformationController {
 		
 		jsonObject=new JSONObject();
 		jsonObject.put("list", list);
-<<<<<<< HEAD
 		for(int i=0;i<list.size();i++){
 			System.out.println("测试："+list.get(i).getAverageWorkTime()+list.get(i).getOrderNum());
 		}
@@ -186,10 +158,4 @@ public class CustomerServiceInformationController {
 			
 		}
 
-=======
-		
-		return jsonObject.toString();
-	}
-	
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 }

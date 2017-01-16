@@ -2,10 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
-<<<<<<< HEAD
-=======
 		<li><a href="">做房效率统计</a></li>
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	</ul>
 </div>
 
@@ -17,16 +14,10 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
-<<<<<<< HEAD
-						ng-model="wefLimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="wefLimit.endTime"
-=======
 						ng-model="wefLimit.startTime" required
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
 						type="text" name="endTime" ng-model="wefLimit.endTime" required
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -40,16 +31,6 @@
 	</div>
 
 	<table class="tablelist tablestyle">
-<<<<<<< HEAD
-		<thead>
-			<tr>
-				<th class="width5">序号</th>
-				<th class="width5">员工</th>
-				<th class="width5">编号</th>
-				<th class="width7">做房时间（分钟）</th>
-				<th class="width7">当班时间（分钟）</th>
-				<th class="width5">效率</th>
-=======
 	<caption align="top" class="tableTitle"><div  class="tableTitle">客房部员工工作效率统计表</div><div>统计时间：{{wefLimit.startTime}}&nbsp;至 &nbsp;{{wefLimit.endTime}}</div></caption>
 		<thead>
 			<tr>
@@ -61,7 +42,6 @@
 				<th class="width5">做房效率</th>
 				<th class="width7">做房+客服（分钟）</th>
 				<th class="width5">工作效率</th>
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 			</tr>
 		</thead>
 		<tbody>
@@ -69,17 +49,11 @@
 				<td>{{we.orderNum}}</td>
 				<td>{{we.staff_name}}</td>
 				<td>{{we.staff_no}}</td>
-<<<<<<< HEAD
-				<td></td>
-				<td></td>
-				<td></td>
-=======
 				<td>{{we.work_time}}</td>
 				<td>{{we.house_time}}</td>
 				<td>{{we.house_eff}}</td>
 				<td>{{we.house_serv_time}}</td>
 				<td>{{we.house_serv_eff}}</td>
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 			</tr>
 		</tbody>
 	</table>

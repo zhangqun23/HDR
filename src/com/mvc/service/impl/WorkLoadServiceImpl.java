@@ -1,12 +1,5 @@
 package com.mvc.service.impl;
 
-<<<<<<< HEAD
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-=======
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,16 +14,11 @@ import java.util.Map;
 import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
-<<<<<<< HEAD
-import com.mvc.service.WorkLoadService;
-import com.utils.CollectionUtil;
-=======
 import com.mvc.entityReport.WorkLoadMonth;
 import com.mvc.repository.StaffInfoRepository;
 import com.mvc.service.WorkLoadService;
@@ -38,7 +26,6 @@ import com.utils.CollectionUtil;
 import com.utils.FileHelper;
 import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 /**
  * 工作量相关的service层接口实现
@@ -51,21 +38,15 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 	@Autowired
 	WorkLoadDao workLoadDao;
-<<<<<<< HEAD
-=======
 	@Autowired
 	StaffInfoRepository staffInfoRepository;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 	// 获取所有员工工作量汇总列表
 	@Override
 	public List<WorkLoad> getWorkLoadSummaryList(String startTime, String endTime) {
 
 		List<Object> listSource = workLoadDao.getWorkRecordSummary(startTime, endTime);
-<<<<<<< HEAD
-=======
 
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 		Iterator<Object> it = listSource.iterator();
 		List<WorkLoad> listGoal = objToWorkLoad(it);
 
@@ -83,14 +64,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 			workLoad.setStaffNo(obj[0].toString());
 			workLoad.setStaffName(obj[1].toString());
-<<<<<<< HEAD
-			workLoad.setCleanRoom(obj[2].toString());// 抹尘房总工作量
-			workLoad.setCheckoutRoom(obj[3].toString());// 离退房总工作量
-			workLoad.setOvernightRoom(obj[4].toString());// 过夜房总工作量
-
-			workLoad.setActualLoad(obj[5].toString());// 实际总工作量
-			workLoad.setBeyondLoad(obj[6].toString());// 超出总工作量
-=======
 			workLoad.setCleanRoom(Float.valueOf(obj[2].toString()));// 抹尘房总工作量
 			workLoad.setCheckoutRoom(Float.valueOf(obj[3].toString()));// 离退房总工作量
 			workLoad.setOvernightRoom(Float.valueOf(obj[4].toString()));// 过夜房总工作量
@@ -98,16 +71,11 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			workLoad.setBeyondLoad(Float.valueOf(obj[6].toString()));// 超出总工作量
 			workLoad.setRatedLoad(Float.valueOf(obj[7].toString()));// 额定总工作量
 			workLoad.setWorkDays(obj[8].toString());// 实际工作天数
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 			listGoal.add(workLoad);
 		}
 		// 按员工实际工作量进行排序并编号
-<<<<<<< HEAD
-		sortAndWrite(listGoal, "actualLoad", true, "rank");
-=======
 		sortAndWrite(listGoal, "actualLoad", false, "rank");
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 		Iterator<WorkLoad> itGoal = listGoal.iterator();
 		int i = 0;
@@ -120,8 +88,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		return listGoal;
 	}
 
-<<<<<<< HEAD
-=======
 	/**
 	 * 排序并插入序号
 	 * 
@@ -175,7 +141,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		return byteArr;
 	}
 
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	// 获取所有员工工作量饱和度分析列表
 	@Override
 	public List<WorkLoadLevel> getWorkLoadLevelList(String startTime, String endTime) {
@@ -189,53 +154,24 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		WorkLoadLevel workLoadLevel = null;
 
 		for (int i = 0; i < it.size(); i++) {
-<<<<<<< HEAD
-			// Float beyondLevel = null;
-			String actualLoad = it.get(i).getActualLoad();
-			String beyondLoad = it.get(i).getBeyondLoad();
-			workLoadLevel = new WorkLoadLevel();
-=======
 			workLoadLevel = new WorkLoadLevel();
 			Float beyondTotal = it.get(i).getRatedLoad();
 			Float beyondLoad = it.get(i).getBeyondLoad();
 			Float beyondLevel = beyondLoad / beyondTotal * 100;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 			workLoadLevel.setOrderNum(String.valueOf(i + 1));
 			workLoadLevel.setStaffNo(it.get(i).getStaffNo());
 			workLoadLevel.setStaffName(it.get(i).getStaffName());
-<<<<<<< HEAD
-			workLoadLevel.setActualLoad(actualLoad);
-			workLoadLevel.setBeyondLoad(beyondLoad);
-=======
 			workLoadLevel.setActualLoad(it.get(i).getActualLoad());// 实际总工作量
 			workLoadLevel.setWorkDays(it.get(i).getWorkDays());// 实际工作总天数
 			workLoadLevel.setBeyondLoad(beyondLoad);// 超出总工作量
 			workLoadLevel.setOutOfRang(String.format("%.2f", beyondLevel) + "%");// 超出幅度
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 
 			listGoal.add(workLoadLevel);
 		}
 		return listGoal;
 	}
 
-<<<<<<< HEAD
-	/**
-	 * 排序并插入序号
-	 * 
-	 * @param list
-	 * @param filedName
-	 *            按指定字段排序
-	 * @param ascFlag
-	 *            true升序,false降序
-	 * @param writeField
-	 *            向指定字段插入序号
-	 */
-	private void sortAndWrite(List<WorkLoad> list, String filedName, boolean ascFlag, String writeField) {
-		CollectionUtil.sort(list, filedName, ascFlag);
-		CollectionUtil<WorkLoad> collectionUtil = new CollectionUtil<WorkLoad>();
-		collectionUtil.writeSort(list, writeField);
-=======
 	// 导出所有员工工作量饱和度分析表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -428,7 +364,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
->>>>>>> 9b3b642d9bd2e958022a1e2c925f3db5c693e51e
 	}
 
 }

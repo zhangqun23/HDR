@@ -302,4 +302,77 @@ public class WorkHouseController {
 		return str;
 	}
 
+	/**
+	 * 部门员工工作效率统计导出
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportWorkEfficiencyBylimits.do")
+	public ResponseEntity<byte[]> exportWorkEffByLimits(HttpServletRequest request) {
+		String startTime = null;
+		String endTime = null;
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFF_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffByLimits(map, path, tempPath);
+
+		return byteArr;
+	}
+
+	/**
+	 * 部门员工工作效率分析导出
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportUserWorkEfficiencyBylimits.do")
+	public ResponseEntity<byte[]> exportUserWorkEffByLimits(HttpServletRequest request) {
+		String checkYear = null;
+		String quarter = null;
+		String staffName = null;
+		String chartSVGStr = null;
+		String chart1SVGStr = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
+			checkYear = request.getParameter("checkYear");// 年份
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("quarter"))) {
+			quarter = request.getParameter("quarter");// 季度
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("staffName"))) {
+			staffName = request.getParameter("staffName");// 员工姓名
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr"))) {
+			chartSVGStr = request.getParameter("chartSVGStr");// 工作效率
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))) {
+			chart1SVGStr = request.getParameter("chart1SVGStr");// 做房效率
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("checkYear", checkYear);
+		map.put("quarter", quarter);
+		map.put("staffName", staffName);
+		map.put("chartSVGStr", chartSVGStr);
+		map.put("chart1SVGStr", chart1SVGStr);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFFANA_PATH);// 模板路径
+		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffAna(map, path, tempPath, picPath);
+
+		return byteArr;
+	}
+
 }

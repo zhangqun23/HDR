@@ -241,6 +241,7 @@ app
 								quarter : "0",
 								staffId : ""
 							};
+
 							// 获取房间类型名称
 							reportForm.sortName = "";
 							// zq驳回率统计

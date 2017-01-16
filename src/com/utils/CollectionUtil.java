@@ -21,7 +21,7 @@ import org.apache.commons.collections.comparators.NullComparator;
 public class CollectionUtil<T> {
 
 	/**
-	 * 根据实体按指定字段升/降排序(注意：要排序的字段可为Integer或Float。 对于String类型默认按字典顺序，如'19'<'2')
+	 * 根据实体按指定字段升/降排序
 	 * 
 	 * @param list
 	 * @param filedName
@@ -44,7 +44,7 @@ public class CollectionUtil<T> {
 	}
 
 	/**
-	 * 根据实体按多个字段升/降排序(注意：要排序的字段可为Integer或Float。 对于String类型默认按字典顺序，如'19'<'2')
+	 * 根据实体按多个字段升/降排序
 	 * 
 	 * @param beans
 	 * @param sortParam

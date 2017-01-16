@@ -81,6 +81,10 @@ public class CustomerServiceInformationController {
 		jsonObject=new JSONObject();
 		jsonObject.put("list", list);
 		
+		for(int i=0;i<list.size();i++){
+			System.out.println("测试："+list.get(i).getOrderNum());
+		}
+		
 		return jsonObject.toString();	
 	}
 	/**
@@ -112,7 +116,7 @@ public class CustomerServiceInformationController {
 		jsonObject=new JSONObject();
 		jsonObject.put("list", list);
 		for(int i=0;i<list.size();i++){
-			System.out.println("测试："+list.get(i).getAverageWorkTime()+list.get(i).getOrderNum());
+			System.out.println("测试："+list.get(i).getOrderNum());
 		}
 		
 		return jsonObject.toString();

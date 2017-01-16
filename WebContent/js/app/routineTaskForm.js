@@ -86,6 +86,12 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/workEffAnalyseForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workEffAnalyseForm.html',
 		controller : 'ReportController'
+	}).when('/workRejectForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workRejectForm.html',
+		controller : 'ReportController'
+	}).when('/workRejectAnalyseForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/workRejectAnalyseForm.html',
+		controller : 'ReportController'
 	})
 } ]);
 
@@ -164,6 +170,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	services.selectWorkRejectByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workLoad/selectWorkRejectByLimits.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -230,6 +243,17 @@ app
 							};
 							// 获取房间类型名称
 							reportForm.sortName = "";
+							// zq驳回率统计
+							reportForm.wrLimit = {
+								startTime : "",
+								endTime : ""
+							}
+							// zq驳回率分析折线图条件
+							reportForm.wraLimit = {
+								checkYear : "",
+								quarter : "0",
+								staffId : ""
+							}
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -700,7 +724,7 @@ app
 								var no = $("#roomSortType").val();
 								reportForm.sortName = getSelectedRoomType(no);
 							}
-							
+
 							// lwt例行任务工作量统计界面设置条件
 							reportForm.workloadLimit = {
 								startTime : "",
@@ -735,18 +759,22 @@ app
 								}
 								var workloadLimit = JSON
 										.stringify(reportForm.workloadLimit);
-								services.selectWorkloadByLimits({
-//									limit : workloadLimit
-									startDate:reportForm.workloadLimit.startTime,
-									endDate:reportForm.workloadLimit.endTime
-								}).success(function(data) {
-									reportForm.workloadList = data.workLoadList;
-									if (data.workLoadList.length) {
-										reportForm.listIsShow = false;
-									} else {
-										reportForm.listIsShow = true;
-									}
-								});
+								services
+										.selectWorkloadByLimits(
+												{
+													// limit : workloadLimit
+													startDate : reportForm.workloadLimit.startTime,
+													endDate : reportForm.workloadLimit.endTime
+												})
+										.success(
+												function(data) {
+													reportForm.workloadList = data.workLoadList;
+													if (data.workLoadList.length) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+												});
 							}
 
 							// lwt根据条件分析员工的工作量
@@ -846,8 +874,10 @@ app
 																3);
 														break;
 													}
-													var title = "员工 "+"("
-															+ getSelectedStaff(reportForm.staffWorkloadLimit.staffId)+")"
+													var title = "员工 "
+															+ "("
+															+ getSelectedStaff(reportForm.staffWorkloadLimit.staffId)
+															+ ")"
 															+ (reportForm.staffWorkloadLimit.checkYear)
 															+ nowQuarterName
 															+ "工作量动态变化趋势图";// 折线图标题显示
@@ -892,18 +922,176 @@ app
 								}
 								var workLoadLevelLimit = JSON
 										.stringify(reportForm.workLoadLevelLimit);
-								services.selectWorkloadLevel({
-									//limit : workLoadLevelLimit
-									startDate:reportForm.workLoadLevelLimit.startTime,
-									endDate:reportForm.workLoadLevelLimit.endTime
+								services
+										.selectWorkloadLevel(
+												{
+													// limit :
+													// workLoadLevelLimit
+													startDate : reportForm.workLoadLevelLimit.startTime,
+													endDate : reportForm.workLoadLevelLimit.endTime
+												})
+										.success(
+												function(data) {
+													reportForm.workloadLevels = data.WorkLoadLevelList;
+													if (data.WorkLoadLevelList.length) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+												});
+							}
+							// zq做房驳回率统计
+							reportForm.selectWorkRejectByLimits = function() {
+								if (reportForm.wrLimit.startTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.wrLimit.endTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								var workRejectLimit = JSON
+										.stringify(reportForm.wrLimit);
+								services.selectWorkRejectByLimits({
+									limit : workRejectLimit
 								}).success(function(data) {
-									reportForm.workloadLevels = data.WorkLoadLevelList;
-									if (data.WorkLoadLevelList.length) {
-										reportForm.listIsShow = false;
-									} else {
-										reportForm.listIsShow = true;
-									}
+									reportForm.workRejectList = data.list;
 								});
+							}
+							// zq做房驳回率折线图扇形图
+							reportForm.selectWorkRejectAnalyseByLimits = function() {
+								if (reportForm.wraLimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (reportForm.wraLimit.quarter == "") {
+									alert("请选择查询季度！");
+									return false;
+								}
+								if (reportForm.wraLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								var workRejectAnalyseLimit = JSON
+										.stringify(reportForm.wraLimit);
+								services
+										.selectWorkRejectAnalyseByLimits({
+											limit : workRejectAnalyseLimit
+										})
+										.success(
+												function(data) {
+													var title = "员工（"
+															+ getSelectedStaff(reportForm.wraLimit.staffId)
+															+ "）"
+															+ reportForm.wraLimit.checkYear
+															+ "年度"
+															+ reportForm.wraLimit.quarter
+															+ "做房驳回率趋势图";// 折线图标题显示
+													var title1 = "驳回原因汇总";
+													var xAxis = [];// 横坐标显示
+													var yAxis = "效率";// 纵坐标显示
+													var nowQuarter = reportForm.wraLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(reportForm.wraLimit.staffId)
+															+ "员工做房驳回率";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工做房驳回率的平均Data
+													var averageData = [];// 个人平均做房驳回率
+													var userData = [];// 个人工作效率
+													for ( var item in data.list) {
+														userData
+																.push(data.list[item]);
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																12);
+														averageData = getAverageData(
+																data.averWorkReject,
+																12);
+
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														allAverageData = getAverageData(
+																data.allAverWorkReject,
+																3);
+														averageData = getAverageData(
+																data.averWorkReject,
+																3);
+														break;
+													}
+
+													combine(lineData,
+															"个人平均工作效率",
+															averageData);
+													combine(lineData,
+															"全体平均工作效率",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+
+													lineChartForm(lineData,
+															"#lineChart",
+															title, xAxis, yAxis);
+
+													$('#chart-svg')
+															.val(
+																	$(
+																			"#lineChart")
+																			.highcharts()
+																			.getSVG());
+
+												});
+							}
+							// zq扇形图公用函数
+							function pieChartForm(elementId, title, dataName,
+									data) {
+								var chart1 = new LineChart({
+									elementId : elementId,
+									title : title,
+									data : data,
+									name : dataName
+								});
+								chart1.init();
 							}
 
 							// zq初始化
@@ -938,10 +1126,17 @@ app
 										'/workEffAnalyseForm') == 0) {
 									selectRoomStaffs();
 									selectRoomSorts();
-								}else if ($location.path().indexOf(
+								} else if ($location.path().indexOf(
 										'/workloadAnalysis') == 0) {
 									selectRoomStaffs();
-							}}
+								} else if ($location.path().indexOf(
+										'/workRejectForm') == 0) {
+
+								} else if ($location.path().indexOf(
+										'/workRejectAnalyseForm') == 0) {
+									selectRoomStaffs();
+								}
+							}
 							initData();
 							// zq控制年
 							var $dateFormat = $(".dateFormatForY");

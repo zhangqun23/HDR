@@ -15,16 +15,18 @@
 					href="${ctx}/workHouse/toReportFormPage.do#/workloadAnalysis">员工工作量分析</a><i></i></li>
 				<li id="workloadLevelForm"><cite></cite> <a
 					href="${ctx}/workHouse/toReportFormPage.do#/workloadLevelForm">员工工作量饱和度分析</a><i></i></li>
-			    <li id="doRoomTime"><cite></cite> <a
+				<li id="doRoomTime"><cite></cite> <a
 					href="${ctx}/workHouse/toReportFormPage.do#/workHouseForm">做房用时统计</a><i></i></li>
 				<li id="doRoomAnalyse"><cite></cite> <a
 					href="${ctx}/workHouse/toReportFormPage.do#/workHouseAnalyseForm">做房用时分析</a><i></i></li>
 				<li id="doHomeEffic"><cite></cite> <a
-					href="${ctx}/workHouse/toReportFormPage.do#/workEfficiencyForm">做房效率统计</a><i></i></li>					
-				<li id="doHomeEffic"><cite></cite> <a
+					href="${ctx}/workHouse/toReportFormPage.do#/workEfficiencyForm">做房效率统计</a><i></i></li>
+				<li id="doHomeEfficAnalyse"><cite></cite> <a
 					href="${ctx}/workHouse/toReportFormPage.do#/workEffAnalyseForm">做房效率分析</a><i></i></li>
-				<li id="suppplyUsage"><cite></cite> <a href="">客用品使用量统计</a><i></i></li>
-				<li id="leaderCheckHome"><cite></cite> <a href="">领班查房工作量/用时统计</a><i></i></li>
+				<li id="doHomeReject"><cite></cite> <a
+					href="${ctx}/workHouse/toReportFormPage.do#/workRejectForm">做房驳回率统计</a><i></i></li>
+				<li id="doHomeRejectAnalyse"><cite></cite> <a
+					href="${ctx}/workHouse/toReportFormPage.do#/workRejectAnalyseForm">做房驳回率分析</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 查退房工作量/用时统计 -->
@@ -37,7 +39,8 @@
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEfficiencyForm">抢房效率统计</a><i></i></li>
 				<li id="robHomeEffAnalyse"><cite></cite> <a
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEffAnalyseForm">抢房效率分析</a><i></i></li>
-				<li id="checkHomeTime"><cite></cite> <a href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkEfficiencyForm">领班查房效率统计</a><i></i></li>
+				<li id="checkHomeTime"><cite></cite> <a
+					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkEfficiencyForm">领班查房效率统计</a><i></i></li>
 			</ul>
 		</dd>
 

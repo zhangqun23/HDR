@@ -2,6 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
+		<li><a href="">做房效率分析</a></li>
 	</ul>
 </div>
 
@@ -26,7 +27,8 @@
 						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
 				</select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
-					type="button" value="查询" ng-click="selectUserWorkEfficiencyByLimits()"></li>
+					type="button" value="查询"
+					ng-click="selectUserWorkEfficiencyByLimits()"></li>
 				<li><input id="chart-svg" name="chartSVGStr" type="text"
 					class="hidden" /></li>
 				<li><input id="chart1-svg" name="chart1SVGStr" type="text"

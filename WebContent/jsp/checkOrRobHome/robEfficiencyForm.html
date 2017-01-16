@@ -21,10 +21,10 @@
 					<li><label>起止年月</label><input type="text" name="startTime"
 						ng-model="reLimit.startTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
 						type="text" name="endTime" required ng-model="reLimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 					<li><label>房间类型</label><select class="dfselect layoutStyle"
 						style="width: 140px" ng-model="reLimit.roomType" required
 						name="roomType" id="roomSortType" ng-change="getSortNameByNo()"><option

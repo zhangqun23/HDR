@@ -74,8 +74,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/typeForm', {
 		templateUrl : '/HDR/jsp/customerService/typeForm.html',
 		controller : 'CustomerServiceController'
-	})
-	.when('/linenExpendForm', {
+	}).when('/linenExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/linenExpendForm.html',
 		controller : 'CustomerServiceController'
 	}).when('/roomExpendForm', {
@@ -87,6 +86,16 @@ app.config([ '$routeProvider', function($routeProvider) {
 	})
 } ]);
 app.constant('baseUrl', '/HDR/');
+<<<<<<< HEAD
+app
+		.factory(
+				'services',
+				[
+						'$http',
+						'baseUrl',
+						function($http, baseUrl) {
+							var services = {};
+=======
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
 	 // wq选择布草消耗
@@ -142,9 +151,49 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 
-	return services;
-} ]);
+							// lwt:筛选出部门
+							services.selectDep = function(data) {
+								return $http({
+									method : 'post',
+									url : baseUrl + 'user/selectDep.do',
+									data : data
+								});
+							};
+							
+							// wq选择布草消耗
+							services.selectLinenExpendFormByLlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectLinenExpendFormByLlimits.do',
+									data : data
+								});
+							};
+							// wq选择房间耗品
+							services.selectRoomExpendFormByRlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectRoomExpendFormByRlimits.do',
+									data : data
+								});
+							};
+							// wq选择卫生间耗品
+							services.selectWashExpendFormByWlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectWashExpendFormByWlimits.do',
+									data : data
+								});
+							};
+							return services;
+						} ]);
 app
 		.controller(
 				'CustomerServiceController',
@@ -155,7 +204,19 @@ app
 						function($scope, services, $location) {
 							var reportForm = $scope;
 							// wq布草统计界面设置条件
-							reportForm.limit = {
+							reportForm.llimit = {
+								startTime : "",
+								endTime : "",
+								formType : ""
+							};
+							// wq房间耗品统计界面设置条件
+							reportForm.rlimit = {
+								startTime : "",
+								endTime : "",
+								formType : ""
+							};
+							// wq卫生间耗品统计界面设置条件
+							reportForm.wlimit = {
 								startTime : "",
 								endTime : "",
 								formType : ""
@@ -163,13 +224,13 @@ app
 							// wq选择报表类型默认值
 							reportForm.formTypes = [ {
 								id : 0,
-								type : "过夜房"
+								type : "对客服务"
 							}, {
 								id : 1,
 								type : "离退房"
 							}, {
 								id : 2,
-								type : "对客服务"
+								type : "过夜房"
 							} ];
 
 							function preventDefault(e) {
@@ -183,37 +244,105 @@ app
 								}
 							}
 							// wq根据条件查找布草消耗列表
-							reportForm.selectExpendFormByLimits = function() {
-								if (reportForm.limit.startTime == "") {
+							reportForm.selectLinenExpendFormByLlimits = function() {
+								if (reportForm.llimit.startTime == "") {
 									alert("请选择开始时间！");
 									return false;
 								}
-								if (reportForm.limit.endTime == "") {
+								if (reportForm.llimit.endTime == "") {
 									alert("请选择截止时间！");
 									return false;
 								}
-								if (compareDateTime(reportForm.limit.startTime,
-										reportForm.limit.endTime)) {
+								if (compareDateTime(
+										reportForm.llimit.startTime,
+										reportForm.llimit.endTime)) {
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
-								if (reportForm.limit.formType == "") {
+								if (reportForm.llimit.formType == "") {
 									alert("请选择报表类型！");
 									return false;
 								}
-								var expendFormLimit = JSON
-										.stringify(expendForm.limit);
-								services.selectExpendFormByLimits({
-									limit : expendFormLimit
+								var linenExpendFormLlimit = JSON
+										.stringify(reportForm.llimit);
+								services.selectLinenExpendFormByLlimits({
+									llimit : linenExpendFormLlimit
 								}).success(function(data) {
-									reportForm.expendFormList = data.list;
+									//alert(data.list.length);
+									reportForm.linenExpendFormList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
 									}
 								});
-							} 
+							}
+							// wq根据条件查找房间耗品消耗列表
+							reportForm.selectRoomExpendFormByRlimits = function() {
+								if (reportForm.rlimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.rlimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.rlimit.startTime,
+										reportForm.rlimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.rlimit.formType == "") {
+									alert("请选择报表类型！");
+									return false;
+								}
+								var roomExpendFormRlimit = JSON
+										.stringify(reportForm.rlimit);
+								services.selectRoomExpendFormByRlimits({
+									rlimit : roomExpendFormRlimit
+								}).success(function(data) {
+									reportForm.roomExpendFormList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+							// wq根据条件查找卫生间耗品消耗列表
+							reportForm.selectWashExpendFormByWlimits = function() {
+								if (reportForm.wlimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.wlimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.wlimit.startTime,
+										reportForm.wlimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.wlimit.formType == "") {
+									alert("请选择报表类型！");
+									return false;
+								}
+								var washExpendFormWlimit = JSON
+										.stringify(reportForm.wlimit);
+								services.selectLinenExpendFormByWlimits({
+									wlimit : washExpendFormWlimit
+								}).success(function(data) {
+									reportForm.washExpendFormList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
 							// wq比较两个时间的大小
 							function compareDateTime(startDate, endDate) {
 								var date1 = new Date(startDate);
@@ -353,6 +482,14 @@ app
 							// 初始化
 							function initData() {
 								console.log("初始化页面信息");
+<<<<<<< HEAD
+								if ($location.path().indexOf(
+										'/staffWorkloadForm') == 0) {
+
+								} else if ($location.path()
+										.indexOf('/typeForm') == 0) {
+
+=======
 								if ($location.path().indexOf('/staffWorkloadForm') == 0) {
 									selectDepart();
 									selectStaffByDepId();
@@ -360,6 +497,7 @@ app
 								} else if ($location.path().indexOf(
 										'/typeForm') == 0) {
 									selectDepart();
+>>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 								}
 							}
 							initData();

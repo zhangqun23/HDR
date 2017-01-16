@@ -305,7 +305,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 		String sqlLimit1 = workEffSQL1(map);
 
 		StringBuilder sql = new StringBuilder();
-		sql.append("select a.staff_id,coalesce(a.work_time,0) work_time,coalesce(b.use_time,0) use_time from ");
+		sql.append("select a.staff_id,a.work_time,b.use_time from ");
 		sql.append("(select w.staff_id,sum(w.work_time) work_time from work_record w");
 		sql.append(" where 1=1 " + sqlLimit1 + " group by w.staff_id) as a left join ");
 
@@ -329,7 +329,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 		String sqlLimit1 = workEffSQL1(map);
 
 		StringBuilder sql = new StringBuilder();
-		sql.append("select a.staff_id,coalesce(a.work_time,0) work_time,coalesce(b.use_time,0) use_time from ");
+		sql.append("select a.staff_id,a.work_time,b.use_time from ");
 		sql.append("(select w.staff_id,sum(w.work_time) work_time from work_record w");
 		sql.append(" where 1=1 " + sqlLimit1 + " group by w.staff_id) as a left join ");
 

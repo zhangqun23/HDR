@@ -1100,13 +1100,14 @@ app
 							}
 							// zq将小数保留两位小数
 							function changeNumType(number) {
-								alert("number"+number);
 								if (!number) {
-									var num = parseFloat('0').toFixed(2);
+									var defaultNum = 0;
+									var num = parseFloat(parseFloat(defaultNum)
+											.toFixed(2));
 								} else {
-									var num = parseFloat(number).toFixed(2);
+									var num = parseFloat(parseFloat(number)
+											.toFixed(2));
 								}
-								alert("num"+num);
 								return num;
 							}
 							// zq初始化

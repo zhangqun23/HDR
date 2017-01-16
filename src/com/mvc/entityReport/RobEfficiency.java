@@ -3,6 +3,7 @@ package com.mvc.entityReport;
 public class RobEfficiency {
 	private String orderNum;// 序号
 	private String authorName;// 员工姓名
+	private String authorNo;//员工编号
 	private String sumTime;// 总用时（分钟）
 	private String givenTime;// 平均给定时间（分钟）
 	private String usedTimeAvg;// 平均抢房用时（分钟）
@@ -81,6 +82,14 @@ public class RobEfficiency {
 
 	public void setBackRate(String backRate) {
 		this.backRate = backRate;
+	}
+
+	public String getAuthorNo() {
+		return authorNo;
+	}
+
+	public void setAuthorNo(String authorNo) {
+		this.authorNo = authorNo;
 	}
 
 }

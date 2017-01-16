@@ -138,8 +138,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
-<<<<<<< HEAD
-=======
 	// zq获取个人做房效率B
 	services.selectUserWorkEfficiencyByLimits = function(data) {
 		return $http({
@@ -179,7 +177,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 	return services;
 } ]);
 app
@@ -244,8 +241,7 @@ app
 								quarter : "0",
 								staffId : ""
 							};
-<<<<<<< HEAD
-=======
+
 							// 获取房间类型名称
 							reportForm.sortName = "";
 							// zq驳回率统计
@@ -259,7 +255,6 @@ app
 								quarter : "0",
 								staffId : ""
 							}
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -727,7 +722,7 @@ app
 							}
 							// zq当房型下拉框变化时获取房型名字
 							reportForm.getSortNameByNo = function() {
-								var no=$("#roomSortType").val();
+								var no = $("#roomSortType").val();
 								reportForm.sortName = getSelectedRoomType(no);
 							}
 

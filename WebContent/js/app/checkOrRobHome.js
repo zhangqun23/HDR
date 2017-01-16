@@ -80,17 +80,14 @@ app.config([ '$routeProvider', function($routeProvider) {
 app.constant('baseUrl', '/HDR/');
 app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	var services = {};
-	// zq获取做房用时列表
-	services.selectWorkHouseByLimits = function(data) {
+	// zq获取抢房效率列表
+	services.selectRobEfficiencyByLimits = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'workHouse/selectWorkHouseBylimits.do',
+			url : baseUrl + 'checkOrRobHome/selectRobEfficiencyByLimits.do',
 			data : data
 		});
 	};
-<<<<<<< HEAD
-	
-=======
 	// zq获取房间类型列表
 	services.getRoomSorts = function(data) {
 		return $http({
@@ -123,7 +120,6 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 	return services;
 } ]);
 app
@@ -134,9 +130,10 @@ app
 						'services',
 						'$location',
 						function($scope, services, $location) {
-							var checkOrRobHome = $scope;
+							var checkRob = $scope;
+							var nowPage = 1;
 							// zq打扫类型默认值
-							checkOrRobHome.cleanTypes = [ {
+							checkRob.cleanTypes = [ {
 								id : 0,
 								type : "抹尘房"
 							}, {
@@ -147,7 +144,7 @@ app
 								type : "过夜房"
 							} ];
 							// zq查找时间季度默认值
-							checkOrRobHome.quarters = [ {
+							checkRob.quarters = [ {
 								id : 0,
 								type : "全年"
 							}, {
@@ -163,15 +160,6 @@ app
 								id : 4,
 								type : "四季度"
 							} ];
-<<<<<<< HEAD
-							// zq做房用时统计界面设置条件
-							checkOrRobHome.limit = {
-								startTime : "",
-								endTime : "",
-								roomType : ""
-							};
-							
-=======
 							// 抢房效率统计查询限制条件
 							checkRob.reLimit = {
 								tableType : "0",
@@ -188,7 +176,6 @@ app
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 							// zq公共函数始
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
@@ -208,8 +195,6 @@ app
 								da.push(ss);
 							}
 							// zq公共函数终
-							
-							
 							// zq生成平均值的数组
 							function getAverageData(data, number) {
 								var arr = [];
@@ -219,7 +204,6 @@ app
 								return arr;
 
 							}
-
 							// zq换页
 							function pageTurn(totalPage, page, Func) {
 								var $pages = $(".tcdPageCode");
@@ -229,6 +213,7 @@ app
 										current : page,
 										backFn : function(p) {
 											Func(p);
+											nowPage = p;// 暂时没用，留待将来换页改序号使用
 										}
 									});
 								}
@@ -250,22 +235,22 @@ app
 							// zq获取房间类型下拉表
 							function selectRoomSorts() {
 								services.getRoomSorts().success(function(data) {
-									checkOrRobHome.roomTypes = data.list;
+									checkRob.roomTypes = data.list;
 								});
 							}
 							// zq查询客服人员列表
 							function selectRoomStaffs() {
 								services.selectRoomStaffs().success(
 										function(data) {
-											checkOrRobHome.staffs = data.list;
+											checkRob.staffs = data.list;
 										});
 							}
 							// zq获取所选房间类型
 							function getSelectedRoomType(roomSortNo) {
 								var type = "";
-								for ( var item in checkOrRobHome.roomTypes) {
-									if (checkOrRobHome.roomTypes[item].sortNo == roomSortNo) {
-										type = checkOrRobHome.roomTypes[item].sortName;
+								for ( var item in checkRob.roomTypes) {
+									if (checkRob.roomTypes[item].sortNo == roomSortNo) {
+										type = checkRob.roomTypes[item].sortName;
 									}
 								}
 								return type;
@@ -289,15 +274,15 @@ app
 							// zq获取所选用户
 							function getSelectedStaff(staffId) {
 								var staffName = "";
-								for ( var item in checkOrRobHome.staffs) {
-									if (checkOrRobHome.staffs[item].staff_id == staffId) {
-										staffName = checkOrRobHome.staffs[item].staff_no
-												+ checkOrRobHome.staffs[item].staff_name;
+								for ( var item in checkRob.staffs) {
+									if (checkRob.staffs[item].staff_id == staffId) {
+										staffName = checkRob.staffs[item].staff_no
+												+ checkRob.staffs[item].staff_name;
 									}
 								}
 								return staffName;
 							}
-							
+
 							// zq比较两个时间的大小
 							function compareDateTime(startDate, endDate) {
 								var date1 = new Date(startDate);
@@ -308,8 +293,6 @@ app
 									return false;
 								}
 							}
-<<<<<<< HEAD
-=======
 							// zq当房型下拉框变化时获取房型名字
 							checkRob.getSortNameByNo = function() {
 								var no = $("#roomSortType").val();
@@ -491,7 +474,6 @@ app
 									$("#detailTable").show();
 								}
 							}
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -506,12 +488,10 @@ app
 																	/(fill|stroke)="rgba([ 0-9]+,[ 0-9]+,[ 0-9]+),([ 0-9\.]+)"/g,
 																	'$1="rgb($2)" $1-opacity="$3"');
 												});
-								if ($location.path().indexOf('/workHouseForm') == 0) {
+								if ($location.path().indexOf(
+										'/robEfficiencyForm') == 0) {
 									selectRoomSorts();
 
-<<<<<<< HEAD
-								} 
-=======
 								} else if ($location.path().indexOf(
 										'/robEffAnalyseForm') == 0) {
 									selectRoomSorts();
@@ -520,7 +500,6 @@ app
 										'/checkEfficiencyForm') == 0) {
 									selectRoomSorts();
 								}
->>>>>>> e2f7892bffe266d817c60cd54f15e418c6d68cf0
 							}
 							initData();
 							// zq控制年

@@ -2,7 +2,6 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
-		<li><a href="">抢房效率统计</a></li>
 	</ul>
 </div>
 
@@ -44,10 +43,8 @@
 
 	</div>
 	<table class="tablelist tablestyle" id="efficiencyTable">
-		<caption align="top" class="tableTitle">
-			<div class="tableTitle">客房部员工抢房 {{sortName}} 工作效率统计表</div>
-			<div>统计时间：{{reLimit.startTime}}&nbsp;至 &nbsp;{{reLimit.endTime}}</div>
-		</caption>
+		<caption align="top" class="tableTitle">客房部员工抢房 {{sortName}}
+			工作效率统计表</caption>
 		<thead>
 			<tr>
 				<th class="width3">序号</th>
@@ -78,7 +75,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<table class="tablelist tablestyle hidden" id="detailTable">
+	<table class="tablelist tablestyle hidden" id="detailTable" >
 		<caption align="top" class="tableTitle">客房部员工抢房 {{sortName}}
 			明细表</caption>
 		<thead>
@@ -108,10 +105,10 @@
 			</tr>
 		</tbody>
 	</table>
-	<div class="tcdPageCode">页码容器</div>
+<div class="tcdPageCode">页码容器</div>
 
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-
+	
 </div>
 
 

@@ -434,9 +434,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		if (averHouseEff != null) {
-			jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
-		}
+		jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
 		String allAverHouseEff = StringUtil.divide(sumHouseTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency1", Float.valueOf(allAverHouseEff));// 全体员工平均做房效率
 
@@ -460,9 +458,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		if (averWorkEff != null) {
-			jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
-		}
+		jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
 		String allAverWorkEff = StringUtil.divide(sumWorkTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency", Float.valueOf(allAverWorkEff));// 全体员工平均工作效率
 

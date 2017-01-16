@@ -9,13 +9,14 @@
 
 	<div>
 		<div>
-			<form action="exportWorkLoadSummaryList.do" method="post"
+			<form action="../workLoad/exportWorkLoadSummaryList.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止日期</label><input type="text" name="startTime"
+
+					<li><label>起止日期</label><input type="text" name="startDate"
 						ng-model="workloadLimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endTime" ng-model="workloadLimit.endTime"
+						type="text" name="endDate" ng-model="workloadLimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 				    <li><input class="btn layoutStyle" style="width: 60px"
@@ -49,11 +50,11 @@
 				<td>{{workload.orderNum}}</td>
 				<td>{{workload.staffName}}</td>
 				<td>{{workload.staffNo}}</td>
-				<td>{{workload.cleanRoom}}</td>
-				<td>{{workload.overnightRoom}}</td>
-				<td>{{workload.checkoutRoom}}</td>
-				<td>{{workload.actualLoad}}</td>
-				<td>{{workload.beyondLoad}}</td>
+				<td>{{workload.cleanRoom| numFloat}}</td>
+				<td>{{workload.overnightRoom| numFloat}}</td>
+				<td>{{workload.checkoutRoom| numFloat}}</td>
+				<td>{{workload.actualLoad| numFloat}}</td>
+				<td>{{workload.beyondLoad| numFloat}}</td>
 				<td>{{workload.rank}}</td>
 			</tr>
 		</tbody>

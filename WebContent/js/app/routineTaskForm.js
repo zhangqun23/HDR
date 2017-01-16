@@ -173,7 +173,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectWorkRejectByLimits = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'workLoad/selectWorkRejectByLimits.do',
+			url : baseUrl + 'workReject/selectWorkRejectByLimits.do',
 			data : data
 		});
 	};

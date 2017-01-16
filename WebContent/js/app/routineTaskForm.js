@@ -792,12 +792,14 @@ app
 								var staffWorkloadLimit = JSON
 										.stringify(reportForm.staffWorkloadLimit);
 								services
-										.selectStaffWorkLoadAnalyse({
-											//limit : staffWorkloadLimit
-											checkYear:reportForm.staffWorkloadLimit.checkYear,
-											quarter:reportForm.staffWorkloadLimit.quarter,
-											staffId:reportForm.staffWorkloadLimit.staffId
-										})
+										.selectStaffWorkLoadAnalyse(
+												{
+													// limit :
+													// staffWorkloadLimit
+													checkYear : reportForm.staffWorkloadLimit.checkYear,
+													quarter : reportForm.staffWorkloadLimit.quarter,
+													staffId : reportForm.staffWorkloadLimit.staffId
+												})
 										.success(
 												function(data) {
 													var xAxis = [];// 横坐标显示
@@ -1109,6 +1111,12 @@ app
 											.toFixed(2));
 								}
 								return num;
+							}
+							// zq获取下拉框得到的员工姓名
+							reportForm.staffName="";
+							reportForm.getStaffNameById = function() {
+								var name = $("#staffId").val();
+								reportForm.staffName = getSelectedStaff(name);
 							}
 							// zq初始化
 							function initData() {

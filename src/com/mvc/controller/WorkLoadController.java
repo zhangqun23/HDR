@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
-import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.service.WorkLoadService;
 import com.utils.StringUtil;
 
@@ -184,6 +183,7 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadAnalyse.do")
 	public ResponseEntity<byte[]> exportWorkLoadAnalyse(HttpServletRequest request, HttpServletResponse response) {
+
 		String svg = "";
 		String checkYear = "";
 		String quarter = "";

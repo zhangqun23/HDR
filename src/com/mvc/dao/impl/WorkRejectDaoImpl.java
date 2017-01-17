@@ -82,7 +82,8 @@ public class WorkRejectDaoImpl implements WorkRejectDao {
 		}
 		return sql.toString();
 	}
-//获取单个人的驳回率
+
+	// 获取单个人的驳回率
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectMonthWorkReject(Map<String, Object> map) {
@@ -110,14 +111,63 @@ public class WorkRejectDaoImpl implements WorkRejectDao {
 		if (startTime != null) {
 			sql.append("  and cs.close_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
-
 		if (staffId != null) {
 			sql.append("  and cs.case_author= '" + staffId + "'");
 		}
 		if (cleanType != null) {
-			sql.append("  and cs.clean_type= '" + cleanType + "'");
+			sql.append("  and cs.clean_type= " + cleanType + "");
 		}
 		return sql.toString();
+	}
+
+	// zq获取全体员工的平均做房效率
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectAllAverRejectEff(Map<String, Object> map) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = allUserWorkRejectSQL(map);
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select cs.case_author,count(1) caseSum,sum(case when cs.is_back > 0 then 1 else 0 end) backSum  from case_info cs");
+		sql.append(
+				"  left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
+		sql.append("  where si.parent_name='计划任务' " + sqlLimit + " group by case_author");
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// zq驳回折线图分析查询条件
+	private String allUserWorkRejectSQL(Map<String, Object> map) {
+		StringBuilder sql = new StringBuilder();
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String cleanType = (String) map.get("cleanType");
+		if (startTime != null) {
+			sql.append("  and cs.close_time between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		if (cleanType != null) {
+			sql.append("  and cs.clean_type= " + cleanType + "");
+		}
+		return sql.toString();
+	}
+
+	// zq获取个人驳回原因统计
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectReasonsByLimits(Map<String, Object> map) {
+		EntityManager em = emf.createEntityManager();
+		String limitSQL = userWorkRejectSQL(map);
+		StringBuilder sql = new StringBuilder();
+		sql.append("select  ch.back_reason from case_handle ch left join case_info cs on cs.case_id=ch.case_id");
+		sql.append("  left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort");
+		sql.append(" where si.parent_name='计划任务' and ch.back_reason is not null "+limitSQL+"");
+		sql.append("");
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list=query.getResultList();
+		em.close();
+		return list;
 	}
 
 }

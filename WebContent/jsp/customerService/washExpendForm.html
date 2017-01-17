@@ -42,7 +42,7 @@
 				<th class="a">卷纸</th>
 		        <th class="a">洗发液</th>
 		        <th class="a">沐浴液</th>
-		        <th class="a">洗发素</th>
+		        <th class="a">护发素</th>
 		        <th class="a">润肤露</th>
 		        <th class="a">护理包</th>
 		        <th class="a">黑垃圾袋</th>
@@ -62,30 +62,30 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+			<tr ng-repeat="wash in washExpendFormList">
+				<td>{{wash.orderNum}}</td>
+				<td>{{wash.room_id}}</td>
+				<td>{{wash.toth_num}}</td>
+				<td>{{wash.ropa_num}}</td>
+				<td>{{wash.rins_num}}</td>
+				<td>{{wash.bafo_num}}</td>
+				<td>{{wash.haco_num}}</td>
+				<td>{{wash.shge_num}}</td>
+				<td>{{wash.capa_num}}</td>
+				<td>{{wash.garb_num}}</td>
+				<td>{{wash.paex_num}}</td>
+				<td>{{wash.peep_num}}</td>
+				<td>{{wash.shca_num}}</td>
+				<td>{{wash.shav_num}}</td>
+				<td>{{wash.comb_num}}</td>
+				<td>{{wash.shcl_num}}</td>
+				<td>{{wash.soap_num}}</td>
+				<td>{{wash.nacl_num}}</td>
+				<td>{{wash.flow_num}}</td>
+				<td>{{wash.basa_num}}</td>
+				<td>{{wash.scpa_num}}</td>
+				<td>{{wash.rugl_num}}</td>
+				<td>{{wash.dete_num}}</td>
 			</tr>
 		</tbody>
 	</table>

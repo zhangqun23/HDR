@@ -20,7 +20,8 @@
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectCheckEfficiencyByLimits()"></li>
+						type="button" value="查询"
+						ng-click="selectCheckEfficiencyByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -36,29 +37,13 @@
 				<th class="width5" rowspan="2">序号</th>
 				<th class="width5" rowspan="2">领班</th>
 				<th class="width5" rowspan="2">编号</th>
-				<th class="width5" colspan="4">过夜房</th>
-				<th class="width5" colspan="4">离退房</th>
-
-			</tr>
-			<tr>
-				<th class="width5">数量</th>
-				<th class="width5">总用时</th>
-				<th class="width5">平均用时</th>
-				<th class="width5">排名</th>
-				<th class="width5">数量</th>
-				<th class="width5">总用时</th>
-				<th class="width5">平均用时</th>
-				<th class="width5">排名</th>
-
+				<th class="width5" colspan="4">查房时间（分钟）</th>
+				<th class="width5" colspan="4">当班时间（分钟）</th>
+				<th class="width5" colspan="4">效率</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="c in checkEfficiencyList">
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
 				<td>{{}}</td>
 				<td>{{}}</td>
 				<td>{{}}</td>

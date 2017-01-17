@@ -169,7 +169,8 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			url : baseUrl + 'workLoad/getWorkLoadLevelList.do',
 			data : data
 		});
-	}
+	};
+	// zq驳回统计
 	services.selectWorkRejectByLimits = function(data) {
 		return $http({
 			method : 'post',
@@ -177,6 +178,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq驳回分析
+	services.selectWorkRejectAnalyseByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'workReject/selectWorkRejectAnalyseByLimits.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 app
@@ -253,6 +262,7 @@ app
 							reportForm.wraLimit = {
 								checkYear : "",
 								quarter : "0",
+								cleanType:"0",
 								staffId : ""
 							}
 							// zq公共函数始
@@ -829,55 +839,55 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														nowQuarterName = "全年";
-														allAverageData = getAverageData(changeNumType(
-																data.allAverageData),
+														allAverageData = getAverageData(
+																changeNumType(data.allAverageData),
 																12);
-														averageData = getAverageData(changeNumType(
-																data.averageData),
+														averageData = getAverageData(
+																changeNumType(data.averageData),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														nowQuarterName = "第一季度";
-														allAverageData = getAverageData(changeNumType(
-																data.allAverageData),
+														allAverageData = getAverageData(
+																changeNumType(data.allAverageData),
 																3);
-														averageData = getAverageData(changeNumType(
-																data.averageData),
+														averageData = getAverageData(
+																changeNumType(data.averageData),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														nowQuarterName = "第二季度";
-														allAverageData = getAverageData(changeNumType(
-																data.allAverageData),
+														allAverageData = getAverageData(
+																changeNumType(data.allAverageData),
 																3);
-														averageData = getAverageData(changeNumType(
-																data.averageData),
+														averageData = getAverageData(
+																changeNumType(data.averageData),
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														nowQuarterName = "第三季度";
-														allAverageData = getAverageData(changeNumType(
-																data.allAverageData),
+														allAverageData = getAverageData(
+																changeNumType(data.allAverageData),
 																3);
-														averageData = getAverageData(changeNumType(
-																data.averageData),
+														averageData = getAverageData(
+																changeNumType(data.averageData),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														nowQuarterName = "第四季度";
-														allAverageData = getAverageData(changeNumType(
-																data.allAverageData),
+														allAverageData = getAverageData(
+																changeNumType(data.allAverageData),
 																3);
-														averageData = getAverageData(changeNumType(
-																data.averageData),
+														averageData = getAverageData(
+																changeNumType(data.averageData),
 																3);
 														break;
 													}
@@ -959,6 +969,7 @@ app
 								}
 								var workRejectLimit = JSON
 										.stringify(reportForm.wrLimit);
+								console.log(workRejectLimit);
 								services.selectWorkRejectByLimits({
 									limit : workRejectLimit
 								}).success(function(data) {
@@ -979,8 +990,13 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								if (reportForm.wraLimit.cleanType == "") {
+									alert("请选择打扫类型！");
+									return false;
+								}
 								var workRejectAnalyseLimit = JSON
 										.stringify(reportForm.wraLimit);
+								console.log(workRejectAnalyseLimit);
 								services
 										.selectWorkRejectAnalyseByLimits({
 											limit : workRejectAnalyseLimit
@@ -1113,7 +1129,7 @@ app
 								return num;
 							}
 							// zq获取下拉框得到的员工姓名
-							reportForm.staffName="";
+							reportForm.staffName = "";
 							reportForm.getStaffNameById = function() {
 								var name = $("#staffId").val();
 								reportForm.staffName = getSelectedStaff(name);

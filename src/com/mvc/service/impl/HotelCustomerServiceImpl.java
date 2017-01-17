@@ -60,7 +60,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		}
 		if (jsonObject.containsKey("depart")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("depart"))) {
-				depart = jsonObject.getString("depart");
+				depart = jsonObject.getString("depart");			
 			}
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -111,8 +111,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			listGoal.add(hoCustomerService);
 		}	
 
-		sortAndWrite(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
-		sortAndWrite(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
+		sortAndWrite(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
+		sortAndWrite(listGoal, "timeOutRate", false, "timeOutRate_rank");// 超时率排名
 
 		// 序号
 		Iterator<HoCustomerService> itGoal = listGoal.iterator();
@@ -158,8 +158,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 	@Override
 	public ResponseEntity<byte[]> exportCustomerService(Map<String, Object> map, String path, String modelPath) {
 		ResponseEntity<byte[]> byteww = null;
-		String starttime = (String) map.get("start_time");// 开始时间
-		String endtime = (String) map.get("end_time");// 结束时间
+		String starttime = (String) map.get("start_Time");// 开始时间
+		String endtime = (String) map.get("end_Time");// 结束时间
 		List<HoCustomerService> listGoal = null;
 		WordHelper wh = new WordHelper();
 
@@ -178,7 +178,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			// 获取列表和文本信息
 			listMap.put("0", listGoal);
 			contentMap.put("${starttime}", starttime);
-			contentMap.put("${endtime}", starttime);
+			contentMap.put("${endtime}", endtime);
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
@@ -240,8 +240,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			listGoal.add(houseCustomerServiceLoad);
 		}
 
-		sortAndWrite0(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
-		sortAndWrite0(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
+		sortAndWrite0(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
+		sortAndWrite0(listGoal, "timeOutRate", false, "timeOutRate_rank");// 超时率排名
 
 		// 序号
 		Iterator<HouseCustomerServiceLoad> itGoal = listGoal.iterator();
@@ -287,8 +287,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 	@Override
 	public ResponseEntity<byte[]> exportRoomWorkload(Map<String, Object> map, String path, String modelPath) {
 		ResponseEntity<byte[]> byteww = null;
-		String starttime = (String) map.get("start_time");// 开始时间
-		String endtime = (String) map.get("end_time");// 结束时间
+		String starttime = (String) map.get("start_Time");// 开始时间
+		String endtime = (String) map.get("end_Time");// 结束时间
 		List<HouseCustomerServiceLoad> listGoal = null;
 		WordHelper wh = new WordHelper();
 
@@ -311,7 +311,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			// 获取列表和文本信息
 			listMap.put("0", listGoal);
 			contentMap.put("${starttime}", starttime);
-			contentMap.put("${endtime}", starttime);
+			contentMap.put("${endtime}", endtime);
 			contentMap.put("${depart}", department);
 
 			try {
@@ -371,8 +371,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			listGoal.add(houseCustomerServiceType);
 		}
 
-		sortAndWrite1(listGoal, "serviceLoad", true, "serviceLoad_rank");// 总量排名
-		sortAndWrite1(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
+		sortAndWrite1(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
+		sortAndWrite1(listGoal, "timeOutRate", false, "timeOutRate_rank");// 超时率排名
 
 		Iterator<HouseCustomerServiceType> itGoal = listGoal.iterator();
 		int i = 0;
@@ -417,8 +417,8 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 	@Override
 	public ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path, String modelPath) {
 		ResponseEntity<byte[]> byteww = null;
-		String starttime = (String) map.get("start_time");// 开始时间
-		String endtime = (String) map.get("end_time");// 结束时间
+		String starttime = (String) map.get("start_Time");// 开始时间
+		String endtime = (String) map.get("end_Time");// 结束时间
 		List<HouseCustomerServiceType> listGoal = null;
 		WordHelper wh = new WordHelper();
 
@@ -441,7 +441,7 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 			// 获取列表和文本信息
 			listMap.put("0", listGoal);
 			contentMap.put("${starttime}", starttime);
-			contentMap.put("${endtime}", starttime);
+			contentMap.put("${endtime}", endtime);
 			contentMap.put("${depart}", department);
 
 			try {

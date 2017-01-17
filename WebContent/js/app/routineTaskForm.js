@@ -173,7 +173,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectWorkRejectByLimits = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'workLoad/selectWorkRejectByLimits.do',
+			url : baseUrl + 'workReject/selectWorkRejectByLimits.do',
 			data : data
 		});
 	};
@@ -814,11 +814,11 @@ app
 
 													for ( var item in data.workLoadMonths) {
 														staffData
-																.push(data.workLoadMonths[item].actualLoad);
+																.push(changeNumType(data.workLoadMonths[item].actualLoad));
 													}
 													for ( var item in data.workLoadMonths) {
 														ratedData
-																.push(data.workLoadMonths[item].ratedLoad);
+																.push(changeNumType(data.workLoadMonths[item].ratedLoad));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -829,55 +829,55 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														nowQuarterName = "全年";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																12);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														nowQuarterName = "第一季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														nowQuarterName = "第二季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														nowQuarterName = "第三季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														nowQuarterName = "第四季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													}

@@ -9,17 +9,17 @@
 
 	<div>
 		<div>
-			<form action="exportStaffWorkload.do" method="post"
+			<form action="../customerServiceInformation/exportStaffWorkload.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="staffWorkloadLimit.start_time" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="staffWorkloadLimit.end_time"
+						ng-model="staffWorkloadLimit.start_time" required class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
+						type="text" name="endTime" ng-model="staffWorkloadLimit.end_time" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>			
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>			
 					<li><label>部门</label><select class="dfselect layoutStyle"
-						style="width: 73px" ng-model="staffWorkloadLimit.depart" name="departId"><option
+						style="width: 73px" ng-model="staffWorkloadLimit.depart" required name="departId"><option
 								value="">请选择</option>
 							<option value="{{depart.departmentId}}" ng-repeat="depart in depts">{{depart.departmentName}}</option></select></li>
 				   <li><input class="btn layoutStyle" style="width: 60px"
@@ -57,7 +57,7 @@
 				<td>{{staffWorkload.timeOutService}}</td>
 				<td>{{staffWorkload.sumWorkTime}}</td>
 				<td>{{staffWorkload.averageWorkTime}}</td>
-				<td>{{staffWorkload.timeOutRate}}</td>
+				<td>{{staffWorkload.timeOutRate|numPercent}}</td>
 				<td>{{staffWorkload.serviceLoad_rank}}</td>
 				<td>{{staffWorkload.timeOutRate_rank}}</td>
 			</tr>

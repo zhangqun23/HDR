@@ -1,0 +1,69 @@
+/**
+ * 
+ */
+package com.mvc.entityReport;
+
+/**
+ * 领班查房效率
+ * 
+ * @author zjn
+ * @date 2017年1月17日
+ */
+public class CheckHouse {
+	private String orderNum;// 序号
+	private String staffName;// 员工姓名
+	private String staffNo;// 员工编号
+
+	private String checkTime;// 查房总用时
+	private String totalTime;// 当班总用时
+	private String efficiency;// 效率
+
+	public String getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public String getStaffNo() {
+		return staffNo;
+	}
+
+	public void setStaffNo(String staffNo) {
+		this.staffNo = staffNo;
+	}
+
+	public String getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(String checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	public String getTotalTime() {
+		return totalTime;
+	}
+
+	public void setTotalTime(String totalTime) {
+		this.totalTime = totalTime;
+	}
+
+	public String getEfficiency() {
+		return efficiency;
+	}
+
+	public void setEfficiency(String efficiency) {
+		this.efficiency = efficiency;
+	}
+
+}

@@ -161,6 +161,44 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		}
 		return sql.toString();
 	}
+	
+	//布草消耗分析
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectLinenExpendAnalyse(Map<String, Object> map) {
+		
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = expendAnalyseSQL(map);
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
+		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
+		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append("goods_info.Goods_id>'408' and goods_info.Goods_id<'434' " + sqlLimit);
+		sql.append("group by temp_list.goods_id ");
+		
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+	}
+	
+	// 布草统计分析SQL条件
+	private String expendAnalyseSQL(Map<String, Object> map) {
+		StringBuilder sql = new StringBuilder();
+
+		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
+		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+
+		if (startTime != null && endTime != null) {
+			sql.append(" and case_info.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		return sql.toString();
+	}
+
 
 	// 查询房间耗品消耗
 	@SuppressWarnings("unchecked")
@@ -442,6 +480,31 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return sql.toString();
 	}
 
+	//房间耗品消耗分析
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectRoomExpendAnalyse(Map<String, Object> map) {
+		
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = expendAnalyseSQL(map);
+			
+		StringBuilder sql = new StringBuilder();
+		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
+		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
+		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append("goods_info.Goods_id in (553,444,389,390,388,379,453,551,553,548,549,550,563,547,502,491,455,452,380,454,  ");
+		sql.append("501,495,383,493,487,486,484,485,492,490,382,381,496,470) " + sqlLimit);
+		sql.append("group by temp_list.goods_id ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+	}
+	
 	//卫生间耗品
 	@SuppressWarnings("unchecked")
 	@Override
@@ -560,6 +623,30 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 			sql.append(" and case_info.open_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
 		return sql.toString();
+	}
+	
+	//房间耗品消耗分析
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectWashExpendAnalyse(Map<String, Object> map) {
+			
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = expendAnalyseSQL(map);
+	
+		StringBuilder sql = new StringBuilder();
+		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
+		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
+		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append("goods_info.Goods_id in (394,401,457,458,459,460,481,482,445,456,448,451,446,447,565) " + sqlLimit);
+		sql.append("group by temp_list.goods_id ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
 	}
 
 }

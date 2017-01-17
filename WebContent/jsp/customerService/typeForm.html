@@ -18,8 +18,8 @@
 						type="text" name="endTime" ng-model="typeLimit.end_time" required
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
-					<li><label>部门</label><select class="dfselect layoutStyle"
-						style="width: 73px" ng-model="typeLimit.depart" required name="departId"><option
+					<li><label>部门</label><select class="dfselect layoutStyle" id="dept"
+						style="width: 73px" ng-change="getDeptNameById()" ng-model="typeLimit.depart" required name="departId"><option
 								value="">请选择</option>
 							<option value="{{depart.departmentId}}" ng-repeat="depart in depts">{{depart.departmentName}}</option></select></li>			
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -35,6 +35,10 @@
 	</div>
 
 	<table class="tablelist">
+	    <caption align="top" class="tableTitle">
+			<div class="tableTitle">{{deptName}}服务类型统计</div>
+			<div>统计时间：{{typeLimit.start_time}}&nbsp;至 &nbsp;{{typeLimit.end_time}}</div>
+		</caption>
 		<thead>
 			<tr>
 				<th class="width5">序号</th>

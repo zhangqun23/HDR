@@ -14,16 +14,21 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
-						ng-model="limit.startTime" required class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="limit.endTime" required
+						id="startTime" ng-model="limit.startTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onClick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM',readOnly:'true',onpicked: function(){$(this).trigger('change');}}) "
+						onChange=""><label>—</label><input type="text"
+						name="endTime" ng-model="limit.endTime" required
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
 					<li><label>房间类型</label><select class="dfselect layoutStyle"
-						style="width: 140px" ng-model="limit.roomType" name="roomType" id="roomSortType" ng-change="getSortNameByNo()" required><option
+						style="width: 140px" ng-model="limit.roomType" name="roomType"
+						id="roomSortType" ng-change="getSortNameByNo()" required><option
 								value="">请选择</option>
 							<option value="{{r.sortNo}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
-					<li><input type="text" name="sortName" class="hidden" ng-model="sortName"></li>
+					<li><input type="text" name="sortName" class="hidden"
+						ng-model="sortName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkHouseByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -39,7 +44,10 @@
 	</div>
 
 	<table class="tablelist tablestyle">
-	<caption align="top" class="tableTitle"><div  class="tableTitle">客房员工{{sortName}}做房时间统计表</div><div>统计时间：{{limit.startTime}}&nbsp;至 &nbsp;{{limit.endTime}}</div></caption>
+		<caption align="top" class="tableTitle">
+			<div class="tableTitle">客房员工{{sortName}}做房时间统计表</div>
+			<div>统计时间：{{limit.startTime}}&nbsp;至 &nbsp;{{limit.endTime}}</div>
+		</caption>
 		<thead>
 			<tr>
 				<th class="width5" rowspan="2">序号</th>

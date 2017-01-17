@@ -9,13 +9,29 @@ package com.mvc.entityReport;
 public class HoCustomerService {
 	private String orderNum;// 序号
 	private String department;// 部门
-	private String serviceLoad;// 服务数量
+	private Float serviceLoad;// 服务数量
 	private String timeOutService;// 超时服务
-	private String timeOutRate;// 超时率
+	private Float timeOutRate;// 超时率
 	private String sumWorkTime;// 总用时
 	private String averageWorkTime;// 平均用时
 	private String serviceLoad_rank;// 总量排名
 	private String timeOutRate_rank;// 超时率排名
+
+	public Float getServiceLoad() {
+		return serviceLoad;
+	}
+
+	public void setServiceLoad(Float serviceLoad) {
+		this.serviceLoad = serviceLoad;
+	}
+
+	public Float getTimeOutRate() {
+		return timeOutRate;
+	}
+
+	public void setTimeOutRate(Float timeOutRate) {
+		this.timeOutRate = timeOutRate;
+	}
 
 	public String getOrderNum() {
 		return orderNum;
@@ -33,13 +49,7 @@ public class HoCustomerService {
 		this.timeOutService = timeOutService;
 	}
 
-	public String getTimeOutRate() {
-		return timeOutRate;
-	}
-
-	public void setTimeOutRate(String timeOutRate) {
-		this.timeOutRate = timeOutRate;
-	}
+	
 
 	public String getTimeOutRate_rank() {
 		return timeOutRate_rank;
@@ -57,13 +67,7 @@ public class HoCustomerService {
 		this.department = department;
 	}
 
-	public String getServiceLoad() {
-		return serviceLoad;
-	}
-
-	public void setServiceLoad(String serviceLoad) {
-		this.serviceLoad = serviceLoad;
-	}
+	
 
 	public String getSumWorkTime() {
 		return sumWorkTime;

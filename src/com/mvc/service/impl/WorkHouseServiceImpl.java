@@ -1,5 +1,6 @@
 package com.mvc.service.impl;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.base.enums.CleanType;
 import com.mvc.dao.WorkHouseDao;
 import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.WorkEfficiency;
@@ -21,6 +23,7 @@ import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
+import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
@@ -283,6 +286,69 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return sum;
 	}
 
+	// 部门员工做房用时分析导出
+	@Override
+	public ResponseEntity<byte[]> exportWorkHouseAna(Map<String, Object> map, String path, String tempPath,
+			String picPath) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+		String staffName = (String) map.get("staffName");
+		String sortName = (String) map.get("sortName");
+		String cleanType = (String) map.get("cleanType");
+		String cleanTypeStr = CleanType.intToStr(Integer.valueOf(cleanType));
+		String year = (String) map.get("checkYear");
+		String quarter = (String) map.get("quarter");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			String fileName = "客房部员工" + sortName + cleanTypeStr + "做房用时分析.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("${staffName}", staffName);
+			contentMap.put("${roomType}", sortName);// 房间类型名称
+			contentMap.put("${cleanType}", cleanTypeStr);
+			if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
+				String startTime = StringUtil.quarterFirstDay(year, quarter);
+				String endTime = StringUtil.quarterLastDay(year, quarter);
+				startTime = startTime.substring(0, 10);// 保留到天
+				endTime = endTime.substring(0, 10);
+				contentMap.put("${startTime}", startTime);
+				contentMap.put("${endTime}", endTime);
+			}
+
+			// 图片相关
+			String svg1 = (String) map.get("chart1SVGStr");
+			String picName1 = null;
+			if (StringUtil.strIsNotEmpty(svg1)) {
+				picName1 = "pic1.png";
+				picPath = FileHelper.transPath(picName1, picPath);
+			}
+			Map<String, Object> picMap = null;
+			picMap = new HashMap<String, Object>();
+			picMap.put("width", 960);
+			picMap.put("height", 400);
+			picMap.put("type", "png");
+			try {
+				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为png格式，并保存到服务器
+				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			contentMap.put("${pic1}", picMap);
+
+			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
 	/**** 员工工作效率报表 ****/
 
 	// 查询员工工作效率
@@ -370,7 +436,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
+		if (averHouseEff != null) {
+			jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
+		}
 		String allAverHouseEff = StringUtil.divide(sumHouseTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency1", Float.valueOf(allAverHouseEff));// 全体员工平均做房效率
 
@@ -394,7 +462,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 		}
-		jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
+		if (averWorkEff != null) {
+			jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
+		}
 		String allAverWorkEff = StringUtil.divide(sumWorkTime.toString(), sumDutyTime.toString());
 		jsonObject.put("allAverWorkEfficiency", Float.valueOf(allAverWorkEff));// 全体员工平均工作效率
 
@@ -433,6 +503,137 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			}
 		}
 		return listGoal;
+	}
+
+	// 部门员工工作效率统计导出
+	@Override
+	public ResponseEntity<byte[]> exportWorkEffByLimits(Map<String, Object> map, String path, String tempPath) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			String fileName = "客房部员工工作效率统计表.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workHouseDao.selectWorkEffByLimits(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkEfficiency> listGoal = objToWorkEff(it);
+
+			WorkEfficiency sum = sumWorkEff(listGoal);// 合计
+			listGoal.add(sum);
+
+			Map<String, Object> listMap = new HashMap<String, Object>();
+			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			String startTime = (String) map.get("startTime");
+			String endTime = (String) map.get("endTime");
+			contentMap.put("${startTime}", startTime.substring(0, 10));
+			contentMap.put("${endTime}", endTime.substring(0, 10));
+
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	/**
+	 * list求和(工作效率)
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private WorkEfficiency sumWorkEff(List<WorkEfficiency> list) {
+		WorkEfficiency sum = new WorkEfficiency();
+		Iterator<WorkEfficiency> it = list.iterator();
+
+		Long sum_work_time = (long) 0;// 当班时间
+		Long sum_house_time = (long) 0;// 做房时间
+		Long sum_house_serv_time = (long) 0;// 做房+客服时间
+
+		WorkEfficiency WorkEff = null;
+		while (it.hasNext()) {
+			WorkEff = it.next();
+			sum_work_time += Integer.valueOf(WorkEff.getWork_time());
+			sum_house_time += Integer.valueOf(WorkEff.getHouse_time());
+			sum_house_serv_time += Integer.valueOf(WorkEff.getHouse_serv_time());
+		}
+		sum.setOrderNum("合计");
+		sum.setWork_time(String.valueOf(sum_work_time));
+		sum.setHouse_time(String.valueOf(sum_house_time));
+		sum.setHouse_serv_time(String.valueOf(sum_house_serv_time));
+
+		return sum;
+	}
+
+	// 部门员工工作效率分析导出
+	@Override
+	public ResponseEntity<byte[]> exportWorkEffAna(Map<String, Object> map, String path, String tempPath,
+			String picPath) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+		String staffName = (String) map.get("staffName");
+		String year = (String) map.get("checkYear");
+		String quarter = (String) map.get("quarter");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			String fileName = "客房部员工工作效率分析.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("${staffName}", staffName);
+			if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
+				String startTime = StringUtil.quarterFirstDay(year, quarter);
+				String endTime = StringUtil.quarterLastDay(year, quarter);
+				startTime = startTime.substring(0, 10);// 保留到天
+				endTime = endTime.substring(0, 10);
+				contentMap.put("${startTime}", startTime);
+				contentMap.put("${endTime}", endTime);
+			}
+
+			// 图片相关
+			String[] svgs = new String[2];
+			svgs[0] = (String) map.get("chartSVGStr");
+			svgs[1] = (String) map.get("chart1SVGStr");
+			String[] picNames = new String[2];
+			String[] picPaths = new String[2];
+			Map<String, Object> picMap = null;
+			for (int i = 0; i < 2; i++) {
+				if (StringUtil.strIsNotEmpty(svgs[i])) {
+					picNames[i] = "pic" + i + ".png";
+					picPaths[i] = FileHelper.transPath(picNames[i], picPath);// 解析后的上传路径
+
+					picMap = new HashMap<String, Object>();
+					picMap.put("width", 960);
+					picMap.put("height", 400);
+					picMap.put("type", "png");
+					try {
+						SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]
+						picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPaths[i]), true));
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					contentMap.put("${pic" + i + "}", picMap);
+				}
+			}
+
+			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return byteArr;
 	}
 
 }

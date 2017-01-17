@@ -173,7 +173,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectWorkRejectByLimits = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'workLoad/selectWorkRejectByLimits.do',
+			url : baseUrl + 'workReject/selectWorkRejectByLimits.do',
 			data : data
 		});
 	};
@@ -345,7 +345,7 @@ app
 													var userData = [];
 													for ( var item in data.list) {
 														userData
-																.push(data.list[item]);
+																.push(changeNumType(data.list[item]));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -356,27 +356,27 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																changeNumType(data.allAverWorkTime),
 																12);
 														averageData = getAverageData(
-																data.averWorkTime,
+																changeNumType(data.averWorkTime),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																changeNumType(data.allAverWorkTime),
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																changeNumType(data.averWorkTime),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																changeNumType(data.allAverWorkTime),
 																3);
 														averageData = getAverageData(
 																data.averWorkTime,
@@ -386,20 +386,20 @@ app
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																changeNumType(data.allAverWorkTime),
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																changeNumType(data.averWorkTime),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkTime,
+																changeNumType(data.allAverWorkTime),
 																3);
 														averageData = getAverageData(
-																data.averWorkTime,
+																changeNumType(data.averWorkTime),
 																3);
 														break;
 													}
@@ -560,8 +560,8 @@ app
 										})
 										.success(
 												function(data) {
-													var title = "客房员工工作效率分析折线图";// 折线图标题显示
-													var title1 = "客房员工做房效率分析折线图";
+													var title = "图一：客房员工工作效率分析折线图";// 折线图标题显示
+													var title1 = "图二：客房员工做房效率分析折线图";
 													var xAxis = [];// 横坐标显示
 													var yAxis = "效率";// 纵坐标显示
 													var nowQuarter = reportForm.weafLimit.quarter;// 当前的选择季度
@@ -580,11 +580,11 @@ app
 													var userData1 = [];// 个人做房效率
 													for ( var item in data.list) {
 														userData
-																.push(data.list[item]);
+																.push(changeNumType(data.list[item]));
 													}
 													for ( var item in data.list1) {
 														userData1
-																.push(data.list1[item]);
+																.push(changeNumType(data.list1[item]));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -595,80 +595,80 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																12);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																12);
 														allAverageData1 = getAverageData(
-																data.allAverWorkEfficiency1,
+																changeNumType(data.allAverWorkEfficiency1),
 																12);
 														averageData1 = getAverageData(
-																data.averWorkEfficiency1,
+																changeNumType(data.averWorkEfficiency1),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														allAverageData1 = getAverageData(
-																data.allAverWorkEfficiency1,
+																changeNumType(data.allAverWorkEfficiency1),
 																3);
 														averageData1 = getAverageData(
-																data.averWorkEfficiency1,
+																changeNumType(data.averWorkEfficiency1),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														allAverageData1 = getAverageData(
-																data.allAverWorkEfficiency1,
+																changeNumType(data.allAverWorkEfficiency1),
 																3);
 														averageData1 = getAverageData(
-																data.averWorkEfficiency1,
+																changeNumType(data.averWorkEfficiency1),
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														allAverageData1 = getAverageData(
-																data.allAverWorkEfficiency1,
+																changeNumType(data.allAverWorkEfficiency1),
 																3);
 														averageData1 = getAverageData(
-																data.averWorkEfficiency1,
+																changeNumType(data.averWorkEfficiency1),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														allAverageData1 = getAverageData(
-																data.allAverWorkEfficiency1,
+																changeNumType(data.allAverWorkEfficiency1),
 																3);
 														averageData1 = getAverageData(
-																data.averWorkEfficiency1,
+																changeNumType(data.averWorkEfficiency1),
 																3);
 														break;
 													}
@@ -695,7 +695,8 @@ app
 															title, xAxis, yAxis);
 													lineChartForm(lineData,
 															"#lineChart1",
-															title, xAxis, yAxis);
+															title1, xAxis,
+															yAxis);
 													$('#chart-svg')
 															.val(
 																	$(
@@ -791,9 +792,14 @@ app
 								var staffWorkloadLimit = JSON
 										.stringify(reportForm.staffWorkloadLimit);
 								services
-										.selectStaffWorkLoadAnalyse({
-											limit : staffWorkloadLimit
-										})
+										.selectStaffWorkLoadAnalyse(
+												{
+													// limit :
+													// staffWorkloadLimit
+													checkYear : reportForm.staffWorkloadLimit.checkYear,
+													quarter : reportForm.staffWorkloadLimit.quarter,
+													staffId : reportForm.staffWorkloadLimit.staffId
+												})
 										.success(
 												function(data) {
 													var xAxis = [];// 横坐标显示
@@ -806,13 +812,13 @@ app
 													var staffData = [];// 员工工作量
 													var ratedData = [];// 额定工作量
 
-													for ( var item in data.staffData) {
+													for ( var item in data.workLoadMonths) {
 														staffData
-																.push(data.staffData[item]);
+																.push(changeNumType(data.workLoadMonths[item].actualLoad));
 													}
-													for ( var item in data.ratedData) {
+													for ( var item in data.workLoadMonths) {
 														ratedData
-																.push(data.ratedData[item]);
+																.push(changeNumType(data.workLoadMonths[item].ratedLoad));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -823,55 +829,55 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														nowQuarterName = "全年";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																12);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														nowQuarterName = "第一季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														nowQuarterName = "第二季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														nowQuarterName = "第三季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														nowQuarterName = "第四季度";
-														allAverageData = getAverageData(
-																data.allAverageData,
+														allAverageData = getAverageData(changeNumType(
+																data.allAverageData),
 																3);
-														averageData = getAverageData(
-																data.averageData,
+														averageData = getAverageData(changeNumType(
+																data.averageData),
 																3);
 														break;
 													}
@@ -1086,7 +1092,7 @@ app
 							// zq扇形图公用函数
 							function pieChartForm(elementId, title, dataName,
 									data) {
-								var chart1 = new LineChart({
+								var chart1 = new Chart({
 									elementId : elementId,
 									title : title,
 									data : data,
@@ -1094,7 +1100,24 @@ app
 								});
 								chart1.init();
 							}
-
+							// zq将小数保留两位小数
+							function changeNumType(number) {
+								if (!number) {
+									var defaultNum = 0;
+									var num = parseFloat(parseFloat(defaultNum)
+											.toFixed(2));
+								} else {
+									var num = parseFloat(parseFloat(number)
+											.toFixed(2));
+								}
+								return num;
+							}
+							// zq获取下拉框得到的员工姓名
+							reportForm.staffName="";
+							reportForm.getStaffNameById = function() {
+								var name = $("#staffId").val();
+								reportForm.staffName = getSelectedStaff(name);
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");

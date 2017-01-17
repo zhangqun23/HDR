@@ -9,11 +9,11 @@ package com.mvc.entityReport;
 public class HouseCustomerServiceType {
 	private String orderNum;// 序号
 	private String serviceType;// 服务类型
-	private String serviceLoad;// 服务数量
+	private Float serviceLoad;// 服务数量
 	private String giveTime;// 给定时间
 	private String averageWorkTime;// 平均用时
 	private String timeOutServiceLoad;// 超时服务数量
-	private String timeOutRate;// 超时率
+	private Float timeOutRate;// 超时率
 	private String serviceLoad_rank;// 总量排名
 	private String timeOutRate_rank;// 超时率排
 
@@ -31,14 +31,6 @@ public class HouseCustomerServiceType {
 
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
-	}
-
-	public String getServiceLoad() {
-		return serviceLoad;
-	}
-
-	public void setServiceLoad(String serviceLoad) {
-		this.serviceLoad = serviceLoad;
 	}
 
 	public String getGiveTime() {
@@ -65,11 +57,19 @@ public class HouseCustomerServiceType {
 		this.timeOutServiceLoad = timeOutServiceLoad;
 	}
 
-	public String getTimeOutRate() {
+	public Float getServiceLoad() {
+		return serviceLoad;
+	}
+
+	public void setServiceLoad(Float serviceLoad) {
+		this.serviceLoad = serviceLoad;
+	}
+
+	public Float getTimeOutRate() {
 		return timeOutRate;
 	}
 
-	public void setTimeOutRate(String timeOutRate) {
+	public void setTimeOutRate(Float timeOutRate) {
 		this.timeOutRate = timeOutRate;
 	}
 

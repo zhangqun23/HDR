@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 
 import com.mvc.entityReport.WorkLoad;
-import com.mvc.entityReport.WorkLoadLevel;
 
 /**
  * 工作量相关的service层接口
@@ -23,7 +22,7 @@ public interface WorkLoadService {
 	ResponseEntity<byte[]> exportWorkLoadSummaryList(Map<String, Object> map);
 
 	// 获取所有员工工作量饱和度分析列表
-	List<WorkLoadLevel> getWorkLoadLevelList(String startTime, String endTime);
+	String getWorkLoadLevelList(String startTime, String endTime);
 
 	// 导出所有员工工作量饱和度分析表
 	ResponseEntity<byte[]> exportWorkLoadLevelList(Map<String, Object> map);

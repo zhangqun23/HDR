@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.LinenExpend;
 import com.mvc.entityReport.RoomExpend;
+import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.StringUtil;
 
@@ -38,7 +42,7 @@ public class ExpendFormController {
 	/**
 	 * 布草统计
 	 * 
-	 * @param request
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/selectLinenExpendFormByLlimits.do")
@@ -50,6 +54,46 @@ public class ExpendFormController {
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 		return jsonObject.toString();
+	}
+	
+	/**
+	 * 导出所有员工工作量汇总表，word格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportLinenExpendForm.do")
+	public ResponseEntity<byte[]> exportLinenExpendForm(HttpServletRequest request) {
+		String formType = null;
+		String formName = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
+			formType = request.getParameter("formType");// 报表类型
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
+			formName = request.getParameter("formName");// 报表类型名称
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formType", formType);
+		map.put("formName", formName);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.LINENEXPEND_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = expendFormService.exportLinenExpendForm(map, path, tempPath);
+
+		return byteArr;
 	}
 
 	/**
@@ -64,6 +108,7 @@ public class ExpendFormController {
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<RoomExpend> list = expendFormService.selectRoomExpend(map);
+		
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 		return jsonObject.toString();
@@ -75,15 +120,18 @@ public class ExpendFormController {
 	 * @param request
 	 * @return
 	 */
-	/*
-	 * @RequestMapping("/selectWashExpendFormByWlimits.do") public @ResponseBody
-	 * String selectWashExpendForm(HttpServletRequest request) { JSONObject
-	 * jsonObject = JSONObject.fromObject(request.getParameter("wlimit"));
-	 * 
-	 * Map<String, Object> map = JsonObjToMap(jsonObject); List<RoomExpend> list
-	 * = expendFormService.selectWashExpend(map); jsonObject = new JSONObject();
-	 * jsonObject.put("list", list); return jsonObject.toString(); }
-	 */
+	  @RequestMapping("/selectWashExpendFormByWlimits.do")
+	  public @ResponseBody String selectWashExpendForm(HttpServletRequest request) {
+		  JSONObject jsonObject = JSONObject.fromObject(request.getParameter("wlimit"));
+	  
+	      Map<String, Object> map = JsonObjToMap(jsonObject);
+	      List<WashExpend> list = expendFormService.selectWashExpend(map);
+  
+	      jsonObject = new JSONObject();
+	      jsonObject.put("list", list);
+	      return jsonObject.toString();
+	   }
+	 
 
 	/**
 	 * 将JsonObject转换成Map
@@ -93,6 +141,7 @@ public class ExpendFormController {
 	 */
 	private Map<String, Object> JsonObjToMap(JSONObject jsonObject) {
 		String formType = null;
+		String formName = null;
 		String startTime = null;
 		String endTime = null;
 		if (jsonObject.containsKey("formType")) {
@@ -100,19 +149,25 @@ public class ExpendFormController {
 				formType = jsonObject.getString("formType");// 报表类型
 			}
 		}
+		if (jsonObject.containsKey("formName")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("formName"))) {
+				formType = jsonObject.getString("formName");// 报表类型名称
+			}
+		}
 		if (jsonObject.containsKey("startTime")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("startTime"))) {
-				startTime = StringUtil.monthFirstDay(jsonObject.getString("startTime"));// 开始时间
+				startTime = StringUtil.dayFirstTime(jsonObject.getString("startTime"));// 开始时间
 			}
 		}
 		if (jsonObject.containsKey("endTime")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("endTime"))) {
-				endTime = StringUtil.monthLastDay(jsonObject.getString("endTime"));// 结束时间
+				endTime = StringUtil.dayLastTime(jsonObject.getString("endTime"));// 结束时间
 			}
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("formType", formType);
+		map.put("formName", formName);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 

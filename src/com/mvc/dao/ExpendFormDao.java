@@ -15,4 +15,7 @@ public interface ExpendFormDao {
 	
 	//房间耗品统计
 	List<Object> selectroomExpend(Map<String, Object> map);
+	
+	//卫生间耗品统计
+	List<Object> selectwashExpend(Map<String, Object> map);
 }

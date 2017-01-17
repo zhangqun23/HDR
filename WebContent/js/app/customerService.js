@@ -549,7 +549,7 @@ app.controller('CustomerServiceController', [
 					}
 				});
 			}
-
+			reportForm.barSize="";
 			// lwt根据条件查找服务类型统计
 			reportForm.selectType = function() {
 				if (reportForm.typeLimit.start_time == "") {
@@ -577,10 +577,22 @@ app.controller('CustomerServiceController', [
 				}).success(function(data) {
 					$(".overlayer").fadeOut(200);
 					$(".tipLoading").fadeOut(200);
-					reportForm.typeList = data.list;
-					if (data.list.length) {
-						reportForm.listIsShow = false;
+					
+					if (data.list.length==1) {
+						reportForm.typeList='';
+						reportForm.listIsShow = true;
+						reportForm.barIsShow=false;
 						
+					} else {
+						reportForm.barIsShow=true;
+						reportForm.typeList = data.list;
+						reportForm.listIsShow = false;
+						if(data.list.length<15){
+							reportForm.barSize=data.list.length*80;
+						}else{
+							reportForm.barSize=1200;
+						}
+						$("#bar1").css('height',reportForm.barSize+'px');
 						var title =  getSelectedDepartName(reportForm.typeLimit.depart)+"对客服务类型条形图分析";// 条形图标题显示
 						var xAxis = [];// 横坐标显示
 						var yAxis = "单位:数量";// 纵坐标显示
@@ -598,9 +610,7 @@ app.controller('CustomerServiceController', [
 								$(
 										"#bar1")
 										.highcharts()
-										.getSVG());
-					} else {
-						reportForm.listIsShow = true;
+										.getSVG());	
 					}
 				
 				});

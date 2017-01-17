@@ -38,8 +38,8 @@
 	<div class="loginbody">
 
 		<span class="systemlogo"></span> <a
-			href="/HDR//workLoad/getStaffWorkLoadAnalyse.do">查询测试-zjn</a> <a
-			href="/HDR//workLoad/exportWorkLoadSummaryList.do">导出测试-zjn</a> <span>
+			href="/HDR//checkHouse/getCheckHouseList.do">查询测试-zjn</a> <a
+			href="/HDR//checkHouse/exportCheckHouseList.do">导出测试-zjn</a> <span>
 		</span><a href="/HDR//workLoad/test0.do">就是爱你</a> <span> </span><a
 			href="/HDR/workHouse/selectWorkHouseBylimits.do">员工统计-wr测试</a>
 		<div class="loginbox">

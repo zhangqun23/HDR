@@ -43,7 +43,6 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		selectSql.append(" left join  staff_info si on wr.staff_id=si.Staff_id");
 		selectSql.append(" where wr.close_time between '" + startTime + "' and '" + endTime + "'");
 		selectSql.append(" group by wr.staff_id ");
-		System.out.println("selectSql:" + selectSql);
 
 		Query query = em.createNativeQuery(selectSql.toString());
 		@SuppressWarnings("unchecked")
@@ -71,6 +70,7 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 	// 获取某个员工每个月的实际总工作量、额定总工作量
 	@SuppressWarnings("unchecked")
 	@Override
+
 	public List<Object> getMonthWorkLoad(String startTime, String endTime, Integer staffId) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();

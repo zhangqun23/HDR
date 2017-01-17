@@ -1,5 +1,6 @@
 package com.mvc.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import net.sf.json.JSONObject;
  */
 @Controller
 @RequestMapping("/customerServiceInformation")
-public class CustomerServiceInformationController {
+public class CustomerServiceController {
 	@Autowired
 	HotelCustomerService hotelCustomerService;
 	
@@ -52,8 +53,15 @@ public class CustomerServiceInformationController {
 	 */
 	@RequestMapping("/exportDepWorkload.do")
 	public ResponseEntity<byte[]> exportCustomerService(HttpServletRequest request){
-		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
-		Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
+		//JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
+		String startTime=null;
+		String endTime=null;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		startTime=request.getParameter("startTime");
+		endTime=request.getParameter("endTime");
+		map.put("start_Time", startTime);
+		map.put("end_Time", endTime);
 		
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径	
 		String modelPath = request.getSession().getServletContext()
@@ -92,8 +100,19 @@ public class CustomerServiceInformationController {
 	 */
 	@RequestMapping("/exportStaffWorkload.do")
 	public ResponseEntity<byte[]> exportRoomWorkload(HttpServletRequest request){
-		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
-		Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
+		//JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
+		//Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
+		
+		String startTime=null;
+		String endTime=null;
+		String departId=null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		startTime=request.getParameter("startTime");
+		endTime=request.getParameter("endTime");
+		departId=request.getParameter("departId");
+		map.put("start_Time", startTime);
+		map.put("end_Time", endTime);
+		map.put("depart_Id", departId);
 		
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径	
 		String modelPath = request.getSession().getServletContext()
@@ -126,8 +145,19 @@ public class CustomerServiceInformationController {
 	 */
 	@RequestMapping("/exportType.do")
 	public ResponseEntity<byte[]> exportRoomType(HttpServletRequest request){
-		JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
-		Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
+		//JSONObject jsonObject=JSONObject.fromObject(request.getParameter("limit"));
+		//Map<String, Object> map=hotelCustomerService.JsonObjToMap(jsonObject);
+		
+		String startTime=null;
+		String endTime=null;
+		String departId=null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		startTime=request.getParameter("startTime");
+		endTime=request.getParameter("endTime");
+		departId=request.getParameter("departId");
+		map.put("start_Time", startTime);
+		map.put("end_Time", endTime);
+		map.put("depart_Id", departId);
 		
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径	
 		String modelPath = request.getSession().getServletContext()

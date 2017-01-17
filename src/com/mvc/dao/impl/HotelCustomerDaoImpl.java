@@ -27,9 +27,22 @@ public class HotelCustomerDaoImpl implements HotelCustomerDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> findHotelService(Map<String, Object> map) {
-		String starttime=(String) map.get("start_time");//开始时间
-		String endtime=(String) map.get("end_time");//结束时间
+		String starttime = null;
+		String endtime = null;
+		if ((String) map.get("start_Time")!=null) {
+			starttime=(String) map.get("start_Time");//开始时间
+		}
+		if ((String) map.get("end_Time")!=null) {
+			endtime=(String) map.get("end_Time");//结束时间
+		}
 		
+		if ((String) map.get("start_time")!=null) {
+			starttime=(String) map.get("start_time");//开始时间
+		}
+		if ((String) map.get("end_time")!=null) {
+			endtime=(String) map.get("end_time");//结束时间
+		}
+	
 		EntityManager em=emf.createEntityManager();
 		StringBuilder sql=new StringBuilder();		
 		sql.append("select * from (select d.department_name,count(d.department_name) depart,"
@@ -54,9 +67,30 @@ public class HotelCustomerDaoImpl implements HotelCustomerDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> findDepartmentLoad(Map<String, Object> map) {
-		String starttime=(String) map.get("start_time");//开始时间
-		String endtime=(String) map.get("end_time");//结束时间
-		String depart=(String) map.get("depart");//部门
+		String starttime = null;
+		String endtime= null;
+		String depart= null;
+		
+		if ((String) map.get("start_time")!=null) {
+			starttime=(String) map.get("start_time");//开始时间
+		}
+		if ((String) map.get("end_time")!=null) {
+			endtime=(String) map.get("end_time");//结束时间
+		}
+		if ((String) map.get("depart")!=null) {
+			depart=(String) map.get("depart");//部门
+		}
+		
+		if ((String) map.get("start_Time")!=null) {
+			starttime=(String) map.get("start_Time");//开始时间
+		}
+		if ((String) map.get("end_Time")!=null) {
+			endtime=(String) map.get("end_Time");//结束时间
+		}
+		if ((String) map.get("depart_Id")!=null) {
+			depart=(String) map.get("depart_Id");//部门
+		}
+		
 		
 		EntityManager em=emf.createEntityManager();
 		StringBuilder sql=new StringBuilder();			
@@ -82,12 +116,29 @@ public class HotelCustomerDaoImpl implements HotelCustomerDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> findRoomType(Map<String, Object> map) {
-		//String starttime=(String) map.get("start_time");//开始时间
-		String starttime="2013-01-08";
-		//String endtime=(String) map.get("end_time");//结束时间
-		String endtime="2017-01-13";
-		//String depart=(String) map.get("depart");//部门
-		String depart="DE000105";
+		String starttime = null;
+		String endtime= null;
+		String depart= null;
+		
+		if ((String) map.get("start_time")!=null) {
+			starttime=(String) map.get("start_time");//开始时间
+		}
+		if ((String) map.get("end_time")!=null) {
+			endtime=(String) map.get("end_time");//结束时间
+		}
+		if ((String) map.get("depart")!=null) {
+			depart=(String) map.get("depart");//部门
+		}
+		
+		if ((String) map.get("start_Time")!=null) {
+			starttime=(String) map.get("start_Time");//开始时间
+		}
+		if ((String) map.get("end_Time")!=null) {
+			endtime=(String) map.get("end_Time");//结束时间
+		}
+		if ((String) map.get("depart_Id")!=null) {
+			depart=(String) map.get("depart_Id");//部门
+		}
 		
 		EntityManager em=emf.createEntityManager();
 		StringBuilder sql=new StringBuilder();

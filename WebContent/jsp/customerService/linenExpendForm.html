@@ -9,19 +9,20 @@
 
 	<div>
 		<div>
-			<form action="exportDepWorkload.do" method="post"
+			<form action="exportLinenExpendForm.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止日期</label><input type="text" name="llimit.startTime"
+					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="llimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="llimit.endTime" ng-model="llimit.endTime"
+						type="text" name="endTime" ng-model="llimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
-					style="width: 140px" ng-model="llimit.formType" name="llimit.formType"
+					style="width: 140px" ng-model="llimit.formType" name="formType" id="linenFormType" ng-change="getFormNameByNo()"
 					required>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
+					<li><input type="text" name="formName" class="hidden" ng-model="formName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectLinenExpendFormByLlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"

@@ -28,4 +28,6 @@ public class ReportFormConstants {
 	//部门员工做房用时统计表
 	public static final String WORKHOUSE_PATH = DICTIONARY + "workHouse.docx";
 	
+	public static final String LINENEXPEND_PATH = DICTIONARY + "linenexpend.docx";
+	
 }

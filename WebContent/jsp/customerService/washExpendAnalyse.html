@@ -13,21 +13,21 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="wlimit.startTime" class="dfselect dateLayoutStyle"
+						ng-model="awlimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="endTime" ng-model="wlimit.endTime"
+						type="text" name="endTime" ng-model="awlimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click=""></li>
+						type="button" value="查询" ng-click="selectWashExpendAnalyseByWlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
 
 			</form>
 		</div>
-
+		<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 	</div>
-
+	<div id="bar1" style="width: 800px; height: 1200px; margin: 0 auto"></div>
 
 

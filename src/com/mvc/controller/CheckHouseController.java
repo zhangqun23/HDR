@@ -47,7 +47,7 @@ public class CheckHouseController {
 		List<CheckHouse> checkHouseList = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("endDTime"))) {
+				&& StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
 			startTime = request.getParameter("startTime");
 			endTime = request.getParameter("endTime");
 			checkHouseList = checkHouseService.getCheckHouseList(startTime, endTime);

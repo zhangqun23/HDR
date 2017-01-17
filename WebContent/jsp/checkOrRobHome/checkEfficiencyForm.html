@@ -9,7 +9,7 @@
 
 	<div>
 		<div>
-			<form action="exportRobEfficiencyBylimits.do" method="post"
+			<form action="../checkHouse/exportCheckHouseList.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
@@ -31,25 +31,30 @@
 
 	</div>
 	<table class="tablelist tablestyle">
-		<caption align="top" class="tableTitle">客房部领班查房工作效率统计表</caption>
+		<caption align="top" class="tableTitle">
+			<div class="tableTitle">客房部领班查房工作效率统计表</div>
+			<div>统计时间：{{ceLimit.startTime}}&nbsp;至
+				&nbsp;{{ceLimit.endTime}}</div>
+
+		</caption>
 		<thead>
 			<tr>
-				<th class="width5" rowspan="2">序号</th>
-				<th class="width5" rowspan="2">领班</th>
-				<th class="width5" rowspan="2">编号</th>
-				<th class="width5" colspan="4">查房时间（分钟）</th>
-				<th class="width5" colspan="4">当班时间（分钟）</th>
-				<th class="width5" colspan="4">效率</th>
+				<th class="width5">序号</th>
+				<th class="width5">领班</th>
+				<th class="width5">编号</th>
+				<th class="width5">查房时间（分钟）</th>
+				<th class="width5">当班时间（分钟）</th>
+				<th class="width5">效率</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="c in checkEfficiencyList">
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
+				<td>{{c.orderNum}}</td>
+				<td>{{c.staffName}}</td>
+				<td>{{c.staffNo}}</td>
+				<td>{{c.checkTime}}</td>
+				<td>{{c.totalTime}}</td>
+				<td>{{c.efficiency}}</td>
 			</tr>
 		</tbody>
 	</table>

@@ -262,7 +262,7 @@ app
 							reportForm.wraLimit = {
 								checkYear : "",
 								quarter : "0",
-								cleanType:"0",
+								cleanType : "0",
 								staffId : ""
 							}
 							// zq公共函数始
@@ -303,11 +303,15 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workHouseLimit = JSON
 										.stringify(reportForm.limit);
 								services.selectWorkHouseByLimits({
 									limit : workHouseLimit
 								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
 									reportForm.workHouseList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
@@ -330,6 +334,8 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var userWorkHouseLimit = JSON
 										.stringify(reportForm.whaLimit);
 								services
@@ -338,6 +344,10 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var title = "客房员工 "
 															+ " "
 															+ getSelectedRoomType(reportForm.whaLimit.roomType)
@@ -534,11 +544,15 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workEfficiencyLimit = JSON
 										.stringify(reportForm.wefLimit);
 								services.selectWorkEfficiencyByLimits({
 									limit : workEfficiencyLimit
 								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
 									reportForm.workEfficiencyList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
@@ -562,6 +576,8 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workEffAnalyseLimit = JSON
 										.stringify(reportForm.weafLimit);
 								services
@@ -570,6 +586,10 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var title = "图一：客房员工工作效率分析折线图";// 折线图标题显示
 													var title1 = "图二：客房员工做房效率分析折线图";
 													var xAxis = [];// 横坐标显示
@@ -782,8 +802,10 @@ app
 												})
 										.success(
 												function(data) {
-													$(".overlayer").fadeOut(200);
-													$(".tipLoading").fadeOut(200);
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													reportForm.workloadList = data.workLoadList;
 													if (data.workLoadList.length) {
 														reportForm.listIsShow = false;
@@ -818,8 +840,10 @@ app
 												})
 										.success(
 												function(data) {
-													$(".overlayer").fadeOut(200);
-													$(".tipLoading").fadeOut(200);
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var xAxis = [];// 横坐标显示
 													var yAxis = "工作量";// 纵坐标显示
 													var nowQuarter = reportForm.staffWorkloadLimit.quarter;// 当前的选择季度
@@ -959,16 +983,18 @@ app
 												})
 										.success(
 												function(data) {
-													$(".overlayer").fadeOut(200);
-													$(".tipLoading").fadeOut(200);
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													reportForm.workloadLevels = data.WorkLoadLevelList;
-													reportForm.remark=data.analyseResult;
+													reportForm.remark = data.analyseResult;
 													if (data.WorkLoadLevelList.length) {
 														reportForm.listIsShow = false;
-														reportForm.listRemark=true;
+														reportForm.listRemark = true;
 													} else {
 														reportForm.listIsShow = true;
-														reportForm.listRemark=false;
+														reportForm.listRemark = false;
 													}
 												});
 							}
@@ -982,13 +1008,22 @@ app
 									alert("请选择起始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workRejectLimit = JSON
 										.stringify(reportForm.wrLimit);
 								console.log(workRejectLimit);
 								services.selectWorkRejectByLimits({
 									limit : workRejectLimit
 								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
 									reportForm.workRejectList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
 								});
 							}
 							// zq做房驳回率折线图扇形图
@@ -1009,6 +1044,8 @@ app
 									alert("请选择打扫类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workRejectAnalyseLimit = JSON
 										.stringify(reportForm.wraLimit);
 								console.log(workRejectAnalyseLimit);
@@ -1018,6 +1055,10 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var title = "员工（"
 															+ getSelectedStaff(reportForm.wraLimit.staffId)
 															+ "）"

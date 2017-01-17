@@ -325,6 +325,8 @@ app
 									alert("请选择房间类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								robEfficiencyLimit = JSON
 										.stringify(checkRob.reLimit);
 								if (checkRob.reLimit.tableType == '0') {
@@ -332,7 +334,14 @@ app
 										limit : robEfficiencyLimit,
 										page : nowPage
 									}).success(function(data) {
+										$(".overlayer").fadeOut(200);
+										$(".tipLoading").fadeOut(200);
 										checkRob.robEfficiencyList = data.list;
+										if (data.list.length) {
+											checkRob.listIsShow = false;
+										} else {
+											checkRob.listIsShow = true;
+										}
 									});
 								} else {
 									services
@@ -342,11 +351,20 @@ app
 											})
 											.success(
 													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
 														checkRob.robDetailList = data.list;
 														pageTurn(
 																data.totalPage,
 																1,
 																getRobDetailByLimits);
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
 													});
 								}
 
@@ -375,6 +393,8 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var robEffAnalyseLimit = JSON
 										.stringify(checkRob.reaLimit);
 								services
@@ -383,6 +403,10 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var title = "客房员工 "
 															+ " "
 															+ getSelectedRoomType(checkRob.reaLimit.roomType)
@@ -515,16 +539,21 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
-								var checkEffLimit = JSON
-										.stringify(checkRob.ceLimit);
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								services
-										.selectCheckEfficiencyByLimits({
-											limit : checkEffLimit
-										})
+										.selectCheckEfficiencyByLimits(
+												{
+													startTime : checkRob.ceLimit.startTime,
+													endTime : checkRob.ceLimit.endTime
+												})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													checkRob.checkEfficiencyList = data.checkHouseList;
-
 													if (data.checkHouseList.length) {
 														checkRob.listIsShow = false;
 													} else {

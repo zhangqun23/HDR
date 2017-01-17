@@ -77,11 +77,20 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/linenExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/linenExpendForm.html',
 		controller : 'CustomerServiceController'
+	}).when('/linenExpendAnalyse', {
+		templateUrl : '/HDR/jsp/customerService/linenExpendAnalyse.html',
+		controller : 'CustomerServiceController'
 	}).when('/roomExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/roomExpendForm.html',
 		controller : 'CustomerServiceController'
+	}).when('/roomExpendAnalyse', {
+		templateUrl : '/HDR/jsp/customerService/roomExpendAnalyse.html',
+		controller : 'CustomerServiceController'
 	}).when('/washExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/washExpendForm.html',
+		controller : 'CustomerServiceController'
+	}).when('/washExpendAnalyse', {
+		templateUrl : '/HDR/jsp/customerService/roomExpendAnalyse.html',
 		controller : 'CustomerServiceController'
 	})
 } ]);
@@ -160,6 +169,16 @@ app
 									data : data
 								});
 							};
+							// wq布草用量分析
+							services.selectLinenExpendAnalyseByLlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectLinenExpendAnalyseByLlimits.do',
+									data : data
+								});
+							};
 							// wq选择房间耗品
 							services.selectRoomExpendFormByRlimits = function(
 									data) {
@@ -170,6 +189,16 @@ app
 									data : data
 								});
 							};
+							// wq房间耗品用量分析
+							services.selectRoomExpendAnalyseByRlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectRoomExpendAnalyseByRlimits.do',
+									data : data
+								});
+							};
 							// wq选择卫生间耗品
 							services.selectWashExpendFormByWlimits = function(
 									data) {
@@ -177,6 +206,16 @@ app
 									method : 'post',
 									url : baseUrl
 											+ 'customerService/selectWashExpendFormByWlimits.do',
+									data : data
+								});
+							};
+							// wq卫生间耗品用量分析
+							services.selectWashExpendAnalyseByWlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectWashExpendAnalyseByWlimits.do',
 									data : data
 								});
 							};
@@ -192,7 +231,12 @@ app.controller('CustomerServiceController', [
 			reportForm.llimit = {
 				startTime : "",
 				endTime : "",
-				formType : ""
+				formType : "0",
+			};
+			// wq布草分析统计界面设置条件
+			reportForm.allimit = {
+				startTime : "",
+				endTime : ""
 			};
 			// wq房间耗品统计界面设置条件
 			reportForm.rlimit = {
@@ -200,12 +244,24 @@ app.controller('CustomerServiceController', [
 				endTime : "",
 				formType : ""
 			};
+			// wq布草分析统计界面设置条件
+			reportForm.arlimit = {
+				startTime : "",
+				endTime : ""
+			};
 			// wq卫生间耗品统计界面设置条件
 			reportForm.wlimit = {
 				startTime : "",
 				endTime : "",
 				formType : ""
 			};
+			// wq布草分析统计界面设置条件
+			reportForm.awlimit = {
+				startTime : "",
+				endTime : ""
+			};
+			// wq获取报表类型名称
+			reportForm.formName = "对客服务";
 			// wq选择报表类型默认值
 			reportForm.formTypes = [ {
 				id : 0,
@@ -251,13 +307,34 @@ app.controller('CustomerServiceController', [
 				services.selectLinenExpendFormByLlimits({
 					llimit : linenExpendFormLlimit
 				}).success(function(data) {
-					// alert(data.list.length);
 					reportForm.linenExpendFormList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;
 					} else {
 						reportForm.listIsShow = true;
 					}
+				});
+			}
+			// wq根据条件查找布草分析
+			reportForm.selectLinenExpendAnalyseByLlimits = function() {
+				if (reportForm.allimit.startTime == "") {
+					alert("请选择开始时间！");
+					return false;
+				}
+				if (reportForm.allimit.endTime == "") {
+					alert("请选择截止时间！");
+					return false;
+				}
+				if (compareDateTime(reportForm.allimit.startTime,
+						reportForm.allimit.endTime)) {
+					alert("截止时间不能大于开始时间！");
+					return false;
+				}
+				var linenExpendAnalyseLlimit = JSON.stringify(reportForm.allimit);
+				services.selectLinenExpendFormByLlimits({
+					allimit : linenExpendAnalyseLlimit
+				}).success(function(data) {
+					
 				});
 			}
 			// wq根据条件查找房间耗品消耗列表
@@ -291,6 +368,7 @@ app.controller('CustomerServiceController', [
 					}
 				});
 			}
+			
 			// wq根据条件查找卫生间耗品消耗列表
 			reportForm.selectWashExpendFormByWlimits = function() {
 				if (reportForm.wlimit.startTime == "") {
@@ -311,7 +389,7 @@ app.controller('CustomerServiceController', [
 					return false;
 				}
 				var washExpendFormWlimit = JSON.stringify(reportForm.wlimit);
-				services.selectLinenExpendFormByWlimits({
+				services.selectWashExpendFormByWlimits({
 					wlimit : washExpendFormWlimit
 				}).success(function(data) {
 					reportForm.washExpendFormList = data.list;
@@ -321,6 +399,27 @@ app.controller('CustomerServiceController', [
 						reportForm.listIsShow = true;
 					}
 				});
+			}
+			// wq传入报表名称
+			reportForm.getFormNameByNo = function() {
+				var no = $("#linenFormType").val();
+				reportForm.formName = getSelectedFormName(no);
+			}
+			// wq获取所选报表名称
+			function getSelectedFormName(formType) {
+				var type = "";
+				switch (formType) {
+				case '0':
+					type = "对客服务";
+					break;
+				case '1':
+					type = "离退房";
+					break;
+				case '2':
+					type = "过夜房";
+					break;
+				}
+				return type;
 			}
 			// wq比较两个时间的大小
 			function compareDateTime(startDate, endDate) {
@@ -350,6 +449,7 @@ app.controller('CustomerServiceController', [
 				depart : ""
 
 			}
+			
 			// lwt查询部门列表
 			function selectDepart() {
 				services.selectDepart().success(function(data) {
@@ -362,6 +462,24 @@ app.controller('CustomerServiceController', [
 					reportForm.staffs = data.list;
 				});
 			}
+			//lwt部门名称
+			reportForm.deptName = "";
+			// lwt当部门下拉框变化时获取部门名字
+			reportForm.getDeptNameById = function() {
+				var Id = $("#dept").val();
+				reportForm.deptName = getDeptName(Id);
+			}
+			// lwt根据deptId获取部门名称
+			function getDeptName(deptId) {
+				var type = "";
+				for ( var item in reportForm.depts) {
+					if (reportForm.depts[item].departmentId == deptId) {
+						type = reportForm.depts[item].departmentName;
+					}
+				}
+				return type;
+			}
+			
 			// lwt根据条件查找部门对客服务工作量
 			reportForm.selectDepWorkload = function() {
 				if (reportForm.depWorkloadLimit.start_time == "") {
@@ -377,11 +495,15 @@ app.controller('CustomerServiceController', [
 					alert("截止时间不能大于开始时间！");
 					return false;
 				}
+				$(".overlayer").fadeIn(200);
+				$(".tipLoading").fadeIn(200);
 				var depWorkloadLimit = JSON
 						.stringify(reportForm.depWorkloadLimit);
 				services.selectDepWorkload({
 					limit : depWorkloadLimit
 				}).success(function(data) {
+					$(".overlayer").fadeOut(200);
+					$(".tipLoading").fadeOut(200);
 					reportForm.depWorkloadList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;
@@ -409,12 +531,16 @@ app.controller('CustomerServiceController', [
 					alert("请选择部门！");
 					return false;
 				}
+				$(".overlayer").fadeIn(200);
+				$(".tipLoading").fadeIn(200);
 
 				var staffWorkloadLimit = JSON
 						.stringify(reportForm.staffWorkloadLimit);
 				services.selectStaffWorkload({
 					limit : staffWorkloadLimit
 				}).success(function(data) {
+					$(".overlayer").fadeOut(200);
+					$(".tipLoading").fadeOut(200);
 					reportForm.staffWorkloadList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;
@@ -423,7 +549,7 @@ app.controller('CustomerServiceController', [
 					}
 				});
 			}
-
+			reportForm.barSize="";
 			// lwt根据条件查找服务类型统计
 			reportForm.selectType = function() {
 				if (reportForm.typeLimit.start_time == "") {
@@ -443,15 +569,30 @@ app.controller('CustomerServiceController', [
 					alert("请选择部门！");
 					return false;
 				}
-
+				$(".overlayer").fadeIn(200);
+				$(".tipLoading").fadeIn(200);
 				var typeLimit = JSON.stringify(reportForm.typeLimit);
 				services.selectType({
 					limit : typeLimit
 				}).success(function(data) {
-					reportForm.typeList = data.list;
-					if (data.list.length) {
-						reportForm.listIsShow = false;
+					$(".overlayer").fadeOut(200);
+					$(".tipLoading").fadeOut(200);
+					
+					if (data.list.length==1) {
+						reportForm.typeList='';
+						reportForm.listIsShow = true;
+						reportForm.barIsShow=false;
 						
+					} else {
+						reportForm.barIsShow=true;
+						reportForm.typeList = data.list;
+						reportForm.listIsShow = false;
+						if(data.list.length<15){
+							reportForm.barSize=data.list.length*80;
+						}else{
+							reportForm.barSize=1200;
+						}
+						$("#bar1").css('height',reportForm.barSize+'px');
 						var title =  getSelectedDepartName(reportForm.typeLimit.depart)+"对客服务类型条形图分析";// 条形图标题显示
 						var xAxis = [];// 横坐标显示
 						var yAxis = "单位:数量";// 纵坐标显示
@@ -469,9 +610,7 @@ app.controller('CustomerServiceController', [
 								$(
 										"#bar1")
 										.highcharts()
-										.getSVG());
-					} else {
-						reportForm.listIsShow = true;
+										.getSVG());	
 					}
 				
 				});

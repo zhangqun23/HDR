@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
-import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.service.WorkLoadService;
 import com.utils.StringUtil;
 
@@ -45,11 +44,10 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/getWorkLoadSummaryList.do")
 	public @ResponseBody String getWorkLoadSummaryList(HttpServletRequest request) {
-		JSONObject jsonObject = new JSONObject();
-
-		List<WorkLoad> workLoadList = null;
 		String startDate = "";
 		String endDate = "";
+		JSONObject jsonObject = new JSONObject();
+		List<WorkLoad> workLoadList = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
@@ -57,7 +55,6 @@ public class WorkLoadController {
 			endDate = request.getParameter("endDate");
 			workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
 		}
-
 		jsonObject.put("workLoadList", workLoadList);
 		return jsonObject.toString();
 	}
@@ -71,10 +68,9 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadSummaryList.do")
 	public ResponseEntity<byte[]> exportWorkLoadSummaryList(HttpServletRequest request, HttpServletResponse response) {
-
-		ResponseEntity<byte[]> byteArr = null;
 		String startDate = "";
 		String endDate = "";
+		ResponseEntity<byte[]> byteArr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
@@ -103,23 +99,17 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/getWorkLoadLevelList.do")
 	public @ResponseBody String getWorkLoadLevelList(HttpServletRequest request) {
-
-		JSONObject jsonObject = new JSONObject();
-		List<WorkLoadLevel> workLoadLevelList = null;
+		String str = "";
 		String startDate = "";
 		String endDate = "";
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
-			workLoadLevelList = workLoadService.getWorkLoadLevelList(startDate, endDate);
+			str = workLoadService.getWorkLoadLevelList(startDate, endDate);
 		}
-
-		jsonObject.put("WorkLoadLevelList", workLoadLevelList);
-		return jsonObject.toString();
-
+		return str;
 	}
 
 	/**
@@ -131,10 +121,9 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadLevelList.do")
 	public ResponseEntity<byte[]> exportWorkLoadLevelList(HttpServletRequest request, HttpServletResponse response) {
-
-		ResponseEntity<byte[]> byteArr = null;
 		String startDate = "";
 		String endDate = "";
+		ResponseEntity<byte[]> byteArr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
@@ -165,14 +154,10 @@ public class WorkLoadController {
 	@RequestMapping("/getStaffWorkLoadAnalyse.do")
 	public @ResponseBody String getWorkLoadAnalyse(HttpServletRequest request) {
 		String str = "";
-		Map<String, String> map = new HashMap<String, String>();
-		// String checkYear = "2017";
-		// String quarter = "1";
-		// String quarter = "0";
-		// String staffId = "511";
 		String checkYear = "";
 		String quarter = "";
 		String staffId = "";
+		Map<String, String> map = new HashMap<String, String>();
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))

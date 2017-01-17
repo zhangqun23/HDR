@@ -449,6 +449,7 @@ app.controller('CustomerServiceController', [
 				depart : ""
 
 			}
+			
 			// lwt查询部门列表
 			function selectDepart() {
 				services.selectDepart().success(function(data) {
@@ -461,6 +462,24 @@ app.controller('CustomerServiceController', [
 					reportForm.staffs = data.list;
 				});
 			}
+			//lwt部门名称
+			reportForm.deptName = "";
+			// lwt当部门下拉框变化时获取部门名字
+			reportForm.getDeptNameById = function() {
+				var Id = $("#dept").val();
+				reportForm.deptName = getDeptName(Id);
+			}
+			// lwt根据deptId获取部门名称
+			function getDeptName(deptId) {
+				var type = "";
+				for ( var item in reportForm.depts) {
+					if (reportForm.depts[item].departmentId == deptId) {
+						type = reportForm.depts[item].departmentName;
+					}
+				}
+				return type;
+			}
+			
 			// lwt根据条件查找部门对客服务工作量
 			reportForm.selectDepWorkload = function() {
 				if (reportForm.depWorkloadLimit.start_time == "") {
@@ -476,11 +495,15 @@ app.controller('CustomerServiceController', [
 					alert("截止时间不能大于开始时间！");
 					return false;
 				}
+				$(".overlayer").fadeIn(200);
+				$(".tipLoading").fadeIn(200);
 				var depWorkloadLimit = JSON
 						.stringify(reportForm.depWorkloadLimit);
 				services.selectDepWorkload({
 					limit : depWorkloadLimit
 				}).success(function(data) {
+					$(".overlayer").fadeOut(200);
+					$(".tipLoading").fadeOut(200);
 					reportForm.depWorkloadList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;
@@ -508,12 +531,16 @@ app.controller('CustomerServiceController', [
 					alert("请选择部门！");
 					return false;
 				}
+				$(".overlayer").fadeIn(200);
+				$(".tipLoading").fadeIn(200);
 
 				var staffWorkloadLimit = JSON
 						.stringify(reportForm.staffWorkloadLimit);
 				services.selectStaffWorkload({
 					limit : staffWorkloadLimit
 				}).success(function(data) {
+					$(".overlayer").fadeOut(200);
+					$(".tipLoading").fadeOut(200);
 					reportForm.staffWorkloadList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;
@@ -542,11 +569,14 @@ app.controller('CustomerServiceController', [
 					alert("请选择部门！");
 					return false;
 				}
-
+				$(".overlayer").fadeIn(200);
+				$(".tipLoading").fadeIn(200);
 				var typeLimit = JSON.stringify(reportForm.typeLimit);
 				services.selectType({
 					limit : typeLimit
 				}).success(function(data) {
+					$(".overlayer").fadeOut(200);
+					$(".tipLoading").fadeOut(200);
 					reportForm.typeList = data.list;
 					if (data.list.length) {
 						reportForm.listIsShow = false;

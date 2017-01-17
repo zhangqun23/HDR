@@ -759,6 +759,8 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workloadLimit = JSON
 										.stringify(reportForm.workloadLimit);
 								services
@@ -770,6 +772,8 @@ app
 												})
 										.success(
 												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													reportForm.workloadList = data.workLoadList;
 													if (data.workLoadList.length) {
 														reportForm.listIsShow = false;
@@ -789,6 +793,8 @@ app
 									alert("请选择员工！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var staffWorkloadLimit = JSON
 										.stringify(reportForm.staffWorkloadLimit);
 								services
@@ -802,6 +808,8 @@ app
 												})
 										.success(
 												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													var xAxis = [];// 横坐标显示
 													var yAxis = "工作量";// 纵坐标显示
 													var nowQuarter = reportForm.staffWorkloadLimit.quarter;// 当前的选择季度
@@ -927,6 +935,8 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var workLoadLevelLimit = JSON
 										.stringify(reportForm.workLoadLevelLimit);
 								services
@@ -939,11 +949,16 @@ app
 												})
 										.success(
 												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													reportForm.workloadLevels = data.WorkLoadLevelList;
+													reportForm.remark=data.analyseResult;
 													if (data.WorkLoadLevelList.length) {
 														reportForm.listIsShow = false;
+														reportForm.listRemark=true;
 													} else {
 														reportForm.listIsShow = true;
+														reportForm.listRemark=false;
 													}
 												});
 							}

@@ -17,6 +17,7 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.service.WorkLoadService;
+import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -78,8 +79,7 @@ public class WorkLoadController {
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-			String modelPath = request.getSession().getServletContext()
-					.getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
+			String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORDLOAD_PATH);// 模板路径
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
@@ -88,6 +88,7 @@ public class WorkLoadController {
 			map.put("modelPath", modelPath);
 			byteArr = workLoadService.exportWorkLoadSummaryList(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -132,7 +133,7 @@ public class WorkLoadController {
 			endDate = request.getParameter("endDate");
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 			String modelPath = request.getSession().getServletContext()
-					.getRealPath("word\\" + "workLoadLevelList.docx");// 模板路径
+					.getRealPath(ReportFormConstants.WORDLOADLEVEL_PATH);// 模板路径
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
@@ -141,6 +142,7 @@ public class WorkLoadController {
 			map.put("modelPath", modelPath);
 			byteArr = workLoadService.exportWorkLoadLevelList(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 
 	}
@@ -192,7 +194,8 @@ public class WorkLoadController {
 		Map<String, String> map = new HashMap<String, String>();
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadAnalyse.docx");// 模板路径
+		String modelPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.WORKLOADANALYSE_PATH);// 模板路径
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr"))
@@ -214,6 +217,7 @@ public class WorkLoadController {
 			map.put("staffId", staffId);
 			byteArr = workLoadService.exportWorkLoadAnalyse(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 }

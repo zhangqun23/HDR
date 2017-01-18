@@ -20,10 +20,15 @@ public class ReportFormConstants {
 	// word模版所在包名
 	public static final String DICTIONARY = "word\\";
 
-	// 客房部员工工作量汇总表word模版
-	public static final String WORDLOAD_PATH = DICTIONARY + "workLoad.docx";
-	// 客房部员工工作量饱和度分析表word模版
-	public static final String WORDLOADLEVEL_PATH = DICTIONARY + "WorkLoadLevel.docx";
+	// 客房部员工工作量汇总表
+	public static final String WORDLOAD_PATH = DICTIONARY + "workLoadSummary.docx";
+	// 客房部员工工作量饱和度分析表
+	public static final String WORDLOADLEVEL_PATH = DICTIONARY + "workLoadLevel.docx";
+	// 客房部单个员工工作量分析图
+	public static final String WORKLOADANALYSE_PATH = DICTIONARY + "workLoadAnalyse.docx";
+
+	// 领班查房效率
+	public static final String CHECKHOUSE_PATH = DICTIONARY + "checkHouseList.docx";
 
 	// 部门员工做房用时统计表
 	public static final String WORKHOUSE_PATH = DICTIONARY + "workHouse.docx";
@@ -33,14 +38,12 @@ public class ReportFormConstants {
 	public static final String WORKEFF_PATH = DICTIONARY + "workEff.docx";
 	// 部门员工工作效率分析
 	public static final String WORKEFFANA_PATH = DICTIONARY + "workEffAna.docx";
-	
+
 	// 布草统计表
 	public static final String LINENEXPEND_PATH = DICTIONARY + "linenexpend.docx";
 	// 房间耗品统计表
 	public static final String ROOMEXPEND_PATH = DICTIONARY + "roomExpend.docx";
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
-	
-	
 
 }

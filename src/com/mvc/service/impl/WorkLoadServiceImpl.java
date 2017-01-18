@@ -1,6 +1,5 @@
 package com.mvc.service.impl;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,12 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkLoadDao;
+import com.mvc.entity.StaffInfo;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.entityReport.WorkLoadMonth;
@@ -24,7 +23,8 @@ import com.mvc.repository.StaffInfoRepository;
 import com.mvc.service.WorkLoadService;
 import com.utils.CollectionUtil;
 import com.utils.FileHelper;
-import com.utils.SvgPngConverter;
+import com.utils.PictureUtil;
+import com.utils.StringUtil;
 import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
@@ -258,14 +258,14 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			highBeyondLevel = (float) (highBeyondNum / size * 100);
 			highBelowLevel = (float) (highBelowNum / size * 100);
 			if (beyondLevel >= 97) {
-				analyseResult = "额定工作量设置略低于正常水平,所有员工工作量超出额定工作量，超出幅度在一定范围内";
+				analyseResult = "额定工作量设置略低于正常水平,所有员工实际工作量超出额定工作量，超出幅度在一定范围内";
 			} else if (highBeyondLevel >= 97) {
-				analyseResult = "额定工作量设置低于正常水平,所有员工工作量超出额定工作量，且超出幅度过高，建议提高额定工作量";
+				analyseResult = "额定工作量设置低于正常水平,所有员工实际工作量超出额定工作量，且超出幅度过高，建议提高额定工作量";
 			}
 			if (belowLevel <= -97) {
-				analyseResult = "额定工作量设置略高于正常水平,所有员工工作量低于额定工作量，且低出幅度在一定范围内高";
+				analyseResult = "额定工作量设置略高于正常水平,所有员工实际工作量低于额定工作量，且低出幅度在一定范围内高";
 			} else if (highBelowLevel <= -97) {
-				analyseResult = "额定工作量设置高于正常水平,所有员工工作量低于额定工作量，且低出幅度过高，建议降低额定工作量";
+				analyseResult = "额定工作量设置高于正常水平,所有员工实际工作量低于额定工作量，且低出幅度过高，建议降低额定工作量";
 			}
 		}
 		return analyseResult;
@@ -360,52 +360,42 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		String quarter = map.get("quarter");
 		Map<String, Object> dateMap = new HashMap<String, Object>();
 		Integer monthNum = 12;
-		String startTime = "";
-		String endTime = "";
+		String startTime = StringUtil.quarterFirstDay(checkYear, quarter);
+		String endTime = StringUtil.quarterLastDay(checkYear, quarter);
 		String quarterName = "";
 		Integer startMonth = 1;
 
 		switch (quarter) {
 		case "0":
-			startTime = "-01-01 00:00:00";
-			endTime = "-12-31 23:59:59";
 			quarterName = "全年";
 			break;
 		case "1":
-			startTime = "-01-01 00:00:00";
-			endTime = "-03-31 23:59:59";
 			monthNum = 3;
-			quarterName = "第一季度";
+			quarterName = "年第一季度";
 			startMonth = 1;
 			break;
 		case "2":
-			startTime = "-04-01 00:00:00";
-			endTime = "-06-30 23:59:59";
 			monthNum = 3;
-			quarterName = "第二季度";
+			quarterName = "年第二季度";
 			startMonth = 4;
 			break;
 		case "3":
-			startTime = "-07-01 00:00:00";
-			endTime = "-09-30 23:59:59";
 			monthNum = 3;
-			quarterName = "第三季度";
+			quarterName = "年第三季度";
 			startMonth = 7;
 			break;
 		case "4":
-			startTime = "-10-01 00:00:00";
-			endTime = "-12-31 23:59:59";
 			monthNum = 3;
-			quarterName = "第四季度";
+			quarterName = "年第四季度";
 			startMonth = 10;
 			break;
 		default:
 			break;
 		}
-		dateMap.put("startTime", checkYear + startTime);
-		dateMap.put("endTime", checkYear + endTime);
+		dateMap.put("startTime", startTime);
+		dateMap.put("endTime", endTime);
 		dateMap.put("monthNum", monthNum);
-		dateMap.put("quarterName", quarterName);
+		dateMap.put("quarterName", checkYear + quarterName);
 		dateMap.put("startMonth", startMonth);
 		return dateMap;
 	}
@@ -425,31 +415,19 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		String modelPath = map.get("modelPath");
 		String picCataPath = map.get("picCataPath");
 		String svg = map.get("svg");
-		Integer staffId = Integer.valueOf(map.get("staffId"));
-		String staffName = staffInfoRepository.findById(staffId).getStaff_name();
-		String quarterName = (String) dateMap.get("quarterName");
-		String fileName = "客房部员工" + staffName + quarterName + "工作量分析结果.docx";
+		StaffInfo staffInfo = staffInfoRepository.findById(Integer.valueOf(map.get("staffId")));
+		String staffName = staffInfo.getStaff_name();
+		String staffNo = staffInfo.getStaff_no();
+		String date = (String) dateMap.get("quarterName");
+		String fileName = "客房部员工" + (staffNo + staffName) + date + "工作量分析结果.docx";
+
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-		String picName = "pic.png";
-		String picPath = FileHelper.transPath(picName, picCataPath);// 解析后的上传路径
+		picMap = PictureUtil.getPicMap(picCataPath, svg);
 
-		try {
-			SvgPngConverter.convertToPng(svg, picPath);// 图片svgCode转化为png格式，并保存到picPath
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (TranscoderException e1) {
-			e1.printStackTrace();
-		}
-		picMap.put("width", 960);
-		picMap.put("height", 400);
-		picMap.put("type", "png");
-		try {
-			picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
+		contentMap.put("${staffName}", staffNo + staffName);
+		contentMap.put("${date}", date);
 		contentMap.put("${pic}", picMap);
+
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, null, contentMap, 1, out);
@@ -459,7 +437,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
 	}

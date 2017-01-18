@@ -20,6 +20,7 @@ import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CollectionUtil;
 import com.utils.FileHelper;
+import com.utils.Pager;
 import com.utils.WordHelper;
 
 
@@ -36,9 +37,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	//布草统计
 	@Override
-	public List<LinenExpend> selectLinenExpend(Map<String, Object> map) {
+	public List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager) {
 		
-		List<Object> listSource = expendFormDao.selectlinenExpend(map);
+		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize());
 		Iterator<Object> it = listSource.iterator();
 		List<LinenExpend> listGoal = objToLinenExpand(it);
 
@@ -1004,4 +1005,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		return listGoal;
 	}
 
+	// 查询合同总条数
+	@Override
+	public Long countTotal(Map<String, Object> map) {
+		return expendFormDao.countTotal(map);
+	}
 }

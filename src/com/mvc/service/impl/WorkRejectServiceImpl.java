@@ -129,9 +129,9 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		// 获取驳回原因统计扇形图
 		List<Object> reasonList = workRejectDao.selectReasonsByLimits(map);
 		Iterator<Object> iter = reasonList.iterator();
-		int reasonArr[] = new int[] { 0, 0, 0, 0, 0};
+		int reasonArr[] = new int[] { 0, 0, 0, 0, 0 };
 
-		Object obj1=null;
+		Object obj1 = null;
 		while (iter.hasNext()) {
 			obj1 = (Object) iter.next();
 			JSONObject reasonJson = JSONObject.fromObject(obj1);
@@ -167,12 +167,13 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 	private List<String> perMonthEff(List<Object> list, String startMonth, String endMonth) {
 		List<String> listGoal = new ArrayList<String>();
 		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer startM = Integer.valueOf(startMonth);
+			Integer endM = Integer.valueOf(endMonth);
 			Integer size = list.size();
 
 			Object[] obj = null;
 			Integer month = null;
-			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+			for (int i = 0, j = startM; i < size || j <= endM; i++, j++) {
 				if (i < size) {
 					obj = (Object[]) list.get(i);
 					month = Integer.valueOf(obj[0].toString());

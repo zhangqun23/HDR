@@ -20,4 +20,8 @@ public interface WorkRejectService {
 	List<WorkReject> selectWorkRejectByLimits(Map<String, Object> map);
 
 	String selectWorkRejectAnalyseByLimits(Map<String, Object> map);
+
+	ResponseEntity<byte[]> exportWorRejectBylimits(Map<String, Object> map, String path, String tempPath);
+
+	ResponseEntity<byte[]> exportWorkRejectAna(Map<String, Object> map, String path, String tempPath, String picPath);
 }

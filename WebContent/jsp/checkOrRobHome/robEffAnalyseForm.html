@@ -2,6 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
+		<li><a href="">查房/抢房统计分析</a></li>
 		<li><a href="">抢房效率分析</a></li>
 	</ul>
 </div>
@@ -40,7 +41,7 @@
 					type="button" value="查询" ng-click="selectRobEffAnalyseByLimits()"></li>
 				<li><input id="chart1-svg" name="chart1SVGStr" type="text"
 					class="hidden" /></li>
-				<li><input class="btn layoutStyle" style="width: 60px"
+				<li><input class="btn layoutStyle" style="width: 60px" onClick="setExportFlagCookie()"
 					type="submit" value="导出"></li>
 			</ul>
 		</form>

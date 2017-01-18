@@ -33,14 +33,17 @@ public class ReportFormConstants {
 	public static final String WORKEFF_PATH = DICTIONARY + "workEff.docx";
 	// 部门员工工作效率分析
 	public static final String WORKEFFANA_PATH = DICTIONARY + "workEffAna.docx";
-	
+
 	// 布草统计表
 	public static final String LINENEXPEND_PATH = DICTIONARY + "linenexpend.docx";
 	// 房间耗品统计表
 	public static final String ROOMEXPEND_PATH = DICTIONARY + "roomExpend.docx";
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
-	
-	
+
+	// 驳回率统计表
+	public static final String RejectEff_PATH = DICTIONARY + "workReject.docx";
+	//驳回率折线图
+	public static final String RejectAnalyse_PATH = DICTIONARY + "rejectAnalyse.docx";
 
 }

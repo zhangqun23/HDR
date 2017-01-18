@@ -9,12 +9,18 @@ import java.util.Map;
  * @date 2017年1月13日
  */
 public interface ExpendFormDao {
+	
+	//布草统计分页
+	List<Object> selectlinenPage(Map<String, Object> map, Integer offset, Integer end);
 
 	//布草统计
 	List<Object> selectlinenExpend(Map<String, Object> map);
 	
 	//布草统计分析
 	List<Object> selectLinenExpendAnalyse(Map<String, Object> map);
+	
+	// 查询布草总条数
+	Long countTotal(Map<String, Object> map);
 	
 	//房间耗品统计
 	List<Object> selectroomExpend(Map<String, Object> map);
@@ -27,4 +33,6 @@ public interface ExpendFormDao {
 	
 	//卫生间耗品统计分析
 	List<Object> selectWashExpendAnalyse(Map<String, Object> map);
+
+
 }

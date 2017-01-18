@@ -19,12 +19,15 @@
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
-					style="width: 140px" ng-model="llimit.formType" name="formType" id="linenFormType" ng-change="getFormNameByNo()"
-					required>
-						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
-					<li><input type="text" name="formName" class="hidden" ng-model="formName"></li>
+						style="width: 140px" ng-model="llimit.formType" name="formType"
+						id="linenFormType" ng-change="getFormNameByNo()" required>
+							<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option>
+					</select></li>
+					<li><input type="text" name="formName" class="hidden"
+						ng-model="formName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="button" value="查询" ng-click="selectLinenExpendFormByLlimits()"></li>
+						type="button" value="查询"
+						ng-click="selectLinenExpendFormByLlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
@@ -41,18 +44,18 @@
 				<th class="width3">房号</th>
 				<th class="width3">浴巾</th>
 				<th class="width3">面巾</th>
-		        <th class="width3">床单</th>
-		        <th class="width3">方巾</th>
-		        <th class="width3">中巾</th>
-		        <th class="width3">地巾</th>
-		        <th class="width3">浴袍</th>
-		        <th class="width3">被罩</th>
-		        <th class="width3">拼尘罩</th>
-		        <th class="width3">枕套</th>
-		        <th class="width3">购物袋</th>
-		        <th class="width3">洗衣袋</th>
-		        <th class="width3">枕芯</th>
-		        <th class="width3">毛毯</th>
+				<th class="width3">床单</th>
+				<th class="width3">方巾</th>
+				<th class="width3">中巾</th>
+				<th class="width3">地巾</th>
+				<th class="width3">浴袍</th>
+				<th class="width3">被罩</th>
+				<th class="width3">拼尘罩</th>
+				<th class="width3">枕套</th>
+				<th class="width3">购物袋</th>
+				<th class="width3">洗衣袋</th>
+				<th class="width3">枕芯</th>
+				<th class="width3">毛毯</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -76,6 +79,7 @@
 			</tr>
 		</tbody>
 	</table>
+	<div class="tcdPageCode">页码容器</div>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 </div>
 

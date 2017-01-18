@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.mvc.dao.HotelCustomerDao;
+import com.mvc.dao.CustomerServiceDao;
 import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
 import com.mvc.repository.DepartmentInfoRepository;
-import com.mvc.service.HotelCustomerService;
+import com.mvc.service.CustomerServiceService;
 import com.utils.CollectionUtil;
 import com.utils.DoubleFloatUtil;
 import com.utils.FileHelper;
@@ -36,9 +36,9 @@ import net.sf.json.JSONObject;
  * @date 2017年1月10日
  */
 @Service("hotelCustomerServiceImpl")
-public class HotelCustomerServiceImpl implements HotelCustomerService {
+public class CustomerServiceServiceImpl implements CustomerServiceService {
 	@Autowired
-	HotelCustomerDao hotelCustomerDao;
+	CustomerServiceDao hotelCustomerDao;
 	@Autowired
 	DepartmentInfoRepository departmentInfoRepository;
 
@@ -85,7 +85,6 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		String serviceLoad = "0.0";// 总计服务数量
 		String timeOutService = "0.0";// 总计超时服务
 		String timeOutRate = "0.0";// 总计超时率
-		//String timeOutRate0 = null;
 		Object[] obj;
 		HoCustomerService hoCustomerService;
 		while (it.hasNext()) {
@@ -128,7 +127,6 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		hoCustomerService.setOrderNum("合计");
 		hoCustomerService.setServiceLoad(Float.valueOf(serviceLoad));
 		hoCustomerService.setTimeOutService(timeOutService);
-		//timeOutRate0 = timeOutRate + "%";// (总计超时率)
 		hoCustomerService.setTimeOutRate(Float.valueOf(timeOutRate));
 		listGoal.add(hoCustomerService);
 		System.out.println(listGoal);
@@ -214,7 +212,6 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		String serviceLoad = "0.0";// 总计服务数量
 		String timeOutService = "0.0";// 总计超时
 		String timeOutRate = "0.0";// 总计超时率
-		//String timeOutRate0 = null;
 
 		Object[] obj;
 		HouseCustomerServiceLoad houseCustomerServiceLoad;
@@ -257,7 +254,6 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		houseCustomerServiceLoad.setOrderNum("合计");
 		houseCustomerServiceLoad.setServiceLoad(Float.valueOf(serviceLoad));// 总计服务数量
 		houseCustomerServiceLoad.setTimeOutService(timeOutService);// 总计超时
-		//timeOutRate0 =StringUtil.strFloatToPer(timeOutRate) ;// (总计超时率)
 		houseCustomerServiceLoad.setTimeOutRate(Float.valueOf(timeOutRate));// 总计超时率
 		listGoal.add(houseCustomerServiceLoad);
 
@@ -347,7 +343,6 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		String serviceLoad = "0.0";// 总计服务数量
 		String timeOutService = "0.0";// 总计超时
 		String timeOutRate = "0.0";// 总计超时率
-		//String timeOutRate0 = null;
 
 		Object[] obj;
 		HouseCustomerServiceType houseCustomerServiceType;
@@ -387,7 +382,6 @@ public class HotelCustomerServiceImpl implements HotelCustomerService {
 		houseCustomerServiceType.setOrderNum("合计");
 		houseCustomerServiceType.setServiceLoad(Float.valueOf(serviceLoad));// 总计服务数量
 		houseCustomerServiceType.setTimeOutServiceLoad(timeOutService);// 总计超时
-		//timeOutRate0 = timeOutRate + "%";// (总计超时率)
 		houseCustomerServiceType.setTimeOutRate(Float.valueOf(timeOutRate));// 总计超时率
 		listGoal.add(houseCustomerServiceType);
 

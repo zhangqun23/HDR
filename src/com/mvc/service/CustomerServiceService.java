@@ -18,7 +18,7 @@ import net.sf.json.JSONObject;
  * @author wanghuimin
  * @date 2017年1月10日
  */
-public interface HotelCustomerService {
+public interface CustomerServiceService {
 
 	// 将json转换为Map
 	Map<String, Object> JsonObjToMap(JSONObject jsonObject);

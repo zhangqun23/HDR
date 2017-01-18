@@ -46,4 +46,11 @@ public class ReportFormConstants {
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
 
+	// 导出酒店对客服务信息统计表
+	public static final String CUSTOMERSERVICE_PATH = DICTIONARY + "customerService.docx";
+	// 导出部门对客服务工作量统计表
+	public static final String ROOMWORKLOAD_PATH = DICTIONARY + "roomWorkload.docx";
+	// 导出部门对客服务类型统计
+	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
+
 }

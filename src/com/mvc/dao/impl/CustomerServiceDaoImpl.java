@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.mvc.dao.HotelCustomerDao;
+import com.mvc.dao.CustomerServiceDao;
 
 /**
  * 酒店对客服务信息统计
@@ -19,7 +19,7 @@ import com.mvc.dao.HotelCustomerDao;
  * @date 2017年1月10日
  */
 @Repository("HotelCustomerDaoImpl")
-public class HotelCustomerDaoImpl implements HotelCustomerDao{
+public class CustomerServiceDaoImpl implements CustomerServiceDao{
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;

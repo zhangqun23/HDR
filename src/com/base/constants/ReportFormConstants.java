@@ -40,10 +40,16 @@ public class ReportFormConstants {
 	public static final String WORKEFFANA_PATH = DICTIONARY + "workEffAna.docx";
 
 	// 布草统计表
-	public static final String LINENEXPEND_PATH = DICTIONARY + "linenexpend.docx";
+	public static final String LINENEXPEND_PATH = DICTIONARY + "linenExpend.docx";
 	// 房间耗品统计表
 	public static final String ROOMEXPEND_PATH = DICTIONARY + "roomExpend.docx";
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
+	// 布草用量分析图
+	public static final String LINENEXPENDPIC_PATH = DICTIONARY + "linenExpendPic.docx";
+	// 房间耗品用量分析图
+	public static final String ROOMEXPENDPIC_PATH = DICTIONARY + "roomExpendPic.docx";
+	// 卫生间易耗品分析图
+	public static final String WASHEXPENDPIC_PATH = DICTIONARY + "washExpendPic.docx";
 
 }

@@ -35,4 +35,10 @@
 		
 	</header>
 	<section class="containner">
+	<!-- 加载模态框 -->
+    <div class="overlayer"></div>
+    <div class="tipLoading" >
+	<img class="tipimage" src="../images/wait.gif"/><div class="tiptext" >正在加载，请稍后……</div>
+    </div>
+    <!-- 加载模态框 -->		
 		

@@ -9,7 +9,7 @@
 
 	<div>
 		<div>
-			<form action="exportDepWorkload.do" method="post"
+			<form action="exportWashExpendForm.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
@@ -19,9 +19,10 @@
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><label>选择报表类型</label><select class="dfselect layoutStyle"
-					    style="width: 140px" ng-model="wlimit.formType" name="formType"
+					    style="width: 140px" ng-model="wlimit.formType" name="formType" id="linenFormType" ng-change="getFormNameByNo()"
 					    required>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
+					<li><input type="text" name="formName" class="hidden" ng-model="formName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWashExpendFormByWlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -42,7 +43,7 @@
 				<th class="a">卷纸</th>
 		        <th class="a">洗发液</th>
 		        <th class="a">沐浴液</th>
-		        <th class="a">洗发素</th>
+		        <th class="a">护发素</th>
 		        <th class="a">润肤露</th>
 		        <th class="a">护理包</th>
 		        <th class="a">黑垃圾袋</th>
@@ -62,30 +63,30 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+			<tr ng-repeat="wash in washExpendFormList">
+				<td>{{wash.orderNum}}</td>
+				<td>{{wash.room_id}}</td>
+				<td>{{wash.toth_num}}</td>
+				<td>{{wash.ropa_num}}</td>
+				<td>{{wash.rins_num}}</td>
+				<td>{{wash.bafo_num}}</td>
+				<td>{{wash.haco_num}}</td>
+				<td>{{wash.shge_num}}</td>
+				<td>{{wash.capa_num}}</td>
+				<td>{{wash.garb_num}}</td>
+				<td>{{wash.paex_num}}</td>
+				<td>{{wash.peep_num}}</td>
+				<td>{{wash.shca_num}}</td>
+				<td>{{wash.shav_num}}</td>
+				<td>{{wash.comb_num}}</td>
+				<td>{{wash.shcl_num}}</td>
+				<td>{{wash.soap_num}}</td>
+				<td>{{wash.nacl_num}}</td>
+				<td>{{wash.flow_num}}</td>
+				<td>{{wash.basa_num}}</td>
+				<td>{{wash.scpa_num}}</td>
+				<td>{{wash.rugl_num}}</td>
+				<td>{{wash.dete_num}}</td>
 			</tr>
 		</tbody>
 	</table>

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
-import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.service.WorkLoadService;
+import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -45,11 +45,10 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/getWorkLoadSummaryList.do")
 	public @ResponseBody String getWorkLoadSummaryList(HttpServletRequest request) {
-		JSONObject jsonObject = new JSONObject();
-
-		List<WorkLoad> workLoadList = null;
 		String startDate = "";
 		String endDate = "";
+		JSONObject jsonObject = new JSONObject();
+		List<WorkLoad> workLoadList = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
@@ -57,7 +56,6 @@ public class WorkLoadController {
 			endDate = request.getParameter("endDate");
 			workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
 		}
-
 		jsonObject.put("workLoadList", workLoadList);
 		return jsonObject.toString();
 	}
@@ -71,10 +69,9 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadSummaryList.do")
 	public ResponseEntity<byte[]> exportWorkLoadSummaryList(HttpServletRequest request, HttpServletResponse response) {
-
-		ResponseEntity<byte[]> byteArr = null;
 		String startDate = "";
 		String endDate = "";
+		ResponseEntity<byte[]> byteArr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
@@ -82,8 +79,7 @@ public class WorkLoadController {
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-			String modelPath = request.getSession().getServletContext()
-					.getRealPath("word\\" + "workLoadSummaryList.docx");// 模板路径
+			String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORDLOAD_PATH);// 模板路径
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
@@ -92,6 +88,7 @@ public class WorkLoadController {
 			map.put("modelPath", modelPath);
 			byteArr = workLoadService.exportWorkLoadSummaryList(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -103,23 +100,17 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/getWorkLoadLevelList.do")
 	public @ResponseBody String getWorkLoadLevelList(HttpServletRequest request) {
-
-		JSONObject jsonObject = new JSONObject();
-		List<WorkLoadLevel> workLoadLevelList = null;
+		String str = "";
 		String startDate = "";
 		String endDate = "";
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
-			workLoadLevelList = workLoadService.getWorkLoadLevelList(startDate, endDate);
+			str = workLoadService.getWorkLoadLevelList(startDate, endDate);
 		}
-
-		jsonObject.put("WorkLoadLevelList", workLoadLevelList);
-		return jsonObject.toString();
-
+		return str;
 	}
 
 	/**
@@ -131,10 +122,9 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadLevelList.do")
 	public ResponseEntity<byte[]> exportWorkLoadLevelList(HttpServletRequest request, HttpServletResponse response) {
-
-		ResponseEntity<byte[]> byteArr = null;
 		String startDate = "";
 		String endDate = "";
+		ResponseEntity<byte[]> byteArr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
@@ -143,7 +133,7 @@ public class WorkLoadController {
 			endDate = request.getParameter("endDate");
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 			String modelPath = request.getSession().getServletContext()
-					.getRealPath("word\\" + "workLoadLevelList.docx");// 模板路径
+					.getRealPath(ReportFormConstants.WORDLOADLEVEL_PATH);// 模板路径
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
@@ -152,6 +142,7 @@ public class WorkLoadController {
 			map.put("modelPath", modelPath);
 			byteArr = workLoadService.exportWorkLoadLevelList(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 
 	}
@@ -165,14 +156,10 @@ public class WorkLoadController {
 	@RequestMapping("/getStaffWorkLoadAnalyse.do")
 	public @ResponseBody String getWorkLoadAnalyse(HttpServletRequest request) {
 		String str = "";
-		Map<String, String> map = new HashMap<String, String>();
-		// String checkYear = "2017";
-		// String quarter = "1";
-		// String quarter = "0";
-		// String staffId = "511";
 		String checkYear = "";
 		String quarter = "";
 		String staffId = "";
+		Map<String, String> map = new HashMap<String, String>();
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
 				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
@@ -207,7 +194,8 @@ public class WorkLoadController {
 		Map<String, String> map = new HashMap<String, String>();
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "workLoadAnalyse.docx");// 模板路径
+		String modelPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.WORKLOADANALYSE_PATH);// 模板路径
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr"))
@@ -229,6 +217,7 @@ public class WorkLoadController {
 			map.put("staffId", staffId);
 			byteArr = workLoadService.exportWorkLoadAnalyse(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 }

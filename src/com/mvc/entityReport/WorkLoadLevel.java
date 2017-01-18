@@ -13,11 +13,11 @@ public class WorkLoadLevel {
 	private String staffNo;// 员工编号
 
 	private String workDays;// 实际工作天数
+	private Float ratedLoad;// 额定工作量
 	private Float actualLoad;// 实际工作量
 	private Float beyondLoad;// 超出工作量
 	private String outOfRang;// 超出幅度
-
-	private Float ratedLoad;// 额定工作量
+	private Float outOfRang2;// 超出幅度、冗余字段
 
 	public String getOrderNum() {
 		return orderNum;
@@ -81,6 +81,14 @@ public class WorkLoadLevel {
 
 	public void setWorkDays(String workDays) {
 		this.workDays = workDays;
+	}
+
+	public Float getOutOfRang2() {
+		return outOfRang2;
+	}
+
+	public void setOutOfRang2(Float outOfRang2) {
+		this.outOfRang2 = outOfRang2;
 	}
 
 }

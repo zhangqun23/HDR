@@ -9,19 +9,20 @@
 
 	<div>
 		<div>
-			<form action="exportDepWorkload.do" method="post"
+			<form action="exportRoomExpendForm.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
-					<li><label>起止日期</label><input type="text" name="rlimit.startTime"
+					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="rlimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
-						type="text" name="rlimit.endTime" ng-model="rlimit.endTime"
+						type="text" name="endTime" ng-model="rlimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
-					style="width: 140px" ng-model="rlimit.formType" name="rlimit.formType"
+					style="width: 140px" ng-model="rlimit.formType" name="formType"  id="linenFormType" ng-change="getFormNameByNo()"
 					required>
 						<option value="{{f.id}}" ng-repeat="f in formTypes">{{f.type}}</option></select></li>
+					<li><input type="text" name="formName" class="hidden" ng-model="formName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectRoomExpendFormByRlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
@@ -34,7 +35,6 @@
 	</div>
 
 	<table class="tablelist">
-		<thead>
 			<tr>
 				<th class="a" rowspan="2">序号</th>
 				<th class="a" rowspan="2">房号</th>
@@ -76,48 +76,48 @@
 		        <th class="a">信封(航空)</th>
 		      
 		      </tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="room in roomExpendFormLimit">
+		<tbody ng-repeat="room in roomExpendFormList">
+			<tr>
 				<td rowspan="2">{{room.orderNum}}</td>
 				<td rowspan="2">{{room.room_id}}</td>
 				<td>{{room.umbr_num}}</td>
 				<td>{{room.coff_num}}</td>
 				<td>{{room.suge_num}}</td>
-				<td>{{coup_num}}</td>
-				<td>{{penc_num}}</td>
-				<td>{{erse_num}}</td>
-				<td>{{clca_num}}</td>
-				<td>{{fati_num}}</td>
-				<td>{{enca_num}}</td>
-				<td>{{bage_num}}</td>
-				<td>{{teab_num}}</td>
-				<td>{{meca_num}}</td>
-				<td>{{opbo_num}}</td>
-				<td>{{blte_num}}</td>
-				<td>{{dnds_num}}</td>
-				<td>{{tvca_num}}</td>
-				<td>{{orel_num}}</td>
-		    </tr>
-		    <tr>
-				<td>{{memo_num}}</td>
-				<td>{{coas_num}}</td>
-				<td>{{matc_num}}</td>
-				<td>{{mapp_num}}</td>
-				<td>{{rule_num}}</td>
-				<td>{{stat_num}}</td>
-				<td>{{clip_num}}</td>
-				<td>{{bape_num}}</td>
-				<td>{{comp_num}}</td>
-				<td>{{lali_num}}</td>
-				<td>{{losu_num}}</td>
-				<td>{{shpa_num}}</td>
-				<td>{{anma_num}}</td>
-				<td>{{grte_num}}</td>
-				<td>{{chsl_num}}</td>
-				<td>{{cocl_num}}</td>
-				<td>{{arel_num}}</td>
+				<td>{{room.coup_num}}</td>
+				<td>{{room.penc_num}}</td>
+				<td>{{room.erse_num}}</td>
+				<td>{{room.clca_num}}</td>
+				<td>{{room.fati_num}}</td>
+				<td>{{room.enca_num}}</td>
+				<td>{{room.bage_num}}</td>
+				<td>{{room.teab_num}}</td>
+				<td>{{room.meca_num}}</td>
+				<td>{{room.opbo_num}}</td>
+				<td>{{room.blte_num}}</td>
+				<td>{{room.dnds_num}}</td>
+				<td>{{room.tvca_num}}</td>
+				<td>{{room.orel_num}}</td>
 			</tr>
+            <tr>
+				<td>{{room.memo_num}}</td>
+				<td>{{room.coas_num}}</td>
+				<td>{{room.matc_num}}</td>
+				<td>{{room.mapp_num}}</td>
+				<td>{{room.rule_num}}</td>
+				<td>{{room.stat_num}}</td>
+				<td>{{room.clip_num}}</td>
+				<td>{{room.bape_num}}</td>
+				<td>{{room.comp_num}}</td>
+				<td>{{room.lali_num}}</td>
+				<td>{{room.losu_num}}</td>
+				<td>{{room.shpa_num}}</td>
+				<td>{{room.anma_num}}</td>
+				<td>{{room.grte_num}}</td>
+				<td>{{room.chsl_num}}</td>
+				<td>{{room.cocl_num}}</td>
+				<td>{{room.arel_num}}</td>
+			</tr>
+
 		</tbody>
 	</table>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>

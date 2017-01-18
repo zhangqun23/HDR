@@ -10,11 +10,11 @@ public class HouseCustomerServiceLoad {
 	private String orderNum;// 序号
 	private String staff_name;// 员工姓名
 	private String staff_no;// 员工编号
-	private String serviceLoad;// 服务数量
+	private Float serviceLoad;// 服务数量
 	private String timeOutService;// 超时服务
 	private String sumWorkTime;// 总用时
 	private String averageWorkTime;// 平均用时
-	private String timeOutRate;// 超时率
+	private Float timeOutRate;// 超时率
 	private String serviceLoad_rank;// 总量排名
 	private String timeOutRate_rank;// 超时率排名
 
@@ -34,11 +34,11 @@ public class HouseCustomerServiceLoad {
 		this.timeOutService = timeOutService;
 	}
 
-	public String getTimeOutRate() {
+	public Float getTimeOutRate() {
 		return timeOutRate;
 	}
 
-	public void setTimeOutRate(String timeOutRate) {
+	public void setTimeOutRate(Float timeOutRate) {
 		this.timeOutRate = timeOutRate;
 	}
 
@@ -66,11 +66,11 @@ public class HouseCustomerServiceLoad {
 		this.staff_no = staff_no;
 	}
 
-	public String getServiceLoad() {
+	public Float getServiceLoad() {
 		return serviceLoad;
 	}
 
-	public void setServiceLoad(String serviceLoad) {
+	public void setServiceLoad(Float serviceLoad) {
 		this.serviceLoad = serviceLoad;
 	}
 

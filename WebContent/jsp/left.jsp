@@ -58,11 +58,16 @@
 					href="${ctx}/customerService/toReportFormPage.do#/typeForm">服务类型统计</a><i></i></li>
 				<li id="linenExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/linenExpendForm">布草统计</a><i></i></li>
+				<li id="linenExpendAnalyse"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/linenExpendAnalyse">布草用量分析</a><i></i></li>
 				<li id="roomExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/roomExpendForm">房间耗品统计</a><i></i></li>
+				<li id="roomExpendAnalyse"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/roomExpendAnalyse">房间耗品用量分析</a><i></i></li>
 				<li id="washExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/washExpendForm">卫生间易耗品统计</a><i></i></li>
-
+				<li id="washExpendAnalyse"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/washExpendAnalyse">卫生间易耗品用量分析</a><i></i></li>
 			</ul>
 
 		</dd>

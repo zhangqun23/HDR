@@ -118,7 +118,6 @@ public class WorkHouseController {
 				endTime = StringUtil.monthLastDay(jsonObject.getString("endTime"));// 结束时间
 			}
 		}
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("roomType", roomType);
 		map.put("startTime", startTime);

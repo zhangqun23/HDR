@@ -119,7 +119,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			url : baseUrl + 'checkOrRobHome/selectRobEffAnalyseByLimits.do',
 			data : data
 		});
-	}
+	};
+	// zq查询领班查房效率
+	services.selectCheckEfficiencyByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + '/checkHouse/getCheckHouseList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -173,6 +181,11 @@ app
 								quarter : "0",
 								roomType : "",
 								staffId : ""
+							}
+							// zq查房效率
+							checkRob.ceLimit = {
+								startTime : "",
+								endTime : ""
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
@@ -312,6 +325,8 @@ app
 									alert("请选择房间类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								robEfficiencyLimit = JSON
 										.stringify(checkRob.reLimit);
 								if (checkRob.reLimit.tableType == '0') {
@@ -319,7 +334,14 @@ app
 										limit : robEfficiencyLimit,
 										page : nowPage
 									}).success(function(data) {
+										$(".overlayer").fadeOut(200);
+										$(".tipLoading").fadeOut(200);
 										checkRob.robEfficiencyList = data.list;
+										if (data.list.length) {
+											checkRob.listIsShow = false;
+										} else {
+											checkRob.listIsShow = true;
+										}
 									});
 								} else {
 									services
@@ -329,11 +351,20 @@ app
 											})
 											.success(
 													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
 														checkRob.robDetailList = data.list;
 														pageTurn(
 																data.totalPage,
 																1,
 																getRobDetailByLimits);
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
 													});
 								}
 
@@ -362,6 +393,8 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var robEffAnalyseLimit = JSON
 										.stringify(checkRob.reaLimit);
 								services
@@ -370,6 +403,10 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var title = "客房员工 "
 															+ " "
 															+ getSelectedRoomType(checkRob.reaLimit.roomType)
@@ -385,7 +422,7 @@ app
 													var userData = [];
 													for ( var item in data.list) {
 														userData
-																.push(data.list[item]);
+																.push(changeNumType(data.list[item]));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -396,50 +433,50 @@ app
 																'9月', '10月',
 																'11月', '12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																12);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																12);
 														break;
 													case '1':
 														xAxis = [ '1月', '2月',
 																'3月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													case '2':
 														xAxis = [ '4月', '5月',
 																'6月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													case '3':
 														xAxis = [ '7月', '8月',
 																'9月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													case '4':
 														xAxis = [ '10月', '11月',
 																'12月' ];
 														allAverageData = getAverageData(
-																data.allAverWorkEfficiency,
+																changeNumType(data.allAverWorkEfficiency),
 																3);
 														averageData = getAverageData(
-																data.averWorkEfficiency,
+																changeNumType(data.averWorkEfficiency),
 																3);
 														break;
 													}
@@ -473,6 +510,56 @@ app
 									$("#efficiencyTable").hide();
 									$("#detailTable").show();
 								}
+							}
+							// zq将小数保留两位小数
+							function changeNumType(number) {
+								if (!number) {
+									var defaultNum = 0;
+									var num = parseFloat(parseFloat(defaultNum)
+											.toFixed(2));
+								} else {
+									var num = parseFloat(parseFloat(number)
+											.toFixed(2));
+								}
+								return num;
+							}
+							// zq获取下拉框得到的员工姓名
+							checkRob.staffName = "";
+							checkRob.getStaffNameById = function() {
+								var name = $("#staffId").val();
+								checkRob.staffName = getSelectedStaff(name);
+							}
+							// zq获取领班查房效率列表
+							checkRob.selectCheckEfficiencyByLimits = function() {
+								if (checkRob.ceLimit.startTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (checkRob.ceLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services
+										.selectCheckEfficiencyByLimits(
+												{
+													startTime : checkRob.ceLimit.startTime,
+													endTime : checkRob.ceLimit.endTime
+												})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													checkRob.checkEfficiencyList = data.checkHouseList;
+													if (data.checkHouseList.length) {
+														checkRob.listIsShow = false;
+													} else {
+														checkRob.listIsShow = true;
+													}
+												});
 							}
 							// zq初始化
 							function initData() {

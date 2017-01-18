@@ -10,7 +10,7 @@ import com.mvc.entity.StaffInfo;
  * @author wanghuimin
  * @date 2017年1月10日
  */
-public interface HotelCustomerDao {
+public interface CustomerServiceDao {
 
 	//查询酒店对客服务信息统计
 	List<Object> findHotelService(Map<String, Object> map);

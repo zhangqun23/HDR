@@ -2,6 +2,7 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
+		<li><a href="">例行任务统计分析</a></li>
 		<li><a href="">做房效率统计</a></li>
 	</ul>
 </div>
@@ -22,7 +23,7 @@
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkEfficiencyByLimits()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
+					<li><input class="btn layoutStyle" style="width: 60px" onClick="setExportFlagCookie()"
 						type="submit" value="导出"></li>
 				</ul>
 

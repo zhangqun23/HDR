@@ -19,12 +19,15 @@ import com.utils.Pager;
  */
 public interface ExpendFormService {
 	
-	//布草统计
-	List<LinenExpend> selectLinenExpend(Map<String, Object> map);
+	//布草统计分页
+	List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager);
 	
 	//导出布草使用量统计表
 	ResponseEntity<byte[]> exportLinenExpendForm(Map<String, Object> map, String path, String tempPath);
-	
+
+	// 查询布草总条数
+	Long countTotal(Map<String, Object> map);
+		
 	//布草统计分析
 	List<ExpendAnalyse> selectLinenExpendAnalyse(Map<String, Object> map);
 	

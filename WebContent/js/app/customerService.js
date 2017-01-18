@@ -463,7 +463,6 @@ app
 										})
 										.success(
 												function(data) {
-
 													reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
@@ -566,7 +565,6 @@ app
 										})
 										.success(
 												function(data) {
-
 													reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;

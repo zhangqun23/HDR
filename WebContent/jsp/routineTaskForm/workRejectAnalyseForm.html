@@ -2,13 +2,14 @@
 	<span>位置：</span>
 	<ul class="placeul">
 		<li><a href="">首页</a></li>
+		<li><a href="">例行任务统计分析</a></li>
 		<li><a href="">做房驳回率分析</a></li>
 	</ul>
 </div>
 
 <div class="rightinfo">
 	<div class="tools" style="">
-		<form action="exportWorkRejectAnalyseBylimits.do" method="post"
+		<form action="../workReject/exportWorkRejectAnalyseBylimits.do" method="post"
 			enctype="multipart/form-data">
 			<ul class="projectListLimit">
 				<li><label>年份</label> <input type="text" name="checkYear"
@@ -39,13 +40,17 @@
 					ng-click="selectWorkRejectAnalyseByLimits()"></li>
 				<li><input id="chart-svg" name="chartSVGStr" type="text"
 					class="hidden" /></li>
-				<li><input class="btn layoutStyle" style="width: 60px"
+					<li><input id="chart1-svg" name="chart1SVGStr" type="text"
+					class="hidden" /></li>
+				<li><input class="btn layoutStyle" style="width: 60px" onClick="setExportFlagCookie()"
 					type="submit" value="导出"></li>
 			</ul>
 		</form>
 
 	</div>
 	<div id="lineChart"
+		style="min-width: 400px; width: 1000px; height: 400px"></div>
+		<div id="pieChart"
 		style="min-width: 400px; width: 1000px; height: 400px"></div>
 </div>
 

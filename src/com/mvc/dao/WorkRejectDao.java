@@ -16,4 +16,8 @@ public interface WorkRejectDao {
 	List<Object> selectWorkRejectByLimits(Map<String, Object> map);
 
 	List<Object> selectMonthWorkReject(Map<String, Object> map);
+
+	List<Object> selectAllAverRejectEff(Map<String, Object> map);
+
+	List<Object> selectReasonsByLimits(Map<String, Object> map);
 }

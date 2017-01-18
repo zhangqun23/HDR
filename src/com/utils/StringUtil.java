@@ -134,7 +134,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * 获取日期当前月份的第一天
+	 * 获取日期当前月份的最后一天
 	 * 
 	 * @param dateStr
 	 *            yyyy-MM
@@ -215,7 +215,6 @@ public class StringUtil {
 		str = monthLastDay(str);
 		return str;
 	}
-
 
 	/**
 	 * 将Float型字符串转换成%形式

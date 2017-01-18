@@ -11,41 +11,48 @@ import com.mvc.entityReport.RoomExpend;
 import com.mvc.entityReport.WashExpend;
 import com.utils.Pager;
 
-
 /**
  * 耗品统计
+ * 
  * @author wq
  * @date 2017年1月13日
  */
 public interface ExpendFormService {
-	
-	//布草统计分页
+
+	// 布草统计分页
 	List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager);
-	
-	//导出布草使用量统计表
+
+	// 导出布草使用量统计表
 	ResponseEntity<byte[]> exportLinenExpendForm(Map<String, Object> map, String path, String tempPath);
 
 	// 查询布草总条数
 	Long countTotal(Map<String, Object> map);
-		
-	//布草统计分析
+
+	// 布草统计分析
 	List<ExpendAnalyse> selectLinenExpendAnalyse(Map<String, Object> map);
-	
-	//房间耗品统计
+
+	// 房间耗品统计
 	List<RoomExpend> selectRoomExpend(Map<String, Object> map);
-	
-	//导出房间耗品使用量统计表
+
+	// 导出房间耗品使用量统计表
 	ResponseEntity<byte[]> exportRoomExpendForm(Map<String, Object> map, String path, String tempPath);
-	
-	//房间耗品统计分析
+
+	// 房间耗品统计分析
 	List<ExpendAnalyse> selectRoomExpendAnalyse(Map<String, Object> map);
-	
-	//卫生间耗品统计
+
+	// 卫生间耗品统计
 	List<WashExpend> selectWashExpend(Map<String, Object> map);
-	
-	//导出卫生间耗品使用量统计表
+
+	// 导出卫生间耗品使用量统计表
 	ResponseEntity<byte[]> exportWashExpendForm(Map<String, Object> map, String path, String tempPath);
-	
-	//卫生间耗品统计分析
+
+	// 卫生间耗品统计分析
 	List<ExpendAnalyse> selectWashExpendAnalyse(Map<String, Object> map);
+
+	/********** zjn添加 **********/
+	// 导出房间或卫生间耗品分析图
+	ResponseEntity<byte[]> exportRoomOrWashExpendPic(Map<String, String> map);
+
+	// 导出布草用量分析图
+	ResponseEntity<byte[]> exportLinenExpendPic(Map<String, String> map);
 }

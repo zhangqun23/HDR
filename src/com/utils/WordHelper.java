@@ -33,6 +33,10 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 
+import com.mvc.entityReport.HoCustomerService;
+import com.mvc.entityReport.HouseCustomerServiceLoad;
+import com.mvc.entityReport.HouseCustomerServiceType;
+
 public class WordHelper<T> {
 
 	/**
@@ -125,6 +129,7 @@ public class WordHelper<T> {
 					}
 				}
 				T t = (T) it.next();
+				Boolean flag = tranFieldToPer(t);// 需要处理%列
 				Field[] fields = t.getClass().getDeclaredFields();
 				cells = row.getTableCells();
 				for (int i = 0; i < colNum; i++) {
@@ -136,7 +141,11 @@ public class WordHelper<T> {
 					Method getMethod = tCls.getMethod(getMethodName, new Class[] {});
 					Object value = getMethod.invoke(t, new Object[] {});
 					if (value != null) {
-						cell.setText(String.valueOf(value));// 写入单元格内容
+						if (flag && fieldName.equals("timeOutRate")) {
+							cell.setText(StringUtil.strFloatToPer(String.valueOf(value)));// 转换成%
+						} else {
+							cell.setText(String.valueOf(value));// 写入单元格内容
+						}
 					}
 					cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
 					cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
@@ -322,6 +331,22 @@ public class WordHelper<T> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 需要转化%列的类
+	 * 
+	 * @param t
+	 * @return
+	 */
+	private Boolean tranFieldToPer(T t) {
+		Boolean flag = false;
+		Class<? extends Object> cla = t.getClass();
+		if (cla == HoCustomerService.class || cla == HouseCustomerServiceLoad.class
+				|| cla == HouseCustomerServiceType.class) {
+			flag = true;
+		}
+		return flag;
 	}
 
 }

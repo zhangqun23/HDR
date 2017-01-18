@@ -218,3 +218,7 @@
 .tablestyle th{
 	text-align: center;
 }
+.tableTitle{
+	margin-bottom:10px;
+	font-size:18px;
+}

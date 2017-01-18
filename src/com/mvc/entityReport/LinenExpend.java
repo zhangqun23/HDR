@@ -1,12 +1,13 @@
 package com.mvc.entityReport;
 
 /**
- * 布草消耗
+ * 布草消耗分析
  * 
  * @author wq
- * @date 2017年1月12日
+ * @date 2017年1月17日
  */
 public class LinenExpend {
+	
 	private String orderNum;// 序号
 	private String room_id;// 房号
 	private String bato_num;// 浴巾数量
@@ -119,7 +120,6 @@ public class LinenExpend {
 	}
 	public void setBlan_num(String blan_num) {
 		this.blan_num = blan_num;
-	}	
-
+	}
 
 }

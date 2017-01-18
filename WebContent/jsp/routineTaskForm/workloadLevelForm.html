@@ -1,7 +1,9 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">例行任务统计/员工工作量饱和度分析</a></li>
+		<li><a href="">首页</a></li>
+		<li><a href="">例行任务统计</a></li>
+		<li><a href="">员工工作量饱和度分析</a></li>
 	</ul>
 </div>
 
@@ -30,6 +32,10 @@
 	</div>
 
 	<table class="tablelist tablestyle" >
+		<caption align="top" class="tableTitle">
+			<div class="tableTitle">客房员工工作量饱和度分析</div>
+			<div>统计时间：{{workLoadLevelLimit.startTime}}&nbsp;至 &nbsp;{{workLoadLevelLimit.endTime}}</div>
+		</caption>
 		<thead>
 			<tr>
 				<th class="width10">序号</th>
@@ -56,6 +62,7 @@
 			</tr>
 		</tbody>
 	</table>
+	<label ng-show="listRemark" style="color:red;font-size:medium;marginTop:20px">分析结果:{{remark}}</label>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 </div>
 

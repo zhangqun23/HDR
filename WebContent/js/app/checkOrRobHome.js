@@ -119,7 +119,15 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			url : baseUrl + 'checkOrRobHome/selectRobEffAnalyseByLimits.do',
 			data : data
 		});
-	}
+	};
+	// zq查询领班查房效率
+	services.selectCheckEfficiencyByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + '/checkHouse/getCheckHouseList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -173,6 +181,11 @@ app
 								quarter : "0",
 								roomType : "",
 								staffId : ""
+							}
+							// zq查房效率
+							checkRob.ceLimit = {
+								startTime : "",
+								endTime : ""
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
@@ -312,6 +325,8 @@ app
 									alert("请选择房间类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								robEfficiencyLimit = JSON
 										.stringify(checkRob.reLimit);
 								if (checkRob.reLimit.tableType == '0') {
@@ -319,7 +334,14 @@ app
 										limit : robEfficiencyLimit,
 										page : nowPage
 									}).success(function(data) {
+										$(".overlayer").fadeOut(200);
+										$(".tipLoading").fadeOut(200);
 										checkRob.robEfficiencyList = data.list;
+										if (data.list.length) {
+											checkRob.listIsShow = false;
+										} else {
+											checkRob.listIsShow = true;
+										}
 									});
 								} else {
 									services
@@ -329,11 +351,20 @@ app
 											})
 											.success(
 													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
 														checkRob.robDetailList = data.list;
 														pageTurn(
 																data.totalPage,
 																1,
 																getRobDetailByLimits);
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
 													});
 								}
 
@@ -362,6 +393,8 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var robEffAnalyseLimit = JSON
 										.stringify(checkRob.reaLimit);
 								services
@@ -370,6 +403,10 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
 													var title = "客房员工 "
 															+ " "
 															+ getSelectedRoomType(checkRob.reaLimit.roomType)
@@ -491,6 +528,38 @@ app
 							checkRob.getStaffNameById = function() {
 								var name = $("#staffId").val();
 								checkRob.staffName = getSelectedStaff(name);
+							}
+							// zq获取领班查房效率列表
+							checkRob.selectCheckEfficiencyByLimits = function() {
+								if (checkRob.ceLimit.startTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (checkRob.ceLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services
+										.selectCheckEfficiencyByLimits(
+												{
+													startTime : checkRob.ceLimit.startTime,
+													endTime : checkRob.ceLimit.endTime
+												})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													checkRob.checkEfficiencyList = data.checkHouseList;
+													if (data.checkHouseList.length) {
+														checkRob.listIsShow = false;
+													} else {
+														checkRob.listIsShow = true;
+													}
+												});
 							}
 							// zq初始化
 							function initData() {

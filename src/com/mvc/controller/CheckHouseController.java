@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.CheckHouse;
 import com.mvc.service.CheckHouseService;
+import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -75,7 +76,8 @@ public class CheckHouseController {
 			startTime = request.getParameter("startTime");
 			endTime = request.getParameter("endTime");
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-			String modelPath = request.getSession().getServletContext().getRealPath("word\\" + "checkHouseList.docx");// 模板路径
+			String modelPath = request.getSession().getServletContext()
+					.getRealPath(ReportFormConstants.CHECKHOUSE_PATH);// 模板路径
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startTime", startTime);
@@ -84,6 +86,7 @@ public class CheckHouseController {
 			map.put("modelPath", modelPath);
 			byteArr = checkHouseService.exportCheckHouseList(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 

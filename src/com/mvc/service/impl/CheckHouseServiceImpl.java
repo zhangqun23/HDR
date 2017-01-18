@@ -50,12 +50,13 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 		String checkTime = "";
 		String totalTime = "";
 		List<CheckHouse> listGoal = new ArrayList<CheckHouse>();
-		int i = 1;
+		int i = 0;
 		while (it.hasNext()) {
+			i++;
 			obj = (Object[]) it.next();
 			checkHouse = new CheckHouse();
 
-			checkHouse.setOrderNum(String.valueOf((i + 1)));
+			checkHouse.setOrderNum(String.valueOf((i)));
 			checkHouse.setStaffNo(obj[0].toString());
 			checkHouse.setStaffName(obj[1].toString());
 			checkTime = obj[2].toString();

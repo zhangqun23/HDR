@@ -18,6 +18,7 @@ import com.mvc.entityReport.LinenExpend;
 import com.mvc.entityReport.RoomExpend;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
+import com.utils.Pager;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -50,10 +51,15 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("llimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<LinenExpend> list = expendFormService.selectLinenExpend(map);
-		
+		int totalRow = Integer.parseInt(expendFormService.countTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+
+		List<LinenExpend> list = expendFormService.selectLinenPage(map, pager);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 	

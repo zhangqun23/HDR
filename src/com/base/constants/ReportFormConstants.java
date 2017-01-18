@@ -1,5 +1,7 @@
 package com.base.constants;
 
+import com.sun.jndi.url.dns.dnsURLContext;
+
 /**
  * 报表相关路径常量
  * 
@@ -41,6 +43,9 @@ public class ReportFormConstants {
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
 	
-	
+	//抢房效率表
+	public static final String ROBEFFICIENCY_PATH=DICTIONARY+"robEfficiency.docx";
+	//抢房明细表
+	public static final String ROBDETAIL_PATH=DICTIONARY+"robdetail.docx";
 
 }

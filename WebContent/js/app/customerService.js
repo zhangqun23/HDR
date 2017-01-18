@@ -682,11 +682,13 @@ app.controller('CustomerServiceController', [
 				}).success(function(data) {
 					$(".overlayer").fadeOut(200);
 					$(".tipLoading").fadeOut(200);
-					reportForm.depWorkloadList = data.list;
-					if (data.list.length) {
-						reportForm.listIsShow = false;
-					} else {
+					
+					if (data.list.length==1) {
 						reportForm.listIsShow = true;
+						reportForm.depWorkloadList = '';
+					} else {
+						reportForm.listIsShow = false;
+						reportForm.depWorkloadList = data.list;
 					}
 				});
 			}
@@ -719,11 +721,13 @@ app.controller('CustomerServiceController', [
 				}).success(function(data) {
 					$(".overlayer").fadeOut(200);
 					$(".tipLoading").fadeOut(200);
-					reportForm.staffWorkloadList = data.list;
-					if (data.list.length) {
-						reportForm.listIsShow = false;
-					} else {
+					
+					if (data.list.length==1) {
 						reportForm.listIsShow = true;
+						reportForm.staffWorkloadList ='';
+					} else {
+						reportForm.listIsShow = false;
+						reportForm.staffWorkloadList = data.list;
 					}
 				});
 			}

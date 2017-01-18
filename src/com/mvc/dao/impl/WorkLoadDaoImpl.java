@@ -32,8 +32,6 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder selectSql = new StringBuilder();
-		startTime = startTime + " 00:00:00";
-		endTime = endTime + " 23:59:59";
 
 		selectSql.append(
 				"select si.Staff_no staff_no,si.Staff_name staff_name,coalesce(sum(clean_room_workload),0) clean_room, coalesce(sum(checkout_room_workload),0) checkout_room,coalesce(sum(overnight_room_workload),0)overnight_room,");

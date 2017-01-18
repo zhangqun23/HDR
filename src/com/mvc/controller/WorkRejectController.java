@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.connector.Request;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.WorkReject;
 import com.mvc.service.WorkHouseService;
 import com.mvc.service.WorkRejectService;
+import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -124,7 +126,7 @@ public class WorkRejectController {
 
 	// zq导出驳回统计表
 	@RequestMapping("/exportWorRejectBylimits.do")
-	public ResponseEntity<byte[]> exportWorRejectBylimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportWorRejectBylimits(HttpServletRequest request , HttpServletResponse response) {
 		String startTime = null;
 		String endTime = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
@@ -139,12 +141,13 @@ public class WorkRejectController {
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.RejectEff_PATH);// 模板路径
 		ResponseEntity<byte[]> byteArr = workRejectService.exportWorRejectBylimits(map, path, tempPath);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
 	// zq驳回折线图的分析
 	@RequestMapping("/exportWorkRejectAnalyseBylimits.do")
-	public ResponseEntity<byte[]> exportWorkRejectAnalyseBylimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportWorkRejectAnalyseBylimits(HttpServletRequest request, HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String cleanType = null;
@@ -185,6 +188,7 @@ public class WorkRejectController {
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.RejectAnalyse_PATH);
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);
 		ResponseEntity<byte[]> byteArr = workRejectService.exportWorkRejectAna(map, path, tempPath, picPath);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 

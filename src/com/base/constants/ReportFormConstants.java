@@ -46,18 +46,16 @@ public class ReportFormConstants {
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
 
-<<<<<<< HEAD
 	// 驳回率统计表
 	public static final String RejectEff_PATH = DICTIONARY + "workReject.docx";
-	//驳回率折线图
+	// 驳回率折线图
 	public static final String RejectAnalyse_PATH = DICTIONARY + "rejectAnalyse.docx";
-=======
+
 	// 导出酒店对客服务信息统计表
 	public static final String CUSTOMERSERVICE_PATH = DICTIONARY + "customerService.docx";
 	// 导出部门对客服务工作量统计表
 	public static final String ROOMWORKLOAD_PATH = DICTIONARY + "roomWorkload.docx";
 	// 导出部门对客服务类型统计
 	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
->>>>>>> d3fa3eab0f3340d864125d17c2b357cced3dabec
 
 }

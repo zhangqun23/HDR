@@ -1177,14 +1177,17 @@ app
 														case 4:
 															s=['房间卫生',data.reasonList[4]];
 															break;
-														case 5:
-															s=['其他问题',data.reasonList[5]];
-															break;
 															
 														}
 														pieReasons.push(s);
 													}
-													pieChartForm("#pieChart",title,"做房驳回原因",pieReasons);
+													pieChartForm("#pieChart",title1,"做房驳回原因",pieReasons);
+													$('#chart1-svg')
+													.val(
+															$(
+																	"#pieChart")
+																	.highcharts()
+																	.getSVG());
 												});
 							}
 							// zq扇形图公用函数

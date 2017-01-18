@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.CheckHouseDao;
+import com.utils.StringUtil;
 
 /**
  * 领班查房效率相关的dao层实现
@@ -33,8 +34,8 @@ public class CheckHouseDaoImpl implements CheckHouseDao {
 	public List<Object> getCheckHouseTime(String startTime, String endTime) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder selectSql = new StringBuilder();
-		startTime = startTime + " 00:00:00";
-		endTime = endTime + " 23:59:59";
+		startTime = StringUtil.dayFirstTime(startTime);
+		endTime = StringUtil.dayLastTime(endTime);
 
 		selectSql.append(
 				"select si.Staff_no staff_no,si.Staff_name staff_name,coalesce(sum(check_time),0) check_time ,coalesce(sum(work_time),0) work_time");

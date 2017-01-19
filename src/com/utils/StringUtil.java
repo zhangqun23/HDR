@@ -224,8 +224,7 @@ public class StringUtil {
 	 */
 	public static String strFloatToPer(String strFloat) {
 		String str = "";
-		Float f = Float.valueOf(strFloat);
-		str = f * 100 + "%";
+		str = multiply(strFloat, "100") + "%";
 		return str;
 	}
 

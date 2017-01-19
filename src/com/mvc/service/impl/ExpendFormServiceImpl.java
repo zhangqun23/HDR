@@ -45,7 +45,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	@Override
 	public List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager) {
 
-		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize());
+		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize(), listCondition);
+
 		Iterator<Object> it = listSource.iterator();
 		List<LinenExpend> listGoal = objToLinenExpand(it);
 

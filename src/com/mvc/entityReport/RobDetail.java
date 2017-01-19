@@ -51,11 +51,11 @@ public class RobDetail {
 		this.workEffeciency = workEffeciency;
 	}
 
-	public String getAuthor_name() {
+	public String getAuthorName() {
 		return authorName;
 	}
 
-	public void setAuthor_name(String author_name) {
+	public void setAuthorName(String author_name) {
 		this.authorName = author_name;
 	}
 

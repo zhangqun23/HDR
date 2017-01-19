@@ -216,12 +216,13 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	private List<Integer> perMonth(List<Object> list, String startMonth, String endMonth) {
 		List<Integer> listGoal = new ArrayList<Integer>();
 		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer startM = Integer.valueOf(startMonth);
+			Integer endM = Integer.valueOf(endMonth);
 			Integer size = list.size();
 
 			Object[] obj = null;
 			Integer month = null;
-			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+			for (int i = 0, j = startM; i < size || j <= endM; i++, j++) {
 				if (i < size) {
 					obj = (Object[]) list.get(i);
 					month = Integer.valueOf(obj[0].toString());
@@ -482,12 +483,13 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	private List<String> perMonthEff(List<Object> list, String startMonth, String endMonth) {
 		List<String> listGoal = new ArrayList<String>();
 		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer startM = Integer.valueOf(startMonth);
+			Integer endM = Integer.valueOf(endMonth);
 			Integer size = list.size();
 
 			Object[] obj = null;
 			Integer month = null;
-			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+			for (int i = 0, j = startM; i < size || j <= endM; i++, j++) {
 				if (i < size) {
 					obj = (Object[]) list.get(i);
 					month = Integer.valueOf(obj[0].toString());

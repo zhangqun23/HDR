@@ -140,17 +140,22 @@ public class CustomerServiceController {
 		String startTime = null;
 		String endTime = null;
 		String departId = null;
+		String photo=null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		startTime = request.getParameter("startTime");
 		endTime = request.getParameter("endTime");
 		departId = request.getParameter("departId");
+		photo=request.getParameter("bar-svg");
+		
 		map.put("start_Time", startTime);
 		map.put("end_Time", endTime);
 		map.put("depart_Id", departId);
+		map.put("photo", photo);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String picPath=request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMWORKTYPE_PATH);// 模板路径
-		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomType(map, path, modelPath);
+		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomType(map, path,picPath, modelPath);
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}

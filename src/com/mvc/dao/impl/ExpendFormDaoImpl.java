@@ -37,8 +37,9 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		String sqlLimit = linenExpendSQL(map);
 
 		StringBuilder sql = new StringBuilder();
-		sql.append("select a0.room_id," + getSelSQL(listCondition) + " from ");
+		sql.append("select a.room_no," + getSelSQL(listCondition) + " from ");
 		sql.append(getSizeSQL(listCondition, sqlLimit));
+		sql.append(" limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString());
 		query.setParameter("offset", offset).setParameter("end", end);
 		List<Object> list = query.getResultList();
@@ -74,24 +75,26 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 			Integer size = list.size();
 			for (int i = 0; i < size; i++) {
 				if (i == 0) {
-					sql.append("(select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
+					sql.append("(select distinct temp_list.room_no from temp_list left join goods_info on goods_info.goods_id=temp_list.goods_id ");
+					sql.append(" left join case_info on case_info.call_id=temp_list.call_id ");
+					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' order by temp_list.room_no " + sqlLimit + " ) as a ");
+					sql.append(" left join (select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
 					sql.append(
 							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
-					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id left join ");
-					sql.append(" goods_type on goods_type.Goods_TypeId=goods_info.Goods_Typeid ");
+					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
 					sql.append(" where call_info.customer_service_flag='1' and Goods_Name is not null and ");
 					sql.append(" goods_info.goods_id=" + list.get(i) + sqlLimit);
-					sql.append(" group by call_info.room_id limit :offset,:end) as a0 left join ");
+					sql.append(" group by call_info.room_id) as a0 ");
+					sql.append(" on a.room_no=a0.room_id left join ");
 				} else {
 					sql.append("(select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
 					sql.append(
 							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
-					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id left join ");
-					sql.append(" goods_type on goods_type.Goods_TypeId=goods_info.Goods_Typeid ");
+					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
 					sql.append(" where call_info.customer_service_flag='1' and Goods_Name is not null and ");
 					sql.append(" goods_info.goods_id=" + list.get(i) + sqlLimit);
-					sql.append(" group by call_info.room_id limit :offset,:end) as a" + i);
-					sql.append(" on a" + i + ".room_id=a0.room_id left join ");
+					sql.append(" group by call_info.room_id) as a" + i);
+					sql.append(" on a" + i + ".room_id=a.room_no left join ");
 				}
 			}
 			sqlStr = sql.toString().substring(0, sql.toString().length() - 10);
@@ -785,7 +788,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return sql.toString();
 	}
 
-	// 房间耗品消耗分析
+	// 卫生间耗品消耗分析
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectWashExpendAnalyse(Map<String, Object> map) {

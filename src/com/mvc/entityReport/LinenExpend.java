@@ -10,20 +10,20 @@ public class LinenExpend {
 	
 	private String orderNum;// 序号
 	private String room_id;// 房号
-	private String bato_num;// 浴巾数量
-	private String facl_num;// 面巾数量
+	private String slba_num;// 被罩数量
+	private String duto_num;// 拼尘罩数量
+	private String laba_num;// 洗衣袋数量
 	private String besh_num;// 床单数量
+	private String facl_num;// 面巾数量
+	private String bato_num;// 浴巾数量
 	private String hato_num;// 方巾数量
 	private String medo_num;// 中巾数量
 	private String flto_num;// 地巾数量
 	private String baro_num;// 浴袍数量
-	private String slba_num;// 被罩数量
-	private String duto_num;// 拼尘罩数量
 	private String pill_num;// 枕套数量
-	private String shop_num;// 购物袋数量
-	private String laba_num;// 洗衣袋数量
 	private String piin_num;// 枕芯数量
 	private String blan_num;// 毛毯数量
+	private String shop_num;// 购物袋数量
 	
 	public String getOrderNum() {
 		return orderNum;

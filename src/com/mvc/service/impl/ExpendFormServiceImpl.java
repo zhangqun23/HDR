@@ -46,7 +46,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	public List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager) {
 
 		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
-		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize(), listCondition);
+		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize(),
+				listCondition);
 
 		Iterator<Object> it = listSource.iterator();
 		List<LinenExpend> listGoal = objToLinenExpand(it);
@@ -59,24 +60,25 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<LinenExpend> listGoal = new ArrayList<LinenExpend>();
 		Object[] obj = null;
 		LinenExpend linenExpend = null;
+
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
 			linenExpend = new LinenExpend();
 			linenExpend.setRoom_id(obj[0].toString());
-			linenExpend.setBato_num(obj[1].toString());
-			linenExpend.setFacl_num(obj[2].toString());
-			linenExpend.setBesh_num(obj[3].toString());
-			linenExpend.setHato_num(obj[4].toString());
-			linenExpend.setMedo_num(obj[5].toString());
-			linenExpend.setFlto_num(obj[6].toString());
-			linenExpend.setBaro_num(obj[7].toString());
-			linenExpend.setSlba_num(obj[8].toString());
-			linenExpend.setDuto_num(obj[9].toString());
-			linenExpend.setPill_num(obj[10].toString());
-			linenExpend.setShop_num(obj[11].toString());
-			linenExpend.setLaba_num(obj[12].toString());
-			linenExpend.setPiin_num(obj[13].toString());
-			linenExpend.setBlan_num(obj[14].toString());
+			linenExpend.setSlba_num(obj[1].toString());
+			linenExpend.setDuto_num(obj[2].toString());
+			linenExpend.setLaba_num(obj[3].toString());
+			linenExpend.setBesh_num(obj[4].toString());
+			linenExpend.setFacl_num(obj[5].toString());
+			linenExpend.setBato_num(obj[6].toString());
+			linenExpend.setHato_num(obj[7].toString());
+			linenExpend.setMedo_num(obj[8].toString());
+			linenExpend.setFlto_num(obj[9].toString());
+			linenExpend.setBaro_num(obj[10].toString());
+			linenExpend.setPill_num(obj[11].toString());
+			linenExpend.setPiin_num(obj[12].toString());
+			linenExpend.setBlan_num(obj[13].toString());
+			linenExpend.setShop_num(obj[14].toString());
 
 			listGoal.add(linenExpend);
 		}

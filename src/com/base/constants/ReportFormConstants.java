@@ -56,6 +56,8 @@ public class ReportFormConstants {
 	public static final String ROBEFFICIENCY_PATH = DICTIONARY + "robEfficiency.docx";
 	// 抢房明细表
 	public static final String ROBDETAIL_PATH = DICTIONARY + "robdetail.docx";
+	// 抢房效率折线图
+	public static final String ROBEFFICIENCYANALYSE_PATH = DICTIONARY + "robEfficiencyAnalyse.docx";
 
 	// 驳回率统计表
 	public static final String RejectEff_PATH = DICTIONARY + "workReject.docx";

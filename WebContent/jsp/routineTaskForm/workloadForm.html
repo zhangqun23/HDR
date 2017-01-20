@@ -15,16 +15,16 @@
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 
-					<li><label>起止日期</label><input type="text" name="startDate"
+					<li><label>起止日期</label><input type="text" name="startDate" required
 						ng-model="workloadLimit.startTime" class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endDate" ng-model="workloadLimit.endTime"
+						type="text" name="endDate" required ng-model="workloadLimit.endTime"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
 				    <li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkloadByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+						type="submit" value="导出" onClick="setExportFlagCookie()"></li>
 				</ul>
 
 			</form>

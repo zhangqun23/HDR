@@ -9,7 +9,7 @@ public class RobDetail {
 	private String authorName;// 完成员工
 	private String isBack;// 驳回次数
 	private String checkUsedTime;// 检查用时（分钟）
-	private String CheckerName;// 检查人
+	private String checkerName;// 检查人
 
 	public String getOrderNum() {
 		return orderNum;
@@ -76,11 +76,11 @@ public class RobDetail {
 	}
 
 	public String getCheckerName() {
-		return CheckerName;
+		return checkerName;
 	}
 
 	public void setCheckerName(String checkerName) {
-		CheckerName = checkerName;
+		this.checkerName = checkerName;
 	}
 
 }

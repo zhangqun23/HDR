@@ -49,7 +49,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	private List<RobEfficiency> objToRobEfficiency(Iterator<Object> it) {
 		List<RobEfficiency> listGoal = new ArrayList<RobEfficiency>();
 		Object[] obj = null;
-		int no = 0;
+		int no = 1;
 		RobEfficiency robEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
@@ -89,7 +89,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	private List<RobDetail> objToRobDetail(Iterator<Object> it) {
 		List<RobDetail> listGoal = new ArrayList<RobDetail>();
 		Object[] obj = null;
-		int no = 0;
+		int no = 1;
 		RobDetail robDetail = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
@@ -147,7 +147,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		jsonObj.put("list", useTime);// 按月平均 公式：当月任务用时总合/任务数量
 		jsonObj.put("averWorkEfficiency", averWorkEfficiency);// 所选员工全年任务用时总合/全年任务数量
 		jsonObj.put("allAverWorkEfficiency", allAverWorkEfficiency);// 所有员工全年任务用时总合/全年任务数量
-		return null;
+		return jsonObj.toString();
 	}
 
 	private float[] handelPerMonthsStaff(List<Object> list, Integer startMonth, Integer monthNum) {

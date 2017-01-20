@@ -312,7 +312,7 @@ public class WorkHouseController {
 	 * @return
 	 */
 	@RequestMapping("/exportWorkEfficiencyBylimits.do")
-	public ResponseEntity<byte[]> exportWorkEffByLimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportWorkEffByLimits(HttpServletRequest request, HttpServletResponse response) {
 		String startTime = null;
 		String endTime = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
@@ -330,6 +330,7 @@ public class WorkHouseController {
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFF_PATH);// 模板路径
 		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffByLimits(map, path, tempPath);
 
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -340,7 +341,7 @@ public class WorkHouseController {
 	 * @return
 	 */
 	@RequestMapping("/exportUserWorkEfficiencyBylimits.do")
-	public ResponseEntity<byte[]> exportUserWorkEffByLimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportUserWorkEffByLimits(HttpServletRequest request, HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String staffName = null;
@@ -375,6 +376,7 @@ public class WorkHouseController {
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffAna(map, path, tempPath, picPath);
 
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 

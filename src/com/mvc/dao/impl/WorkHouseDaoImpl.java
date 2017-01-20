@@ -87,7 +87,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 			sql.append(" and cs.sort_no='" + roomType + "'");
 		}
 		if (startTime != null && endTime != null) {
-			sql.append(" and cs.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+			sql.append(" and cs.close_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
 		if (deptId != null) {
 			sql.append(" and cs.depart_id='" + deptId + "'");
@@ -150,7 +150,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(
-				"select DATE_FORMAT(cs.open_time,'%m') months,coalesce(sum(cs.use_time),0) use_time from case_info cs ");
+				"select DATE_FORMAT(cs.close_time,'%m') months,coalesce(sum(cs.use_time),0) use_time from case_info cs ");
 		sql.append(
 				"left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
 		sql.append(" where si.parent_name='计划任务' " + sqlLimit + " group by months");
@@ -216,7 +216,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 		String staffId = (String) map.get("staffId");
 
 		if (startTime != null && endTime != null) {
-			sql.append(" and cs.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+			sql.append(" and cs.close_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
 		if (deptId != null) {
 			sql.append(" and cs.depart_id='" + deptId + "'");
@@ -241,7 +241,7 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 		String staffId = (String) map.get("staffId");
 
 		if (startTime != null && endTime != null) {
-			sql.append(" and w.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+			sql.append(" and w.close_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
 		if (staffId != null) {
 			sql.append(" and w.staff_id='" + staffId + "'");
@@ -259,10 +259,10 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("select a.months,coalesce(a.work_time,0) work_time,coalesce(b.use_time,0) use_time from ");
-		sql.append("(select DATE_FORMAT(w.open_time,'%m') months,sum(w.work_time) work_time from work_record w");
+		sql.append("(select DATE_FORMAT(w.close_time,'%m') months,sum(w.work_time) work_time from work_record w");
 		sql.append(" where 1=1 " + sqlLimit1 + " group by months) as a left join ");
 
-		sql.append("(select DATE_FORMAT(cs.open_time,'%m') months,sum(cs.use_time) use_time from case_info cs ");
+		sql.append("(select DATE_FORMAT(cs.close_time,'%m') months,sum(cs.use_time) use_time from case_info cs ");
 		sql.append(
 				"left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
 		sql.append("where si.parent_name='计划任务' " + sqlLimit + " group by months) as b on b.months=a.months");
@@ -282,10 +282,10 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("select a.months,coalesce(a.work_time,0) work_time,coalesce(b.use_time,0) use_time from ");
-		sql.append("(select DATE_FORMAT(w.open_time,'%m') months,sum(w.work_time) work_time from work_record w");
+		sql.append("(select DATE_FORMAT(w.close_time,'%m') months,sum(w.work_time) work_time from work_record w");
 		sql.append(" where 1=1 " + sqlLimit1 + " group by months) as a left join ");
 
-		sql.append("(select DATE_FORMAT(cs.open_time,'%m') months,sum(cs.use_time) use_time from case_info cs ");
+		sql.append("(select DATE_FORMAT(cs.close_time,'%m') months,sum(cs.use_time) use_time from case_info cs ");
 		sql.append(
 				"left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort ");
 		sql.append(

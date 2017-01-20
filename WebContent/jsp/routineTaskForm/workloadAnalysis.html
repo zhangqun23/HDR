@@ -17,13 +17,13 @@
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange="">
 				</li>
 				<li><label>季度</label><select class="dfselect layoutStyle"
-					style="width: 73px" ng-model="staffWorkloadLimit.quarter" required name="quarter"
-					required><option value="{{q.id}}"
+					style="width: 73px" ng-model="staffWorkloadLimit.quarter" name="quarter"
+					><option value="{{q.id}}"
 							ng-repeat="q in quarters">{{q.type}}</option>
 				</select></li>
 				<li><label>员工</label><select class="dfselect layoutStyle"
-					style="width: 110px" ng-model="staffWorkloadLimit.staffId" required name="staffId"
-					required>
+					style="width: 110px" ng-model="staffWorkloadLimit.staffId" name="staffId"
+					>
 						<option value="">请选择</option>
 						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
 				</select></li>

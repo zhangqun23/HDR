@@ -1090,8 +1090,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				picPaths[i] = FileHelper.transPath(picNames[i], picCataPath);// 解析后的上传路径
 
 				picMap = new HashMap<String, Object>();
-				picMap.put("width", 400);
-				picMap.put("height", 960);
+				picMap.put("width", 550);
+				picMap.put("height", 920);
 				picMap.put("type", "png");
 				try {
 					SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]

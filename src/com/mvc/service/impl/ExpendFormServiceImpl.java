@@ -1043,7 +1043,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			fileName = "卫生间耗品用量分析图.docx";
 		}
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-		picMap = PictureUtil.getPicMap(picCataPath, svg);
+		picMap = PictureUtil.getHighPicMap(picCataPath, svg);
 
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
@@ -1090,8 +1090,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				picPaths[i] = FileHelper.transPath(picNames[i], picCataPath);// 解析后的上传路径
 
 				picMap = new HashMap<String, Object>();
-				picMap.put("width", 960);
-				picMap.put("height", 400);
+				picMap.put("width", 400);
+				picMap.put("height", 960);
 				picMap.put("type", "png");
 				try {
 					SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]

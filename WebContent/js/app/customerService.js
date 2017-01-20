@@ -354,6 +354,7 @@ app
 								}
 								var linenExpendAnalyseLlimit = JSON
 										.stringify(reportForm.allimit);
+								//alert(allimit.startTime);
 								services
 										.selectLinenExpendAnalyseByLlimits({
 											allimit : linenExpendAnalyseLlimit
@@ -394,69 +395,13 @@ app
 														barForm(barData,
 																"#bar1", title,
 																xAxis, yAxis);
-
-														var pieReasons=[];
-														for( var i=0;i< data.list.length;i++){
-															var s=[];
-															switch(i){
-															case 0:
-																s=['被罩',data.list[0]];
-																break;
-															case 1:
-																s=['拼尘罩',data.list[1]];
-																break;
-															case 2:
-																s=['洗衣袋',data.list[2]];
-																break;
-															case 3:
-																s=['床单',data.list[3]];
-																break;
-															case 4:
-																s=['面巾',data.list[4]];
-																break;
-															case 5:
-																s=['浴巾',data.list[5]];
-																break;
-															case 6:
-																s=['方巾',data.list[6]];
-																break;
-															case 7:
-																s=['中巾',data.list[7]];
-																break;
-															case 8:
-																s=['地巾',data.list[8]];
-																break;
-															case 9:
-																s=['浴袍',data.list[9]];
-																break;
-															case 10:
-																s=['枕套',data.list[10]];
-																break;
-															case 11:
-																s=['枕芯',data.list[11]];
-																break;
-															case 12:
-																s=['毛毯',data.list[12]];
-																break;
-															case 13:
-																s=['购物袋',data.list[13]];
-																break;
-															}
-															pieReasons.push(s);
-														}
 														$('#bar-svg')
 																.val(
 																		$(
 																				"#bar1")
 																				.highcharts()
 																				.getSVG());
-														pieChartForm("#pieChart",title1,"客房部布草使用量扇形图分析",pieReasons);
-														$('#chart1-svg')
-														.val(
-																$(
-																		"#pieChart")
-																		.highcharts()
-																		.getSVG());
+														
 													} else {
 														reportForm.listIsShow = true;
 													}

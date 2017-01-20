@@ -90,7 +90,7 @@ app.config([ '$routeProvider', function($routeProvider) {
 		templateUrl : '/HDR/jsp/customerService/washExpendForm.html',
 		controller : 'CustomerServiceController'
 	}).when('/washExpendAnalyse', {
-		templateUrl : '/HDR/jsp/customerService/roomExpendAnalyse.html',
+		templateUrl : '/HDR/jsp/customerService/washExpendAnalyse.html',
 		controller : 'CustomerServiceController'
 	})
 } ]);
@@ -354,6 +354,7 @@ app
 								}
 								var linenExpendAnalyseLlimit = JSON
 										.stringify(reportForm.allimit);
+								//alert(allimit.startTime);
 								services
 										.selectLinenExpendAnalyseByLlimits({
 											allimit : linenExpendAnalyseLlimit
@@ -400,6 +401,7 @@ app
 																				"#bar1")
 																				.highcharts()
 																				.getSVG());
+														
 													} else {
 														reportForm.listIsShow = true;
 													}
@@ -463,7 +465,7 @@ app
 										})
 										.success(
 												function(data) {
-													reportForm.typeList = data.list;
+													//reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
 
@@ -561,11 +563,11 @@ app
 										.stringify(reportForm.wrlimit);
 								services
 										.selectWashExpendAnalyseByWlimits({
-											arlimit : washExpendAnalyseWlimit
+											wrlimit : washExpendAnalyseWlimit
 										})
 										.success(
 												function(data) {
-													reportForm.typeList = data.list;
+													//reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
 
@@ -585,7 +587,7 @@ app
 														var barData = [];// 最终传入bar1中的data
 														var linenNum = [];
 														for ( var item in data.list) {
-															if (data.list[item].good_name != '') {
+															if (data.list[item].goods_name != '') {
 																xAxis
 																		.push(data.list[item].goods_name);
 																linenNum
@@ -655,15 +657,16 @@ app
 									});
 								}
 							}
-							// wq饼图公用函数
-							function chartForm(data, elementId, title, name) {
-								var bingchart = new chart({
-									data : data,
+							// wq扇形图图公用函数
+							function pieChartForm(elementId, title, dataName,
+									data) {
+								var chart1 = new Chart({
 									elementId : elementId,
 									title : title,
-									name : name
+									data : data,
+									name : dataName
 								});
-								bingchart.init();
+								chart1.init();
 							}
 							// lwt对客服务部门设置条件
 							reportForm.depWorkloadLimit = {

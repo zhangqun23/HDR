@@ -1,5 +1,6 @@
 package com.mvc.service.impl;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.base.enums.CleanType;
 import com.mvc.dao.CheckOrRobDao;
 import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.RobDetail;
@@ -22,6 +24,7 @@ import com.mvc.service.CheckOrRobService;
 import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.StringUtil;
+import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 /**
@@ -46,7 +49,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	private List<RobEfficiency> objToRobEfficiency(Iterator<Object> it) {
 		List<RobEfficiency> listGoal = new ArrayList<RobEfficiency>();
 		Object[] obj = null;
-		int no = 0;
+		int no = 1;
 		RobEfficiency robEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
@@ -86,7 +89,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	private List<RobDetail> objToRobDetail(Iterator<Object> it) {
 		List<RobDetail> listGoal = new ArrayList<RobDetail>();
 		Object[] obj = null;
-		int no = 0;
+		int no = 1;
 		RobDetail robDetail = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
@@ -94,7 +97,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robDetail.setRoomNo(obj[0].toString());
 			robDetail.setUsedTime(obj[1].toString());
 			robDetail.setGivenTime(obj[2].toString());
-			robDetail.setAuthor_name(obj[3].toString());
+			robDetail.setAuthorName(obj[3].toString());
 			robDetail.setIsBack(obj[4].toString());
 			robDetail.setCheckUsedTime(obj[5].toString());
 			robDetail.setCheckerName(obj[6].toString());
@@ -144,7 +147,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		jsonObj.put("list", useTime);// 按月平均 公式：当月任务用时总合/任务数量
 		jsonObj.put("averWorkEfficiency", averWorkEfficiency);// 所选员工全年任务用时总合/全年任务数量
 		jsonObj.put("allAverWorkEfficiency", allAverWorkEfficiency);// 所有员工全年任务用时总合/全年任务数量
-		return null;
+		return jsonObj.toString();
 	}
 
 	private float[] handelPerMonthsStaff(List<Object> list, Integer startMonth, Integer monthNum) {
@@ -245,7 +248,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -279,7 +282,65 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportRobAnalyseByLimits(Map<String, Object> map, String path, String tempPath,
+			String picPath) {
+
+		String staffName = (String) map.get("staffName");
+		String sortName = (String) map.get("sortName");
+		String year = (String) map.get("checkYear");
+		String quarter = (String) map.get("quarter");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			String fileName = "客房部员工" + sortName + "抢房效率分析.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("${staffName}", staffName);
+			contentMap.put("${sortName}", sortName);// 房间类型名称
+			if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
+				String startTime = StringUtil.quarterFirstDay(year, quarter);
+				String endTime = StringUtil.quarterLastDay(year, quarter);
+				startTime = startTime.substring(0, 10);// 保留到天
+				endTime = endTime.substring(0, 10);
+				contentMap.put("${startTime}", startTime);
+				contentMap.put("${endTime}", endTime);
+			}
+
+			// 图片相关
+			String svg1 = (String) map.get("chart1SVGStr");
+			String picName1 = null;
+			if (StringUtil.strIsNotEmpty(svg1)) {
+				picName1 = "pic1.png";
+				picPath = FileHelper.transPath(picName1, picPath);
+			}
+			Map<String, Object> picMap = null;
+			picMap = new HashMap<String, Object>();
+			picMap.put("width", 960);
+			picMap.put("height", 400);
+			picMap.put("type", "png");
+			try {
+				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为png格式，并保存到服务器
+				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			contentMap.put("${pic1}", picMap);
+
+			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {

@@ -9,7 +9,7 @@
 
 	<div>
 		<div>
-			<form action="exportDepWorkload.do" method="post"
+			<form action="exportRoomOrWashExpendPic.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
@@ -22,6 +22,8 @@
 						type="button" value="查询" ng-click="selectRoomExpendAnalyseByRlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
+					<li><input id="bar-svg" name="chartSVGStr"  type="text" class="hidden" /></li>	
+					<li><input name="expendType" type="text" class="hidden" value="0"/></li>
 				</ul>
 
 			</form>

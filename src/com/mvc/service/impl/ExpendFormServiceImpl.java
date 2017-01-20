@@ -45,7 +45,10 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	@Override
 	public List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager) {
 
-		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize());
+		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+		List<Object> listSource = expendFormDao.selectlinenPage(map, pager.getOffset(), pager.getPageSize(),
+				listCondition);
+
 		Iterator<Object> it = listSource.iterator();
 		List<LinenExpend> listGoal = objToLinenExpand(it);
 
@@ -57,24 +60,25 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<LinenExpend> listGoal = new ArrayList<LinenExpend>();
 		Object[] obj = null;
 		LinenExpend linenExpend = null;
+
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
 			linenExpend = new LinenExpend();
 			linenExpend.setRoom_id(obj[0].toString());
-			linenExpend.setBato_num(obj[1].toString());
-			linenExpend.setFacl_num(obj[2].toString());
-			linenExpend.setBesh_num(obj[3].toString());
-			linenExpend.setHato_num(obj[4].toString());
-			linenExpend.setMedo_num(obj[5].toString());
-			linenExpend.setFlto_num(obj[6].toString());
-			linenExpend.setBaro_num(obj[7].toString());
-			linenExpend.setSlba_num(obj[8].toString());
-			linenExpend.setDuto_num(obj[9].toString());
-			linenExpend.setPill_num(obj[10].toString());
-			linenExpend.setShop_num(obj[11].toString());
-			linenExpend.setLaba_num(obj[12].toString());
-			linenExpend.setPiin_num(obj[13].toString());
-			linenExpend.setBlan_num(obj[14].toString());
+			linenExpend.setSlba_num(obj[1].toString());
+			linenExpend.setDuto_num(obj[2].toString());
+			linenExpend.setLaba_num(obj[3].toString());
+			linenExpend.setBesh_num(obj[4].toString());
+			linenExpend.setFacl_num(obj[5].toString());
+			linenExpend.setBato_num(obj[6].toString());
+			linenExpend.setHato_num(obj[7].toString());
+			linenExpend.setMedo_num(obj[8].toString());
+			linenExpend.setFlto_num(obj[9].toString());
+			linenExpend.setBaro_num(obj[10].toString());
+			linenExpend.setPill_num(obj[11].toString());
+			linenExpend.setPiin_num(obj[12].toString());
+			linenExpend.setBlan_num(obj[13].toString());
+			linenExpend.setShop_num(obj[14].toString());
 
 			listGoal.add(linenExpend);
 		}
@@ -1039,7 +1043,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			fileName = "卫生间耗品用量分析图.docx";
 		}
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-		picMap = PictureUtil.getPicMap(picCataPath, svg);
+		picMap = PictureUtil.getHighPicMap(picCataPath, svg);
 
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
@@ -1086,8 +1090,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				picPaths[i] = FileHelper.transPath(picNames[i], picCataPath);// 解析后的上传路径
 
 				picMap = new HashMap<String, Object>();
-				picMap.put("width", 960);
-				picMap.put("height", 400);
+				picMap.put("width", 400);
+				picMap.put("height", 960);
 				picMap.put("type", "png");
 				try {
 					SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]

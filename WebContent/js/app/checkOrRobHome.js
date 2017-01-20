@@ -413,7 +413,7 @@ app
 															+ " " + "抢房效率分析折线图";// 折线图标题显示
 													var xAxis = [];// 横坐标显示
 													var yAxis = "抢房效率";// 纵坐标显示
-													var nowQuarter = reportForm.reaLimit.quarter;// 当前的选择季度
+													var nowQuarter = checkRob.reaLimit.quarter;// 当前的选择季度
 													var lineName = getSelectedStaff(checkRob.reaLimit.staffId)
 															+ "员工抢房效率";
 													var lineData = [];// 最终传入chart1中的data

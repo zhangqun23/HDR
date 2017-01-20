@@ -1,7 +1,5 @@
 package com.base.constants;
 
-import com.sun.jndi.url.dns.dnsURLContext;
-
 /**
  * 报表相关路径常量
  * 
@@ -54,12 +52,12 @@ public class ReportFormConstants {
 	// 卫生间易耗品分析图
 	public static final String WASHEXPENDPIC_PATH = DICTIONARY + "washExpendPic.docx";
 
-	
-	//抢房效率表
-	public static final String ROBEFFICIENCY_PATH=DICTIONARY+"robEfficiency.docx";
-	//抢房明细表
-	public static final String ROBDETAIL_PATH=DICTIONARY+"robdetail.docx";
-
+	// 抢房效率表
+	public static final String ROBEFFICIENCY_PATH = DICTIONARY + "robEfficiency.docx";
+	// 抢房明细表
+	public static final String ROBDETAIL_PATH = DICTIONARY + "robdetail.docx";
+	// 抢房效率折线图
+	public static final String ROBEFFICIENCYANALYSE_PATH = DICTIONARY + "robEfficiencyAnalyse.docx";
 
 	// 驳回率统计表
 	public static final String RejectEff_PATH = DICTIONARY + "workReject.docx";
@@ -72,6 +70,5 @@ public class ReportFormConstants {
 	public static final String ROOMWORKLOAD_PATH = DICTIONARY + "roomWorkload.docx";
 	// 导出部门对客服务类型统计
 	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
-
 
 }

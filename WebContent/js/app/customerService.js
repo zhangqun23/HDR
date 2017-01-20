@@ -308,6 +308,8 @@ app
 									alert("请选择报表类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								linenExpendFormLlimit = JSON
 										.stringify(reportForm.llimit);
 								services
@@ -317,6 +319,8 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													reportForm.linenExpendFormList = data.list;
 													pageTurn(data.totalPage, 1,
 															getLinenExpendFormByLlimits);
@@ -329,10 +333,14 @@ app
 							}
 							// wq布草统计换页函数
 							function getLinenExpendFormByLlimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								services.selectLinenExpendFormByLlimits({
 									llimit : linenExpendFormLlimit,
 									page : p
 								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
 									reportForm.linenExpendFormList = data.list;
 								});
 							}
@@ -352,6 +360,8 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var linenExpendAnalyseLlimit = JSON
 										.stringify(reportForm.allimit);
 								//alert(allimit.startTime);
@@ -361,11 +371,12 @@ app
 										})
 										.success(
 												function(data) {
-
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
-
+														
 														if (data.list.length < 15) {
 															reportForm.barSize = data.list.length * 80;
 														} else {
@@ -381,14 +392,25 @@ app
 														var yAxis = "单位:数量";// 纵坐标显示
 														var barData = [];// 最终传入bar1中的data
 														var linenNum = [];
+														var pieData=[];//饼状图传入数据
 														for ( var item in data.list) {
 															if (data.list[item].good_name != '') {
 																xAxis
 																		.push(data.list[item].goods_name);
 																linenNum
 																		.push(parseInt(data.list[item].goods_num));
+																combinePie(pieData,data.list[item].goods_name,parseInt(data.list[item].goods_num));			
 															}
 														}
+														pieChartForm("#pieChart", "客房部布草使用量饼状图分析", "布草使用占比",
+																pieData);
+														$('#pie-svg')
+														.val(
+																$(
+																		"#pieChart")
+																		.highcharts()
+																		.getSVG());
+														
 														combine(barData,
 																'布草使用数量',
 																linenNum);
@@ -428,11 +450,15 @@ app
 									alert("请选择报表类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var roomExpendFormRlimit = JSON
 										.stringify(reportForm.rlimit);
 								services.selectRoomExpendFormByRlimits({
 									rlimit : roomExpendFormRlimit
 								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
 									reportForm.roomExpendFormList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
@@ -457,6 +483,8 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var roomExpendAnalyseRlimit = JSON
 										.stringify(reportForm.arlimit);
 								services
@@ -465,6 +493,8 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													//reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
@@ -530,11 +560,15 @@ app
 									alert("请选择报表类型！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var washExpendFormWlimit = JSON
 										.stringify(reportForm.wlimit);
 								services.selectWashExpendFormByWlimits({
 									wlimit : washExpendFormWlimit
 								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
 									reportForm.washExpendFormList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
@@ -559,6 +593,8 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								var washExpendAnalyseWlimit = JSON
 										.stringify(reportForm.wrlimit);
 								services
@@ -567,6 +603,8 @@ app
 										})
 										.success(
 												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
 													//reportForm.typeList = data.list;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
@@ -872,6 +910,13 @@ app
 													}
 
 												});
+							}
+							// lwt为生成饼图拼data
+							function combinePie(da, name, data1) {
+								var ss = [];
+								ss[0] = name;
+								ss[1] = data1;
+								da.push(ss);
 							}
 							// lwt为生成条形图拼data
 							function combine(da, name, arr) {

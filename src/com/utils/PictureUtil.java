@@ -53,8 +53,8 @@ public class PictureUtil {
 		} catch (TranscoderException e1) {
 			e1.printStackTrace();
 		}
-		picMap.put("width", 400);
-		picMap.put("height", 960);
+		picMap.put("width", 550);
+		picMap.put("height", 920);
 		picMap.put("type", "png");
 		try {
 			picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));

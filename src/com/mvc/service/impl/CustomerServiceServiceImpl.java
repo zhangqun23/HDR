@@ -1,5 +1,6 @@
 package com.mvc.service.impl;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import com.utils.CollectionUtil;
 import com.utils.DoubleFloatUtil;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
+import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
@@ -111,7 +113,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		}	
 
 		sortAndWrite(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
-		sortAndWrite(listGoal, "timeOutRate", false, "timeOutRate_rank");// 超时率排名
+		sortAndWrite(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
 		// 序号
 		Iterator<HoCustomerService> itGoal = listGoal.iterator();
@@ -238,7 +240,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		}
 
 		sortAndWrite0(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
-		sortAndWrite0(listGoal, "timeOutRate", false, "timeOutRate_rank");// 超时率排名
+		sortAndWrite0(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
 
 		// 序号
 		Iterator<HouseCustomerServiceLoad> itGoal = listGoal.iterator();
@@ -366,8 +368,8 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			listGoal.add(houseCustomerServiceType);
 		}
 
-		sortAndWrite1(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
-		sortAndWrite1(listGoal, "timeOutRate", false, "timeOutRate_rank");// 超时率排名
+		sortAndWrite1(listGoal, "serviceLoad",false, "serviceLoad_rank");// 总量排名
+		sortAndWrite1(listGoal, "timeOutRate",true, "timeOutRate_rank");// 超时率排名
 
 		Iterator<HouseCustomerServiceType> itGoal = listGoal.iterator();
 		int i = 0;
@@ -409,10 +411,31 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 	// 导出部门对客服务服务类型统计表
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path, String modelPath) {
+	public ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path,String picPath, String modelPath) {
 		ResponseEntity<byte[]> byteww = null;
 		String starttime = (String) map.get("start_Time");// 开始时间
 		String endtime = (String) map.get("end_Time");// 结束时间
+		String photo=(String) map.get("photo");//图片
+		
+		//添加图片
+		String picName1 = null;
+		if (StringUtil.strIsNotEmpty(photo)) {
+			picName1 = "pic1.png";
+			picPath = FileHelper.transPath(picName1, picPath);
+		}
+		Map<String, Object> picMap = null;
+		picMap = new HashMap<String, Object>();
+		picMap.put("width", 960);
+		picMap.put("height", 400);
+		picMap.put("type", "png");
+		try {
+			SvgPngConverter.convertToPng(photo, picPath);// 图片svgCode转化为png格式，并保存到服务器
+			picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
 		List<HouseCustomerServiceType> listGoal = null;
 		WordHelper wh = new WordHelper();
 
@@ -437,6 +460,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			contentMap.put("${starttime}", starttime);
 			contentMap.put("${endtime}", endtime);
 			contentMap.put("${depart}", department);
+			contentMap.put("${photo}", photo);
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径

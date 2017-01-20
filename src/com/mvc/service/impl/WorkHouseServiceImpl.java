@@ -340,7 +340,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			}
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 1, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {

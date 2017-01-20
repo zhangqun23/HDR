@@ -39,7 +39,7 @@ public interface CustomerServiceService {
 	ResponseEntity<byte[]> exportRoomWorkload(Map<String, Object> map, String path, String modelPath);
 
 	// 导出部门对客服务服务类型统计表
-	ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path, String modelPath);
+	ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path,String picPath, String modelPath);
 
 	// 查询部门列表
 	List<DepartmentInfo> findDep();

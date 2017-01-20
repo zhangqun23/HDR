@@ -155,6 +155,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append(sqlLimit);
 		sql.append(" limit ");
 		sql.append(pager.getOffset() + "," + pager.getPageSize());
@@ -191,6 +192,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append(sqlLimit);
 
 		Query query = em.createNativeQuery(sql.toString());

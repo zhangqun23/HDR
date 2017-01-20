@@ -41,9 +41,9 @@ public class PictureUtil {
 		return picMap;
 	}
 
-	public static Map<String, Object> getHighPicMap(String picCataPath, String svg) {
+	public static Map<String, Object> getHighPicMap(String picName,String picCataPath, String svg) {
 		Map<String, Object> picMap = new HashMap<String, Object>();
-		String picName = "pic.png";
+		
 		String picPath = FileHelper.transPath(picName, picCataPath);// 解析后的上传路径
 
 		try {
@@ -53,8 +53,30 @@ public class PictureUtil {
 		} catch (TranscoderException e1) {
 			e1.printStackTrace();
 		}
-		picMap.put("width", 400);
-		picMap.put("height", 960);
+		picMap.put("width", 550);
+		picMap.put("height", 920);
+		picMap.put("type", "png");
+		try {
+			picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return picMap;
+	}
+
+	public static Map<String, Object> getSquarePicMap(String picName, String picCataPath, String svg) {
+		Map<String, Object> picMap = new HashMap<String, Object>();
+		String picPath = FileHelper.transPath(picName, picCataPath);// 解析后的上传路径
+
+		try {
+			SvgPngConverter.convertToPng(svg, picPath);// 图片svgCode转化为png格式，并保存到picPath
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (TranscoderException e1) {
+			e1.printStackTrace();
+		}
+		picMap.put("width", 500);
+		picMap.put("height", 500);
 		picMap.put("type", "png");
 		try {
 			picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));

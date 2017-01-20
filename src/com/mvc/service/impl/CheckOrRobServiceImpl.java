@@ -3,6 +3,7 @@ package com.mvc.service.impl;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,6 +51,8 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		List<RobEfficiency> listGoal = new ArrayList<RobEfficiency>();
 		Object[] obj = null;
 		int no = 1;
+		DecimalFormat fnum = new DecimalFormat("##0.00");
+
 		RobEfficiency robEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
@@ -57,9 +60,10 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robEfficiency.setAuthorName(obj[1].toString());
 			robEfficiency.setAuthorNo(obj[2].toString());
 			robEfficiency.setSumTime(obj[3].toString());
-			robEfficiency.setGivenTime(obj[4].toString());
+			robEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
 			robEfficiency.setWorkCount(obj[5].toString());
-			robEfficiency.setWorkEffeciencyAvg(obj[8].toString());
+			robEfficiency
+					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
 
 			String UsedTimeAvg = StringUtil.divide(obj[2].toString(), obj[4].toString());
 			robEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
@@ -103,7 +107,8 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robDetail.setCheckerName(obj[6].toString());
 			robDetail.setOrderNum(no + "");
 
-			robDetail.setWorkEffeciency(StringUtil.divide(obj[1].toString(), obj[2].toString()));// 效率
+			robDetail.setWorkEffeciency(
+					StringUtil.divide(Float.parseFloat(obj[1].toString()) * 100 + "", obj[2].toString()));// 效率
 
 			no++;
 

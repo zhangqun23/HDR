@@ -41,9 +41,9 @@ public class PictureUtil {
 		return picMap;
 	}
 
-	public static Map<String, Object> getHighPicMap(String picName,String picCataPath, String svg) {
+	public static Map<String, Object> getHighPicMap(String picName, String picCataPath, String svg) {
 		Map<String, Object> picMap = new HashMap<String, Object>();
-		
+
 		String picPath = FileHelper.transPath(picName, picCataPath);// 解析后的上传路径
 
 		try {

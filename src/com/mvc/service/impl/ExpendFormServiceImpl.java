@@ -224,7 +224,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_blan_num = (long) 0;
 
 		LinenExpend linenExpend = null;
-		long chu = Integer.valueOf(list.size());
+		Float chu = Float.valueOf(list.size());
 		if (chu != 0) {
 			while (it.hasNext()) {
 				linenExpend = it.next();
@@ -244,20 +244,20 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_blan_num += Integer.valueOf(linenExpend.getBlan_num());
 			}
 			avg.setOrderNum("平均");
-			avg.setBato_num(String.valueOf(sum_bato_num / chu));
-			avg.setFacl_num(String.valueOf(sum_facl_num / chu));
-			avg.setBesh_num(String.valueOf(sum_besh_num / chu));
-			avg.setHato_num(String.valueOf(sum_hato_num / chu));
-			avg.setMedo_num(String.valueOf(sum_medo_num / chu));
-			avg.setFlto_num(String.valueOf(sum_flto_num / chu));
-			avg.setBaro_num(String.valueOf(sum_baro_num / chu));
-			avg.setSlba_num(String.valueOf(sum_slba_num / chu));
-			avg.setDuto_num(String.valueOf(sum_duto_num / chu));
-			avg.setPill_num(String.valueOf(sum_pill_num / chu));
-			avg.setShop_num(String.valueOf(sum_shop_num / chu));
-			avg.setLaba_num(String.valueOf(sum_laba_num / chu));
-			avg.setPiin_num(String.valueOf(sum_piin_num / chu));
-			avg.setBlan_num(String.valueOf(sum_blan_num / chu));
+			avg.setBato_num(String.valueOf(StringUtil.save2Float(sum_bato_num / chu)));
+			avg.setFacl_num(String.valueOf(StringUtil.save2Float(sum_facl_num / chu)));
+			avg.setBesh_num(String.valueOf(StringUtil.save2Float(sum_besh_num / chu)));
+			avg.setHato_num(String.valueOf(StringUtil.save2Float(sum_hato_num / chu)));
+			avg.setMedo_num(String.valueOf(StringUtil.save2Float(sum_medo_num / chu)));
+			avg.setFlto_num(String.valueOf(StringUtil.save2Float(sum_flto_num / chu)));
+			avg.setBaro_num(String.valueOf(StringUtil.save2Float(sum_baro_num / chu)));
+			avg.setSlba_num(String.valueOf(StringUtil.save2Float(sum_slba_num / chu)));
+			avg.setDuto_num(String.valueOf(StringUtil.save2Float(sum_duto_num / chu)));
+			avg.setPill_num(String.valueOf(StringUtil.save2Float(sum_pill_num / chu)));
+			avg.setShop_num(String.valueOf(StringUtil.save2Float(sum_shop_num / chu)));
+			avg.setLaba_num(String.valueOf(StringUtil.save2Float(sum_laba_num / chu)));
+			avg.setPiin_num(String.valueOf(StringUtil.save2Float(sum_piin_num / chu)));
+			avg.setBlan_num(String.valueOf(StringUtil.save2Float(sum_blan_num / chu)));
 		}
 		return avg;
 	}
@@ -564,7 +564,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		RoomExpend avg = new RoomExpend();
 		Iterator<RoomExpend> re = list.iterator();
-		long chu = Integer.valueOf(list.size());
+		Float chu = Float.valueOf(list.size());
 
 		Long sum_umbr_num = (long) 0;
 		Long sum_coff_num = (long) 0;
@@ -641,40 +641,40 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_arel_num += Integer.valueOf(roomExpend.getArel_num());
 			}
 			avg.setOrderNum("平均");
-			avg.setUmbr_num(String.valueOf(sum_umbr_num / chu));
-			avg.setCoff_num(String.valueOf(sum_coff_num / chu));
-			avg.setSuge_num(String.valueOf(sum_suge_num / chu));
-			avg.setCoup_num(String.valueOf(sum_coup_num / chu));
-			avg.setPenc_num(String.valueOf(sum_penc_num / chu));
-			avg.setErse_num(String.valueOf(sum_erse_num / chu));
-			avg.setClca_num(String.valueOf(sum_clca_num / chu));
-			avg.setFati_num(String.valueOf(sum_fati_num / chu));
-			avg.setEnca_num(String.valueOf(sum_enca_num / chu));
-			avg.setBage_num(String.valueOf(sum_bage_num / chu));
-			avg.setTeab_num(String.valueOf(sum_teab_num / chu));
-			avg.setMeca_num(String.valueOf(sum_meca_num / chu));
-			avg.setOpbo_num(String.valueOf(sum_opbo_num / chu));
-			avg.setBlte_num(String.valueOf(sum_blte_num / chu));
-			avg.setDnds_num(String.valueOf(sum_dnds_num / chu));
-			avg.setTvca_num(String.valueOf(sum_tvca_num / chu));
-			avg.setOrel_num(String.valueOf(sum_orel_num / chu));
-			avg.setMemo_num(String.valueOf(sum_memo_num / chu));
-			avg.setCoas_num(String.valueOf(sum_coas_num / chu));
-			avg.setMatc_num(String.valueOf(sum_matc_num / chu));
-			avg.setMapp_num(String.valueOf(sum_mapp_num / chu));
-			avg.setRule_num(String.valueOf(sum_rule_num / chu));
-			avg.setStat_num(String.valueOf(sum_stat_num / chu));
-			avg.setClip_num(String.valueOf(sum_clip_num / chu));
-			avg.setBape_num(String.valueOf(sum_bape_num / chu));
-			avg.setComp_num(String.valueOf(sum_comp_num / chu));
-			avg.setLali_num(String.valueOf(sum_lali_num / chu));
-			avg.setLosu_num(String.valueOf(sum_losu_num / chu));
-			avg.setShpa_num(String.valueOf(sum_shpa_num / chu));
-			avg.setAnma_num(String.valueOf(sum_anma_num / chu));
-			avg.setGrte_num(String.valueOf(sum_grte_num / chu));
-			avg.setChsl_num(String.valueOf(sum_chsl_num / chu));
-			avg.setCocl_num(String.valueOf(sum_cocl_num / chu));
-			avg.setArel_num(String.valueOf(sum_arel_num / chu));
+			avg.setUmbr_num(String.valueOf(StringUtil.save2Float(sum_umbr_num / chu)));
+			avg.setCoff_num(String.valueOf(StringUtil.save2Float(sum_coff_num / chu)));
+			avg.setSuge_num(String.valueOf(StringUtil.save2Float(sum_suge_num / chu)));
+			avg.setCoup_num(String.valueOf(StringUtil.save2Float(sum_coup_num / chu)));
+			avg.setPenc_num(String.valueOf(StringUtil.save2Float(sum_penc_num / chu)));
+			avg.setErse_num(String.valueOf(StringUtil.save2Float(sum_erse_num / chu)));
+			avg.setClca_num(String.valueOf(StringUtil.save2Float(sum_clca_num / chu)));
+			avg.setFati_num(String.valueOf(StringUtil.save2Float(sum_fati_num / chu)));
+			avg.setEnca_num(String.valueOf(StringUtil.save2Float(sum_enca_num / chu)));
+			avg.setBage_num(String.valueOf(StringUtil.save2Float(sum_bage_num / chu)));
+			avg.setTeab_num(String.valueOf(StringUtil.save2Float(sum_teab_num / chu)));
+			avg.setMeca_num(String.valueOf(StringUtil.save2Float(sum_meca_num / chu)));
+			avg.setOpbo_num(String.valueOf(StringUtil.save2Float(sum_opbo_num / chu)));
+			avg.setBlte_num(String.valueOf(StringUtil.save2Float(sum_blte_num / chu)));
+			avg.setDnds_num(String.valueOf(StringUtil.save2Float(sum_dnds_num / chu)));
+			avg.setTvca_num(String.valueOf(StringUtil.save2Float(sum_tvca_num / chu)));
+			avg.setOrel_num(String.valueOf(StringUtil.save2Float(sum_orel_num / chu)));
+			avg.setMemo_num(String.valueOf(StringUtil.save2Float(sum_memo_num / chu)));
+			avg.setCoas_num(String.valueOf(StringUtil.save2Float(sum_coas_num / chu)));
+			avg.setMatc_num(String.valueOf(StringUtil.save2Float(sum_matc_num / chu)));
+			avg.setMapp_num(String.valueOf(StringUtil.save2Float(sum_mapp_num / chu)));
+			avg.setRule_num(String.valueOf(StringUtil.save2Float(sum_rule_num / chu)));
+			avg.setStat_num(String.valueOf(StringUtil.save2Float(sum_stat_num / chu)));
+			avg.setClip_num(String.valueOf(StringUtil.save2Float(sum_clip_num / chu)));
+			avg.setBape_num(String.valueOf(StringUtil.save2Float(sum_bape_num / chu)));
+			avg.setComp_num(String.valueOf(StringUtil.save2Float(sum_comp_num / chu)));
+			avg.setLali_num(String.valueOf(StringUtil.save2Float(sum_lali_num / chu)));
+			avg.setLosu_num(String.valueOf(StringUtil.save2Float(sum_losu_num / chu)));
+			avg.setShpa_num(String.valueOf(StringUtil.save2Float(sum_shpa_num / chu)));
+			avg.setAnma_num(String.valueOf(StringUtil.save2Float(sum_anma_num / chu)));
+			avg.setGrte_num(String.valueOf(StringUtil.save2Float(sum_grte_num / chu)));
+			avg.setChsl_num(String.valueOf(StringUtil.save2Float(sum_chsl_num / chu)));
+			avg.setCocl_num(String.valueOf(StringUtil.save2Float(sum_cocl_num / chu)));
+			avg.setArel_num(String.valueOf(StringUtil.save2Float(sum_arel_num / chu)));
 		}
 
 		return avg;
@@ -888,7 +888,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		WashExpend avg = new WashExpend();
 		Iterator<WashExpend> it = list.iterator();
-		long chu = Integer.valueOf(list.size());
+		Float chu = Float.valueOf(list.size());
 
 		Long sum_toth_num = (long) 0;
 		Long sum_ropa_num = (long) 0;
@@ -939,27 +939,27 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_dete_num += Integer.valueOf(washExpend.getDete_num());
 			}
 			avg.setOrderNum("平均");
-			avg.setToth_num(String.valueOf(sum_toth_num / chu));
-			avg.setRopa_num(String.valueOf(sum_ropa_num / chu));
-			avg.setRins_num(String.valueOf(sum_rins_num / chu));
-			avg.setBafo_num(String.valueOf(sum_bafo_num / chu));
-			avg.setHaco_num(String.valueOf(sum_haco_num / chu));
-			avg.setShge_num(String.valueOf(sum_shge_num / chu));
-			avg.setCapa_num(String.valueOf(sum_capa_num / chu));
-			avg.setGarb_num(String.valueOf(sum_garb_num / chu));
-			avg.setPaex_num(String.valueOf(sum_paex_num / chu));
-			avg.setPeep_num(String.valueOf(sum_peep_num / chu));
-			avg.setShca_num(String.valueOf(sum_shca_num / chu));
-			avg.setShav_num(String.valueOf(sum_shav_num / chu));
-			avg.setComb_num(String.valueOf(sum_comb_num / chu));
-			avg.setShcl_num(String.valueOf(sum_shcl_num / chu));
-			avg.setSoap_num(String.valueOf(sum_soap_num / chu));
-			avg.setNacl_num(String.valueOf(sum_nacl_num / chu));
-			avg.setFlow_num(String.valueOf(sum_flow_num / chu));
-			avg.setBasa_num(String.valueOf(sum_basa_num / chu));
-			avg.setScpa_num(String.valueOf(sum_scpa_num / chu));
-			avg.setRugl_num(String.valueOf(sum_rugl_num / chu));
-			avg.setDete_num(String.valueOf(sum_dete_num / chu));
+			avg.setToth_num(String.valueOf(StringUtil.save2Float(sum_toth_num / chu)));
+			avg.setRopa_num(String.valueOf(StringUtil.save2Float(sum_ropa_num / chu)));
+			avg.setRins_num(String.valueOf(StringUtil.save2Float(sum_rins_num / chu)));
+			avg.setBafo_num(String.valueOf(StringUtil.save2Float(sum_bafo_num / chu)));
+			avg.setHaco_num(String.valueOf(StringUtil.save2Float(sum_haco_num / chu)));
+			avg.setShge_num(String.valueOf(StringUtil.save2Float(sum_shge_num / chu)));
+			avg.setCapa_num(String.valueOf(StringUtil.save2Float(sum_capa_num / chu)));
+			avg.setGarb_num(String.valueOf(StringUtil.save2Float(sum_garb_num / chu)));
+			avg.setPaex_num(String.valueOf(StringUtil.save2Float(sum_paex_num / chu)));
+			avg.setPeep_num(String.valueOf(StringUtil.save2Float(sum_peep_num / chu)));
+			avg.setShca_num(String.valueOf(StringUtil.save2Float(sum_shca_num / chu)));
+			avg.setShav_num(String.valueOf(StringUtil.save2Float(sum_shav_num / chu)));
+			avg.setComb_num(String.valueOf(StringUtil.save2Float(sum_comb_num / chu)));
+			avg.setShcl_num(String.valueOf(StringUtil.save2Float(sum_shcl_num / chu)));
+			avg.setSoap_num(String.valueOf(StringUtil.save2Float(sum_soap_num / chu)));
+			avg.setNacl_num(String.valueOf(StringUtil.save2Float(sum_nacl_num / chu)));
+			avg.setFlow_num(String.valueOf(StringUtil.save2Float(sum_flow_num / chu)));
+			avg.setBasa_num(String.valueOf(StringUtil.save2Float(sum_basa_num / chu)));
+			avg.setScpa_num(String.valueOf(StringUtil.save2Float(sum_scpa_num / chu)));
+			avg.setRugl_num(String.valueOf(StringUtil.save2Float(sum_rugl_num / chu)));
+			avg.setDete_num(String.valueOf(StringUtil.save2Float(sum_dete_num / chu)));
 		}
 		return avg;
 	}

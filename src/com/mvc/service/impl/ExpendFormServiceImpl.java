@@ -1037,13 +1037,14 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
 		String expendType = map.get("expendType");
+		String picName = "pic.png";
 		if (expendType.equals("0")) {
 			fileName = "房间耗品用量分析图.docx";
 		} else {
 			fileName = "卫生间耗品用量分析图.docx";
 		}
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-		picMap = PictureUtil.getHighPicMap(picCataPath, svg);
+		picMap = PictureUtil.getHighPicMap(picName, picCataPath, svg);
 
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
@@ -1079,25 +1080,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 		// 图片相关
 		String[] svgs = new String[2];
-		svgs[0] = (String) map.get("svg1");
-		svgs[1] = (String) map.get("svg2");
+		svgs[0] = (String) map.get("svg2");
+		svgs[1] = (String) map.get("svg1");
 		String[] picNames = new String[2];
-		String[] picPaths = new String[2];
 
 		for (int i = 0; i < 2; i++) {
 			if (StringUtil.strIsNotEmpty(svgs[i])) {
 				picNames[i] = "pic" + i + ".png";
-				picPaths[i] = FileHelper.transPath(picNames[i], picCataPath);// 解析后的上传路径
-
-				picMap = new HashMap<String, Object>();
-				picMap.put("width", 400);
-				picMap.put("height", 960);
-				picMap.put("type", "png");
-				try {
-					SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]
-					picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPaths[i]), true));
-				} catch (Exception ex) {
-					ex.printStackTrace();
+				if (i == 0) {
+					picMap = PictureUtil.getHighPicMap(picNames[i], picCataPath, svgs[i]);
+				} else {
+					picMap = PictureUtil.getSquarePicMap(picNames[i], picCataPath, svgs[i]);
 				}
 				contentMap.put("${pic" + i + "}", picMap);
 			}

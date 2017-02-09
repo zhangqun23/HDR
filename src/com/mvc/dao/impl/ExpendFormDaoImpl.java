@@ -77,7 +77,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 				if (i == 0) {
 					sql.append("(select distinct temp_list.room_no from temp_list left join goods_info on goods_info.goods_id=temp_list.goods_id ");
 					sql.append(" left join case_info on case_info.call_id=temp_list.call_id ");
-					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' order by temp_list.room_no " + sqlLimit + " ) as a ");
+					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' " + sqlLimit + " order by temp_list.room_no asc ) as a ");
 					sql.append(" left join (select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
 					sql.append(
 							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
@@ -412,7 +412,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 				if (i == 0) {
 					sql.append("(select distinct temp_list.room_no from temp_list left join goods_info on goods_info.goods_id=temp_list.goods_id ");
 					sql.append(" left join case_info on case_info.call_id=temp_list.call_id ");
-					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0301' order by temp_list.room_no " + sqlLimit + " ) as a ");
+					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0301' " + sqlLimit + " order by temp_list.room_no asc ) as a ");
 					sql.append(" left join (select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
 					sql.append(
 							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
@@ -472,7 +472,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 					if (i == 0) {
 						sql.append("(select distinct temp_list.room_no from temp_list left join goods_info on goods_info.goods_id=temp_list.goods_id ");
 						sql.append(" left join case_info on case_info.call_id=temp_list.call_id ");
-						sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0302' order by temp_list.room_no " + sqlLimit + " ) as a ");
+						sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0302' " + sqlLimit + " order by temp_list.room_no asc ) as a ");
 						sql.append(" left join (select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
 						sql.append(
 								" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");

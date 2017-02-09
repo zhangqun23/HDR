@@ -1,6 +1,5 @@
 package com.mvc.service.impl;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.PictureUtil;
 import com.utils.StringUtil;
-import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 /**
@@ -108,7 +106,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = expendFormDao.selectlinenExpend(map);
+			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+			List<Object> listSource = expendFormDao.selectlinenExpend(map, listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<LinenExpend> listGoal = objToLinenExpand(it);
 
@@ -325,9 +324,12 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	// 房间耗品统计
 	@Override
-	public List<RoomExpend> selectRoomExpend(Map<String, Object> map) {
+	public List<RoomExpend> selectRoomExpend(Map<String, Object> map, Pager pager) {
 
-		List<Object> listSource = expendFormDao.selectroomExpend(map);
+		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		List<Object> listSource = expendFormDao.selectroomPage(map, pager.getOffset(), pager.getPageSize(),
+				listCondition);
+		
 		Iterator<Object> it = listSource.iterator();
 		List<RoomExpend> listGoal = objToRoomExpand(it);
 
@@ -405,7 +407,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = expendFormDao.selectroomExpend(map);
+			List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+			List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<RoomExpend> listGoal = objToRoomExpand(it);
 
@@ -700,9 +703,12 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	// 卫生间耗品统计
 	@Override
-	public List<WashExpend> selectWashExpend(Map<String, Object> map) {
+	public List<WashExpend> selectWashExpend(Map<String, Object> map, Pager pager) {
 
-		List<Object> listSource = expendFormDao.selectwashExpend(map);
+		List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+		List<Object> listSource = expendFormDao.selectwashPage(map, pager.getOffset(), pager.getPageSize(),
+				listCondition);
+		
 		Iterator<Object> it = listSource.iterator();
 		List<WashExpend> listGoal = objToWashExpand(it);
 
@@ -738,6 +744,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			washExpend.setScpa_num(obj[19].toString());
 			washExpend.setRugl_num(obj[20].toString());
 			washExpend.setDete_num(obj[21].toString());
+			washExpend.setThim_num(obj[22].toString());
+			washExpend.setBacl_num(obj[23].toString());
+			washExpend.setTocl_num(obj[24].toString());
+			washExpend.setBabr_num(obj[25].toString());
+			washExpend.setClbr_num(obj[26].toString());
 
 			listGoal.add(washExpend);
 		}
@@ -751,7 +762,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			washExpend = (WashExpend) itGoal.next();
 			washExpend.setOrderNum(String.valueOf(i));
 		}
-		// System.out.println(listGoal.size());
 
 		return listGoal;
 	}
@@ -768,7 +778,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = expendFormDao.selectwashExpend(map);
+			List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+			List<Object> listSource = expendFormDao.selectwashExpend(map,listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<WashExpend> listGoal = objToWashExpand(it);
 
@@ -826,6 +837,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_scpa_num = (long) 0;
 		Long sum_rugl_num = (long) 0;
 		Long sum_dete_num = (long) 0;
+		Long sum_thim_num = (long) 0;
+		Long sum_bacl_num = (long) 0;
+		Long sum_tocl_num = (long) 0;
+		Long sum_babr_num = (long) 0;
+		Long sum_clbr_num = (long) 0;
 
 		WashExpend washExpend = null;
 		while (it.hasNext()) {
@@ -851,6 +867,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_scpa_num += Integer.valueOf(washExpend.getScpa_num());
 			sum_rugl_num += Integer.valueOf(washExpend.getRugl_num());
 			sum_dete_num += Integer.valueOf(washExpend.getDete_num());
+			sum_thim_num += Integer.valueOf(washExpend.getThim_num());
+			sum_bacl_num += Integer.valueOf(washExpend.getBacl_num());
+			sum_tocl_num += Integer.valueOf(washExpend.getTocl_num());
+			sum_babr_num += Integer.valueOf(washExpend.getBabr_num());
+			sum_clbr_num += Integer.valueOf(washExpend.getClbr_num());
 		}
 		sum.setOrderNum("合计");
 		sum.setToth_num(String.valueOf(sum_toth_num));
@@ -874,6 +895,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		sum.setScpa_num(String.valueOf(sum_scpa_num));
 		sum.setRugl_num(String.valueOf(sum_rugl_num));
 		sum.setDete_num(String.valueOf(sum_dete_num));
+		sum.setThim_num(String.valueOf(sum_thim_num));
+		sum.setBacl_num(String.valueOf(sum_bacl_num));
+		sum.setTocl_num(String.valueOf(sum_tocl_num));
+		sum.setBabr_num(String.valueOf(sum_babr_num));
+		sum.setClbr_num(String.valueOf(sum_clbr_num));
 
 		return sum;
 	}
@@ -911,6 +937,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_scpa_num = (long) 0;
 		Long sum_rugl_num = (long) 0;
 		Long sum_dete_num = (long) 0;
+		Long sum_thim_num = (long) 0;
+		Long sum_bacl_num = (long) 0;
+		Long sum_tocl_num = (long) 0;
+		Long sum_babr_num = (long) 0;
+		Long sum_clbr_num = (long) 0;
 
 		WashExpend washExpend = null;
 		if (chu != 0) {
@@ -937,6 +968,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_scpa_num += Integer.valueOf(washExpend.getScpa_num());
 				sum_rugl_num += Integer.valueOf(washExpend.getRugl_num());
 				sum_dete_num += Integer.valueOf(washExpend.getDete_num());
+				sum_thim_num += Integer.valueOf(washExpend.getThim_num());
+				sum_bacl_num += Integer.valueOf(washExpend.getBacl_num());
+				sum_tocl_num += Integer.valueOf(washExpend.getTocl_num());
+				sum_babr_num += Integer.valueOf(washExpend.getBabr_num());
+				sum_clbr_num += Integer.valueOf(washExpend.getClbr_num());
 			}
 			avg.setOrderNum("平均");
 			avg.setToth_num(String.valueOf(StringUtil.save2Float(sum_toth_num / chu)));
@@ -960,6 +996,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			avg.setScpa_num(String.valueOf(StringUtil.save2Float(sum_scpa_num / chu)));
 			avg.setRugl_num(String.valueOf(StringUtil.save2Float(sum_rugl_num / chu)));
 			avg.setDete_num(String.valueOf(StringUtil.save2Float(sum_dete_num / chu)));
+			avg.setThim_num(String.valueOf(StringUtil.save2Float(sum_thim_num / chu)));
+			avg.setBacl_num(String.valueOf(StringUtil.save2Float(sum_bacl_num / chu)));
+			avg.setTocl_num(String.valueOf(StringUtil.save2Float(sum_tocl_num / chu)));
+			avg.setBabr_num(String.valueOf(StringUtil.save2Float(sum_babr_num / chu)));
+			avg.setClbr_num(String.valueOf(StringUtil.save2Float(sum_clbr_num / chu)));
 		}
 		return avg;
 	}
@@ -1014,10 +1055,10 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		return listGoal;
 	}
 
-	// 查询合同总条数
+	// 查询布草总条数
 	@Override
-	public Long countTotal(Map<String, Object> map) {
-		return expendFormDao.countTotal(map);
+	public Long countlinenTotal(Map<String, Object> map) {
+		return expendFormDao.countlinenTotal(map);
 	}
 
 	/********** zjn添加 **********/
@@ -1110,5 +1151,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		}
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
+	}
+		
+	// 查询房间耗品总条数
+	@Override
+	public Long countroomTotal(Map<String, Object> map) {
+		return expendFormDao.countroomTotal(map);
+	}
+
+	// 查询卫生间耗品总条数
+	@Override
+	public Long countwashTotal(Map<String, Object> map) {
+		return expendFormDao.countwashTotal(map);
 	}
 }

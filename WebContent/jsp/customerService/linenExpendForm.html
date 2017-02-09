@@ -1,7 +1,9 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">对客服务/布草统计</a></li>
+		<li><a href="">首页</a></li>
+		<li><a href="">对客服务统计</a></li>
+		<li><a href="">布草统计</a></li>
 	</ul>
 </div>
 
@@ -14,10 +16,10 @@
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="llimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""><label>—</label><input
 						type="text" name="endTime" ng-model="llimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
 						style="width: 140px" ng-model="llimit.formType" name="formType"
 						id="linenFormType" ng-change="getFormNameByNo()" required>

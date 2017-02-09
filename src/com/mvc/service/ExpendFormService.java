@@ -26,13 +26,19 @@ public interface ExpendFormService {
 	ResponseEntity<byte[]> exportLinenExpendForm(Map<String, Object> map, String path, String tempPath);
 
 	// 查询布草总条数
-	Long countTotal(Map<String, Object> map);
+	Long countlinenTotal(Map<String, Object> map);
+
+	// 查询房间耗品总条数
+	Long countroomTotal(Map<String, Object> map);
+
+	// 查询卫生间耗品总条数
+	Long countwashTotal(Map<String, Object> map);
 
 	// 布草统计分析
 	List<ExpendAnalyse> selectLinenExpendAnalyse(Map<String, Object> map);
 
-	// 房间耗品统计
-	List<RoomExpend> selectRoomExpend(Map<String, Object> map);
+	// 房间耗品统计分页
+	List<RoomExpend> selectRoomExpend(Map<String, Object> map, Pager pager);
 
 	// 导出房间耗品使用量统计表
 	ResponseEntity<byte[]> exportRoomExpendForm(Map<String, Object> map, String path, String tempPath);
@@ -40,8 +46,8 @@ public interface ExpendFormService {
 	// 房间耗品统计分析
 	List<ExpendAnalyse> selectRoomExpendAnalyse(Map<String, Object> map);
 
-	// 卫生间耗品统计
-	List<WashExpend> selectWashExpend(Map<String, Object> map);
+	// 卫生间耗品统计分页
+	List<WashExpend> selectWashExpend(Map<String, Object> map, Pager pager);
 
 	// 导出卫生间耗品使用量统计表
 	ResponseEntity<byte[]> exportWashExpendForm(Map<String, Object> map, String path, String tempPath);

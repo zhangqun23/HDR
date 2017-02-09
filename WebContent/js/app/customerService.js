@@ -364,7 +364,6 @@ app
 								$(".tipLoading").fadeIn(200);
 								var linenExpendAnalyseLlimit = JSON
 										.stringify(reportForm.allimit);
-								//alert(allimit.startTime);
 								services
 										.selectLinenExpendAnalyseByLlimits({
 											allimit : linenExpendAnalyseLlimit
@@ -452,19 +451,35 @@ app
 								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								var roomExpendFormRlimit = JSON
+								roomExpendFormRlimit = JSON
 										.stringify(reportForm.rlimit);
 								services.selectRoomExpendFormByRlimits({
-									rlimit : roomExpendFormRlimit
+									rlimit : roomExpendFormRlimit,
+									page : nowPage
 								}).success(function(data) {
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.roomExpendFormList = data.list;
+									pageTurn(data.totalPage, 1,
+											getRoomExpendFormByRlimits);
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
 									}
+								});
+							}
+							// wq房间耗品统计换页函数
+							function getRoomExpendFormByRlimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services.selectRoomExpendFormByRlimits({
+									rlimit : roomExpendFormRlimit,
+									page : p
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.roomExpendFormList = data.list;
 								});
 							}
 							// wq根据条件查找房间耗品分析
@@ -485,7 +500,7 @@ app
 								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								var roomExpendAnalyseRlimit = JSON
+								roomExpendAnalyseRlimit = JSON
 										.stringify(reportForm.arlimit);
 								services
 										.selectRoomExpendAnalyseByRlimits({
@@ -562,19 +577,35 @@ app
 								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								var washExpendFormWlimit = JSON
+								washExpendFormWlimit = JSON
 										.stringify(reportForm.wlimit);
 								services.selectWashExpendFormByWlimits({
-									wlimit : washExpendFormWlimit
+									wlimit : washExpendFormWlimit,
+									page : nowPage
 								}).success(function(data) {
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.washExpendFormList = data.list;
+									pageTurn(data.totalPage, 1,
+											getWashExpendFormByWlimits);
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
 									}
+								});
+							}
+							// wq卫生间耗品统计换页函数
+							function getWashExpendFormByWlimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services.selectWashExpendFormByWlimits({
+									wlimit : washExpendFormWlimit,
+									page : p
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.washExpendFormList = data.list;
 								});
 							}
 							// wq根据条件查找卫生间耗品分析

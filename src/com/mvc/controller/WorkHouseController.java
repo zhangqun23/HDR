@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.service.WorkHouseService;
+import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -62,7 +64,7 @@ public class WorkHouseController {
 	 * @return
 	 */
 	@RequestMapping("/exportWorkHouseBylimits.do")
-	public ResponseEntity<byte[]> exportWorkHouse(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportWorkHouse(HttpServletRequest request, HttpServletResponse response) {
 		String roomType = null;
 		String sortName = null;
 		String startTime = null;
@@ -90,6 +92,7 @@ public class WorkHouseController {
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKHOUSE_PATH);// 模板路径
 		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path, tempPath);
 
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -196,7 +199,8 @@ public class WorkHouseController {
 	 * @return
 	 */
 	@RequestMapping("/exportUserWorkHouseBylimits.do")
-	public ResponseEntity<byte[]> exportUserWorkHouseByLimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportUserWorkHouseByLimits(HttpServletRequest request,
+			HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String sortName = null;
@@ -236,6 +240,7 @@ public class WorkHouseController {
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouseAna(map, path, tempPath, picPath);
 
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -255,7 +260,6 @@ public class WorkHouseController {
 		List<WorkEfficiency> list = workHouseService.selectWorkEffByLimits(map);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
-		System.out.println("工作效率：" + jsonObject.toString());
 		return jsonObject.toString();
 	}
 
@@ -308,7 +312,7 @@ public class WorkHouseController {
 	 * @return
 	 */
 	@RequestMapping("/exportWorkEfficiencyBylimits.do")
-	public ResponseEntity<byte[]> exportWorkEffByLimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportWorkEffByLimits(HttpServletRequest request, HttpServletResponse response) {
 		String startTime = null;
 		String endTime = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
@@ -326,6 +330,7 @@ public class WorkHouseController {
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFF_PATH);// 模板路径
 		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffByLimits(map, path, tempPath);
 
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -336,7 +341,7 @@ public class WorkHouseController {
 	 * @return
 	 */
 	@RequestMapping("/exportUserWorkEfficiencyBylimits.do")
-	public ResponseEntity<byte[]> exportUserWorkEffByLimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportUserWorkEffByLimits(HttpServletRequest request, HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String staffName = null;
@@ -371,6 +376,7 @@ public class WorkHouseController {
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffAna(map, path, tempPath, picPath);
 
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 

@@ -1,5 +1,6 @@
 package com.mvc.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,80 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
+
+	// 布草消耗分页
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectlinenPage(Map<String, Object> map, Integer offset, Integer end,
+			List<Integer> listCondition) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = linenExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select a.room_no," + getSelSQL(listCondition) + " from ");
+		sql.append(getSizeSQL(listCondition, sqlLimit));
+		sql.append(" limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("offset", offset).setParameter("end", end);
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	/**
+	 * 获取查询条件SQL
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private String getSelSQL(List<Integer> list) {
+		StringBuilder sql = new StringBuilder();
+		for (int i = 0; i < list.size(); i++) {
+			sql.append("coalesce(a" + i + ".num,0),");
+		}
+		return sql.toString().substring(0, sql.toString().length() - 1);
+	}
+
+	/**
+	 * 获取查询字段SQL
+	 * 
+	 * @param list
+	 * @param sqlLimit
+	 * @return
+	 */
+	private String getSizeSQL(List<Integer> list, String sqlLimit) {
+		StringBuilder sql = new StringBuilder();
+		String sqlStr = null;
+		if (list != null) {
+			Integer size = list.size();
+			for (int i = 0; i < size; i++) {
+				if (i == 0) {
+					sql.append("(select distinct temp_list.room_no from temp_list left join goods_info on goods_info.goods_id=temp_list.goods_id ");
+					sql.append(" left join case_info on case_info.call_id=temp_list.call_id ");
+					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' order by temp_list.room_no " + sqlLimit + " ) as a ");
+					sql.append(" left join (select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
+					sql.append(
+							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
+					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+					sql.append(" where call_info.customer_service_flag='1' and Goods_Name is not null and ");
+					sql.append(" goods_info.goods_id=" + list.get(i) + sqlLimit);
+					sql.append(" group by call_info.room_id) as a0 ");
+					sql.append(" on a.room_no=a0.room_id left join ");
+				} else {
+					sql.append("(select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
+					sql.append(
+							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
+					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+					sql.append(" where call_info.customer_service_flag='1' and Goods_Name is not null and ");
+					sql.append(" goods_info.goods_id=" + list.get(i) + sqlLimit);
+					sql.append(" group by call_info.room_id) as a" + i);
+					sql.append(" on a" + i + ".room_id=a.room_no left join ");
+				}
+			}
+			sqlStr = sql.toString().substring(0, sql.toString().length() - 10);
+		}
+		return sqlStr;
+	}
 
 	// 查询布草消耗
 	@SuppressWarnings("unchecked")
@@ -161,31 +236,32 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		}
 		return sql.toString();
 	}
-	
-	//布草消耗分析
+
+	// 布草消耗分析
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectLinenExpendAnalyse(Map<String, Object> map) {
-		
+
 		EntityManager em = emf.createEntityManager();
 		String sqlLimit = expendAnalyseSQL(map);
-		
+
 		StringBuilder sql = new StringBuilder();
 		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
 		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
 		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
 		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
-		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
-		sql.append("goods_info.Goods_id>'408' and goods_info.Goods_id<'434' " + sqlLimit);
+		sql.append(" left  join goods_type on goods_type.Goods_TypeId=goods_info.Goods_Typeid");
+		sql.append(" where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append(" goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' " + sqlLimit);
 		sql.append("group by temp_list.goods_id ");
-		
+
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
 		System.out.println(list);
 		return list;
 	}
-	
+
 	// 布草统计分析SQL条件
 	private String expendAnalyseSQL(Map<String, Object> map) {
 		StringBuilder sql = new StringBuilder();
@@ -199,6 +275,26 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return sql.toString();
 	}
 
+	// 分页
+	@Override
+	public Long countTotal(Map<String, Object> map) {
+
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = linenExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(distinct(call_info.room_id)) from temp_list left join ");
+		sql.append("call_info on temp_list.call_id=call_info.call_id ");
+		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
+		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append("goods_info.Goods_id>'408' and goods_info.Goods_id<'434' " + sqlLimit);
+
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		em.close();
+		return totalRow.longValue();
+	}
 
 	// 查询房间耗品消耗
 	@SuppressWarnings("unchecked")
@@ -480,21 +576,22 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return sql.toString();
 	}
 
-	//房间耗品消耗分析
+	// 房间耗品消耗分析
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectRoomExpendAnalyse(Map<String, Object> map) {
-		
+
 		EntityManager em = emf.createEntityManager();
 		String sqlLimit = expendAnalyseSQL(map);
-			
+
 		StringBuilder sql = new StringBuilder();
 		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
 		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
 		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
 		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
 		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
-		sql.append("goods_info.Goods_id in (553,444,389,390,388,379,453,551,553,548,549,550,563,547,502,491,455,452,380,454,  ");
+		sql.append(
+				"goods_info.Goods_id in (553,444,389,390,388,379,453,551,553,548,549,550,563,547,502,491,455,452,380,454,  ");
 		sql.append("501,495,383,493,487,486,484,485,492,490,382,381,496,470) " + sqlLimit);
 		sql.append("group by temp_list.goods_id ");
 
@@ -504,8 +601,8 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		System.out.println(list);
 		return list;
 	}
-	
-	//卫生间耗品
+
+	// 卫生间耗品
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectwashExpend(Map<String, Object> map) {
@@ -514,100 +611,166 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		String sqlLimit = washExpendSQL(map);
 
 		StringBuilder sql = new StringBuilder();
-		sql.append("select a.room_no,coalesce(a.num,0),coalesce(b.num1,0),coalesce(c.num3,0),coalesce(d.num4,0),coalesce(e.num5,0),coalesce(f.num6,0), ");
-		sql.append(" coalesce(g.num7,0),coalesce(h.num8,0),coalesce(i.num9,0),coalesce(j.num10,0),coalesce(k.num11,0),coalesce(l.num12,0),coalesce(m.num13,0), ");
-		sql.append(" coalesce(n.num14,0),coalesce(o.num15,0),coalesce(p.num16,0),coalesce(q.num17,0),coalesce(r.num18,0),coalesce(s.num19,0),coalesce(t.num20,0),coalesce(u.num21,0) ");
-        sql.append(" from (select room_info.room_no,sum(temp_list.num) num from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=394 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as a left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num1 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=401 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as b on b.room_no=a.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num3 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=457 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as c on c.room_no=b.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num4 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=458 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as d on d.room_no=c.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num5 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=459 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as e on e.room_no=d.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num6 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=460 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as f on f.room_no=d.room_no left join ");
-        sql.append("  (select room_info.room_no,sum(temp_list.num) num7 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=481 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as g on g.room_no=f.room_no left join ");
-        sql.append("  (select room_info.room_no,sum(temp_list.num) num8 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=482 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as h on h.room_no=g.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num9 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=445 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as i on i.room_no=h.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num10 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=456 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as j on j.room_no=i.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num11 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=448 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as k on k.room_no=j.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num12 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=451 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as l on l.room_no=k.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num13 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=446 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as m on m.room_no=l.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num14 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=447 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as n on n.room_no=m.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num15 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=565 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as o on o.room_no=n.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num16 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=450 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as p on p.room_no=o.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num17 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=461 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as q on q.room_no=p.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num18 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=462 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as r on r.room_no=q.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num19 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=476 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as s on s.room_no=r.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num20 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=478 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as t on t.room_no=s.room_no left join ");
-        sql.append(" (select room_info.room_no,sum(temp_list.num) num21 from room_info left join call_info on call_info.room_id=room_info.room_id ");
-        sql.append(" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
-        sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=473 "+ sqlLimit);
-        sql.append(" group by room_info.room_id,temp_list.goods_id) as u on u.room_no=t.room_no ");
+		sql.append(
+				"select a.room_no,coalesce(a.num,0),coalesce(b.num1,0),coalesce(c.num3,0),coalesce(d.num4,0),coalesce(e.num5,0),coalesce(f.num6,0), ");
+		sql.append(
+				" coalesce(g.num7,0),coalesce(h.num8,0),coalesce(i.num9,0),coalesce(j.num10,0),coalesce(k.num11,0),coalesce(l.num12,0),coalesce(m.num13,0), ");
+		sql.append(
+				" coalesce(n.num14,0),coalesce(o.num15,0),coalesce(p.num16,0),coalesce(q.num17,0),coalesce(r.num18,0),coalesce(s.num19,0),coalesce(t.num20,0),coalesce(u.num21,0) ");
+		sql.append(
+				" from (select room_info.room_no,sum(temp_list.num) num from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=394 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as a left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num1 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=401 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as b on b.room_no=a.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num3 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=457 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as c on c.room_no=b.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num4 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=458 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as d on d.room_no=c.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num5 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=459 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as e on e.room_no=d.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num6 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=460 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as f on f.room_no=d.room_no left join ");
+		sql.append(
+				"  (select room_info.room_no,sum(temp_list.num) num7 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=481 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as g on g.room_no=f.room_no left join ");
+		sql.append(
+				"  (select room_info.room_no,sum(temp_list.num) num8 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=482 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as h on h.room_no=g.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num9 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=445 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as i on i.room_no=h.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num10 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=456 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as j on j.room_no=i.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num11 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=448 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as k on k.room_no=j.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num12 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=451 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as l on l.room_no=k.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num13 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=446 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as m on m.room_no=l.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num14 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=447 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as n on n.room_no=m.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num15 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=565 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as o on o.room_no=n.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num16 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=450 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as p on p.room_no=o.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num17 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=461 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as q on q.room_no=p.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num18 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=462 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as r on r.room_no=q.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num19 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=476 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as s on s.room_no=r.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num20 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=478 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as t on t.room_no=s.room_no left join ");
+		sql.append(
+				" (select room_info.room_no,sum(temp_list.num) num21 from room_info left join call_info on call_info.room_id=room_info.room_id ");
+		sql.append(
+				" left join temp_list on call_info.call_id=temp_list.call_id left join goods_info on temp_list.goods_id=goods_info.Goods_id left join case_info on case_info.call_id=call_info.call_id  ");
+		sql.append(" where call_info.customer_service_flag=1 and Goods_Name is not null and goods_info.Goods_id=473 "
+				+ sqlLimit);
+		sql.append(" group by room_info.room_id,temp_list.goods_id) as u on u.room_no=t.room_no ");
 
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
 		return list;
 	}
-	
+
 	// 卫生间耗品统计SQL条件
 	private String washExpendSQL(Map<String, Object> map) {
 		StringBuilder sql = new StringBuilder();
@@ -624,15 +787,15 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		}
 		return sql.toString();
 	}
-	
-	//房间耗品消耗分析
+
+	// 卫生间耗品消耗分析
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectWashExpendAnalyse(Map<String, Object> map) {
-			
+
 		EntityManager em = emf.createEntityManager();
 		String sqlLimit = expendAnalyseSQL(map);
-	
+
 		StringBuilder sql = new StringBuilder();
 		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
 		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
@@ -645,7 +808,27 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
-		System.out.println(list);
+		return list;
+	}
+
+	// 统计条件
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> selectCondition(String expendType) {
+
+		EntityManager em = emf.createEntityManager();
+
+		String sqlLimit = expendType;
+		StringBuilder sql = new StringBuilder();
+		sql.append("select goods_info.Goods_id from goods_info left join goods_type on ");
+		sql.append(
+				" goods_type.Goods_TypeId=goods_info.Goods_Typeid where goods_info.Display=1 and goods_type.TypeName= '"
+						+ sqlLimit + "' ");
+		sql.append(" order by goods_info.Goods_id;");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Integer> list = query.getResultList();
+		em.close();
 		return list;
 	}
 

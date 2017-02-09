@@ -1,6 +1,5 @@
 package com.mvc.service.impl;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -22,8 +21,8 @@ import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
 import com.utils.FileHelper;
+import com.utils.PictureUtil;
 import com.utils.StringUtil;
-import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
@@ -216,12 +215,13 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	private List<Integer> perMonth(List<Object> list, String startMonth, String endMonth) {
 		List<Integer> listGoal = new ArrayList<Integer>();
 		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer startM = Integer.valueOf(startMonth);
+			Integer endM = Integer.valueOf(endMonth);
 			Integer size = list.size();
 
 			Object[] obj = null;
 			Integer month = null;
-			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+			for (int i = 0, j = startM; i < size || j <= endM; i++, j++) {
 				if (i < size) {
 					obj = (Object[]) list.get(i);
 					month = Integer.valueOf(obj[0].toString());
@@ -321,25 +321,10 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 			// 图片相关
 			String svg1 = (String) map.get("chart1SVGStr");
-			String picName1 = null;
-			if (StringUtil.strIsNotEmpty(svg1)) {
-				picName1 = "pic1.png";
-				picPath = FileHelper.transPath(picName1, picPath);
-			}
-			Map<String, Object> picMap = null;
-			picMap = new HashMap<String, Object>();
-			picMap.put("width", 960);
-			picMap.put("height", 400);
-			picMap.put("type", "png");
-			try {
-				SvgPngConverter.convertToPng(svg1, picPath);// 图片svgCode转化为png格式，并保存到服务器
-				picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			Map<String, Object> picMap = PictureUtil.getPicMap(picPath, svg1);
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 1, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -482,12 +467,13 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	private List<String> perMonthEff(List<Object> list, String startMonth, String endMonth) {
 		List<String> listGoal = new ArrayList<String>();
 		if (StringUtil.strIsNotEmpty(startMonth) && StringUtil.strIsNotEmpty(endMonth)) {
-			Integer len = Integer.valueOf(endMonth) - Integer.valueOf(startMonth) + 1;
+			Integer startM = Integer.valueOf(startMonth);
+			Integer endM = Integer.valueOf(endMonth);
 			Integer size = list.size();
 
 			Object[] obj = null;
 			Integer month = null;
-			for (int i = 0, j = 1; i < size || j <= len; i++, j++) {
+			for (int i = 0, j = startM; i < size || j <= endM; i++, j++) {
 				if (i < size) {
 					obj = (Object[]) list.get(i);
 					month = Integer.valueOf(obj[0].toString());
@@ -604,24 +590,10 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String[] svgs = new String[2];
 			svgs[0] = (String) map.get("chartSVGStr");
 			svgs[1] = (String) map.get("chart1SVGStr");
-			String[] picNames = new String[2];
-			String[] picPaths = new String[2];
 			Map<String, Object> picMap = null;
 			for (int i = 0; i < 2; i++) {
 				if (StringUtil.strIsNotEmpty(svgs[i])) {
-					picNames[i] = "pic" + i + ".png";
-					picPaths[i] = FileHelper.transPath(picNames[i], picPath);// 解析后的上传路径
-
-					picMap = new HashMap<String, Object>();
-					picMap.put("width", 960);
-					picMap.put("height", 400);
-					picMap.put("type", "png");
-					try {
-						SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]
-						picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPaths[i]), true));
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+					picMap = PictureUtil.getPicMap(picPath, svgs[i]);
 					contentMap.put("${pic" + i + "}", picMap);
 				}
 			}

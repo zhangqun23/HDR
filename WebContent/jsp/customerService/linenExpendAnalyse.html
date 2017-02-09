@@ -9,7 +9,7 @@
 
 	<div>
 		<div>
-			<form action="exportDepWorkload.do" method="post"
+			<form action="exportLinenExpendPic.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
@@ -22,13 +22,16 @@
 						type="button" value="查询" ng-click="selectLinenExpendAnalyseByLlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
-						<li><input id="bar-svg" name="bar-svg" type="text" class="hidden" /></li>
+					
+					<li><input id="bar-svg" name="chartSVGStr2"  type="text" class="hidden" /></li>	
+					<li><input id="pie-svg" name="chartSVGStr1"  type="text" class="hidden" /></li>	
 				</ul>
 
 			</form>
 			<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 		</div>
-		<div id="bar1" style="width: 800px; height: 1200px; margin: 0 auto"></div>
+		<div id="pieChart" style="min-width: 400px; width: 500px; height: 500px;margin:0 auto"></div>
+		<div id="bar1" style="width: 800px;margin: 0 auto"></div>
 
 
 

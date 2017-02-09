@@ -36,7 +36,7 @@
 						ng-model="sortName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectRobByLimits()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px" onClick="setExportFlagCookie()"
+					<li><input class="btn layoutStyle" style="width: 60px"
 						type="submit" value="导出"></li>
 				</ul>
 
@@ -64,16 +64,16 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="r in robEfficiencyList">
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
+				<td>{{r.orderNum}}</td>
+				<td>{{r.authorName}}</td>
+				<td>{{r.authorNo}}</td>
+				<td>{{r.sumTime}}</td>
+				<td>{{r.givenTime}}</td>
+				<td>{{r.usedTimeAvg}}</td>
+				<td>{{r.workCount}}</td>
+				<td>{{r.workEffeciencyAvg}}</td>
+				<td>{{r.timeOutRate}}</td>
+				<td>{{r.backRate}}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -95,15 +95,15 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="r in robDetailList">
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
-				<td>{{}}</td>
+				<td>{{r.orderNum}}</td>
+				<td>{{r.roomNo}}</td>
+				<td>{{r.usedTime}}</td>
+				<td>{{r.givenTime}}</td>
+				<td>{{r.workEffeciency}}</td>
+				<td>{{r.authorName}}</td>
+				<td>{{r.isBack}}</td>
+				<td>{{r.checkUsedTime}}</td>
+				<td>{{r.checkerName}}</td>
 			</tr>
 		</tbody>
 	</table>

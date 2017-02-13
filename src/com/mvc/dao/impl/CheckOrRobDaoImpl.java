@@ -212,7 +212,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("count(1) AS caseNum ");
 		sql.append("FROM ");
 		sql.append("case_info ");
-		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.case_id ");
+		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.call_id ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append("WHERE ");
 		sql.append("close_time BETWEEN '");
@@ -244,7 +244,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("coalesce(sum(use_time)/count(1),0) AS avgUstTime ");
 		sql.append("FROM ");
 		sql.append("case_info ");
-		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.case_id ");
+		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.call_id ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append("WHERE ");
 		sql.append("close_time BETWEEN '");
@@ -272,7 +272,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("coalesce(sum(use_time)/count(1),0) AS avgUstTime ");
 		sql.append("FROM ");
 		sql.append("case_info ");
-		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.case_id ");
+		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.call_id ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append("WHERE ");
 		sql.append("close_time BETWEEN '");

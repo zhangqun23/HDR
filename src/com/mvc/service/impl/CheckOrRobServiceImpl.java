@@ -168,7 +168,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 				month = Integer.valueOf(obj[1].toString());
 				if (month == j) {
 					if (obj[0] != null && obj[2] != null) {
-						useTime[i] = Float.parseFloat(StringUtil.divide(obj[0].toString(), obj[2].toString()));
+						useTime[j-1] = Float.parseFloat(StringUtil.divide(obj[0].toString(), obj[2].toString()));
 					}
 				} else {
 					useTime[i] = 0f;

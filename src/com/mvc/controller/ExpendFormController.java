@@ -52,7 +52,7 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("llimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		int totalRow = Integer.parseInt(expendFormService.countTotal(map).toString());
+		int totalRow = Integer.parseInt(expendFormService.countlinenTotal(map).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
@@ -131,10 +131,15 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("rlimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<RoomExpend> list = expendFormService.selectRoomExpend(map);
-
+		int totalRow = Integer.parseInt(expendFormService.countroomTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		
+		List<RoomExpend> list = expendFormService.selectRoomExpend(map, pager);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -205,10 +210,15 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("wlimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<WashExpend> list = expendFormService.selectWashExpend(map);
-
+		int totalRow = Integer.parseInt(expendFormService.countwashTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		
+		List<WashExpend> list = expendFormService.selectWashExpend(map, pager);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -285,7 +295,8 @@ public class ExpendFormController {
 			}
 		}
 		if (jsonObject.containsKey("formName")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("formName"))) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString(""
+					+ ""))) {
 				formType = jsonObject.getString("formName");// 报表类型名称
 			}
 		}

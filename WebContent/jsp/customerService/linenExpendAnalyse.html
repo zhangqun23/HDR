@@ -1,7 +1,9 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">对客服务/布草用量分析</a></li>
+		<li><a href="">首页</a></li>
+		<li><a href="">对客服务统计</a></li>
+		<li><a href="">布草用量分析</a></li>
 	</ul>
 </div>
 
@@ -14,10 +16,11 @@
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="allimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""><label>—</label><input
 						type="text" name="endTime" ng-model="allimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectLinenExpendAnalyseByLlimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"

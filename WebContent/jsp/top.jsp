@@ -24,12 +24,12 @@
 				<li><a href="/HDR/login/logout.do">安全退出</a></li>
 			</ul>
 
-			<div class="user">
+		<!-- 	<div class="user">
 
 				<span id="userNum"></span> <i>消息</i><a
 					href=""><b
 					id="newsNum">0</b></a>
-			</div>
+			</div> -->
 
 		</div>
 		

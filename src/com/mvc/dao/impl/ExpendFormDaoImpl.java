@@ -27,7 +27,112 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
+	
+	// 布草总数统计
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> linenTotleCount(Map<String, Object> map, List<Integer> listCondition){
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = linenExpendSQL(map);
 
+		StringBuilder sql = new StringBuilder();
+		sql.append("select coalesce(b.stn,0) from ");
+		sql.append(" (select goods_id from goods_info where goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' ");
+		sql.append(" order by goods_id asc ) as a ");
+		sql.append(" left join (select sum(temp_list.num) stn,goods_info.goods_id from goods_info ");
+		sql.append(" left join temp_list on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append(" left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append(" left join  case_info on case_info.call_id=call_info.call_id ");
+		sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' " + sqlLimit);
+		sql.append(" group by temp_list.goods_id ) as b on a.goods_id=b.goods_id ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+		
+	}
+	
+	// 房间耗品总数统计
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> roomTotleCount(Map<String, Object> map, List<Integer> listCondition){
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = roomExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select coalesce(b.stn,0) from ");
+		sql.append(" (select goods_id from goods_info where goods_info.Display=1 and goods_info.Goods_Typeid='dt0301' ");
+		sql.append(" order by goods_id asc ) as a ");
+		sql.append(" left join (select sum(temp_list.num) stn,goods_info.goods_id from goods_info ");
+		sql.append(" left join temp_list on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append(" left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append(" left join  case_info on case_info.call_id=call_info.call_id ");
+		sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0301' " + sqlLimit);
+		sql.append(" group by temp_list.goods_id ) as b on a.goods_id=b.goods_id ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+		
+	}
+	
+	// 卫生间耗品总数统计
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> washTotleCount(Map<String, Object> map, List<Integer> listCondition){
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = washExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select coalesce(b.stn,0) from ");
+		sql.append(" (select goods_id from goods_info where goods_info.Display=1 and goods_info.Goods_Typeid='dt0302' ");
+		sql.append(" order by goods_id asc ) as a ");
+		sql.append(" left join (select sum(temp_list.num) stn,goods_info.goods_id from goods_info ");
+		sql.append(" left join temp_list on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append(" left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append(" left join  case_info on case_info.call_id=call_info.call_id ");
+		sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid='dt0302' " + sqlLimit);
+		sql.append(" group by temp_list.goods_id ) as b on a.goods_id=b.goods_id ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+		
+	}
+	
+	// 迷你吧耗品总数统计
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> miniTotleCount(Map<String, Object> map){
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = miniExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select coalesce(b.stn,0) from ");
+		sql.append(" (select goods_id from goods_info where goods_info.Display=1 and goods_info.Goods_Typeid='dt0202' ");
+		sql.append(" or goods_info.Display=1 and goods_info.Goods_Typeid='dt0201'");
+		sql.append(" order by goods_id asc ) as a ");
+		sql.append(" left join (select sum(temp_list.num) stn,goods_info.goods_id from goods_info ");
+		sql.append(" left join temp_list on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append(" left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append(" left join  case_info on case_info.call_id=call_info.call_id ");
+		sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid in ('dt0202','dt0201') " + sqlLimit);
+		sql.append(" group by temp_list.goods_id ) as b on a.goods_id=b.goods_id ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+			
+	}
+	
 	// 布草消耗分页
 	@SuppressWarnings("unchecked")
 	@Override
@@ -153,7 +258,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		sql.append(" left  join goods_type on goods_type.Goods_TypeId=goods_info.Goods_Typeid");
 		sql.append(" where call_info.customer_service_flag='1'and Goods_Name is not null and ");
 		sql.append(" goods_info.Display=1 and goods_info.Goods_Typeid='dt0303' " + sqlLimit);
-		sql.append("group by temp_list.goods_id ");
+		sql.append("group by temp_list.goods_id  order by  sum(temp_list.num) desc ");
 
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
@@ -237,6 +342,27 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		em.close();
 		return totalRow.longValue();
 	}
+	
+	// 迷你吧耗品分页
+	@Override
+	public Long countminiTotal(Map<String, Object> map) {
+
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = miniExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(distinct(call_info.room_id)) from temp_list left join ");
+		sql.append("call_info on temp_list.call_id=call_info.call_id ");
+		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
+		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append("goods_info.Display=1 and goods_info.Goods_Typeid in ('dt0202','dt0201')" + sqlLimit);
+
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		em.close();
+		return totalRow.longValue();
+	}
 
 	// 查询房间耗品消耗
 	@SuppressWarnings("unchecked")
@@ -289,7 +415,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
 		sql.append(
 				"goods_info.Display=1 and goods_info.Goods_Typeid='dt0301'  " + sqlLimit);
-		sql.append("group by temp_list.goods_id ");
+		sql.append("group by temp_list.goods_id  order by  sum(temp_list.num) desc ");
 
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
@@ -348,7 +474,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
 		sql.append("where call_info.customer_service_flag='1'and Goods_Name is not null and ");
 		sql.append("goods_info.Display=1 and goods_info.Goods_Typeid='dt0302' " + sqlLimit);
-		sql.append("group by temp_list.goods_id ");
+		sql.append("group by temp_list.goods_id  order by  sum(temp_list.num) desc ");
 
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
@@ -497,5 +623,39 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 			return sqlStr;
 		}
 
+	// 房间耗品统计SQL条件
+	private String miniExpendSQL(Map<String, Object> map) {
+		StringBuilder sql = new StringBuilder();
+
+		String formType = (String) map.get("formType");
+		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
+		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+
+		if (formType != null && !formType.equals("0")) {
+			sql.append(" and case_info.clean_type='" + formType + "'");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and case_info.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		return sql.toString();
+	}
+	
+	// 迷你吧消耗分页
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectminiPage(Map<String, Object> map, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = miniExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		//sql.append("select a.room_no," + getSelSQL(listCondition) + " from ");
+		//sql.append(getSizeSQL(listCondition, sqlLimit));
+		sql.append(" limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("offset", offset).setParameter("end", end);
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
 
 }

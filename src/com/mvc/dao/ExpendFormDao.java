@@ -11,6 +11,18 @@ import java.util.Map;
  */
 public interface ExpendFormDao {
 
+	// 布草总数统计
+	List<Object> linenTotleCount(Map<String, Object> map, List<Integer> listCondition);
+	
+	// 房间耗品总数统计
+	List<Object> roomTotleCount(Map<String, Object> map, List<Integer> listCondition);
+		
+	// 卫生间耗品总数统计
+	List<Object> washTotleCount(Map<String, Object> map, List<Integer> listCondition);
+	
+	// 迷你吧总数统计
+	List<Object> miniTotleCount(Map<String, Object> map);
+	
 	// 布草统计分页
 	List<Object> selectlinenPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
 
@@ -31,6 +43,9 @@ public interface ExpendFormDao {
 		
 	// 查询卫生间耗品总条数
 	Long countwashTotal(Map<String, Object> map);
+	
+	// 查询迷你吧总条数
+	Long countminiTotal(Map<String, Object> map);
 
 	//房间耗品统计分页
 	List<Object> selectroomPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
@@ -49,5 +64,8 @@ public interface ExpendFormDao {
 
 	// 卫生间耗品统计分析
 	List<Object> selectWashExpendAnalyse(Map<String, Object> map);
+	
+	//迷你吧统计分页
+	List<Object> selectminiPage(Map<String, Object> map, Integer offset, Integer end);
 
 }

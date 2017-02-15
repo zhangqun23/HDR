@@ -1139,10 +1139,10 @@ app
 													}
 
 													combine(lineData,
-															"个人平均工作效率",
+															"个人平均做房驳回率",
 															averageData);
 													combine(lineData,
-															"全体平均工作效率",
+															"全体平均做房驳回率",
 															allAverageData);
 													combine(lineData, lineName,
 															userData);

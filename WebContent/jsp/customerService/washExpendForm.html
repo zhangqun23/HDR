@@ -36,7 +36,78 @@
 
 	</div>
 
+	<table calss="tablelist">
+		<caption class="title">卫生间易耗品使用量合计</caption>
+		<thead ng-show="table1Show">
+			<tr>
+				<th class="width3">牙具</th>
+				<th class="width3">卷纸</th>
+				<th class="width3">洗发液</th>
+				<th class="width3">沐浴露</th>
+				<th class="width3">护发素</th>
+				<th class="width3">润肤露</th>
+				<th class="width3">护理包</th>
+				<th class="width3">黑垃圾袋</th>
+				<th class="width3">抽纸</th>
+				<th class="width3">卫生袋</th>
+				<th class="width3">浴帽</th>
+				<th class="width3">剃须刨</th>
+				<th class="width3">梳子</th>
+			</tr>
+		</thead>
+		<tbody ng-show="table1Show">
+			<tr>
+				<td>{{washCount.sum_toth}}</td>
+				<td>{{washCount.sum_ropa}}</td>
+				<td>{{washCount.sum_rins}}</td>
+				<td>{{washCount.sum_bafo}}</td>
+				<td>{{washCount.sum_haco}}</td>
+				<td>{{washCount.sum_shge}}</td>
+				<td>{{washCount.sum_capa}}</td>
+				<td>{{washCount.sum_garb}}</td>
+				<td>{{washCount.sum_paex}}</td>
+				<td>{{washCount.sum_peep}}</td>
+				<td>{{washCount.sum_shca}}</td>
+				<td>{{washCount.sum_shav}}</td>
+				<td>{{washCount.sum_comb}}</td>
+		</tbody>
+		<thead ng-show="table1Show">
+			<tr>
+				<th class="width3">擦鞋布</th>
+				<th class="width3">手皂</th>
+				<th class="width3">指甲锉</th>
+				<th class="width3">干花</th>
+				<th class="width3">浴盐</th>
+				<th class="width3">百洁布</th>
+				<th class="width3">橡皮手套</th>
+				<th class="width3">洗涤灵</th>
+				<th class="width3">洗消净</th>
+				<th class="width3">浴室清洁剂</th>
+				<th class="width3">洁厕灵</th>
+				<th class="width3">浴缸刷</th>
+				<th class="width3">恭桶刷</th>
+			</tr>
+		</thead>
+		<tbody ng-show="table1Show">
+			<tr>
+				<td>{{washCount.sum_shcl}}</td>
+				<td>{{washCount.sum_soap}}</td>
+				<td>{{washCount.sum_nacl}}</td>
+				<td>{{washCount.sum_flow}}</td>
+				<td>{{washCount.sum_basa}}</td>
+				<td>{{washCount.sum_scpa}}</td>
+				<td>{{washCount.sum_rugl}}</td>
+				<td>{{washCount.sum_dete}}</td>
+				<td>{{washCount.sum_thim}}</td>
+				<td>{{washCount.sum_bacl}}</td>
+				<td>{{washCount.sum_tocl}}</td>
+				<td>{{washCount.sum_babr}}</td>
+				<td>{{washCount.sum_clbr}}</td>
+		</tbody>
+	</table>
+	
 	<table class="tablelist">
+	<caption>房间易耗品使用量</caption>
 			<tr>
 				<th class="a" rowspan="2">序号</th>
 				<th class="a" rowspan="2">房号</th>

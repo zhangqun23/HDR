@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.ExpendAnalyse;
+import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
+import com.mvc.entityReport.MiniCount;
+import com.mvc.entityReport.MiniExpend;
+import com.mvc.entityReport.RoomCount;
 import com.mvc.entityReport.RoomExpend;
+import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CookieUtil;
@@ -57,8 +62,10 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 
+		LinenCount linenCount = expendFormService.linenTotleCount(map);
 		List<LinenExpend> list = expendFormService.selectLinenPage(map, pager);
 		jsonObject = new JSONObject();
+		jsonObject.put("linenCount", linenCount);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -136,8 +143,10 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 		
+		RoomCount roomCount = expendFormService.roomTotleCount(map);
 		List<RoomExpend> list = expendFormService.selectRoomExpend(map, pager);
 		jsonObject = new JSONObject();
+		jsonObject.put("roomCount", roomCount);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -215,8 +224,10 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 		
+		WashCount washCount = expendFormService.washTotleCount(map);
 		List<WashExpend> list = expendFormService.selectWashExpend(map, pager);
 		jsonObject = new JSONObject();
+		jsonObject.put("washCount", washCount);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -275,6 +286,31 @@ public class ExpendFormController {
 
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+	
+	/**
+	 * 迷你吧统计
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/selectMiniExpendFormByMlimits.do")
+	public @ResponseBody String selectMiniExpendForm(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("mlimit"));
+
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		int totalRow = Integer.parseInt(expendFormService.countminiTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+
+		MiniCount miniCount = expendFormService.miniTotleCount(map);
+		List<MiniExpend> list = expendFormService.selectMiniPage(map, pager);
+		jsonObject = new JSONObject();
+		jsonObject.put("miniCount", miniCount);
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 

@@ -16,8 +16,13 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.ExpendFormDao;
 import com.mvc.entityReport.ExpendAnalyse;
+import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
+import com.mvc.entityReport.MiniCount;
+import com.mvc.entityReport.MiniExpend;
+import com.mvc.entityReport.RoomCount;
 import com.mvc.entityReport.RoomExpend;
+import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CollectionUtil;
@@ -39,6 +44,57 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	@Autowired
 	ExpendFormDao expendFormDao;
 
+	//布草总数统计
+	@Override
+	public LinenCount linenTotleCount(Map<String, Object> map){
+		
+		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+		List<Object> listSource = expendFormDao.linenTotleCount(map, listCondition);
+		
+		Iterator<Object> it = listSource.iterator();
+		LinenCount listGoal = objToLinenCount(it);
+
+		return listGoal;
+	}
+	
+	//房间耗品总数统计
+	@Override
+	public RoomCount roomTotleCount(Map<String, Object> map){
+			
+		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		List<Object> listSource = expendFormDao.roomTotleCount(map, listCondition);
+			
+		Iterator<Object> it = listSource.iterator();
+		RoomCount listGoal = objToRoomCount(it);
+		
+		return listGoal;
+	}
+		
+	//卫生间耗品总数统计
+	@Override
+	public WashCount washTotleCount(Map<String, Object> map){
+			
+		List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+		List<Object> listSource = expendFormDao.washTotleCount(map, listCondition);
+			
+		Iterator<Object> it = listSource.iterator();
+		WashCount listGoal = objToWashCount(it);
+
+		return listGoal;
+	}
+	
+	//迷你吧总数统计
+	@Override
+	public MiniCount miniTotleCount(Map<String, Object> map){
+		
+		List<Object> listSource = expendFormDao.miniTotleCount(map);
+			
+		Iterator<Object> it = listSource.iterator();
+		MiniCount listGoal = objToMiniCount(it);
+
+		return listGoal;
+	}
+	
 	// 布草统计
 	@Override
 	public List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager) {
@@ -93,7 +149,147 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		return listGoal;
 	}
+	
+	// 布草总数排序
+	private LinenCount objToLinenCount(Iterator<Object> it) {
+		//List<LinenCount> listGoal = null;
+		//Object[] obj = null;
+		LinenCount linenCount = null;
 
+		//while (it.hasNext()) {
+			//obj = (Object[]) it.next();
+			linenCount = new LinenCount();
+			linenCount.setSum_slba(it.next().toString());
+			linenCount.setSum_duto(it.next().toString());
+			linenCount.setSum_laba(it.next().toString());
+			linenCount.setSum_besh(it.next().toString());
+			linenCount.setSum_facl(it.next().toString());
+			linenCount.setSum_bato(it.next().toString());
+			linenCount.setSum_hato(it.next().toString());
+			linenCount.setSum_medo(it.next().toString());
+			linenCount.setSum_flto(it.next().toString());
+			linenCount.setSum_baro(it.next().toString());
+			linenCount.setSum_pill(it.next().toString());
+			linenCount.setSum_piin(it.next().toString());
+			linenCount.setSum_blan(it.next().toString());
+			linenCount.setSum_shop(it.next().toString());
+
+			//listGoal.add(linenCount);
+		//}
+
+		return linenCount;
+	}
+
+	// 房间耗品总数排序
+	private RoomCount objToRoomCount(Iterator<Object> it) {
+
+		RoomCount roomCount = null;
+
+		roomCount = new RoomCount();
+		
+		roomCount.setSum_coas(it.next().toString());
+		roomCount.setSum_penc(it.next().toString());
+		roomCount.setSum_rule(it.next().toString());
+		roomCount.setSum_erse(it.next().toString());
+		roomCount.setSum_cocl(it.next().toString());
+		roomCount.setSum_chsl(it.next().toString());
+		roomCount.setSum_umbr(it.next().toString());
+		roomCount.setSum_dnds(it.next().toString());
+		roomCount.setSum_meca(it.next().toString());
+		roomCount.setSum_comp(it.next().toString());
+		roomCount.setSum_shpa(it.next().toString());
+		roomCount.setSum_bape(it.next().toString());
+		roomCount.setSum_bage(it.next().toString());
+		roomCount.setSum_clip(it.next().toString());
+		roomCount.setSum_orel(it.next().toString());
+		roomCount.setSum_arel(it.next().toString());
+		roomCount.setSum_fati(it.next().toString());
+		roomCount.setSum_memo(it.next().toString());
+		roomCount.setSum_stat(it.next().toString());
+		roomCount.setSum_lali(it.next().toString());
+		roomCount.setSum_opbo(it.next().toString());
+		roomCount.setSum_mapp(it.next().toString());
+		roomCount.setSum_tvca(it.next().toString());
+		roomCount.setSum_clca(it.next().toString());
+		roomCount.setSum_enca(it.next().toString());
+		roomCount.setSum_grte(it.next().toString());
+		roomCount.setSum_blte(it.next().toString());
+		roomCount.setSum_suge(it.next().toString());
+		roomCount.setSum_losu(it.next().toString());
+		roomCount.setSum_teab(it.next().toString());
+		roomCount.setSum_coff(it.next().toString());
+		roomCount.setSum_coup(it.next().toString());
+		roomCount.setSum_anma(it.next().toString());
+		roomCount.setSum_matc(it.next().toString());
+
+		return roomCount;
+	}
+	
+	// 卫生间耗品总数排序
+	private WashCount objToWashCount(Iterator<Object> it) {
+		
+		WashCount washCount = null;
+
+		washCount = new WashCount();
+		
+		washCount.setSum_toth(it.next().toString());
+		washCount.setSum_ropa(it.next().toString());
+		washCount.setSum_paex(it.next().toString());
+		washCount.setSum_comb(it.next().toString());
+		washCount.setSum_shcl(it.next().toString());
+		washCount.setSum_shca(it.next().toString());
+		washCount.setSum_nacl(it.next().toString());
+		washCount.setSum_shav(it.next().toString());
+		washCount.setSum_peep(it.next().toString());
+		washCount.setSum_rins(it.next().toString());
+		washCount.setSum_bafo(it.next().toString());
+		washCount.setSum_haco(it.next().toString());
+		washCount.setSum_shge(it.next().toString());
+		washCount.setSum_flow(it.next().toString());
+		washCount.setSum_basa(it.next().toString());
+		washCount.setSum_babr(it.next().toString());
+		washCount.setSum_tocl(it.next().toString());
+		washCount.setSum_bacl(it.next().toString());
+		washCount.setSum_thim(it.next().toString());
+		washCount.setSum_dete(it.next().toString());
+		washCount.setSum_clbr(it.next().toString());
+		washCount.setSum_scpa(it.next().toString());
+		washCount.setSum_rugl(it.next().toString());
+		washCount.setSum_capa(it.next().toString());
+		washCount.setSum_garb(it.next().toString());
+		washCount.setSum_soap(it.next().toString());
+		
+		return washCount;
+	}
+	
+	// 卫生间耗品总数排序
+	private MiniCount objToMiniCount(Iterator<Object> it) {
+			
+		MiniCount miniCount = null;
+
+		miniCount = new MiniCount();
+			
+		miniCount.setSum_redb(it.next().toString());
+		miniCount.setSum_coco(it.next().toString());
+		miniCount.setSum_pari(it.next().toString());
+		miniCount.setSum_bige(it.next().toString());
+		miniCount.setSum_jdba(it.next().toString());
+		miniCount.setSum_tine(it.next().toString());
+		miniCount.setSum_kunl(it.next().toString());
+		miniCount.setSum_wine(it.next().toString());
+		miniCount.setSum_bree(it.next().toString());
+		miniCount.setSum_vodk(it.next().toString());
+		miniCount.setSum_auru(it.next().toString());
+		miniCount.setSum_qing(it.next().toString());
+		miniCount.setSum_spri(it.next().toString());
+		miniCount.setSum_nail(it.next().toString());
+		miniCount.setSum_abcs(it.next().toString());
+		miniCount.setSum_card(it.next().toString());
+		miniCount.setSum_como(it.next().toString());
+			
+		return miniCount;
+	}
+		
 	// 布草导出
 	@Override
 	public ResponseEntity<byte[]> exportLinenExpendForm(Map<String, Object> map, String path, String tempPath) {
@@ -291,35 +487,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 			listGoal.add(expendAnalyse);
 		}
-		sortAndWrite4(listGoal, "goods_num", true, "orderNum");
-
-		Iterator<ExpendAnalyse> itGoal = listGoal.iterator();
-		int i = 0;
-		expendAnalyse = null;
-		while (itGoal.hasNext()) {
-			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
-			expendAnalyse = (ExpendAnalyse) itGoal.next();
-			expendAnalyse.setOrderNum(String.valueOf(i));
-		}
 
 		return listGoal;
-	}
-
-	/**
-	 * 排序并插入序号
-	 * 
-	 * @param list
-	 * @param room_id
-	 *            按指定字段排序
-	 * @param ascFlag
-	 *            true升序,false降序
-	 * @param writeField
-	 *            向指定字段插入序号
-	 */
-	private void sortAndWrite4(List<ExpendAnalyse> list, String room_id, boolean ascFlag, String writeField) {
-		CollectionUtil.sort(list, room_id, ascFlag);
-		CollectionUtil<ExpendAnalyse> collectionUtil = new CollectionUtil<ExpendAnalyse>();
-		collectionUtil.writeSort(list, writeField);
 	}
 
 	// 房间耗品统计
@@ -1162,4 +1331,73 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	public Long countwashTotal(Map<String, Object> map) {
 		return expendFormDao.countwashTotal(map);
 	}
+	
+	// 查询迷你吧总条数
+	@Override
+	public Long countminiTotal(Map<String, Object> map) {
+		return expendFormDao.countminiTotal(map);
+	}
+	// 迷你吧统计
+	@Override
+	public List<MiniExpend> selectMiniPage(Map<String, Object> map, Pager pager) {
+
+		List<Object> listSource = expendFormDao.selectminiPage(map, pager.getOffset(), pager.getPageSize());
+
+		Iterator<Object> it = listSource.iterator();
+		List<MiniExpend> listGoal = objToMiniExpand(it);
+
+		return listGoal;
+	}
+
+	// 排序
+	private List<MiniExpend> objToMiniExpand(Iterator<Object> it) {
+		List<MiniExpend> listGoal = new ArrayList<MiniExpend>();
+		Object[] obj = null;
+		MiniExpend miniExpend = null;
+
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
+			miniExpend = new MiniExpend();
+			miniExpend.setRoom_id(obj[0].toString());
+			miniExpend.setRedb_num(obj[1].toString());
+			miniExpend.setCoco_num(obj[2].toString());
+			miniExpend.setPari_num(obj[3].toString());
+			miniExpend.setBige_num(obj[4].toString());
+			miniExpend.setJdba_num(obj[5].toString());
+			miniExpend.setTine_num(obj[6].toString());
+			miniExpend.setKunl_num(obj[7].toString());
+			miniExpend.setWine_num(obj[8].toString());
+			miniExpend.setBree_num(obj[9].toString());
+			miniExpend.setVodk_num(obj[10].toString());
+			miniExpend.setAuru_num(obj[11].toString());
+			miniExpend.setQing_num(obj[12].toString());
+			miniExpend.setSpri_num(obj[13].toString());
+			miniExpend.setNail_num(obj[14].toString());
+			miniExpend.setAbcs_num(obj[14].toString());
+			miniExpend.setCard_num(obj[14].toString());
+			miniExpend.setComo_num(obj[14].toString());
+
+			listGoal.add(miniExpend);
+		}
+		sortAndWrite5(listGoal, "room_id", true, "orderNum");
+
+		return listGoal;
+	}
+	/**
+	 * 排序并插入序号
+	 * 
+	 * @param list
+	 * @param room_id
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @param writeField
+	 *            向指定字段插入序号
+	 */
+	private void sortAndWrite5(List<MiniExpend> list, String room_id, boolean ascFlag, String writeField) {
+		CollectionUtil.sort(list, room_id, ascFlag);
+		CollectionUtil<MiniExpend> collectionUtil = new CollectionUtil<MiniExpend>();
+		collectionUtil.writeSort(list, writeField);
+	}
+
 }

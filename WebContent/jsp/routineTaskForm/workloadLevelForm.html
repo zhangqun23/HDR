@@ -11,19 +11,25 @@
 
 	<div>
 		<div>
-			<form action="../workLoad/exportWorkLoadLevelList.do" method="post"
-				enctype="multipart/form-data">
+			<form action="" method="post" enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startDate"
-						ng-model="workLoadLevelLimit.startTime" required class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endDate" ng-model="workLoadLevelLimit.endTime" required
+						ng-model="workLoadLevelLimit.startTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""><label>—</label><input type="text"
+						name="endDate" ng-model="workLoadLevelLimit.endTime" required
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkloadLevel()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='../workLoad/exportWorkLoadLevelList.do';this.form.submit();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='../workLoad/exportWorkLoadLevelExcel.do';this.form.submit();"></li>
 				</ul>
 
 			</form>
@@ -31,10 +37,11 @@
 
 	</div>
 
-	<table class="tablelist tablestyle" >
+	<table class="tablelist tablestyle">
 		<caption align="top" class="tableTitle">
 			<div class="tableTitle">客房员工工作量饱和度分析</div>
-			<div>统计时间：{{workLoadLevelLimit.startTime}}&nbsp;至 &nbsp;{{workLoadLevelLimit.endTime}}</div>
+			<div>统计时间：{{workLoadLevelLimit.startTime}}&nbsp;至
+				&nbsp;{{workLoadLevelLimit.endTime}}</div>
 		</caption>
 		<thead>
 			<tr>
@@ -46,7 +53,7 @@
 				<th class="width10">实际工作量</th>
 				<th class="width10">超出工作量</th>
 				<th class="width10">超出幅度</th>
-				
+
 			</tr>
 		</thead>
 		<tbody>
@@ -62,7 +69,8 @@
 			</tr>
 		</tbody>
 	</table>
-	<label ng-show="listRemark" style="color:red;font-size:medium;marginTop:20px">分析结果:{{remark}}</label>
+	<label ng-show="listRemark"
+		style="color: red; font-size: medium; marginTop: 20px">分析结果:{{remark}}</label>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 </div>
 

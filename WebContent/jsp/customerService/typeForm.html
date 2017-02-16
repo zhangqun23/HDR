@@ -11,24 +11,35 @@
 
 	<div>
 		<div>
-			<form action="../customerServiceInformation/exportType.do" method="post"
-				enctype="multipart/form-data">
+			<form action="" method="post" enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
-						ng-model="typeLimit.start_time" required class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endTime" ng-model="typeLimit.end_time" required
+						ng-model="typeLimit.start_time" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
-					<li><label>部门</label><select class="dfselect layoutStyle" id="dept"
-						style="width: 73px" ng-change="getDeptNameById()" ng-model="typeLimit.depart" required name="departId"><option
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""><label>—</label><input type="text"
+						name="endTime" ng-model="typeLimit.end_time" required
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
+					<li><label>部门</label><select class="dfselect layoutStyle"
+						id="dept" style="width: 73px" ng-change="getDeptNameById()"
+						ng-model="typeLimit.depart" required name="departId"><option
 								value="">请选择</option>
-							<option value="{{depart.departmentId}}" ng-repeat="depart in depts">{{depart.departmentName}}</option></select></li>			
+							<option value="{{depart.departmentId}}"
+								ng-repeat="depart in depts">{{depart.departmentName}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectType()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
-					<li><input id="bar-svg" name="bar-svg" type="text" class="hidden" /></li>	
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='../customerServiceInformation/exportType.do';this.form.submit();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='../customerServiceInformation/exportTypeExcel.do';this.form.submit();"></li>
+					<li><input id="bar-svg" name="bar-svg" type="text"
+						class="hidden" /></li>
+					<li><input id="analyseResult" name="analyseResult" type="text"
+						class="hidden" /></li>
 				</ul>
 
 			</form>
@@ -37,9 +48,10 @@
 	</div>
 
 	<table class="tablelist">
-	    <caption align="top" class="tableTitle">
+		<caption align="top" class="tableTitle">
 			<div class="tableTitle">{{deptName}}服务类型统计</div>
-			<div>统计时间：{{typeLimit.start_time}}&nbsp;至 &nbsp;{{typeLimit.end_time}}</div>
+			<div>统计时间：{{typeLimit.start_time}}&nbsp;至
+				&nbsp;{{typeLimit.end_time}}</div>
 		</caption>
 		<thead>
 			<tr>
@@ -70,7 +82,8 @@
 	</table>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 </div>
-<div id="bar1" ng-show="barIsShow" style=" margin: 0 auto;width: 800px;"></div>
+<div id="bar1" ng-show="barIsShow" style="margin: 0 auto; width: 800px;"></div>
+<label ng-show="listRemark" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 
 
 

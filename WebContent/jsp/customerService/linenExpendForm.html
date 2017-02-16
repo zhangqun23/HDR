@@ -39,9 +39,9 @@
 
 	</div>
 
-	<table calss="tablelist">
-		<caption class="title">布草使用量合计</caption>
-		<thead ng-show="table1Show">
+	<table class="tablelist">
+		<caption class="table_title">布草使用量合计</caption>
+		<thead>
 			<tr>
 				<th class="width3">被罩</th>
 				<th class="width3">拼尘罩</th>
@@ -59,7 +59,7 @@
 				<th class="width3">购物袋</th>
 			</tr>
 		</thead>
-		<tbody ng-show="table1Show">
+		<tbody>
 			<tr>
 				<td>{{linenCount.sum_slba}}</td>
 				<td>{{linenCount.sum_duto}}</td>
@@ -78,8 +78,8 @@
 		</tbody>
 	</table>
 	<table class="tablelist">
-		<caption>房间布草使用量</caption>
-		<thead ng-show="table2Show">
+		<caption class="table_bottom">房间布草使用量</caption>
+		<thead>
 			<tr>
 				<th class="width3">序号</th>
 				<th class="width3">房号</th>
@@ -99,7 +99,7 @@
 				<th class="width3">购物袋</th>
 			</tr>
 		</thead>
-		<tbody ng-show="table2Show">
+		<tbody>
 			<tr ng-repeat="linen in linenExpendFormList">
 				<td>{{linen.orderNum}}</td>
 				<td>{{linen.room_id}}</td>

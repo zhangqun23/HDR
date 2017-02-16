@@ -95,7 +95,11 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/miniExpendForm', {
 		templateUrl : '/HDR/jsp/customerService/miniExpendForm.html',
 		controller : 'CustomerServiceController'
+	}).when('/miniExpendAnalyse', {
+		templateUrl : '/HDR/jsp/customerService/miniExpendAnalyse.html',
+		controller : 'CustomerServiceController'
 	})
+	
 } ]);
 app.constant('baseUrl', '/HDR/');
 
@@ -232,6 +236,16 @@ app
 									data : data
 								});
 							};
+							// wq迷你吧用量分析
+							services.selectMiniExpendAnalyseByMlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectMiniExpendAnalyseByMlimits.do',
+									data : data
+								});
+							};
 							return services;
 						} ]);
 app
@@ -282,6 +296,11 @@ app
 								startTime : "",
 								endTime : "",
 								formType : "0"
+							};
+							// wq迷你吧分析统计界面设置条件
+							reportForm.amlimit = {
+								startTime : "",
+								endTime : ""
 							};
 							// wq获取报表类型名称
 							reportForm.formName = "对客服务";
@@ -340,14 +359,10 @@ app
 												function(data) {
 													$(".overlayer").fadeOut(200);
 													$(".tipLoading").fadeOut(200);
-													//reportForm.linenExpendFormList = data.list;reportForm.linenCount = data.linenCount;
+													reportForm.linenExpendFormList = data.list;reportForm.linenCount = data.linenCount;
 													pageTurn(data.totalPage, 1,
 															getLinenExpendFormByLlimits);
 													reportForm.linenCount = data.linenCount;
-													if (reportForm.linenCount) {
-														reportForm.table1Show = true;
-														reportForm.table2Show = true;
-													}
 													if (data.list.length) {
 														reportForm.listIsShow = false;
 													} else {
@@ -366,9 +381,6 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.linenExpendFormList = data.list;
-									if (reportForm.linenExpendFormList) {
-										reportForm.table2Show = true;
-									}
 								});
 							}
 							// wq根据条件查找布草分析
@@ -749,13 +761,10 @@ app
 												function(data) {
 													$(".overlayer").fadeOut(200);
 													$(".tipLoading").fadeOut(200);
+													reportForm.miniExpendFormList = data.list;
 													pageTurn(data.totalPage, 1,
 															getMiniExpendFormByMlimits);
 													reportForm.miniCount = data.miniCount;
-													if (reportForm.miniCount) {
-														reportForm.table1Show = true;
-														reportForm.table2Show = true;
-													}
 													if (data.list.length) {
 														reportForm.listIsShow = false;
 													} else {
@@ -763,7 +772,7 @@ app
 													}
 												});
 							}
-							// wq布草统计换页函数
+							// wq迷你吧统计换页函数
 							function getMiniExpendFormByMlimits(p) {
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
@@ -778,6 +787,91 @@ app
 										reportForm.table2Show = true;
 									}
 								});
+							}
+							// wq根据条件查找迷你吧分析
+							reportForm.selectMiniExpendAnalyseByMlimits = function() {
+								if (reportForm.amlimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.amlimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.amlimit.startTime,
+										reportForm.amlimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								var miniExpendAnalyseMlimit = JSON
+										.stringify(reportForm.amlimit);
+								services
+										.selectMiniExpendAnalyseByMlimits({
+											amlimit : miniExpendAnalyseMlimit
+										})
+										.success(
+												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
+													reportForm.typeList = data.list;
+													if (data.list.length) {
+														reportForm.listIsShow = false;
+														
+														if (data.list.length < 15) {
+															reportForm.barSize = data.list.length * 80;
+														} else {
+															reportForm.barSize = 1200;
+														}
+														$("#bar1")
+																.css(
+																		'height',
+																		reportForm.barSize
+																				+ 'px');
+														var title = "客房部迷你吧使用量条形图分析";// 条形图标题显示
+														var xAxis = [];// 横坐标显示
+														var yAxis = "单位:数量";// 纵坐标显示
+														var barData = [];// 最终传入bar1中的data
+														var miniNum = [];
+														var pieData=[];//饼状图传入数据
+														for ( var item in data.list) {
+															if (data.list[item].good_name != '') {
+																xAxis
+																		.push(data.list[item].goods_name);
+																miniNum
+																		.push(parseInt(data.list[item].goods_num));
+																combinePie(pieData,data.list[item].goods_name,parseInt(data.list[item].goods_num));			
+															}
+														}
+														pieChartForm("#pieChart", "客房部迷你吧使用量饼状图分析", "迷你吧使用占比",
+																pieData);
+														$('#pie-svg')
+														.val(
+																$(
+																		"#pieChart")
+																		.highcharts()
+																		.getSVG());
+														
+														combine(barData,
+																'迷你吧使用数量',
+																miniNum);
+														barForm(barData,
+																"#bar1", title,
+																xAxis, yAxis);
+														$('#bar-svg')
+																.val(
+																		$(
+																				"#bar1")
+																				.highcharts()
+																				.getSVG());
+														
+													} else {
+														reportForm.listIsShow = true;
+													}
+
+												});
 							}
 							// wq传入报表名称
 							reportForm.getFormNameByNo = function() {

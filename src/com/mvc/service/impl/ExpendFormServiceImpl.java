@@ -152,30 +152,24 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	
 	// 布草总数排序
 	private LinenCount objToLinenCount(Iterator<Object> it) {
-		//List<LinenCount> listGoal = null;
-		//Object[] obj = null;
+
 		LinenCount linenCount = null;
 
-		//while (it.hasNext()) {
-			//obj = (Object[]) it.next();
-			linenCount = new LinenCount();
-			linenCount.setSum_slba(it.next().toString());
-			linenCount.setSum_duto(it.next().toString());
-			linenCount.setSum_laba(it.next().toString());
-			linenCount.setSum_besh(it.next().toString());
-			linenCount.setSum_facl(it.next().toString());
-			linenCount.setSum_bato(it.next().toString());
-			linenCount.setSum_hato(it.next().toString());
-			linenCount.setSum_medo(it.next().toString());
-			linenCount.setSum_flto(it.next().toString());
-			linenCount.setSum_baro(it.next().toString());
-			linenCount.setSum_pill(it.next().toString());
-			linenCount.setSum_piin(it.next().toString());
-			linenCount.setSum_blan(it.next().toString());
-			linenCount.setSum_shop(it.next().toString());
-
-			//listGoal.add(linenCount);
-		//}
+		linenCount = new LinenCount();
+		linenCount.setSum_slba(it.next().toString());
+		linenCount.setSum_duto(it.next().toString());
+		linenCount.setSum_laba(it.next().toString());
+		linenCount.setSum_besh(it.next().toString());
+		linenCount.setSum_facl(it.next().toString());
+		linenCount.setSum_bato(it.next().toString());
+		linenCount.setSum_hato(it.next().toString());
+		linenCount.setSum_medo(it.next().toString());
+		linenCount.setSum_flto(it.next().toString());
+		linenCount.setSum_baro(it.next().toString());
+		linenCount.setSum_pill(it.next().toString());
+		linenCount.setSum_piin(it.next().toString());
+		linenCount.setSum_blan(it.next().toString());
+		linenCount.setSum_shop(it.next().toString());
 
 		return linenCount;
 	}
@@ -186,7 +180,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		RoomCount roomCount = null;
 
 		roomCount = new RoomCount();
-		
 		roomCount.setSum_coas(it.next().toString());
 		roomCount.setSum_penc(it.next().toString());
 		roomCount.setSum_rule(it.next().toString());
@@ -230,8 +223,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		
 		WashCount washCount = null;
 
-		washCount = new WashCount();
-		
+		washCount = new WashCount();	
 		washCount.setSum_toth(it.next().toString());
 		washCount.setSum_ropa(it.next().toString());
 		washCount.setSum_paex(it.next().toString());
@@ -267,8 +259,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			
 		MiniCount miniCount = null;
 
-		miniCount = new MiniCount();
-			
+		miniCount = new MiniCount();	
 		miniCount.setSum_redb(it.next().toString());
 		miniCount.setSum_coco(it.next().toString());
 		miniCount.setSum_pari(it.next().toString());
@@ -1223,6 +1214,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		return listGoal;
 	}
+	
+	// 迷你吧统计分析
+	@Override
+	public List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map) {
+
+		List<Object> listSource = expendFormDao.selectMiniExpendAnalyse(map);
+		Iterator<Object> it = listSource.iterator();
+		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+
+		return listGoal;
+	}
 
 	// 查询布草总条数
 	@Override
@@ -1373,9 +1375,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			miniExpend.setQing_num(obj[12].toString());
 			miniExpend.setSpri_num(obj[13].toString());
 			miniExpend.setNail_num(obj[14].toString());
-			miniExpend.setAbcs_num(obj[14].toString());
-			miniExpend.setCard_num(obj[14].toString());
-			miniExpend.setComo_num(obj[14].toString());
+			miniExpend.setAbcs_num(obj[15].toString());
+			miniExpend.setCard_num(obj[16].toString());
+			miniExpend.setComo_num(obj[17].toString());
 
 			listGoal.add(miniExpend);
 		}
@@ -1399,5 +1401,191 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		CollectionUtil<MiniExpend> collectionUtil = new CollectionUtil<MiniExpend>();
 		collectionUtil.writeSort(list, writeField);
 	}
+	
+	// 迷你吧导出
+	@Override
+	public ResponseEntity<byte[]> exportMiniExpendForm(Map<String, Object> map, String path, String tempPath) {
+		String formName = (String) map.remove("formName");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<MiniExpend> le = new WordHelper<MiniExpend>();
+			String fileName = "客房部" + formName + "布草使用量统计表.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = expendFormDao.selectminiExpend(map);
+			Iterator<Object> it = listSource.iterator();
+			List<MiniExpend> listGoal = objToMiniExpand(it);
+
+			MiniExpend sum = sumMiniExpend(listGoal);// 合计
+			MiniExpend avg = avgMiniExpend(listGoal);// 平均
+			listGoal.add(sum);
+			listGoal.add(avg);
+
+			Map<String, Object> listMap = new HashMap<String, Object>();
+			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			String startTime = (String) map.get("startTime");
+			String endTime = (String) map.get("endTime");
+			contentMap.put("${formName}", formName);
+			contentMap.put("${startTime}", startTime.substring(0, 10));
+			contentMap.put("${endTime}", endTime.substring(0, 10));
+
+			le.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	/**
+	 * 迷你吧list求和
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private MiniExpend sumMiniExpend(List<MiniExpend> list) {
+		MiniExpend sum = new MiniExpend();
+		Iterator<MiniExpend> it = list.iterator();
+
+		Long sum_redb_num = (long) 0;
+		Long sum_coco_num = (long) 0;
+		Long sum_pari_num = (long) 0;
+		Long sum_bige_num = (long) 0;
+		Long sum_jdba_num = (long) 0;
+		Long sum_tine_num = (long) 0;
+		Long sum_kunl_num = (long) 0;
+		Long sum_wine_num = (long) 0;
+		Long sum_bree_num = (long) 0;
+		Long sum_vodk_num = (long) 0;
+		Long sum_auru_num = (long) 0;
+		Long sum_qing_num = (long) 0;
+		Long sum_spri_num = (long) 0;
+		Long sum_nail_num = (long) 0;
+		Long sum_abcs_num = (long) 0;
+		Long sum_card_num = (long) 0;
+		Long sum_como_num = (long) 0;
+
+		MiniExpend miniExpend = null;
+		while (it.hasNext()) {
+			miniExpend = it.next();
+
+			sum_redb_num += Integer.valueOf(miniExpend.getRedb_num()); 
+			sum_coco_num += Integer.valueOf(miniExpend.getCoco_num());
+			sum_pari_num += Integer.valueOf(miniExpend.getPari_num());
+			sum_bige_num += Integer.valueOf(miniExpend.getBige_num());
+			sum_jdba_num += Integer.valueOf(miniExpend.getJdba_num());
+			sum_tine_num += Integer.valueOf(miniExpend.getTine_num());
+			sum_kunl_num += Integer.valueOf(miniExpend.getKunl_num());
+			sum_wine_num += Integer.valueOf(miniExpend.getWine_num());
+			sum_bree_num += Integer.valueOf(miniExpend.getBree_num());
+			sum_vodk_num += Integer.valueOf(miniExpend.getVodk_num());
+			sum_auru_num += Integer.valueOf(miniExpend.getAuru_num());
+			sum_qing_num += Integer.valueOf(miniExpend.getQing_num());
+			sum_spri_num += Integer.valueOf(miniExpend.getSpri_num());
+			sum_nail_num += Integer.valueOf(miniExpend.getNail_num());
+			sum_abcs_num += Integer.valueOf(miniExpend.getAbcs_num());
+			sum_card_num += Integer.valueOf(miniExpend.getCard_num());
+			sum_como_num += Integer.valueOf(miniExpend.getComo_num());
+		}
+		sum.setOrderNum("合计");
+		sum.setRedb_num(String.valueOf(sum_redb_num));
+		sum.setCoco_num(String.valueOf(sum_coco_num));
+		sum.setPari_num(String.valueOf(sum_pari_num));
+		sum.setBige_num(String.valueOf(sum_bige_num));
+		sum.setJdba_num(String.valueOf(sum_jdba_num));
+		sum.setTine_num(String.valueOf(sum_tine_num));
+		sum.setKunl_num(String.valueOf(sum_kunl_num));
+		sum.setWine_num(String.valueOf(sum_wine_num));
+		sum.setBree_num(String.valueOf(sum_bree_num));
+		sum.setVodk_num(String.valueOf(sum_vodk_num));
+		sum.setAuru_num(String.valueOf(sum_auru_num));
+		sum.setQing_num(String.valueOf(sum_qing_num));
+		sum.setSpri_num(String.valueOf(sum_spri_num));
+		sum.setNail_num(String.valueOf(sum_nail_num));
+		sum.setAbcs_num(String.valueOf(sum_abcs_num));
+		sum.setCard_num(String.valueOf(sum_card_num));
+		sum.setComo_num(String.valueOf(sum_como_num));
+
+		return sum;
+	}
+
+	/**
+	 * 布草list求平均
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private MiniExpend avgMiniExpend(List<MiniExpend> list) {
+
+		MiniExpend avg = new MiniExpend();
+		Iterator<MiniExpend> it = list.iterator();
+
+		Long sum_redb_num = (long) 0;
+		Long sum_coco_num = (long) 0;
+		Long sum_pari_num = (long) 0;
+		Long sum_bige_num = (long) 0;
+		Long sum_jdba_num = (long) 0;
+		Long sum_tine_num = (long) 0;
+		Long sum_kunl_num = (long) 0;
+		Long sum_wine_num = (long) 0;
+		Long sum_bree_num = (long) 0;
+		Long sum_vodk_num = (long) 0;
+		Long sum_auru_num = (long) 0;
+		Long sum_qing_num = (long) 0;
+		Long sum_spri_num = (long) 0;
+		Long sum_nail_num = (long) 0;
+		Long sum_abcs_num = (long) 0;
+		Long sum_card_num = (long) 0;
+		Long sum_como_num = (long) 0;
+
+		MiniExpend miniExpend = null;
+		Float chu = Float.valueOf(list.size());
+		if (chu != 0) {
+			while (it.hasNext()) {
+				miniExpend = it.next();
+				sum_redb_num += Integer.valueOf(miniExpend.getRedb_num()); 
+				sum_coco_num += Integer.valueOf(miniExpend.getCoco_num());
+				sum_pari_num += Integer.valueOf(miniExpend.getPari_num());
+				sum_bige_num += Integer.valueOf(miniExpend.getBige_num());
+				sum_jdba_num += Integer.valueOf(miniExpend.getJdba_num());
+				sum_tine_num += Integer.valueOf(miniExpend.getTine_num());
+				sum_kunl_num += Integer.valueOf(miniExpend.getKunl_num());
+				sum_wine_num += Integer.valueOf(miniExpend.getWine_num());
+				sum_bree_num += Integer.valueOf(miniExpend.getBree_num());
+				sum_vodk_num += Integer.valueOf(miniExpend.getVodk_num());
+				sum_auru_num += Integer.valueOf(miniExpend.getAuru_num());
+				sum_qing_num += Integer.valueOf(miniExpend.getQing_num());
+				sum_spri_num += Integer.valueOf(miniExpend.getSpri_num());
+				sum_nail_num += Integer.valueOf(miniExpend.getNail_num());
+				sum_abcs_num += Integer.valueOf(miniExpend.getAbcs_num());
+				sum_card_num += Integer.valueOf(miniExpend.getCard_num());
+				sum_como_num += Integer.valueOf(miniExpend.getComo_num());
+			}
+			avg.setOrderNum("平均");
+			avg.setRedb_num(String.valueOf(StringUtil.save2Float(sum_redb_num / chu)));
+			avg.setCoco_num(String.valueOf(StringUtil.save2Float(sum_coco_num / chu)));
+			avg.setPari_num(String.valueOf(StringUtil.save2Float(sum_pari_num / chu)));
+			avg.setBige_num(String.valueOf(StringUtil.save2Float(sum_bige_num / chu)));
+			avg.setJdba_num(String.valueOf(StringUtil.save2Float(sum_jdba_num / chu)));
+			avg.setTine_num(String.valueOf(StringUtil.save2Float(sum_tine_num / chu)));
+			avg.setKunl_num(String.valueOf(StringUtil.save2Float(sum_kunl_num / chu)));
+			avg.setWine_num(String.valueOf(StringUtil.save2Float(sum_wine_num / chu)));
+			avg.setBree_num(String.valueOf(StringUtil.save2Float(sum_bree_num / chu)));
+			avg.setVodk_num(String.valueOf(StringUtil.save2Float(sum_vodk_num / chu)));
+			avg.setAuru_num(String.valueOf(StringUtil.save2Float(sum_auru_num / chu)));
+			avg.setQing_num(String.valueOf(StringUtil.save2Float(sum_qing_num / chu)));
+			avg.setSpri_num(String.valueOf(StringUtil.save2Float(sum_spri_num / chu)));
+			avg.setNail_num(String.valueOf(StringUtil.save2Float(sum_nail_num / chu)));
+			avg.setAbcs_num(String.valueOf(StringUtil.save2Float(sum_abcs_num / chu)));
+			avg.setCard_num(String.valueOf(StringUtil.save2Float(sum_card_num / chu)));
+			avg.setComo_num(String.valueOf(StringUtil.save2Float(sum_como_num / chu)));
+		}
+		return avg;
+	}
+
 
 }

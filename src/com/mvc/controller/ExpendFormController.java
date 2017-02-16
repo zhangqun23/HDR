@@ -315,6 +315,63 @@ public class ExpendFormController {
 	}
 
 	/**
+	 * 导出迷你吧，word格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportMiniExpendForm.do")
+	public ResponseEntity<byte[]> exportMiniExpendForm(HttpServletRequest request) {
+		String formType = null;
+		String formName = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
+			formType = request.getParameter("formType");// 报表类型
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
+			formName = request.getParameter("formName");// 报表类型名称
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formType", formType);
+		map.put("formName", formName);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.MINIEXPEND_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = expendFormService.exportMiniExpendForm(map, path, tempPath);
+
+		return byteArr;
+	}
+	
+	/**
+	 *
+	 * 迷你吧使用量分析
+	 */
+	@RequestMapping("/selectMiniExpendAnalyseByMlimits.do")
+	public @ResponseBody String selectMiniExpendAnalyse(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("amlimit"));
+
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		List<ExpendAnalyse> list = expendFormService.selectMiniExpendAnalyse(map);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
+	
+	/**
 	 * 将JsonObject转换成Map
 	 * 
 	 * @param jsonObject

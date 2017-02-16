@@ -11,31 +11,67 @@ import java.util.Map;
  */
 public interface ExpendFormDao {
 
+	// 布草总数统计
+	List<Object> linenTotleCount(Map<String, Object> map, List<Integer> listCondition);
+	
+	// 房间耗品总数统计
+	List<Object> roomTotleCount(Map<String, Object> map, List<Integer> listCondition);
+		
+	// 卫生间耗品总数统计
+	List<Object> washTotleCount(Map<String, Object> map, List<Integer> listCondition);
+	
+	// 迷你吧总数统计
+	List<Object> miniTotleCount(Map<String, Object> map);
+	
 	// 布草统计分页
 	List<Object> selectlinenPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
 
-	// 布草统计
-	List<Object> selectlinenExpend(Map<String, Object> map);
+	// 布草统计(用于导出)
+	List<Object> selectlinenExpend(Map<String, Object> map, List<Integer> listCondition);
 
 	// 布草统计分析
 	List<Object> selectLinenExpendAnalyse(Map<String, Object> map);
 
-	// 统计条件
+	// 统计条件（布草、房间耗品、卫生间耗品）
 	List<Integer> selectCondition(String expendType);
 
 	// 查询布草总条数
-	Long countTotal(Map<String, Object> map);
+	Long countlinenTotal(Map<String, Object> map);
+	
+	// 查询房间耗品总条数
+	Long countroomTotal(Map<String, Object> map);
+		
+	// 查询卫生间耗品总条数
+	Long countwashTotal(Map<String, Object> map);
+	
+	// 查询迷你吧总条数
+	Long countminiTotal(Map<String, Object> map);
 
-	// 房间耗品统计
-	List<Object> selectroomExpend(Map<String, Object> map);
+	// 房间耗品统计分页
+	List<Object> selectroomPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
+
+	// 房间耗品统计(用于导出)
+	List<Object> selectroomExpend(Map<String, Object> map, List<Integer> listCondition);
 
 	// 房间耗品统计分析
 	List<Object> selectRoomExpendAnalyse(Map<String, Object> map);
 
-	// 卫生间耗品统计
-	List<Object> selectwashExpend(Map<String, Object> map);
+	// 卫生间耗品统计分页
+	List<Object> selectwashPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
+	
+	// 卫生间耗品统计(用于导出)
+	List<Object> selectwashExpend(Map<String, Object> map, List<Integer> listCondition);
 
 	// 卫生间耗品统计分析
 	List<Object> selectWashExpendAnalyse(Map<String, Object> map);
+	
+	// 迷你吧统计分页
+	List<Object> selectminiPage(Map<String, Object> map, Integer offset, Integer end);
+
+	// 迷你吧统计(用于导出)
+	List<Object> selectminiExpend(Map<String, Object> map);
+	
+	// 卫生间耗品统计分析
+	List<Object> selectMiniExpendAnalyse(Map<String, Object> map);
 
 }

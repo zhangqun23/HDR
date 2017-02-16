@@ -32,6 +32,11 @@ public class WashExpend {
 	private String scpa_num;//百洁布数目
 	private String rugl_num;//橡皮手套数目
 	private String dete_num;//洗涤灵数目
+	private String thim_num;//洗消净数目
+	private String bacl_num;//浴室清洁剂数目
+	private String tocl_num;//洁厕灵数目
+	private String babr_num;//浴缸刷数目
+	private String clbr_num;//恭桶刷数目
 	
 	public String getOrderNum() {
 		return orderNum;
@@ -170,6 +175,36 @@ public class WashExpend {
 	}
 	public void setDete_num(String dete_num) {
 		this.dete_num = dete_num;
+	}
+	public String getThim_num() {
+		return thim_num;
+	}
+	public void setThim_num(String thim_num) {
+		this.thim_num = thim_num;
+	}
+	public String getBacl_num() {
+		return bacl_num;
+	}
+	public void setBacl_num(String bacl_num) {
+		this.bacl_num = bacl_num;
+	}
+	public String getTocl_num() {
+		return tocl_num;
+	}
+	public void setTocl_num(String tocl_num) {
+		this.tocl_num = tocl_num;
+	}
+	public String getBabr_num() {
+		return babr_num;
+	}
+	public void setBabr_num(String babr_num) {
+		this.babr_num = babr_num;
+	}
+	public String getClbr_num() {
+		return clbr_num;
+	}
+	public void setClbr_num(String clbr_num) {
+		this.clbr_num = clbr_num;
 	}
 
 }

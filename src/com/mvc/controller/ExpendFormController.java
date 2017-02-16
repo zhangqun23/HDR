@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.ExpendAnalyse;
+import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
+import com.mvc.entityReport.MiniCount;
+import com.mvc.entityReport.MiniExpend;
+import com.mvc.entityReport.RoomCount;
 import com.mvc.entityReport.RoomExpend;
+import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CookieUtil;
@@ -52,13 +57,15 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("llimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		int totalRow = Integer.parseInt(expendFormService.countTotal(map).toString());
+		int totalRow = Integer.parseInt(expendFormService.countlinenTotal(map).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 
+		LinenCount linenCount = expendFormService.linenTotleCount(map);
 		List<LinenExpend> list = expendFormService.selectLinenPage(map, pager);
 		jsonObject = new JSONObject();
+		jsonObject.put("linenCount", linenCount);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -131,10 +138,17 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("rlimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<RoomExpend> list = expendFormService.selectRoomExpend(map);
-
+		int totalRow = Integer.parseInt(expendFormService.countroomTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		
+		RoomCount roomCount = expendFormService.roomTotleCount(map);
+		List<RoomExpend> list = expendFormService.selectRoomExpend(map, pager);
 		jsonObject = new JSONObject();
+		jsonObject.put("roomCount", roomCount);
 		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -205,10 +219,17 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("wlimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<WashExpend> list = expendFormService.selectWashExpend(map);
-
+		int totalRow = Integer.parseInt(expendFormService.countwashTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+		
+		WashCount washCount = expendFormService.washTotleCount(map);
+		List<WashExpend> list = expendFormService.selectWashExpend(map, pager);
 		jsonObject = new JSONObject();
+		jsonObject.put("washCount", washCount);
 		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
 
@@ -267,7 +288,89 @@ public class ExpendFormController {
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}
+	
+	/**
+	 * 迷你吧统计
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/selectMiniExpendFormByMlimits.do")
+	public @ResponseBody String selectMiniExpendForm(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("mlimit"));
 
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		int totalRow = Integer.parseInt(expendFormService.countminiTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		pager.setTotalRow(totalRow);
+
+		MiniCount miniCount = expendFormService.miniTotleCount(map);
+		List<MiniExpend> list = expendFormService.selectMiniPage(map, pager);
+		jsonObject = new JSONObject();
+		jsonObject.put("miniCount", miniCount);
+		jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 导出迷你吧，word格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportMiniExpendForm.do")
+	public ResponseEntity<byte[]> exportMiniExpendForm(HttpServletRequest request) {
+		String formType = null;
+		String formName = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
+			formType = request.getParameter("formType");// 报表类型
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
+			formName = request.getParameter("formName");// 报表类型名称
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formType", formType);
+		map.put("formName", formName);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.MINIEXPEND_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = expendFormService.exportMiniExpendForm(map, path, tempPath);
+
+		return byteArr;
+	}
+	
+	/**
+	 *
+	 * 迷你吧使用量分析
+	 */
+	@RequestMapping("/selectMiniExpendAnalyseByMlimits.do")
+	public @ResponseBody String selectMiniExpendAnalyse(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("amlimit"));
+
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		List<ExpendAnalyse> list = expendFormService.selectMiniExpendAnalyse(map);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
+	
 	/**
 	 * 将JsonObject转换成Map
 	 * 
@@ -285,7 +388,8 @@ public class ExpendFormController {
 			}
 		}
 		if (jsonObject.containsKey("formName")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString("formName"))) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString(""
+					+ ""))) {
 				formType = jsonObject.getString("formName");// 报表类型名称
 			}
 		}
@@ -373,7 +477,8 @@ public class ExpendFormController {
 		Map<String, String> map = new HashMap<String, String>();
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.LINENEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
+		String modelPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.LINENEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr1"))) {
 			svg1 = request.getParameter("chartSVGStr1");
@@ -389,11 +494,6 @@ public class ExpendFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
 			endTime = request.getParameter("endTime");
 		}
-
-		// svg1 = request.getParameter("chartSVGStr1");
-		// svg2 = request.getParameter("chartSVGStr2");
-		// startTime = request.getParameter("startTime");
-		// endTime = request.getParameter("endTime");
 		map.put("path", path);
 		map.put("modelPath", modelPath);
 		map.put("picCataPath", picCataPath);
@@ -403,8 +503,6 @@ public class ExpendFormController {
 		map.put("endTime", endTime);
 		byteArr = expendFormService.exportLinenExpendPic(map);
 
-		System.out.println("开始时间：" + startTime);
-		System.out.println("结束时间：" + endTime);
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}

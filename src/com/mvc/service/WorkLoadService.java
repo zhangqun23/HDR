@@ -18,14 +18,20 @@ public interface WorkLoadService {
 	// 获取所有员工工作量汇总列表信息
 	List<WorkLoad> getWorkLoadSummaryList(String startTime, String endTime);
 
-	// 导出所有员工工作量汇总表
-	ResponseEntity<byte[]> exportWorkLoadSummaryList(Map<String, Object> map);
+	// 导出所有员工工作量汇总表Word
+	ResponseEntity<byte[]> exportWorkLoadSummaryWord(Map<String, Object> map);
+
+	// 导出所有员工工作量汇总表excel
+	ResponseEntity<byte[]> exportWorkLoadSummaryExcel(Map<String, Object> map);
 
 	// 获取所有员工工作量饱和度分析列表
 	String getWorkLoadLevelList(String startTime, String endTime);
 
-	// 导出所有员工工作量饱和度分析表
-	ResponseEntity<byte[]> exportWorkLoadLevelList(Map<String, Object> map);
+	// 导出所有员工工作量饱和度分析表world
+	ResponseEntity<byte[]> exportWorkLoadLevelWord(Map<String, Object> map);
+
+	// 导出所有员工工作量饱和度分析表excel
+	ResponseEntity<byte[]> exportWorkLoadLevelExcel(Map<String, Object> map);
 
 	// 获取员工工作量分析图所需数据
 	String getWorkLoadAnalyseInfo(Map<String, String> map);

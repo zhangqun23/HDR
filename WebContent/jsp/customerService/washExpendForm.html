@@ -1,7 +1,9 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">对客服务/卫生间易消耗品统计</a></li>
+		<li><a href="">首页</a></li>
+		<li><a href="">对客服务统计</a></li>
+		<li><a href="">卫生间易耗品统计</a></li>
 	</ul>
 </div>
 
@@ -14,10 +16,10 @@
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="wlimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""><label>—</label><input
 						type="text" name="endTime" ng-model="wlimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""></li>
 					<li><label>选择报表类型</label><select class="dfselect layoutStyle"
 					    style="width: 140px" ng-model="wlimit.formType" name="formType" id="linenFormType" ng-change="getFormNameByNo()"
 					    required>
@@ -35,10 +37,80 @@
 	</div>
 
 	<table class="tablelist">
+		<caption class="table_title">卫生间易耗品使用量合计</caption>
 		<thead>
 			<tr>
-				<th class="a">序号</th>
-				<th class="a">房号</th>
+				<th class="width3">牙具</th>
+				<th class="width3">卷纸</th>
+				<th class="width3">洗发液</th>
+				<th class="width3">沐浴露</th>
+				<th class="width3">护发素</th>
+				<th class="width3">润肤露</th>
+				<th class="width3">护理包</th>
+				<th class="width3">黑垃圾袋</th>
+				<th class="width3">抽纸</th>
+				<th class="width3">卫生袋</th>
+				<th class="width3">浴帽</th>
+				<th class="width3">剃须刨</th>
+				<th class="width3">梳子</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{washCount.sum_toth}}</td>
+				<td>{{washCount.sum_ropa}}</td>
+				<td>{{washCount.sum_rins}}</td>
+				<td>{{washCount.sum_bafo}}</td>
+				<td>{{washCount.sum_haco}}</td>
+				<td>{{washCount.sum_shge}}</td>
+				<td>{{washCount.sum_capa}}</td>
+				<td>{{washCount.sum_garb}}</td>
+				<td>{{washCount.sum_paex}}</td>
+				<td>{{washCount.sum_peep}}</td>
+				<td>{{washCount.sum_shca}}</td>
+				<td>{{washCount.sum_shav}}</td>
+				<td>{{washCount.sum_comb}}</td>
+		</tbody>
+		<thead">
+			<tr>
+				<th class="width3">擦鞋布</th>
+				<th class="width3">手皂</th>
+				<th class="width3">指甲锉</th>
+				<th class="width3">干花</th>
+				<th class="width3">浴盐</th>
+				<th class="width3">百洁布</th>
+				<th class="width3">橡皮手套</th>
+				<th class="width3">洗涤灵</th>
+				<th class="width3">洗消净</th>
+				<th class="width3">浴室清洁剂</th>
+				<th class="width3">洁厕灵</th>
+				<th class="width3">浴缸刷</th>
+				<th class="width3">恭桶刷</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{washCount.sum_shcl}}</td>
+				<td>{{washCount.sum_soap}}</td>
+				<td>{{washCount.sum_nacl}}</td>
+				<td>{{washCount.sum_flow}}</td>
+				<td>{{washCount.sum_basa}}</td>
+				<td>{{washCount.sum_scpa}}</td>
+				<td>{{washCount.sum_rugl}}</td>
+				<td>{{washCount.sum_dete}}</td>
+				<td>{{washCount.sum_thim}}</td>
+				<td>{{washCount.sum_bacl}}</td>
+				<td>{{washCount.sum_tocl}}</td>
+				<td>{{washCount.sum_babr}}</td>
+				<td>{{washCount.sum_clbr}}</td>
+		</tbody>
+	</table>
+	
+	<table class="tablelist">
+	<caption class="table_bottom">卫生间易耗品使用量</caption>
+			<tr>
+				<th class="a" rowspan="2">序号</th>
+				<th class="a" rowspan="2">房号</th>
 				<th class="a">牙具</th>
 				<th class="a">卷纸</th>
 		        <th class="a">洗发液</th>
@@ -52,6 +124,8 @@
 		        <th class="a">浴帽</th>
 		        <th class="a">剃须刨</th>
 		        <th class="a">梳子</th>
+		     </tr>
+		     <tr>
 		        <th class="a">擦鞋布</th>
 		        <th class="a">手皂</th>
 		        <th class="a">指甲锉</th>
@@ -60,12 +134,16 @@
 		        <th class="a">百洁布</th>
 		        <th class="a">橡皮手套</th>
 		        <th class="a">洗涤灵</th>
+		        <th class="a">洗消净</th>
+		        <th class="a">浴室清洁剂</th>
+		        <th class="a">洁厕灵</th>
+		        <th class="a">浴缸刷</th>
+		        <th class="a">恭桶刷</th>
 			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="wash in washExpendFormList">
-				<td>{{wash.orderNum}}</td>
-				<td>{{wash.room_id}}</td>
+		<tbody ng-repeat="wash in washExpendFormList">
+			<tr>
+				<td rowspan="2">{{wash.orderNum}}</td>
+				<td rowspan="2">{{wash.room_id}}</td>
 				<td>{{wash.toth_num}}</td>
 				<td>{{wash.ropa_num}}</td>
 				<td>{{wash.rins_num}}</td>
@@ -79,6 +157,8 @@
 				<td>{{wash.shca_num}}</td>
 				<td>{{wash.shav_num}}</td>
 				<td>{{wash.comb_num}}</td>
+			</tr>
+			<tr>
 				<td>{{wash.shcl_num}}</td>
 				<td>{{wash.soap_num}}</td>
 				<td>{{wash.nacl_num}}</td>
@@ -87,6 +167,11 @@
 				<td>{{wash.scpa_num}}</td>
 				<td>{{wash.rugl_num}}</td>
 				<td>{{wash.dete_num}}</td>
+				<td>{{wash.thim_num}}</td>
+				<td>{{wash.bacl_num}}</td>
+				<td>{{wash.tocl_num}}</td>
+				<td>{{wash.babr_num}}</td>
+				<td>{{wash.clbr_num}}</td>
 			</tr>
 		</tbody>
 	</table>

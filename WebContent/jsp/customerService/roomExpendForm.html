@@ -1,7 +1,9 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">对客服务/房间耗品统计</a></li>
+		<li><a href="">首页</a></li>
+		<li><a href="">对客服务统计</a></li>
+		<li><a href="">房间耗品统计</a></li>
 	</ul>
 </div>
 
@@ -14,10 +16,10 @@
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="rlimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""><label>—</label><input
 						type="text" name="endTime" ng-model="rlimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
 					style="width: 140px" ng-model="rlimit.formType" name="formType"  id="linenFormType" ng-change="getFormNameByNo()"
 					required>
@@ -35,6 +37,93 @@
 	</div>
 
 	<table class="tablelist">
+		<caption class="table_title">房间易耗品使用量合计</caption>
+		<thead>
+			<tr>
+				<th class="a">雨伞</th>
+				<th class="a">咖啡</th>
+				<th class="a">白糖</th>
+				<th class="a">伴侣</th>
+				<th class="a">铅笔</th>
+				<th class="a">橡皮</th>
+				<th class="a">即扫牌</th>
+				<th class="a">面巾纸</th>
+				<th class="a">环保卡</th>
+				<th class="a">手提袋</th>
+				<th class="a">袋泡茶</th>
+				<th class="a">送餐牌</th>
+				<th class="a">意见书</th>
+				<th class="a">立顿红茶</th>
+				<th class="a">请勿打扰牌</th>
+				<th class="a">电视节目单</th>
+				<th class="a">信封（普通）</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{roomCount.sum_umbr}}</td>
+				<td>{{roomCount.sum_coff}}</td>
+				<td>{{roomCount.sum_suge}}</td>
+				<td>{{roomCount.sum_coup}}</td>
+				<td>{{roomCount.sum_penc}}</td>
+				<td>{{roomCount.sum_erse}}</td>
+				<td>{{roomCount.sum_clca}}</td>
+				<td>{{roomCount.sum_fati}}</td>
+				<td>{{roomCount.sum_enca}}</td>
+				<td>{{roomCount.sum_bage}}</td>
+				<td>{{roomCount.sum_teab}}</td>
+				<td>{{roomCount.sum_meca}}</td>
+				<td>{{roomCount.sum_opbo}}</td>
+				<td>{{roomCount.sum_blte}}</td>
+				<td>{{roomCount.sum_dnds}}</td>
+				<td>{{roomCount.sum_tvca}}</td>
+				<td>{{roomCount.sum_orel}}</td>
+		</tbody>
+		<thead>
+			<tr>
+				<th class="a">便签</th>
+				<th class="a">杯垫</th>
+				<th class="a">火柴</th>
+				<th class="a">地图</th>
+				<th class="a">尺子</th>
+				<th class="a">信纸</th>
+				<th class="a">回形针</th>
+				<th class="a">圆珠笔</th>
+				<th class="a">针线包</th>
+				<th class="a">洗衣单</th>
+				<th class="a">低卡糖</th>
+				<th class="a">擦鞋布</th>
+				<th class="a">防毒面具</th>
+				<th class="a">立顿绿茶</th>
+				<th class="a">拖鞋（儿童）</th>
+				<th class="a">彩色曲别针</th>
+				<th class="a">信封（航空）</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{roomCount.sum_memo}}</td>
+				<td>{{roomCount.sum_coas}}</td>
+				<td>{{roomCount.sum_matc}}</td>
+				<td>{{roomCount.sum_mapp}}</td>
+				<td>{{roomCount.sum_rule}}</td>
+				<td>{{roomCount.sum_stat}}</td>
+				<td>{{roomCount.sum_clip}}</td>
+				<td>{{roomCount.sum_bape}}</td>
+				<td>{{roomCount.sum_comp}}</td>
+				<td>{{roomCount.sum_lali}}</td>
+				<td>{{roomCount.sum_losu}}</td>
+				<td>{{roomCount.sum_shpa}}</td>
+				<td>{{roomCount.sum_anma}}</td>
+				<td>{{roomCount.sum_grte}}</td>
+				<td>{{roomCount.sum_chsl}}</td>
+				<td>{{roomCount.sum_cocl}}</td>
+				<td>{{roomCount.sum_arel}}</td>
+		</tbody>
+	</table>
+	
+	<table class="tablelist">
+	<caption class="table_bottom">房间易耗品使用量</caption>
 			<tr>
 				<th class="a" rowspan="2">序号</th>
 				<th class="a" rowspan="2">房号</th>

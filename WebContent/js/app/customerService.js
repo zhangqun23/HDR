@@ -92,7 +92,14 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/washExpendAnalyse', {
 		templateUrl : '/HDR/jsp/customerService/washExpendAnalyse.html',
 		controller : 'CustomerServiceController'
+	}).when('/miniExpendForm', {
+		templateUrl : '/HDR/jsp/customerService/miniExpendForm.html',
+		controller : 'CustomerServiceController'
+	}).when('/miniExpendAnalyse', {
+		templateUrl : '/HDR/jsp/customerService/miniExpendAnalyse.html',
+		controller : 'CustomerServiceController'
 	})
+	
 } ]);
 app.constant('baseUrl', '/HDR/');
 
@@ -219,6 +226,26 @@ app
 									data : data
 								});
 							};
+							// wq选择迷你吧耗品
+							services.selectMiniExpendFormByMlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectMiniExpendFormByMlimits.do',
+									data : data
+								});
+							};
+							// wq迷你吧用量分析
+							services.selectMiniExpendAnalyseByMlimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'customerService/selectMiniExpendAnalyseByMlimits.do',
+									data : data
+								});
+							};
 							return services;
 						} ]);
 app
@@ -235,7 +262,7 @@ app
 							reportForm.llimit = {
 								startTime : "",
 								endTime : "",
-								formType : "0",
+								formType : "0"
 							};
 							// wq布草分析统计界面设置条件
 							reportForm.allimit = {
@@ -259,8 +286,19 @@ app
 								endTime : "",
 								formType : "0"
 							};
-							// wq布草分析统计界面设置条件
+							// wq卫生间分析统计界面设置条件
 							reportForm.awlimit = {
+								startTime : "",
+								endTime : ""
+							};
+							// wq迷你吧统计界面设置条件
+							reportForm.mlimit = {
+								startTime : "",
+								endTime : "",
+								formType : "0"
+							};
+							// wq迷你吧分析统计界面设置条件
+							reportForm.amlimit = {
 								startTime : "",
 								endTime : ""
 							};
@@ -321,9 +359,10 @@ app
 												function(data) {
 													$(".overlayer").fadeOut(200);
 													$(".tipLoading").fadeOut(200);
-													reportForm.linenExpendFormList = data.list;
+													reportForm.linenExpendFormList = data.list;reportForm.linenCount = data.linenCount;
 													pageTurn(data.totalPage, 1,
 															getLinenExpendFormByLlimits);
+													reportForm.linenCount = data.linenCount;
 													if (data.list.length) {
 														reportForm.listIsShow = false;
 													} else {
@@ -364,7 +403,6 @@ app
 								$(".tipLoading").fadeIn(200);
 								var linenExpendAnalyseLlimit = JSON
 										.stringify(reportForm.allimit);
-								//alert(allimit.startTime);
 								services
 										.selectLinenExpendAnalyseByLlimits({
 											allimit : linenExpendAnalyseLlimit
@@ -452,19 +490,39 @@ app
 								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								var roomExpendFormRlimit = JSON
+								roomExpendFormRlimit = JSON
 										.stringify(reportForm.rlimit);
 								services.selectRoomExpendFormByRlimits({
-									rlimit : roomExpendFormRlimit
+									rlimit : roomExpendFormRlimit,
+									page : nowPage
 								}).success(function(data) {
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.roomExpendFormList = data.list;
+									pageTurn(data.totalPage, 1,
+											getRoomExpendFormByRlimits);
+									reportForm.roomCount = data.roomCount;
+									if (reportForm.roomCount) {
+										reportForm.table1Show = true;
+									}
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
 									}
+								});
+							}
+							// wq房间耗品统计换页函数
+							function getRoomExpendFormByRlimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services.selectRoomExpendFormByRlimits({
+									rlimit : roomExpendFormRlimit,
+									page : p
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.roomExpendFormList = data.list;
 								});
 							}
 							// wq根据条件查找房间耗品分析
@@ -485,7 +543,7 @@ app
 								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								var roomExpendAnalyseRlimit = JSON
+								roomExpendAnalyseRlimit = JSON
 										.stringify(reportForm.arlimit);
 								services
 										.selectRoomExpendAnalyseByRlimits({
@@ -562,19 +620,39 @@ app
 								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								var washExpendFormWlimit = JSON
+								washExpendFormWlimit = JSON
 										.stringify(reportForm.wlimit);
 								services.selectWashExpendFormByWlimits({
-									wlimit : washExpendFormWlimit
+									wlimit : washExpendFormWlimit,
+									page : nowPage
 								}).success(function(data) {
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.washExpendFormList = data.list;
+									pageTurn(data.totalPage, 1,
+											getWashExpendFormByWlimits);
+									reportForm.washCount = data.washCount;
+									if (reportForm.washCount) {
+										reportForm.table1Show = true;
+									}
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;
 									}
+								});
+							}
+							// wq卫生间耗品统计换页函数
+							function getWashExpendFormByWlimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services.selectWashExpendFormByWlimits({
+									wlimit : washExpendFormWlimit,
+									page : p
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.washExpendFormList = data.list;
 								});
 							}
 							// wq根据条件查找卫生间耗品分析
@@ -644,6 +722,151 @@ app
 																				"#bar1")
 																				.highcharts()
 																				.getSVG());
+													} else {
+														reportForm.listIsShow = true;
+													}
+
+												});
+							}
+							// wq根据条件查找迷你吧消耗列表
+							reportForm.selectMiniExpendFormByMlimits = function() {
+								if (reportForm.mlimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.mlimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.mlimit.startTime,
+										reportForm.mlimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								if (reportForm.mlimit.formType == "") {
+									alert("请选择报表类型！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								miniExpendFormMlimit = JSON
+										.stringify(reportForm.mlimit);
+								services
+										.selectMiniExpendFormByMlimits({
+											mlimit : miniExpendFormMlimit,
+											page : nowPage
+										})
+										.success(
+												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
+													reportForm.miniExpendFormList = data.list;
+													pageTurn(data.totalPage, 1,
+															getMiniExpendFormByMlimits);
+													reportForm.miniCount = data.miniCount;
+													if (data.list.length) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+												});
+							}
+							// wq迷你吧统计换页函数
+							function getMiniExpendFormByMlimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services.selectMiniExpendFormByMlimits({
+									mlimit : miniExpendFormMlimit,
+									page : p
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.miniExpendFormList = data.list;
+									if (reportForm.miniExpendFormList) {
+										reportForm.table2Show = true;
+									}
+								});
+							}
+							// wq根据条件查找迷你吧分析
+							reportForm.selectMiniExpendAnalyseByMlimits = function() {
+								if (reportForm.amlimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (reportForm.amlimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (compareDateTime(
+										reportForm.amlimit.startTime,
+										reportForm.amlimit.endTime)) {
+									alert("截止时间不能大于开始时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								var miniExpendAnalyseMlimit = JSON
+										.stringify(reportForm.amlimit);
+								services
+										.selectMiniExpendAnalyseByMlimits({
+											amlimit : miniExpendAnalyseMlimit
+										})
+										.success(
+												function(data) {
+													$(".overlayer").fadeOut(200);
+													$(".tipLoading").fadeOut(200);
+													reportForm.typeList = data.list;
+													if (data.list.length) {
+														reportForm.listIsShow = false;
+														
+														if (data.list.length < 15) {
+															reportForm.barSize = data.list.length * 80;
+														} else {
+															reportForm.barSize = 1200;
+														}
+														$("#bar1")
+																.css(
+																		'height',
+																		reportForm.barSize
+																				+ 'px');
+														var title = "客房部迷你吧使用量条形图分析";// 条形图标题显示
+														var xAxis = [];// 横坐标显示
+														var yAxis = "单位:数量";// 纵坐标显示
+														var barData = [];// 最终传入bar1中的data
+														var miniNum = [];
+														var pieData=[];//饼状图传入数据
+														for ( var item in data.list) {
+															if (data.list[item].good_name != '') {
+																xAxis
+																		.push(data.list[item].goods_name);
+																miniNum
+																		.push(parseInt(data.list[item].goods_num));
+																combinePie(pieData,data.list[item].goods_name,parseInt(data.list[item].goods_num));			
+															}
+														}
+														pieChartForm("#pieChart", "客房部迷你吧使用量饼状图分析", "迷你吧使用占比",
+																pieData);
+														$('#pie-svg')
+														.val(
+																$(
+																		"#pieChart")
+																		.highcharts()
+																		.getSVG());
+														
+														combine(barData,
+																'迷你吧使用数量',
+																miniNum);
+														barForm(barData,
+																"#bar1", title,
+																xAxis, yAxis);
+														$('#bar-svg')
+																.val(
+																		$(
+																				"#bar1")
+																				.highcharts()
+																				.getSVG());
+														
 													} else {
 														reportForm.listIsShow = true;
 													}

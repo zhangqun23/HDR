@@ -1,6 +1,5 @@
 package com.mvc.service.impl;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,8 +16,13 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.ExpendFormDao;
 import com.mvc.entityReport.ExpendAnalyse;
+import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
+import com.mvc.entityReport.MiniCount;
+import com.mvc.entityReport.MiniExpend;
+import com.mvc.entityReport.RoomCount;
 import com.mvc.entityReport.RoomExpend;
+import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CollectionUtil;
@@ -26,7 +30,6 @@ import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.PictureUtil;
 import com.utils.StringUtil;
-import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 /**
@@ -41,6 +44,57 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	@Autowired
 	ExpendFormDao expendFormDao;
 
+	//布草总数统计
+	@Override
+	public LinenCount linenTotleCount(Map<String, Object> map){
+		
+		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+		List<Object> listSource = expendFormDao.linenTotleCount(map, listCondition);
+		
+		Iterator<Object> it = listSource.iterator();
+		LinenCount listGoal = objToLinenCount(it);
+
+		return listGoal;
+	}
+	
+	//房间耗品总数统计
+	@Override
+	public RoomCount roomTotleCount(Map<String, Object> map){
+			
+		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		List<Object> listSource = expendFormDao.roomTotleCount(map, listCondition);
+			
+		Iterator<Object> it = listSource.iterator();
+		RoomCount listGoal = objToRoomCount(it);
+		
+		return listGoal;
+	}
+		
+	//卫生间耗品总数统计
+	@Override
+	public WashCount washTotleCount(Map<String, Object> map){
+			
+		List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+		List<Object> listSource = expendFormDao.washTotleCount(map, listCondition);
+			
+		Iterator<Object> it = listSource.iterator();
+		WashCount listGoal = objToWashCount(it);
+
+		return listGoal;
+	}
+	
+	//迷你吧总数统计
+	@Override
+	public MiniCount miniTotleCount(Map<String, Object> map){
+		
+		List<Object> listSource = expendFormDao.miniTotleCount(map);
+			
+		Iterator<Object> it = listSource.iterator();
+		MiniCount listGoal = objToMiniCount(it);
+
+		return listGoal;
+	}
+	
 	// 布草统计
 	@Override
 	public List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager) {
@@ -95,7 +149,138 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		return listGoal;
 	}
+	
+	// 布草总数排序
+	private LinenCount objToLinenCount(Iterator<Object> it) {
 
+		LinenCount linenCount = null;
+
+		linenCount = new LinenCount();
+		linenCount.setSum_slba(it.next().toString());
+		linenCount.setSum_duto(it.next().toString());
+		linenCount.setSum_laba(it.next().toString());
+		linenCount.setSum_besh(it.next().toString());
+		linenCount.setSum_facl(it.next().toString());
+		linenCount.setSum_bato(it.next().toString());
+		linenCount.setSum_hato(it.next().toString());
+		linenCount.setSum_medo(it.next().toString());
+		linenCount.setSum_flto(it.next().toString());
+		linenCount.setSum_baro(it.next().toString());
+		linenCount.setSum_pill(it.next().toString());
+		linenCount.setSum_piin(it.next().toString());
+		linenCount.setSum_blan(it.next().toString());
+		linenCount.setSum_shop(it.next().toString());
+
+		return linenCount;
+	}
+
+	// 房间耗品总数排序
+	private RoomCount objToRoomCount(Iterator<Object> it) {
+
+		RoomCount roomCount = null;
+
+		roomCount = new RoomCount();
+		roomCount.setSum_coas(it.next().toString());
+		roomCount.setSum_penc(it.next().toString());
+		roomCount.setSum_rule(it.next().toString());
+		roomCount.setSum_erse(it.next().toString());
+		roomCount.setSum_cocl(it.next().toString());
+		roomCount.setSum_chsl(it.next().toString());
+		roomCount.setSum_umbr(it.next().toString());
+		roomCount.setSum_dnds(it.next().toString());
+		roomCount.setSum_meca(it.next().toString());
+		roomCount.setSum_comp(it.next().toString());
+		roomCount.setSum_shpa(it.next().toString());
+		roomCount.setSum_bape(it.next().toString());
+		roomCount.setSum_bage(it.next().toString());
+		roomCount.setSum_clip(it.next().toString());
+		roomCount.setSum_orel(it.next().toString());
+		roomCount.setSum_arel(it.next().toString());
+		roomCount.setSum_fati(it.next().toString());
+		roomCount.setSum_memo(it.next().toString());
+		roomCount.setSum_stat(it.next().toString());
+		roomCount.setSum_lali(it.next().toString());
+		roomCount.setSum_opbo(it.next().toString());
+		roomCount.setSum_mapp(it.next().toString());
+		roomCount.setSum_tvca(it.next().toString());
+		roomCount.setSum_clca(it.next().toString());
+		roomCount.setSum_enca(it.next().toString());
+		roomCount.setSum_grte(it.next().toString());
+		roomCount.setSum_blte(it.next().toString());
+		roomCount.setSum_suge(it.next().toString());
+		roomCount.setSum_losu(it.next().toString());
+		roomCount.setSum_teab(it.next().toString());
+		roomCount.setSum_coff(it.next().toString());
+		roomCount.setSum_coup(it.next().toString());
+		roomCount.setSum_anma(it.next().toString());
+		roomCount.setSum_matc(it.next().toString());
+
+		return roomCount;
+	}
+	
+	// 卫生间耗品总数排序
+	private WashCount objToWashCount(Iterator<Object> it) {
+		
+		WashCount washCount = null;
+
+		washCount = new WashCount();	
+		washCount.setSum_toth(it.next().toString());
+		washCount.setSum_ropa(it.next().toString());
+		washCount.setSum_paex(it.next().toString());
+		washCount.setSum_comb(it.next().toString());
+		washCount.setSum_shcl(it.next().toString());
+		washCount.setSum_shca(it.next().toString());
+		washCount.setSum_nacl(it.next().toString());
+		washCount.setSum_shav(it.next().toString());
+		washCount.setSum_peep(it.next().toString());
+		washCount.setSum_rins(it.next().toString());
+		washCount.setSum_bafo(it.next().toString());
+		washCount.setSum_haco(it.next().toString());
+		washCount.setSum_shge(it.next().toString());
+		washCount.setSum_flow(it.next().toString());
+		washCount.setSum_basa(it.next().toString());
+		washCount.setSum_babr(it.next().toString());
+		washCount.setSum_tocl(it.next().toString());
+		washCount.setSum_bacl(it.next().toString());
+		washCount.setSum_thim(it.next().toString());
+		washCount.setSum_dete(it.next().toString());
+		washCount.setSum_clbr(it.next().toString());
+		washCount.setSum_scpa(it.next().toString());
+		washCount.setSum_rugl(it.next().toString());
+		washCount.setSum_capa(it.next().toString());
+		washCount.setSum_garb(it.next().toString());
+		washCount.setSum_soap(it.next().toString());
+		
+		return washCount;
+	}
+	
+	// 卫生间耗品总数排序
+	private MiniCount objToMiniCount(Iterator<Object> it) {
+			
+		MiniCount miniCount = null;
+
+		miniCount = new MiniCount();	
+		miniCount.setSum_redb(it.next().toString());
+		miniCount.setSum_coco(it.next().toString());
+		miniCount.setSum_pari(it.next().toString());
+		miniCount.setSum_bige(it.next().toString());
+		miniCount.setSum_jdba(it.next().toString());
+		miniCount.setSum_tine(it.next().toString());
+		miniCount.setSum_kunl(it.next().toString());
+		miniCount.setSum_wine(it.next().toString());
+		miniCount.setSum_bree(it.next().toString());
+		miniCount.setSum_vodk(it.next().toString());
+		miniCount.setSum_auru(it.next().toString());
+		miniCount.setSum_qing(it.next().toString());
+		miniCount.setSum_spri(it.next().toString());
+		miniCount.setSum_nail(it.next().toString());
+		miniCount.setSum_abcs(it.next().toString());
+		miniCount.setSum_card(it.next().toString());
+		miniCount.setSum_como(it.next().toString());
+			
+		return miniCount;
+	}
+		
 	// 布草导出
 	@Override
 	public ResponseEntity<byte[]> exportLinenExpendForm(Map<String, Object> map, String path, String tempPath) {
@@ -108,7 +293,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = expendFormDao.selectlinenExpend(map);
+			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+			List<Object> listSource = expendFormDao.selectlinenExpend(map, listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<LinenExpend> listGoal = objToLinenExpand(it);
 
@@ -224,7 +410,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_blan_num = (long) 0;
 
 		LinenExpend linenExpend = null;
-		long chu = Integer.valueOf(list.size());
+		Float chu = Float.valueOf(list.size());
 		if (chu != 0) {
 			while (it.hasNext()) {
 				linenExpend = it.next();
@@ -244,20 +430,20 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_blan_num += Integer.valueOf(linenExpend.getBlan_num());
 			}
 			avg.setOrderNum("平均");
-			avg.setBato_num(String.valueOf(sum_bato_num / chu));
-			avg.setFacl_num(String.valueOf(sum_facl_num / chu));
-			avg.setBesh_num(String.valueOf(sum_besh_num / chu));
-			avg.setHato_num(String.valueOf(sum_hato_num / chu));
-			avg.setMedo_num(String.valueOf(sum_medo_num / chu));
-			avg.setFlto_num(String.valueOf(sum_flto_num / chu));
-			avg.setBaro_num(String.valueOf(sum_baro_num / chu));
-			avg.setSlba_num(String.valueOf(sum_slba_num / chu));
-			avg.setDuto_num(String.valueOf(sum_duto_num / chu));
-			avg.setPill_num(String.valueOf(sum_pill_num / chu));
-			avg.setShop_num(String.valueOf(sum_shop_num / chu));
-			avg.setLaba_num(String.valueOf(sum_laba_num / chu));
-			avg.setPiin_num(String.valueOf(sum_piin_num / chu));
-			avg.setBlan_num(String.valueOf(sum_blan_num / chu));
+			avg.setBato_num(String.valueOf(StringUtil.save2Float(sum_bato_num / chu)));
+			avg.setFacl_num(String.valueOf(StringUtil.save2Float(sum_facl_num / chu)));
+			avg.setBesh_num(String.valueOf(StringUtil.save2Float(sum_besh_num / chu)));
+			avg.setHato_num(String.valueOf(StringUtil.save2Float(sum_hato_num / chu)));
+			avg.setMedo_num(String.valueOf(StringUtil.save2Float(sum_medo_num / chu)));
+			avg.setFlto_num(String.valueOf(StringUtil.save2Float(sum_flto_num / chu)));
+			avg.setBaro_num(String.valueOf(StringUtil.save2Float(sum_baro_num / chu)));
+			avg.setSlba_num(String.valueOf(StringUtil.save2Float(sum_slba_num / chu)));
+			avg.setDuto_num(String.valueOf(StringUtil.save2Float(sum_duto_num / chu)));
+			avg.setPill_num(String.valueOf(StringUtil.save2Float(sum_pill_num / chu)));
+			avg.setShop_num(String.valueOf(StringUtil.save2Float(sum_shop_num / chu)));
+			avg.setLaba_num(String.valueOf(StringUtil.save2Float(sum_laba_num / chu)));
+			avg.setPiin_num(String.valueOf(StringUtil.save2Float(sum_piin_num / chu)));
+			avg.setBlan_num(String.valueOf(StringUtil.save2Float(sum_blan_num / chu)));
 		}
 		return avg;
 	}
@@ -292,42 +478,18 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 			listGoal.add(expendAnalyse);
 		}
-		sortAndWrite4(listGoal, "goods_num", true, "orderNum");
-
-		Iterator<ExpendAnalyse> itGoal = listGoal.iterator();
-		int i = 0;
-		expendAnalyse = null;
-		while (itGoal.hasNext()) {
-			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
-			expendAnalyse = (ExpendAnalyse) itGoal.next();
-			expendAnalyse.setOrderNum(String.valueOf(i));
-		}
 
 		return listGoal;
 	}
 
-	/**
-	 * 排序并插入序号
-	 * 
-	 * @param list
-	 * @param room_id
-	 *            按指定字段排序
-	 * @param ascFlag
-	 *            true升序,false降序
-	 * @param writeField
-	 *            向指定字段插入序号
-	 */
-	private void sortAndWrite4(List<ExpendAnalyse> list, String room_id, boolean ascFlag, String writeField) {
-		CollectionUtil.sort(list, room_id, ascFlag);
-		CollectionUtil<ExpendAnalyse> collectionUtil = new CollectionUtil<ExpendAnalyse>();
-		collectionUtil.writeSort(list, writeField);
-	}
-
 	// 房间耗品统计
 	@Override
-	public List<RoomExpend> selectRoomExpend(Map<String, Object> map) {
+	public List<RoomExpend> selectRoomExpend(Map<String, Object> map, Pager pager) {
 
-		List<Object> listSource = expendFormDao.selectroomExpend(map);
+		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		List<Object> listSource = expendFormDao.selectroomPage(map, pager.getOffset(), pager.getPageSize(),
+				listCondition);
+		
 		Iterator<Object> it = listSource.iterator();
 		List<RoomExpend> listGoal = objToRoomExpand(it);
 
@@ -342,40 +504,40 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			obj = (Object[]) it.next();
 			roomExpend = new RoomExpend();
 			roomExpend.setRoom_id(obj[0].toString());
-			roomExpend.setUmbr_num(obj[1].toString());
-			roomExpend.setCoff_num(obj[2].toString());
-			roomExpend.setSuge_num(obj[3].toString());
-			roomExpend.setCoup_num(obj[4].toString());
-			roomExpend.setPenc_num(obj[5].toString());
-			roomExpend.setErse_num(obj[6].toString());
-			roomExpend.setClca_num(obj[7].toString());
-			roomExpend.setFati_num(obj[8].toString());
-			roomExpend.setEnca_num(obj[9].toString());
-			roomExpend.setBage_num(obj[10].toString());
-			roomExpend.setTeab_num(obj[11].toString());
-			roomExpend.setMeca_num(obj[12].toString());
-			roomExpend.setOpbo_num(obj[13].toString());
-			roomExpend.setBlte_num(obj[14].toString());
-			roomExpend.setDnds_num(obj[15].toString());
-			roomExpend.setTvca_num(obj[16].toString());
-			roomExpend.setOrel_num(obj[17].toString());
+			roomExpend.setUmbr_num(obj[7].toString());
+			roomExpend.setCoff_num(obj[31].toString());
+			roomExpend.setSuge_num(obj[28].toString());
+			roomExpend.setCoup_num(obj[32].toString());
+			roomExpend.setPenc_num(obj[2].toString());
+			roomExpend.setErse_num(obj[4].toString());
+			roomExpend.setClca_num(obj[24].toString());
+			roomExpend.setFati_num(obj[17].toString());
+			roomExpend.setEnca_num(obj[25].toString());
+			roomExpend.setBage_num(obj[13].toString());
+			roomExpend.setTeab_num(obj[30].toString());
+			roomExpend.setMeca_num(obj[9].toString());
+			roomExpend.setOpbo_num(obj[21].toString());
+			roomExpend.setBlte_num(obj[27].toString());
+			roomExpend.setDnds_num(obj[8].toString());
+			roomExpend.setTvca_num(obj[23].toString());
+			roomExpend.setOrel_num(obj[15].toString());
 			roomExpend.setMemo_num(obj[18].toString());
-			roomExpend.setCoas_num(obj[19].toString());
-			roomExpend.setMatc_num(obj[20].toString());
-			roomExpend.setMapp_num(obj[21].toString());
-			roomExpend.setRule_num(obj[22].toString());
-			roomExpend.setStat_num(obj[23].toString());
-			roomExpend.setClip_num(obj[24].toString());
-			roomExpend.setBape_num(obj[25].toString());
-			roomExpend.setComp_num(obj[26].toString());
-			roomExpend.setLali_num(obj[27].toString());
-			roomExpend.setLosu_num(obj[28].toString());
-			roomExpend.setShpa_num(obj[29].toString());
-			roomExpend.setAnma_num(obj[30].toString());
-			roomExpend.setGrte_num(obj[31].toString());
-			roomExpend.setChsl_num(obj[32].toString());
-			roomExpend.setCocl_num(obj[33].toString());
-			roomExpend.setArel_num(obj[34].toString());
+			roomExpend.setCoas_num(obj[1].toString());
+			roomExpend.setMatc_num(obj[34].toString());
+			roomExpend.setMapp_num(obj[22].toString());
+			roomExpend.setRule_num(obj[3].toString());
+			roomExpend.setStat_num(obj[19].toString());
+			roomExpend.setClip_num(obj[14].toString());
+			roomExpend.setBape_num(obj[12].toString());
+			roomExpend.setComp_num(obj[10].toString());
+			roomExpend.setLali_num(obj[20].toString());
+			roomExpend.setLosu_num(obj[29].toString());
+			roomExpend.setShpa_num(obj[11].toString());
+			roomExpend.setAnma_num(obj[33].toString());
+			roomExpend.setGrte_num(obj[26].toString());
+			roomExpend.setChsl_num(obj[6].toString());
+			roomExpend.setCocl_num(obj[5].toString());
+			roomExpend.setArel_num(obj[16].toString());
 
 			listGoal.add(roomExpend);
 		}
@@ -405,7 +567,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = expendFormDao.selectroomExpend(map);
+			List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+			List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<RoomExpend> listGoal = objToRoomExpand(it);
 
@@ -564,7 +727,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		RoomExpend avg = new RoomExpend();
 		Iterator<RoomExpend> re = list.iterator();
-		long chu = Integer.valueOf(list.size());
+		Float chu = Float.valueOf(list.size());
 
 		Long sum_umbr_num = (long) 0;
 		Long sum_coff_num = (long) 0;
@@ -641,40 +804,40 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_arel_num += Integer.valueOf(roomExpend.getArel_num());
 			}
 			avg.setOrderNum("平均");
-			avg.setUmbr_num(String.valueOf(sum_umbr_num / chu));
-			avg.setCoff_num(String.valueOf(sum_coff_num / chu));
-			avg.setSuge_num(String.valueOf(sum_suge_num / chu));
-			avg.setCoup_num(String.valueOf(sum_coup_num / chu));
-			avg.setPenc_num(String.valueOf(sum_penc_num / chu));
-			avg.setErse_num(String.valueOf(sum_erse_num / chu));
-			avg.setClca_num(String.valueOf(sum_clca_num / chu));
-			avg.setFati_num(String.valueOf(sum_fati_num / chu));
-			avg.setEnca_num(String.valueOf(sum_enca_num / chu));
-			avg.setBage_num(String.valueOf(sum_bage_num / chu));
-			avg.setTeab_num(String.valueOf(sum_teab_num / chu));
-			avg.setMeca_num(String.valueOf(sum_meca_num / chu));
-			avg.setOpbo_num(String.valueOf(sum_opbo_num / chu));
-			avg.setBlte_num(String.valueOf(sum_blte_num / chu));
-			avg.setDnds_num(String.valueOf(sum_dnds_num / chu));
-			avg.setTvca_num(String.valueOf(sum_tvca_num / chu));
-			avg.setOrel_num(String.valueOf(sum_orel_num / chu));
-			avg.setMemo_num(String.valueOf(sum_memo_num / chu));
-			avg.setCoas_num(String.valueOf(sum_coas_num / chu));
-			avg.setMatc_num(String.valueOf(sum_matc_num / chu));
-			avg.setMapp_num(String.valueOf(sum_mapp_num / chu));
-			avg.setRule_num(String.valueOf(sum_rule_num / chu));
-			avg.setStat_num(String.valueOf(sum_stat_num / chu));
-			avg.setClip_num(String.valueOf(sum_clip_num / chu));
-			avg.setBape_num(String.valueOf(sum_bape_num / chu));
-			avg.setComp_num(String.valueOf(sum_comp_num / chu));
-			avg.setLali_num(String.valueOf(sum_lali_num / chu));
-			avg.setLosu_num(String.valueOf(sum_losu_num / chu));
-			avg.setShpa_num(String.valueOf(sum_shpa_num / chu));
-			avg.setAnma_num(String.valueOf(sum_anma_num / chu));
-			avg.setGrte_num(String.valueOf(sum_grte_num / chu));
-			avg.setChsl_num(String.valueOf(sum_chsl_num / chu));
-			avg.setCocl_num(String.valueOf(sum_cocl_num / chu));
-			avg.setArel_num(String.valueOf(sum_arel_num / chu));
+			avg.setUmbr_num(String.valueOf(StringUtil.save2Float(sum_umbr_num / chu)));
+			avg.setCoff_num(String.valueOf(StringUtil.save2Float(sum_coff_num / chu)));
+			avg.setSuge_num(String.valueOf(StringUtil.save2Float(sum_suge_num / chu)));
+			avg.setCoup_num(String.valueOf(StringUtil.save2Float(sum_coup_num / chu)));
+			avg.setPenc_num(String.valueOf(StringUtil.save2Float(sum_penc_num / chu)));
+			avg.setErse_num(String.valueOf(StringUtil.save2Float(sum_erse_num / chu)));
+			avg.setClca_num(String.valueOf(StringUtil.save2Float(sum_clca_num / chu)));
+			avg.setFati_num(String.valueOf(StringUtil.save2Float(sum_fati_num / chu)));
+			avg.setEnca_num(String.valueOf(StringUtil.save2Float(sum_enca_num / chu)));
+			avg.setBage_num(String.valueOf(StringUtil.save2Float(sum_bage_num / chu)));
+			avg.setTeab_num(String.valueOf(StringUtil.save2Float(sum_teab_num / chu)));
+			avg.setMeca_num(String.valueOf(StringUtil.save2Float(sum_meca_num / chu)));
+			avg.setOpbo_num(String.valueOf(StringUtil.save2Float(sum_opbo_num / chu)));
+			avg.setBlte_num(String.valueOf(StringUtil.save2Float(sum_blte_num / chu)));
+			avg.setDnds_num(String.valueOf(StringUtil.save2Float(sum_dnds_num / chu)));
+			avg.setTvca_num(String.valueOf(StringUtil.save2Float(sum_tvca_num / chu)));
+			avg.setOrel_num(String.valueOf(StringUtil.save2Float(sum_orel_num / chu)));
+			avg.setMemo_num(String.valueOf(StringUtil.save2Float(sum_memo_num / chu)));
+			avg.setCoas_num(String.valueOf(StringUtil.save2Float(sum_coas_num / chu)));
+			avg.setMatc_num(String.valueOf(StringUtil.save2Float(sum_matc_num / chu)));
+			avg.setMapp_num(String.valueOf(StringUtil.save2Float(sum_mapp_num / chu)));
+			avg.setRule_num(String.valueOf(StringUtil.save2Float(sum_rule_num / chu)));
+			avg.setStat_num(String.valueOf(StringUtil.save2Float(sum_stat_num / chu)));
+			avg.setClip_num(String.valueOf(StringUtil.save2Float(sum_clip_num / chu)));
+			avg.setBape_num(String.valueOf(StringUtil.save2Float(sum_bape_num / chu)));
+			avg.setComp_num(String.valueOf(StringUtil.save2Float(sum_comp_num / chu)));
+			avg.setLali_num(String.valueOf(StringUtil.save2Float(sum_lali_num / chu)));
+			avg.setLosu_num(String.valueOf(StringUtil.save2Float(sum_losu_num / chu)));
+			avg.setShpa_num(String.valueOf(StringUtil.save2Float(sum_shpa_num / chu)));
+			avg.setAnma_num(String.valueOf(StringUtil.save2Float(sum_anma_num / chu)));
+			avg.setGrte_num(String.valueOf(StringUtil.save2Float(sum_grte_num / chu)));
+			avg.setChsl_num(String.valueOf(StringUtil.save2Float(sum_chsl_num / chu)));
+			avg.setCocl_num(String.valueOf(StringUtil.save2Float(sum_cocl_num / chu)));
+			avg.setArel_num(String.valueOf(StringUtil.save2Float(sum_arel_num / chu)));
 		}
 
 		return avg;
@@ -700,9 +863,12 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	// 卫生间耗品统计
 	@Override
-	public List<WashExpend> selectWashExpend(Map<String, Object> map) {
+	public List<WashExpend> selectWashExpend(Map<String, Object> map, Pager pager) {
 
-		List<Object> listSource = expendFormDao.selectwashExpend(map);
+		List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+		List<Object> listSource = expendFormDao.selectwashPage(map, pager.getOffset(), pager.getPageSize(),
+				listCondition);
+		
 		Iterator<Object> it = listSource.iterator();
 		List<WashExpend> listGoal = objToWashExpand(it);
 
@@ -719,25 +885,30 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			washExpend.setRoom_id(obj[0].toString());
 			washExpend.setToth_num(obj[1].toString());
 			washExpend.setRopa_num(obj[2].toString());
-			washExpend.setRins_num(obj[3].toString());
-			washExpend.setBafo_num(obj[4].toString());
-			washExpend.setHaco_num(obj[5].toString());
-			washExpend.setShge_num(obj[6].toString());
-			washExpend.setCapa_num(obj[7].toString());
-			washExpend.setGarb_num(obj[8].toString());
-			washExpend.setPaex_num(obj[9].toString());
-			washExpend.setPeep_num(obj[10].toString());
-			washExpend.setShca_num(obj[11].toString());
-			washExpend.setShav_num(obj[12].toString());
-			washExpend.setComb_num(obj[13].toString());
-			washExpend.setShcl_num(obj[14].toString());
-			washExpend.setSoap_num(obj[15].toString());
-			washExpend.setNacl_num(obj[16].toString());
-			washExpend.setFlow_num(obj[17].toString());
-			washExpend.setBasa_num(obj[18].toString());
-			washExpend.setScpa_num(obj[19].toString());
-			washExpend.setRugl_num(obj[20].toString());
-			washExpend.setDete_num(obj[21].toString());
+			washExpend.setRins_num(obj[10].toString());
+			washExpend.setBafo_num(obj[11].toString());
+			washExpend.setHaco_num(obj[12].toString());
+			washExpend.setShge_num(obj[13].toString());
+			washExpend.setCapa_num(obj[24].toString());
+			washExpend.setGarb_num(obj[25].toString());
+			washExpend.setPaex_num(obj[3].toString());
+			washExpend.setPeep_num(obj[9].toString());
+			washExpend.setShca_num(obj[6].toString());
+			washExpend.setShav_num(obj[8].toString());
+			washExpend.setComb_num(obj[4].toString());
+			washExpend.setShcl_num(obj[5].toString());
+			washExpend.setSoap_num(obj[26].toString());
+			washExpend.setNacl_num(obj[7].toString());
+			washExpend.setFlow_num(obj[14].toString());
+			washExpend.setBasa_num(obj[15].toString());
+			washExpend.setScpa_num(obj[22].toString());
+			washExpend.setRugl_num(obj[23].toString());
+			washExpend.setDete_num(obj[20].toString());
+			washExpend.setThim_num(obj[19].toString());
+			washExpend.setBacl_num(obj[18].toString());
+			washExpend.setTocl_num(obj[17].toString());
+			washExpend.setBabr_num(obj[16].toString());
+			washExpend.setClbr_num(obj[21].toString());
 
 			listGoal.add(washExpend);
 		}
@@ -751,7 +922,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			washExpend = (WashExpend) itGoal.next();
 			washExpend.setOrderNum(String.valueOf(i));
 		}
-		// System.out.println(listGoal.size());
 
 		return listGoal;
 	}
@@ -768,7 +938,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = expendFormDao.selectwashExpend(map);
+			List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+			List<Object> listSource = expendFormDao.selectwashExpend(map,listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<WashExpend> listGoal = objToWashExpand(it);
 
@@ -826,6 +997,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_scpa_num = (long) 0;
 		Long sum_rugl_num = (long) 0;
 		Long sum_dete_num = (long) 0;
+		Long sum_thim_num = (long) 0;
+		Long sum_bacl_num = (long) 0;
+		Long sum_tocl_num = (long) 0;
+		Long sum_babr_num = (long) 0;
+		Long sum_clbr_num = (long) 0;
 
 		WashExpend washExpend = null;
 		while (it.hasNext()) {
@@ -851,6 +1027,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_scpa_num += Integer.valueOf(washExpend.getScpa_num());
 			sum_rugl_num += Integer.valueOf(washExpend.getRugl_num());
 			sum_dete_num += Integer.valueOf(washExpend.getDete_num());
+			sum_thim_num += Integer.valueOf(washExpend.getThim_num());
+			sum_bacl_num += Integer.valueOf(washExpend.getBacl_num());
+			sum_tocl_num += Integer.valueOf(washExpend.getTocl_num());
+			sum_babr_num += Integer.valueOf(washExpend.getBabr_num());
+			sum_clbr_num += Integer.valueOf(washExpend.getClbr_num());
 		}
 		sum.setOrderNum("合计");
 		sum.setToth_num(String.valueOf(sum_toth_num));
@@ -874,6 +1055,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		sum.setScpa_num(String.valueOf(sum_scpa_num));
 		sum.setRugl_num(String.valueOf(sum_rugl_num));
 		sum.setDete_num(String.valueOf(sum_dete_num));
+		sum.setThim_num(String.valueOf(sum_thim_num));
+		sum.setBacl_num(String.valueOf(sum_bacl_num));
+		sum.setTocl_num(String.valueOf(sum_tocl_num));
+		sum.setBabr_num(String.valueOf(sum_babr_num));
+		sum.setClbr_num(String.valueOf(sum_clbr_num));
 
 		return sum;
 	}
@@ -888,7 +1074,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		WashExpend avg = new WashExpend();
 		Iterator<WashExpend> it = list.iterator();
-		long chu = Integer.valueOf(list.size());
+		Float chu = Float.valueOf(list.size());
 
 		Long sum_toth_num = (long) 0;
 		Long sum_ropa_num = (long) 0;
@@ -911,6 +1097,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_scpa_num = (long) 0;
 		Long sum_rugl_num = (long) 0;
 		Long sum_dete_num = (long) 0;
+		Long sum_thim_num = (long) 0;
+		Long sum_bacl_num = (long) 0;
+		Long sum_tocl_num = (long) 0;
+		Long sum_babr_num = (long) 0;
+		Long sum_clbr_num = (long) 0;
 
 		WashExpend washExpend = null;
 		if (chu != 0) {
@@ -937,29 +1128,39 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				sum_scpa_num += Integer.valueOf(washExpend.getScpa_num());
 				sum_rugl_num += Integer.valueOf(washExpend.getRugl_num());
 				sum_dete_num += Integer.valueOf(washExpend.getDete_num());
+				sum_thim_num += Integer.valueOf(washExpend.getThim_num());
+				sum_bacl_num += Integer.valueOf(washExpend.getBacl_num());
+				sum_tocl_num += Integer.valueOf(washExpend.getTocl_num());
+				sum_babr_num += Integer.valueOf(washExpend.getBabr_num());
+				sum_clbr_num += Integer.valueOf(washExpend.getClbr_num());
 			}
 			avg.setOrderNum("平均");
-			avg.setToth_num(String.valueOf(sum_toth_num / chu));
-			avg.setRopa_num(String.valueOf(sum_ropa_num / chu));
-			avg.setRins_num(String.valueOf(sum_rins_num / chu));
-			avg.setBafo_num(String.valueOf(sum_bafo_num / chu));
-			avg.setHaco_num(String.valueOf(sum_haco_num / chu));
-			avg.setShge_num(String.valueOf(sum_shge_num / chu));
-			avg.setCapa_num(String.valueOf(sum_capa_num / chu));
-			avg.setGarb_num(String.valueOf(sum_garb_num / chu));
-			avg.setPaex_num(String.valueOf(sum_paex_num / chu));
-			avg.setPeep_num(String.valueOf(sum_peep_num / chu));
-			avg.setShca_num(String.valueOf(sum_shca_num / chu));
-			avg.setShav_num(String.valueOf(sum_shav_num / chu));
-			avg.setComb_num(String.valueOf(sum_comb_num / chu));
-			avg.setShcl_num(String.valueOf(sum_shcl_num / chu));
-			avg.setSoap_num(String.valueOf(sum_soap_num / chu));
-			avg.setNacl_num(String.valueOf(sum_nacl_num / chu));
-			avg.setFlow_num(String.valueOf(sum_flow_num / chu));
-			avg.setBasa_num(String.valueOf(sum_basa_num / chu));
-			avg.setScpa_num(String.valueOf(sum_scpa_num / chu));
-			avg.setRugl_num(String.valueOf(sum_rugl_num / chu));
-			avg.setDete_num(String.valueOf(sum_dete_num / chu));
+			avg.setToth_num(String.valueOf(StringUtil.save2Float(sum_toth_num / chu)));
+			avg.setRopa_num(String.valueOf(StringUtil.save2Float(sum_ropa_num / chu)));
+			avg.setRins_num(String.valueOf(StringUtil.save2Float(sum_rins_num / chu)));
+			avg.setBafo_num(String.valueOf(StringUtil.save2Float(sum_bafo_num / chu)));
+			avg.setHaco_num(String.valueOf(StringUtil.save2Float(sum_haco_num / chu)));
+			avg.setShge_num(String.valueOf(StringUtil.save2Float(sum_shge_num / chu)));
+			avg.setCapa_num(String.valueOf(StringUtil.save2Float(sum_capa_num / chu)));
+			avg.setGarb_num(String.valueOf(StringUtil.save2Float(sum_garb_num / chu)));
+			avg.setPaex_num(String.valueOf(StringUtil.save2Float(sum_paex_num / chu)));
+			avg.setPeep_num(String.valueOf(StringUtil.save2Float(sum_peep_num / chu)));
+			avg.setShca_num(String.valueOf(StringUtil.save2Float(sum_shca_num / chu)));
+			avg.setShav_num(String.valueOf(StringUtil.save2Float(sum_shav_num / chu)));
+			avg.setComb_num(String.valueOf(StringUtil.save2Float(sum_comb_num / chu)));
+			avg.setShcl_num(String.valueOf(StringUtil.save2Float(sum_shcl_num / chu)));
+			avg.setSoap_num(String.valueOf(StringUtil.save2Float(sum_soap_num / chu)));
+			avg.setNacl_num(String.valueOf(StringUtil.save2Float(sum_nacl_num / chu)));
+			avg.setFlow_num(String.valueOf(StringUtil.save2Float(sum_flow_num / chu)));
+			avg.setBasa_num(String.valueOf(StringUtil.save2Float(sum_basa_num / chu)));
+			avg.setScpa_num(String.valueOf(StringUtil.save2Float(sum_scpa_num / chu)));
+			avg.setRugl_num(String.valueOf(StringUtil.save2Float(sum_rugl_num / chu)));
+			avg.setDete_num(String.valueOf(StringUtil.save2Float(sum_dete_num / chu)));
+			avg.setThim_num(String.valueOf(StringUtil.save2Float(sum_thim_num / chu)));
+			avg.setBacl_num(String.valueOf(StringUtil.save2Float(sum_bacl_num / chu)));
+			avg.setTocl_num(String.valueOf(StringUtil.save2Float(sum_tocl_num / chu)));
+			avg.setBabr_num(String.valueOf(StringUtil.save2Float(sum_babr_num / chu)));
+			avg.setClbr_num(String.valueOf(StringUtil.save2Float(sum_clbr_num / chu)));
 		}
 		return avg;
 	}
@@ -1013,11 +1214,22 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		return listGoal;
 	}
-
-	// 查询合同总条数
+	
+	// 迷你吧统计分析
 	@Override
-	public Long countTotal(Map<String, Object> map) {
-		return expendFormDao.countTotal(map);
+	public List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map) {
+
+		List<Object> listSource = expendFormDao.selectMiniExpendAnalyse(map);
+		Iterator<Object> it = listSource.iterator();
+		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+
+		return listGoal;
+	}
+
+	// 查询布草总条数
+	@Override
+	public Long countlinenTotal(Map<String, Object> map) {
+		return expendFormDao.countlinenTotal(map);
 	}
 
 	/********** zjn添加 **********/
@@ -1095,10 +1307,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				contentMap.put("${pic" + i + "}", picMap);
 			}
 		}
-
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
-
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, null, contentMap, 1, out);
@@ -1111,4 +1321,271 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
 	}
+		
+	// 查询房间耗品总条数
+	@Override
+	public Long countroomTotal(Map<String, Object> map) {
+		return expendFormDao.countroomTotal(map);
+	}
+
+	// 查询卫生间耗品总条数
+	@Override
+	public Long countwashTotal(Map<String, Object> map) {
+		return expendFormDao.countwashTotal(map);
+	}
+	
+	// 查询迷你吧总条数
+	@Override
+	public Long countminiTotal(Map<String, Object> map) {
+		return expendFormDao.countminiTotal(map);
+	}
+	// 迷你吧统计
+	@Override
+	public List<MiniExpend> selectMiniPage(Map<String, Object> map, Pager pager) {
+
+		List<Object> listSource = expendFormDao.selectminiPage(map, pager.getOffset(), pager.getPageSize());
+
+		Iterator<Object> it = listSource.iterator();
+		List<MiniExpend> listGoal = objToMiniExpand(it);
+
+		return listGoal;
+	}
+
+	// 排序
+	private List<MiniExpend> objToMiniExpand(Iterator<Object> it) {
+		List<MiniExpend> listGoal = new ArrayList<MiniExpend>();
+		Object[] obj = null;
+		MiniExpend miniExpend = null;
+
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
+			miniExpend = new MiniExpend();
+			miniExpend.setRoom_id(obj[0].toString());
+			miniExpend.setRedb_num(obj[1].toString());
+			miniExpend.setCoco_num(obj[2].toString());
+			miniExpend.setPari_num(obj[3].toString());
+			miniExpend.setBige_num(obj[4].toString());
+			miniExpend.setJdba_num(obj[5].toString());
+			miniExpend.setTine_num(obj[6].toString());
+			miniExpend.setKunl_num(obj[7].toString());
+			miniExpend.setWine_num(obj[8].toString());
+			miniExpend.setBree_num(obj[9].toString());
+			miniExpend.setVodk_num(obj[10].toString());
+			miniExpend.setAuru_num(obj[11].toString());
+			miniExpend.setQing_num(obj[12].toString());
+			miniExpend.setSpri_num(obj[13].toString());
+			miniExpend.setNail_num(obj[14].toString());
+			miniExpend.setAbcs_num(obj[15].toString());
+			miniExpend.setCard_num(obj[16].toString());
+			miniExpend.setComo_num(obj[17].toString());
+
+			listGoal.add(miniExpend);
+		}
+		sortAndWrite5(listGoal, "room_id", true, "orderNum");
+
+		return listGoal;
+	}
+	/**
+	 * 排序并插入序号
+	 * 
+	 * @param list
+	 * @param room_id
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @param writeField
+	 *            向指定字段插入序号
+	 */
+	private void sortAndWrite5(List<MiniExpend> list, String room_id, boolean ascFlag, String writeField) {
+		CollectionUtil.sort(list, room_id, ascFlag);
+		CollectionUtil<MiniExpend> collectionUtil = new CollectionUtil<MiniExpend>();
+		collectionUtil.writeSort(list, writeField);
+	}
+	
+	// 迷你吧导出
+	@Override
+	public ResponseEntity<byte[]> exportMiniExpendForm(Map<String, Object> map, String path, String tempPath) {
+		String formName = (String) map.remove("formName");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			WordHelper<MiniExpend> le = new WordHelper<MiniExpend>();
+			String fileName = "客房部" + formName + "布草使用量统计表.docx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = expendFormDao.selectminiExpend(map);
+			Iterator<Object> it = listSource.iterator();
+			List<MiniExpend> listGoal = objToMiniExpand(it);
+
+			MiniExpend sum = sumMiniExpend(listGoal);// 合计
+			MiniExpend avg = avgMiniExpend(listGoal);// 平均
+			listGoal.add(sum);
+			listGoal.add(avg);
+
+			Map<String, Object> listMap = new HashMap<String, Object>();
+			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			String startTime = (String) map.get("startTime");
+			String endTime = (String) map.get("endTime");
+			contentMap.put("${formName}", formName);
+			contentMap.put("${startTime}", startTime.substring(0, 10));
+			contentMap.put("${endTime}", endTime.substring(0, 10));
+
+			le.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	/**
+	 * 迷你吧list求和
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private MiniExpend sumMiniExpend(List<MiniExpend> list) {
+		MiniExpend sum = new MiniExpend();
+		Iterator<MiniExpend> it = list.iterator();
+
+		Long sum_redb_num = (long) 0;
+		Long sum_coco_num = (long) 0;
+		Long sum_pari_num = (long) 0;
+		Long sum_bige_num = (long) 0;
+		Long sum_jdba_num = (long) 0;
+		Long sum_tine_num = (long) 0;
+		Long sum_kunl_num = (long) 0;
+		Long sum_wine_num = (long) 0;
+		Long sum_bree_num = (long) 0;
+		Long sum_vodk_num = (long) 0;
+		Long sum_auru_num = (long) 0;
+		Long sum_qing_num = (long) 0;
+		Long sum_spri_num = (long) 0;
+		Long sum_nail_num = (long) 0;
+		Long sum_abcs_num = (long) 0;
+		Long sum_card_num = (long) 0;
+		Long sum_como_num = (long) 0;
+
+		MiniExpend miniExpend = null;
+		while (it.hasNext()) {
+			miniExpend = it.next();
+
+			sum_redb_num += Integer.valueOf(miniExpend.getRedb_num()); 
+			sum_coco_num += Integer.valueOf(miniExpend.getCoco_num());
+			sum_pari_num += Integer.valueOf(miniExpend.getPari_num());
+			sum_bige_num += Integer.valueOf(miniExpend.getBige_num());
+			sum_jdba_num += Integer.valueOf(miniExpend.getJdba_num());
+			sum_tine_num += Integer.valueOf(miniExpend.getTine_num());
+			sum_kunl_num += Integer.valueOf(miniExpend.getKunl_num());
+			sum_wine_num += Integer.valueOf(miniExpend.getWine_num());
+			sum_bree_num += Integer.valueOf(miniExpend.getBree_num());
+			sum_vodk_num += Integer.valueOf(miniExpend.getVodk_num());
+			sum_auru_num += Integer.valueOf(miniExpend.getAuru_num());
+			sum_qing_num += Integer.valueOf(miniExpend.getQing_num());
+			sum_spri_num += Integer.valueOf(miniExpend.getSpri_num());
+			sum_nail_num += Integer.valueOf(miniExpend.getNail_num());
+			sum_abcs_num += Integer.valueOf(miniExpend.getAbcs_num());
+			sum_card_num += Integer.valueOf(miniExpend.getCard_num());
+			sum_como_num += Integer.valueOf(miniExpend.getComo_num());
+		}
+		sum.setOrderNum("合计");
+		sum.setRedb_num(String.valueOf(sum_redb_num));
+		sum.setCoco_num(String.valueOf(sum_coco_num));
+		sum.setPari_num(String.valueOf(sum_pari_num));
+		sum.setBige_num(String.valueOf(sum_bige_num));
+		sum.setJdba_num(String.valueOf(sum_jdba_num));
+		sum.setTine_num(String.valueOf(sum_tine_num));
+		sum.setKunl_num(String.valueOf(sum_kunl_num));
+		sum.setWine_num(String.valueOf(sum_wine_num));
+		sum.setBree_num(String.valueOf(sum_bree_num));
+		sum.setVodk_num(String.valueOf(sum_vodk_num));
+		sum.setAuru_num(String.valueOf(sum_auru_num));
+		sum.setQing_num(String.valueOf(sum_qing_num));
+		sum.setSpri_num(String.valueOf(sum_spri_num));
+		sum.setNail_num(String.valueOf(sum_nail_num));
+		sum.setAbcs_num(String.valueOf(sum_abcs_num));
+		sum.setCard_num(String.valueOf(sum_card_num));
+		sum.setComo_num(String.valueOf(sum_como_num));
+
+		return sum;
+	}
+
+	/**
+	 * 布草list求平均
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private MiniExpend avgMiniExpend(List<MiniExpend> list) {
+
+		MiniExpend avg = new MiniExpend();
+		Iterator<MiniExpend> it = list.iterator();
+
+		Long sum_redb_num = (long) 0;
+		Long sum_coco_num = (long) 0;
+		Long sum_pari_num = (long) 0;
+		Long sum_bige_num = (long) 0;
+		Long sum_jdba_num = (long) 0;
+		Long sum_tine_num = (long) 0;
+		Long sum_kunl_num = (long) 0;
+		Long sum_wine_num = (long) 0;
+		Long sum_bree_num = (long) 0;
+		Long sum_vodk_num = (long) 0;
+		Long sum_auru_num = (long) 0;
+		Long sum_qing_num = (long) 0;
+		Long sum_spri_num = (long) 0;
+		Long sum_nail_num = (long) 0;
+		Long sum_abcs_num = (long) 0;
+		Long sum_card_num = (long) 0;
+		Long sum_como_num = (long) 0;
+
+		MiniExpend miniExpend = null;
+		Float chu = Float.valueOf(list.size());
+		if (chu != 0) {
+			while (it.hasNext()) {
+				miniExpend = it.next();
+				sum_redb_num += Integer.valueOf(miniExpend.getRedb_num()); 
+				sum_coco_num += Integer.valueOf(miniExpend.getCoco_num());
+				sum_pari_num += Integer.valueOf(miniExpend.getPari_num());
+				sum_bige_num += Integer.valueOf(miniExpend.getBige_num());
+				sum_jdba_num += Integer.valueOf(miniExpend.getJdba_num());
+				sum_tine_num += Integer.valueOf(miniExpend.getTine_num());
+				sum_kunl_num += Integer.valueOf(miniExpend.getKunl_num());
+				sum_wine_num += Integer.valueOf(miniExpend.getWine_num());
+				sum_bree_num += Integer.valueOf(miniExpend.getBree_num());
+				sum_vodk_num += Integer.valueOf(miniExpend.getVodk_num());
+				sum_auru_num += Integer.valueOf(miniExpend.getAuru_num());
+				sum_qing_num += Integer.valueOf(miniExpend.getQing_num());
+				sum_spri_num += Integer.valueOf(miniExpend.getSpri_num());
+				sum_nail_num += Integer.valueOf(miniExpend.getNail_num());
+				sum_abcs_num += Integer.valueOf(miniExpend.getAbcs_num());
+				sum_card_num += Integer.valueOf(miniExpend.getCard_num());
+				sum_como_num += Integer.valueOf(miniExpend.getComo_num());
+			}
+			avg.setOrderNum("平均");
+			avg.setRedb_num(String.valueOf(StringUtil.save2Float(sum_redb_num / chu)));
+			avg.setCoco_num(String.valueOf(StringUtil.save2Float(sum_coco_num / chu)));
+			avg.setPari_num(String.valueOf(StringUtil.save2Float(sum_pari_num / chu)));
+			avg.setBige_num(String.valueOf(StringUtil.save2Float(sum_bige_num / chu)));
+			avg.setJdba_num(String.valueOf(StringUtil.save2Float(sum_jdba_num / chu)));
+			avg.setTine_num(String.valueOf(StringUtil.save2Float(sum_tine_num / chu)));
+			avg.setKunl_num(String.valueOf(StringUtil.save2Float(sum_kunl_num / chu)));
+			avg.setWine_num(String.valueOf(StringUtil.save2Float(sum_wine_num / chu)));
+			avg.setBree_num(String.valueOf(StringUtil.save2Float(sum_bree_num / chu)));
+			avg.setVodk_num(String.valueOf(StringUtil.save2Float(sum_vodk_num / chu)));
+			avg.setAuru_num(String.valueOf(StringUtil.save2Float(sum_auru_num / chu)));
+			avg.setQing_num(String.valueOf(StringUtil.save2Float(sum_qing_num / chu)));
+			avg.setSpri_num(String.valueOf(StringUtil.save2Float(sum_spri_num / chu)));
+			avg.setNail_num(String.valueOf(StringUtil.save2Float(sum_nail_num / chu)));
+			avg.setAbcs_num(String.valueOf(StringUtil.save2Float(sum_abcs_num / chu)));
+			avg.setCard_num(String.valueOf(StringUtil.save2Float(sum_card_num / chu)));
+			avg.setComo_num(String.valueOf(StringUtil.save2Float(sum_como_num / chu)));
+		}
+		return avg;
+	}
+
+
 }

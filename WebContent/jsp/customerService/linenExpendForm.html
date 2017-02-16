@@ -1,7 +1,9 @@
 <div class="place">
 	<span>位置：</span>
 	<ul class="placeul">
-		<li><a href="">对客服务/布草统计</a></li>
+		<li><a href="">首页</a></li>
+		<li><a href="">对客服务统计</a></li>
+		<li><a href="">布草统计</a></li>
 	</ul>
 </div>
 
@@ -14,10 +16,10 @@
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
 						ng-model="llimit.startTime" class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "><label>—</label><input
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""><label>—</label><input
 						type="text" name="endTime" ng-model="llimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "onChange=""></li>
 					<li><lable>选择报表类型</lable><select class="dfselect layoutStyle"
 						style="width: 140px" ng-model="llimit.formType" name="formType"
 						id="linenFormType" ng-change="getFormNameByNo()" required>
@@ -38,6 +40,45 @@
 	</div>
 
 	<table class="tablelist">
+		<caption class="table_title">布草使用量合计</caption>
+		<thead>
+			<tr>
+				<th class="width3">被罩</th>
+				<th class="width3">拼尘罩</th>
+				<th class="width3">洗衣袋</th>
+				<th class="width3">床单</th>
+				<th class="width3">面巾</th>
+				<th class="width3">浴巾</th>
+				<th class="width3">方巾</th>
+				<th class="width3">中巾</th>
+				<th class="width3">地巾</th>
+				<th class="width3">浴袍</th>
+				<th class="width3">枕套</th>
+				<th class="width3">枕芯</th>
+				<th class="width3">毛毯</th>
+				<th class="width3">购物袋</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{linenCount.sum_slba}}</td>
+				<td>{{linenCount.sum_duto}}</td>
+				<td>{{linenCount.sum_laba}}</td>
+				<td>{{linenCount.sum_besh}}</td>
+				<td>{{linenCount.sum_facl}}</td>
+				<td>{{linenCount.sum_bato}}</td>
+				<td>{{linenCount.sum_hato}}</td>
+				<td>{{linenCount.sum_medo}}</td>
+				<td>{{linenCount.sum_flto}}</td>
+				<td>{{linenCount.sum_baro}}</td>
+				<td>{{linenCount.sum_pill}}</td>
+				<td>{{linenCount.sum_piin}}</td>
+				<td>{{linenCount.sum_blan}}</td>
+				<td>{{linenCount.sum_shop}}</td>
+		</tbody>
+	</table>
+	<table class="tablelist">
+		<caption class="table_bottom">房间布草使用量</caption>
 		<thead>
 			<tr>
 				<th class="width3">序号</th>

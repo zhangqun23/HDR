@@ -39,8 +39,47 @@
 
 	</div>
 
+	<table calss="tablelist">
+		<caption class="title">布草使用量合计</caption>
+		<thead ng-show="table1Show">
+			<tr>
+				<th class="width3">被罩</th>
+				<th class="width3">拼尘罩</th>
+				<th class="width3">洗衣袋</th>
+				<th class="width3">床单</th>
+				<th class="width3">面巾</th>
+				<th class="width3">浴巾</th>
+				<th class="width3">方巾</th>
+				<th class="width3">中巾</th>
+				<th class="width3">地巾</th>
+				<th class="width3">浴袍</th>
+				<th class="width3">枕套</th>
+				<th class="width3">枕芯</th>
+				<th class="width3">毛毯</th>
+				<th class="width3">购物袋</th>
+			</tr>
+		</thead>
+		<tbody ng-show="table1Show">
+			<tr>
+				<td>{{linenCount.sum_slba}}</td>
+				<td>{{linenCount.sum_duto}}</td>
+				<td>{{linenCount.sum_laba}}</td>
+				<td>{{linenCount.sum_besh}}</td>
+				<td>{{linenCount.sum_facl}}</td>
+				<td>{{linenCount.sum_bato}}</td>
+				<td>{{linenCount.sum_hato}}</td>
+				<td>{{linenCount.sum_medo}}</td>
+				<td>{{linenCount.sum_flto}}</td>
+				<td>{{linenCount.sum_baro}}</td>
+				<td>{{linenCount.sum_pill}}</td>
+				<td>{{linenCount.sum_piin}}</td>
+				<td>{{linenCount.sum_blan}}</td>
+				<td>{{linenCount.sum_shop}}</td>
+		</tbody>
+	</table>
 	<table class="tablelist">
-		<thead>
+		<caption>房间布草使用量</caption>
+		<thead ng-show="table2Show">
 			<tr>
 				<th class="width3">序号</th>
 				<th class="width3">房号</th>
@@ -60,7 +99,7 @@
 				<th class="width3">购物袋</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody ng-show="table2Show">
 			<tr ng-repeat="linen in linenExpendFormList">
 				<td>{{linen.orderNum}}</td>
 				<td>{{linen.room_id}}</td>

@@ -36,7 +36,94 @@
 
 	</div>
 
+	<table calss="tablelist">
+		<caption class="title">房间易耗品使用量合计</caption>
+		<thead ng-show="table1Show">
+			<tr>
+				<th class="width3">雨伞</th>
+				<th class="width3">咖啡</th>
+				<th class="width3">白糖</th>
+				<th class="width3">伴侣</th>
+				<th class="width3">铅笔</th>
+				<th class="width3">橡皮</th>
+				<th class="width3">即扫牌</th>
+				<th class="width3">面巾纸</th>
+				<th class="width3">环保卡</th>
+				<th class="width3">手提袋</th>
+				<th class="width3">袋泡茶</th>
+				<th class="width3">送餐牌</th>
+				<th class="width3">意见书</th>
+				<th class="width3">立顿红茶</th>
+				<th class="width3">请勿打扰牌</th>
+				<th class="width3">电视节目单</th>
+				<th class="width3">信封（普通）</th>
+			</tr>
+		</thead>
+		<tbody ng-show="table1Show">
+			<tr>
+				<td>{{roomCount.sum_umbr}}</td>
+				<td>{{roomCount.sum_coff}}</td>
+				<td>{{roomCount.sum_suge}}</td>
+				<td>{{roomCount.sum_coup}}</td>
+				<td>{{roomCount.sum_penc}}</td>
+				<td>{{roomCount.sum_erse}}</td>
+				<td>{{roomCount.sum_clca}}</td>
+				<td>{{roomCount.sum_fati}}</td>
+				<td>{{roomCount.sum_enca}}</td>
+				<td>{{roomCount.sum_bage}}</td>
+				<td>{{roomCount.sum_teab}}</td>
+				<td>{{roomCount.sum_meca}}</td>
+				<td>{{roomCount.sum_opbo}}</td>
+				<td>{{roomCount.sum_blte}}</td>
+				<td>{{roomCount.sum_dnds}}</td>
+				<td>{{roomCount.sum_tvca}}</td>
+				<td>{{roomCount.sum_orel}}</td>
+		</tbody>
+		<thead ng-show="table1Show">
+			<tr>
+				<th class="width3">便签</th>
+				<th class="width3">杯垫</th>
+				<th class="width3">火柴</th>
+				<th class="width3">地图</th>
+				<th class="width3">尺子</th>
+				<th class="width3">信纸</th>
+				<th class="width3">回形针</th>
+				<th class="width3">圆珠笔</th>
+				<th class="width3">针线包</th>
+				<th class="width3">洗衣单</th>
+				<th class="width3">低卡糖</th>
+				<th class="width3">擦鞋布</th>
+				<th class="width3">防毒面具</th>
+				<th class="width3">立顿绿茶</th>
+				<th class="width3">拖鞋（儿童）</th>
+				<th class="width3">彩色曲别针</th>
+				<th class="width3">信封（航空）</th>
+			</tr>
+		</thead>
+		<tbody ng-show="table1Show">
+			<tr>
+				<td>{{roomCount.sum_memo}}</td>
+				<td>{{roomCount.sum_coas}}</td>
+				<td>{{roomCount.sum_matc}}</td>
+				<td>{{roomCount.sum_mapp}}</td>
+				<td>{{roomCount.sum_rule}}</td>
+				<td>{{roomCount.sum_stat}}</td>
+				<td>{{roomCount.sum_clip}}</td>
+				<td>{{roomCount.sum_bape}}</td>
+				<td>{{roomCount.sum_comp}}</td>
+				<td>{{roomCount.sum_lali}}</td>
+				<td>{{roomCount.sum_losu}}</td>
+				<td>{{roomCount.sum_shpa}}</td>
+				<td>{{roomCount.sum_anma}}</td>
+				<td>{{roomCount.sum_grte}}</td>
+				<td>{{roomCount.sum_chsl}}</td>
+				<td>{{roomCount.sum_cocl}}</td>
+				<td>{{roomCount.sum_arel}}</td>
+		</tbody>
+	</table>
+	
 	<table class="tablelist">
+	<caption>房间易耗品使用量</caption>
 			<tr>
 				<th class="a" rowspan="2">序号</th>
 				<th class="a" rowspan="2">房号</th>

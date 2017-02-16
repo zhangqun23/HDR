@@ -88,6 +88,6 @@ public interface ExpendFormService {
 	// 导出房间或卫生间耗品分析图
 	ResponseEntity<byte[]> exportRoomOrWashExpendPic(Map<String, String> map);
 
-	// 导出布草用量分析图
-	ResponseEntity<byte[]> exportLinenExpendPic(Map<String, String> map);
+	// 导出布草或迷你吧用量分析图
+	ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map);
 }

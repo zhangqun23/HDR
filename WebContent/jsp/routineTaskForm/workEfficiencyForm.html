@@ -11,20 +11,26 @@
 
 	<div>
 		<div>
-			<form action="exportWorkEfficiencyBylimits.do" method="post"
+			<form action="" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
 						ng-model="wefLimit.startTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endTime" ng-model="wefLimit.endTime" required
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""><label>—</label><input type="text"
+						name="endTime" ng-model="wefLimit.endTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkEfficiencyByLimits()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='exportWorkEfficiencyBylimits.do';this.form.submit();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='exportWorkEfficiencyExcelBylimits.do';this.form.submit();"></li>
 				</ul>
 
 			</form>
@@ -32,7 +38,11 @@
 	</div>
 
 	<table class="tablelist tablestyle">
-	<caption align="top" class="tableTitle"><div  class="tableTitle">客房部员工工作效率统计表</div><div>统计时间：{{wefLimit.startTime}}&nbsp;至 &nbsp;{{wefLimit.endTime}}</div></caption>
+		<caption align="top" class="tableTitle">
+			<div class="tableTitle">客房部员工工作效率统计表</div>
+			<div>统计时间：{{wefLimit.startTime}}&nbsp;至
+				&nbsp;{{wefLimit.endTime}}</div>
+		</caption>
 		<thead>
 			<tr>
 				<th class="width3">序号</th>

@@ -11,7 +11,7 @@
 
 	<div>
 		<div>
-			<form action="../checkHouse/exportCheckHouseList.do" method="post"
+			<form action="" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
@@ -26,8 +26,12 @@
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询"
 						ng-click="selectCheckEfficiencyByLimits()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='../checkHouse/exportCheckHouseList.do';this.form.submit();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='../checkHouse/exportCheckHouseExcel.do';this.form.submit();"></li>
 				</ul>
 
 			</form>

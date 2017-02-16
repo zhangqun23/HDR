@@ -951,6 +951,15 @@ app
 																			"#lineChart1")
 																			.highcharts()
 																			.getSVG());
+													reportForm.remark = data.analyseResult;
+													$("#analyseResult").val(data.analyseResult);
+													if (data.analyseResult) {
+														reportForm.listIsShow = false;
+														reportForm.listRemark = true;
+													} else {
+														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
+													}
 												});
 							}
 							// lwt例行任务工作量饱和度分析
@@ -1158,36 +1167,48 @@ app
 																			.highcharts()
 																			.getSVG());
 													var title1 = "驳回原因汇总";
-													var pieReasons=[];
-													for( var i=0;i< data.reasonList.length;i++){
-														var s=[];
-														switch(i){
+													var pieReasons = [];
+													for (var i = 0; i < data.reasonList.length; i++) {
+														var s = [];
+														switch (i) {
 														case 0:
-															s=['布草问题',data.reasonList[0]];
+															s = [
+																	'布草问题',
+																	data.reasonList[0] ];
 															break;
 														case 1:
-															s=['迷你吧问题',data.reasonList[1]];
+															s = [
+																	'迷你吧问题',
+																	data.reasonList[1] ];
 															break;
 														case 2:
-															s=['卫生间问题',data.reasonList[2]];
+															s = [
+																	'卫生间问题',
+																	data.reasonList[2] ];
 															break;
 														case 3:
-															s=['毛巾问题',data.reasonList[3]];
+															s = [
+																	'毛巾问题',
+																	data.reasonList[3] ];
 															break;
 														case 4:
-															s=['房间卫生',data.reasonList[4]];
+															s = [
+																	'房间卫生',
+																	data.reasonList[4] ];
 															break;
-															
+
 														}
 														pieReasons.push(s);
 													}
-													pieChartForm("#pieChart",title1,"做房驳回原因",pieReasons);
+													pieChartForm("#pieChart",
+															title1, "做房驳回原因",
+															pieReasons);
 													$('#chart1-svg')
-													.val(
-															$(
-																	"#pieChart")
-																	.highcharts()
-																	.getSVG());
+															.val(
+																	$(
+																			"#pieChart")
+																			.highcharts()
+																			.getSVG());
 												});
 							}
 							// zq扇形图公用函数

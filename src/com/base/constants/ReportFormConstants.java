@@ -45,6 +45,8 @@ public class ReportFormConstants {
 	public static final String ROOMEXPEND_PATH = DICTIONARY + "roomExpend.docx";
 	// 卫生间耗品统计表
 	public static final String WASHEXPEND_PATH = DICTIONARY + "washExpend.docx";
+	// 迷你吧统计表
+	public static final String MINIEXPEND_PATH = DICTIONARY + "miniexpend.docx";
 	// 布草用量分析图
 	public static final String LINENEXPENDPIC_PATH = DICTIONARY + "linenExpendPic.docx";
 	// 房间耗品用量分析图

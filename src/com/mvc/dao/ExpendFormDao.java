@@ -26,7 +26,7 @@ public interface ExpendFormDao {
 	// 布草统计分页
 	List<Object> selectlinenPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
 
-	// 布草统计
+	// 布草统计(用于导出)
 	List<Object> selectlinenExpend(Map<String, Object> map, List<Integer> listCondition);
 
 	// 布草统计分析
@@ -47,25 +47,31 @@ public interface ExpendFormDao {
 	// 查询迷你吧总条数
 	Long countminiTotal(Map<String, Object> map);
 
-	//房间耗品统计分页
+	// 房间耗品统计分页
 	List<Object> selectroomPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
 
-	// 房间耗品统计
+	// 房间耗品统计(用于导出)
 	List<Object> selectroomExpend(Map<String, Object> map, List<Integer> listCondition);
 
 	// 房间耗品统计分析
 	List<Object> selectRoomExpendAnalyse(Map<String, Object> map);
 
-	//卫生间耗品统计分页
+	// 卫生间耗品统计分页
 	List<Object> selectwashPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
 	
-	// 卫生间耗品统计
+	// 卫生间耗品统计(用于导出)
 	List<Object> selectwashExpend(Map<String, Object> map, List<Integer> listCondition);
 
 	// 卫生间耗品统计分析
 	List<Object> selectWashExpendAnalyse(Map<String, Object> map);
 	
-	//迷你吧统计分页
+	// 迷你吧统计分页
 	List<Object> selectminiPage(Map<String, Object> map, Integer offset, Integer end);
+
+	// 迷你吧统计(用于导出)
+	List<Object> selectminiExpend(Map<String, Object> map);
+	
+	// 卫生间耗品统计分析
+	List<Object> selectMiniExpendAnalyse(Map<String, Object> map);
 
 }

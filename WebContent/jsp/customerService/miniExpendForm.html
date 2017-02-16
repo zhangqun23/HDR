@@ -36,9 +36,9 @@
 
 	</div>
 	
-	<table calss="tablelist">
-		<caption class="title">迷你吧使用量合计</caption>
-		<thead ng-show="table1Show">
+	<table class="tablelist">
+		<caption class="table_title">迷你吧使用量合计</caption>
+		<thead>
 			<tr>
 				<th class="width3">红牛</th>
 				<th class="width3">可口可乐</th>
@@ -59,7 +59,7 @@
 				<th class="width3">安全套</th>
 			</tr>
 		</thead>
-		<tbody ng-show="table1Show">
+		<tbody>
 			<tr>
 				<td>{{miniCount.sum_redb}}</td>
 				<td>{{miniCount.sum_coco}}</td>
@@ -82,7 +82,7 @@
 	</table>
 	
 	<table class="tablelist">
-	<caption>迷你吧使用量</caption>
+	<caption class="table_bottom">迷你吧使用量</caption>
 			<tr>
 				<th class="a">序号</th>
 				<th class="a">房号</th>
@@ -105,7 +105,7 @@
 		        <th class="a">安全套</th>
 			</tr>
 			
-		<tbody ng-repeat="room in roomExpendFormList">
+		<tbody ng-repeat="mini in miniExpendFormList">
 			<tr>
 				<td>{{mini.orderNum}}</td>
 				<td>{{mini.room_id}}</td>

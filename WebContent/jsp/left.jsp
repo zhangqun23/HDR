@@ -70,6 +70,8 @@
 					href="${ctx}/customerService/toReportFormPage.do#/washExpendAnalyse">卫生间易耗品用量分析</a><i></i></li>
 				<li id="miniExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/miniExpendForm">迷你吧用量统计</a><i></i></li>
+				<li id="miniExpendAnalyse"><cite></cite> <a
+					href="${ctx}/customerService/toReportFormPage.do#/miniExpendAnalyse">迷你吧用量分析</a><i></i></li>
 			</ul>
 
 		</dd>

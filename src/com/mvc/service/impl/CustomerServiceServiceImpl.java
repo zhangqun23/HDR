@@ -1,6 +1,5 @@
 package com.mvc.service.impl;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,8 +24,8 @@ import com.mvc.service.CustomerServiceService;
 import com.utils.CollectionUtil;
 import com.utils.DoubleFloatUtil;
 import com.utils.FileHelper;
+import com.utils.PictureUtil;
 import com.utils.StringUtil;
-import com.utils.SvgPngConverter;
 import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
@@ -424,17 +423,8 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			picName1 = "pic1.png";
 			picPath = FileHelper.transPath(picName1, picPath);
 		}
-		Map<String, Object> picMap = null;
-		picMap = new HashMap<String, Object>();
-		picMap.put("width", 960);
-		picMap.put("height", 400);
-		picMap.put("type", "png");
-		try {
-			SvgPngConverter.convertToPng(photo, picPath);// 图片svgCode转化为png格式，并保存到服务器
-			picMap.put("content", FileHelper.inputStream2ByteArray(new FileInputStream(picPath), true));// 将图片流放到map中
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		Map<String, Object> picMap = new HashMap<String, Object>();
+		picMap = PictureUtil.getHighPicMap(picName1, picPath, photo);
 
 		List<HouseCustomerServiceType> listGoal = null;
 		WordHelper wh = new WordHelper();

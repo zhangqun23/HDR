@@ -374,7 +374,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		Float averageData = (float) 0;// 个人平均工作量
 		Float allAverageData = (float) 0;// 全体员工的平均工作量
 		Float totalActualWorkLoad = (float) 0;// 全体员工的实际总工作量
-		String analyseResult = "分析结果：";
+		String analyseResult = "";// 分析结果
 		List<WorkLoadMonth> workLoadMonths = new ArrayList<WorkLoadMonth>();
 		List<Object> listSorce = new ArrayList<Object>();
 
@@ -396,11 +396,26 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			averageData = averageData / monthNum;
 			allAverageData = totalActualWorkLoad / monthNum / staffCount;
 		}
+		analyseResult = getAnalyseResult(averageData, allAverageData);
+
 		jsonObject.put("allAverageData", allAverageData);
 		jsonObject.put("averageData", averageData);
 		jsonObject.put("workLoadMonths", workLoadMonths);
 		jsonObject.put("analyseResult", analyseResult);
 		return jsonObject.toString();
+	}
+
+	private String getAnalyseResult(Float averageData, Float allAverageData) {
+		String analyseResult = "分析结果:  ";
+		Float level = (averageData - allAverageData) / allAverageData;
+		if (Math.abs(level) <= 0.05) {
+			analyseResult += "良好(该员工平均工作量与全体员工平均工作量相差不大)";
+		} else if (level > 0.05) {
+			analyseResult += "优秀(该员工平均工作量高于全体员工平均工作量)";
+		} else if (level < 0.05) {
+			analyseResult += "不合格(该员工平均工作量远低于全体员工平均工作量)";
+		}
+		return analyseResult;
 	}
 
 	/**
@@ -517,6 +532,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		String staffNo = staffInfo.getStaff_no();
 		String date = (String) dateMap.get("quarterName");
 		String fileName = "客房部员工" + (staffNo + staffName) + date + "工作量分析结果.docx";
+		String analyseResult = map.get("analyseResult");
 
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 		picMap = PictureUtil.getPicMap(picCataPath, svg);
@@ -524,6 +540,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		contentMap.put("${staffName}", staffNo + staffName);
 		contentMap.put("${date}", date);
 		contentMap.put("${pic}", picMap);
+		contentMap.put("${analyseResult}", analyseResult);
 
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径

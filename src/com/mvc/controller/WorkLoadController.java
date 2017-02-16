@@ -101,26 +101,23 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadSummaryExcel.do")
 	public ResponseEntity<byte[]> exportWorkLoadSummaryExcel(HttpServletRequest request, HttpServletResponse response) {
-		String startDate = "2016-01-01";
-		String endDate = "2018-01-01";
-
-		// String startDate = "";
-		// String endDate = "";
+		String startDate = "";
+		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
 
-		// if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-		// && StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-		//
-		// startDate = request.getParameter("startDate");
-		// endDate = request.getParameter("endDate");
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("path", path);
-		byteArr = workLoadService.exportWorkLoadSummaryExcel(map);
-		// }
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("startDate", startDate);
+			map.put("endDate", endDate);
+			map.put("path", path);
+			byteArr = workLoadService.exportWorkLoadSummaryExcel(map);
+		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
@@ -188,26 +185,23 @@ public class WorkLoadController {
 	 */
 	@RequestMapping("/exportWorkLoadLevelExcel.do")
 	public ResponseEntity<byte[]> exportWorkLoadLevelExcel(HttpServletRequest request, HttpServletResponse response) {
-		String startDate = "2016-01-01";
-		String endDate = "2018-01-01";
-
-		// String startDate = "";
-		// String endDate = "";
+		String startDate = "";
+		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
 
-		// if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-		// && StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-		//
-		// startDate = request.getParameter("startDate");
-		// endDate = request.getParameter("endDate");
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("path", path);
-		byteArr = workLoadService.exportWorkLoadLevelExcel(map);
-		// }
+			startDate = request.getParameter("startDate");
+			endDate = request.getParameter("endDate");
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("startDate", startDate);
+			map.put("endDate", endDate);
+			map.put("path", path);
+			byteArr = workLoadService.exportWorkLoadLevelExcel(map);
+		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
@@ -255,6 +249,7 @@ public class WorkLoadController {
 		String checkYear = "";
 		String quarter = "";
 		String staffId = "";
+		String analyseResult = "";
 		ResponseEntity<byte[]> byteArr = null;
 		Map<String, String> map = new HashMap<String, String>();
 
@@ -272,6 +267,7 @@ public class WorkLoadController {
 			checkYear = request.getParameter("checkYear");
 			quarter = request.getParameter("quarter");
 			staffId = request.getParameter("staffId");
+			analyseResult = request.getParameter("analyseResult");
 
 			map.put("path", path);
 			map.put("modelPath", modelPath);
@@ -280,6 +276,7 @@ public class WorkLoadController {
 			map.put("checkYear", checkYear);
 			map.put("quarter", quarter);
 			map.put("staffId", staffId);
+			map.put("analyseResult", analyseResult);
 			byteArr = workLoadService.exportWorkLoadAnalyse(map);
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记

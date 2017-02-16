@@ -477,7 +477,8 @@ public class ExpendFormController {
 		Map<String, String> map = new HashMap<String, String>();
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.LINENEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
+		String modelPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.LINENEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr1"))) {
 			svg1 = request.getParameter("chartSVGStr1");
@@ -493,11 +494,6 @@ public class ExpendFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
 			endTime = request.getParameter("endTime");
 		}
-
-		// svg1 = request.getParameter("chartSVGStr1");
-		// svg2 = request.getParameter("chartSVGStr2");
-		// startTime = request.getParameter("startTime");
-		// endTime = request.getParameter("endTime");
 		map.put("path", path);
 		map.put("modelPath", modelPath);
 		map.put("picCataPath", picCataPath);
@@ -507,8 +503,6 @@ public class ExpendFormController {
 		map.put("endTime", endTime);
 		byteArr = expendFormService.exportLinenExpendPic(map);
 
-		System.out.println("开始时间：" + startTime);
-		System.out.println("结束时间：" + endTime);
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}

@@ -1130,6 +1130,18 @@ app
 																				"#bar1")
 																				.highcharts()
 																				.getSVG());
+														if (data.analyseResult) {
+															reportForm.listRemark = true;
+															reportForm.remark = data.analyseResult;
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult")
+																	.val("");
+														}
 													}
 
 												});

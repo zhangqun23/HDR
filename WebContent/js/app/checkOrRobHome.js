@@ -498,14 +498,14 @@ app
 																			.highcharts()
 																			.getSVG());
 													if (data.analyseResult) {
-														reportForm.listRemark = true;
-														reportForm.remark = data.analyseResult;
+														checkRob.listRemark = true;
+														checkRob.remark = data.analyseResult;
 														$("#analyseResult")
 																.val(
 																		data.analyseResult);
 													} else {
-														reportForm.listRemark = false;
-														reportForm.remark = "";
+														checkRob.listRemark = false;
+														checkRob.remark = "";
 														$("#analyseResult")
 																.val("");
 													}

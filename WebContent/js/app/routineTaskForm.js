@@ -438,6 +438,18 @@ app
 																			"#lineChart1")
 																			.highcharts()
 																			.getSVG());
+													if (data.analyseResult) {
+														reportForm.listRemark = true;
+														reportForm.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
+													} else {
+														reportForm.listRemark = false;
+														reportForm.remark = "";
+														$("#analyseResult")
+																.val("");
+													}
 												});
 							}
 							// zq生成平均值的数组
@@ -739,7 +751,36 @@ app
 																			"#lineChart1")
 																			.highcharts()
 																			.getSVG());
+													if (data.analyseResult1
+															|| data.analyseResult2) {
+														reportForm.listRemark = true;
+														reportForm.remark1 = data.analyseResult1;
+														reportForm.remark2 = data.analyseResult2;
+														$("#analyseResult1")
+																.val(
+																		data.analyseResult1);
+														$("#analyseResult2")
+																.val(
+																		data.analyseResult2);
+													} else {
+														reportForm.listRemark = false;
+														reportForm.remark1 = "";
+														reportForm.remark2 = "";
+														$("#analyseResult1")
+																.val("");
+														$("#analyseResult2")
+																.val("");
+													}
 												});
+								if (data.analyseResult) {
+									reportForm.listRemark = true;
+									reportForm.remark = data.analyseResult;
+									$("#analyseResult").val(data.analyseResult);
+								} else {
+									reportForm.listRemark = false;
+									reportForm.remark = "";
+									$("#analyseResult").val("");
+								}
 							}
 							// zq比较两个时间的大小
 							function compareDateTime(startDate, endDate) {
@@ -952,7 +993,9 @@ app
 																			.highcharts()
 																			.getSVG());
 													reportForm.remark = data.analyseResult;
-													$("#analyseResult").val(data.analyseResult);
+													$("#analyseResult").val(
+															data.analyseResult);
+													alert(data.analyseResult);
 													if (data.analyseResult) {
 														reportForm.listIsShow = false;
 														reportForm.listRemark = true;
@@ -1209,6 +1252,18 @@ app
 																			"#pieChart")
 																			.highcharts()
 																			.getSVG());
+													if (data.analyseResult) {
+														reportForm.listRemark = true;
+														reportForm.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
+													} else {
+														reportForm.listRemark = false;
+														reportForm.remark = "";
+														$("#analyseResult")
+																.val("");
+													}
 												});
 							}
 							// zq扇形图公用函数

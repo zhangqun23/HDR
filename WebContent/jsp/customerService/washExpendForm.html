@@ -36,9 +36,9 @@
 
 	</div>
 
-	<table calss="tablelist">
-		<caption class="title">卫生间易耗品使用量合计</caption>
-		<thead ng-show="table1Show">
+	<table class="tablelist">
+		<caption class="table_title">卫生间易耗品使用量合计</caption>
+		<thead>
 			<tr>
 				<th class="width3">牙具</th>
 				<th class="width3">卷纸</th>
@@ -55,7 +55,7 @@
 				<th class="width3">梳子</th>
 			</tr>
 		</thead>
-		<tbody ng-show="table1Show">
+		<tbody>
 			<tr>
 				<td>{{washCount.sum_toth}}</td>
 				<td>{{washCount.sum_ropa}}</td>
@@ -71,7 +71,7 @@
 				<td>{{washCount.sum_shav}}</td>
 				<td>{{washCount.sum_comb}}</td>
 		</tbody>
-		<thead ng-show="table1Show">
+		<thead">
 			<tr>
 				<th class="width3">擦鞋布</th>
 				<th class="width3">手皂</th>
@@ -88,7 +88,7 @@
 				<th class="width3">恭桶刷</th>
 			</tr>
 		</thead>
-		<tbody ng-show="table1Show">
+		<tbody>
 			<tr>
 				<td>{{washCount.sum_shcl}}</td>
 				<td>{{washCount.sum_soap}}</td>
@@ -107,7 +107,7 @@
 	</table>
 	
 	<table class="tablelist">
-	<caption>房间易耗品使用量</caption>
+	<caption class="table_bottom">卫生间易耗品使用量</caption>
 			<tr>
 				<th class="a" rowspan="2">序号</th>
 				<th class="a" rowspan="2">房号</th>

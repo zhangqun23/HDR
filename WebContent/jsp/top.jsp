@@ -8,6 +8,7 @@
 <link href="${ctx}/css/admin.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/zhou.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/li.css" rel="stylesheet" type="text/css" />
+<link href="${ctx}/css/wang.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body style="background:url(${ctx}/images/topbg.gif) repeat-x;">

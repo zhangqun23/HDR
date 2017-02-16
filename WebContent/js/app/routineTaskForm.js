@@ -472,7 +472,7 @@ app
 									data : data,
 									lx_Axis : lx_Axis,
 									ly_title : ly_title,
-									subTitle : ''
+									subTitle : 'fjjjjjjjjjjjjjjjhjhjhjhjhjhjh'
 								});
 								chart1.init();
 

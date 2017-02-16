@@ -1305,10 +1305,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				contentMap.put("${pic" + i + "}", picMap);
 			}
 		}
-
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
-
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, null, contentMap, 1, out);

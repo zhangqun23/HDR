@@ -68,7 +68,7 @@ public class WorkLoadController {
 	 * @return
 	 */
 	@RequestMapping("/exportWorkLoadSummaryList.do")
-	public ResponseEntity<byte[]> exportWorkLoadSummaryList(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<byte[]> exportWorkLoadSummaryWord(HttpServletRequest request, HttpServletResponse response) {
 		String startDate = "";
 		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
@@ -86,8 +86,41 @@ public class WorkLoadController {
 			map.put("endDate", endDate);
 			map.put("path", path);
 			map.put("modelPath", modelPath);
-			byteArr = workLoadService.exportWorkLoadSummaryList(map);
+			byteArr = workLoadService.exportWorkLoadSummaryWord(map);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
+	/**
+	 * 导出所有员工工作量汇总表，excel格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportWorkLoadSummaryExcel.do")
+	public ResponseEntity<byte[]> exportWorkLoadSummaryExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startDate = "2016-01-01";
+		String endDate = "2018-01-01";
+
+		// String startDate = "";
+		// String endDate = "";
+		ResponseEntity<byte[]> byteArr = null;
+
+		// if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+		// && StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+		//
+		// startDate = request.getParameter("startDate");
+		// endDate = request.getParameter("endDate");
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("path", path);
+		byteArr = workLoadService.exportWorkLoadSummaryExcel(map);
+		// }
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
@@ -121,7 +154,7 @@ public class WorkLoadController {
 	 * @return
 	 */
 	@RequestMapping("/exportWorkLoadLevelList.do")
-	public ResponseEntity<byte[]> exportWorkLoadLevelList(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<byte[]> exportWorkLoadLevelWord(HttpServletRequest request, HttpServletResponse response) {
 		String startDate = "";
 		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
@@ -140,11 +173,43 @@ public class WorkLoadController {
 			map.put("endDate", endDate);
 			map.put("path", path);
 			map.put("modelPath", modelPath);
-			byteArr = workLoadService.exportWorkLoadLevelList(map);
+			byteArr = workLoadService.exportWorkLoadLevelWord(map);
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
+	}
 
+	/**
+	 * 导出所有员工工作量饱和度分析列表，excel格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportWorkLoadLevelExcel.do")
+	public ResponseEntity<byte[]> exportWorkLoadLevelExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startDate = "2016-01-01";
+		String endDate = "2018-01-01";
+
+		// String startDate = "";
+		// String endDate = "";
+		ResponseEntity<byte[]> byteArr = null;
+
+		// if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
+		// && StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+		//
+		// startDate = request.getParameter("startDate");
+		// endDate = request.getParameter("endDate");
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("path", path);
+		byteArr = workLoadService.exportWorkLoadLevelExcel(map);
+		// }
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
 	}
 
 	/**

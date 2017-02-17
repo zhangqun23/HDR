@@ -116,7 +116,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select coalesce(b.stn,0) from ");
 		sql.append(" (select goods_id from goods_info where goods_info.Display=1 and goods_info.Goods_Typeid='dt0202' ");
-		sql.append(" or goods_info.Display=1 and goods_info.Goods_Typeid='dt0201'");
+		sql.append(" or goods_info.Display=1 and goods_info.Goods_Typeid in ('dt0201','dt0202')");
 		sql.append(" order by goods_id asc ) as a ");
 		sql.append(" left join (select sum(temp_list.num) stn,goods_info.goods_id from goods_info ");
 		sql.append(" left join temp_list on temp_list.goods_id=goods_info.Goods_id ");
@@ -646,10 +646,15 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 	public List<Object> selectminiPage(Map<String, Object> map, Integer offset, Integer end) {
 		EntityManager em = emf.createEntityManager();
 		String sqlLimit = miniExpendSQL(map);
-
+		StringBuilder sqlid = new StringBuilder();
+		sqlid.append("select goods_id from goods_info where goods_info.Display=1 ");
+		sqlid.append("and goods_info.Goods_Typeid in ('dt0202','dt0201') order by goods_id asc;");
+		Query queryid = em.createNativeQuery(sqlid.toString());
+		List<Integer> listCondition = queryid.getResultList();
+		
 		StringBuilder sql = new StringBuilder();
-		//sql.append("select a.room_no," + getSelSQL(listCondition) + " from ");
-		//sql.append(getSizeSQL(listCondition, sqlLimit));
+		sql.append("select a.room_no," + getSelSQL(listCondition) + " from ");
+		sql.append(getMiniSizeSQL(listCondition, sqlLimit));
 		sql.append(" limit :offset,:end");
 		Query query = em.createNativeQuery(sql.toString());
 		query.setParameter("offset", offset).setParameter("end", end);
@@ -657,5 +662,95 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		em.close();
 		return list;
 	}
+
+	/**
+	 * 获取查询迷你吧字段SQL
+	 * 
+	 * @param list
+	 * @param sqlLimit
+	 * @return
+	 */
+	private String getMiniSizeSQL(List<Integer> list, String sqlLimit) {
+		StringBuilder sql = new StringBuilder();
+		String sqlStr = null;
+		if (list != null) {
+			Integer size = list.size();
+			for (int i = 0; i < size; i++) {
+				if (i == 0) {
+					sql.append("(select distinct temp_list.room_no from temp_list left join goods_info on goods_info.goods_id=temp_list.goods_id ");
+					sql.append(" left join case_info on case_info.call_id=temp_list.call_id ");
+					sql.append(" where goods_info.Display=1 and goods_info.Goods_Typeid in ('dt0201','dt0202') " + sqlLimit + " order by temp_list.room_no asc ) as a ");
+					sql.append(" left join (select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
+					sql.append(
+							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
+					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+					sql.append(" where call_info.customer_service_flag='1' and Goods_Name is not null and ");
+					sql.append(" goods_info.goods_id=" + list.get(i) + sqlLimit);
+					sql.append(" group by call_info.room_id) as a0 ");
+					sql.append(" on a.room_no=a0.room_id left join ");
+				} else {
+					sql.append("(select call_info.room_id,sum(temp_list.num) num from call_info left join case_info ");
+					sql.append(
+							" on case_info.call_id=call_info.call_id left join temp_list on temp_list.call_id=call_info.call_id");
+					sql.append(" left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+					sql.append(" where call_info.customer_service_flag='1' and Goods_Name is not null and ");
+					sql.append(" goods_info.goods_id=" + list.get(i) + sqlLimit);
+					sql.append(" group by call_info.room_id) as a" + i);
+					sql.append(" on a" + i + ".room_id=a.room_no left join ");
+				}
+			}
+			sqlStr = sql.toString().substring(0, sql.toString().length() - 10);
+		}
+		return sqlStr;
+	}
+	
+	// 查询迷你吧消耗
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectminiExpend(Map<String, Object> map) {
+
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = miniExpendSQL(map);
+		StringBuilder sqlid = new StringBuilder();
+		sqlid.append("select goods_id from goods_info where goods_info.Display=1 ");
+		sqlid.append("and goods_info.Goods_Typeid in ('dt0202','dt0201') order by goods_id asc;");
+		Query queryid = em.createNativeQuery(sqlid.toString());
+		List<Integer> listCondition = queryid.getResultList();
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select a.room_no," + getSelSQL(listCondition) + " from ");
+		sql.append(getMiniSizeSQL(listCondition, sqlLimit));
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	
+	// 布草消耗分析
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectMiniExpendAnalyse(Map<String, Object> map) {
+
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = expendAnalyseSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select goods_info.Goods_Name,sum(temp_list.num) ");
+		sql.append("from temp_list left join call_info on temp_list.call_id=call_info.call_id ");
+		sql.append("left join goods_info on temp_list.goods_id=goods_info.Goods_id ");
+		sql.append("left join case_info on case_info.call_id=call_info.call_id ");
+		sql.append(" left  join goods_type on goods_type.Goods_TypeId=goods_info.Goods_Typeid");
+		sql.append(" where call_info.customer_service_flag='1'and Goods_Name is not null and ");
+		sql.append(" goods_info.Display=1 and goods_info.Goods_Typeid in ('dt0202','dt0201') " + sqlLimit);
+		sql.append("group by temp_list.goods_id  order by  sum(temp_list.num) desc ");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		System.out.println(list);
+		return list;
+	}
+
 
 }

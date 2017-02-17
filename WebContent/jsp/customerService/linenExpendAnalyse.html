@@ -11,7 +11,7 @@
 
 	<div>
 		<div>
-			<form action="exportLinenExpendPic.do" method="post"
+			<form action="exportLinenOrMiniExpendPic.do" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止日期</label><input type="text" name="startTime"
@@ -27,7 +27,8 @@
 						type="submit" value="导出"></li>
 					
 					<li><input id="bar-svg" name="chartSVGStr2"  type="text" class="hidden" /></li>	
-					<li><input id="pie-svg" name="chartSVGStr1"  type="text" class="hidden" /></li>	
+					<li><input id="pie-svg" name="chartSVGStr1"  type="text" class="hidden" /></li>
+					<li><input name="expendType" type="text" class="hidden" value="0"></li>	
 				</ul>
 
 			</form>

@@ -497,6 +497,18 @@ app
 																			"#lineChart1")
 																			.highcharts()
 																			.getSVG());
+													if (data.analyseResult) {
+														checkRob.listRemark = true;
+														checkRob.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
+													} else {
+														checkRob.listRemark = false;
+														checkRob.remark = "";
+														$("#analyseResult")
+																.val("");
+													}
 												});
 							}
 							// zq根据选择的报表类型显示不同的报表

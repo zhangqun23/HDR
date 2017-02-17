@@ -588,7 +588,7 @@ app
 																"客房部布草使用量饼状图分析",
 																"布草使用占比",
 																pieData);
-														$('#pie-svg')
+														$('#linenpie-svg')
 																.val(
 																		$(
 																				"#linenpieChart")
@@ -601,12 +601,17 @@ app
 														barForm(barData,
 																"#linenbar1", title,
 																xAxis, yAxis);
-														$('#bar-svg')
+														$('#linenbar-svg')
 																.val(
 																		$(
 																				"#linenbar1")
 																				.highcharts()
 																				.getSVG());
+														$('#roombar-svg').val("");
+														$('#washbar-svg').val("");
+														$('#minibar-svg').val("");
+														$('#minipieChart').val("");
+														
 
 													} else {
 														reportForm.listIsShow = true;
@@ -657,12 +662,17 @@ app
 														barForm(barData,
 																"#roombar1", title,
 																xAxis, yAxis);
-														$('#bar-svg')
+														$('#roombar-svg')
 																.val(
 																		$(
-																				"#bar1")
+																				"#roombar1")
 																				.highcharts()
 																				.getSVG());
+														$('#linenbar-svg').val("");
+														$('#linenpieChart').val("");
+														$('#washbar-svg').val("");
+														$('#minibar-svg').val("");
+														$('#minipieChart').val("");
 													} else {
 														reportForm.listIsShow = true;
 													}
@@ -712,12 +722,17 @@ app
 														barForm(barData,
 																"#washbar1", title,
 																xAxis, yAxis);
-														$('#bar-svg')
+														$('#washbar-svg')
 																.val(
 																		$(
-																				"#bar1")
+																				"#washbar1")
 																				.highcharts()
 																				.getSVG());
+														$('#linenbar-svg').val("");
+														$('#linenpieChart').val("");
+														$('#roombar-svg').val("");
+														$('#minibar-svg').val("");
+														$('#minipieChart').val("");
 													} else {
 														reportForm.listIsShow = true;
 													}
@@ -772,7 +787,7 @@ app
 																"客房部迷你吧使用量饼状图分析",
 																"迷你吧使用占比",
 																pieData);
-														$('#pie-svg')
+														$('#minipie-svg')
 																.val(
 																		$(
 																				"#minipieChart")
@@ -785,13 +800,16 @@ app
 														barForm(barData,
 																"#minibar1", title,
 																xAxis, yAxis);
-														$('#bar-svg')
+														$('#minibar-svg')
 																.val(
 																		$(
 																				"#minibar1")
 																				.highcharts()
 																				.getSVG());
-
+														$('#linenbar-svg').val("");
+														$('#linenpieChart').val("");
+														$('#roombar-svg').val("");
+														$('#washbar-svg').val("");
 													} else {
 														reportForm.listIsShow = true;
 													}
@@ -800,6 +818,10 @@ app
 										break;
 								}
 							}
+							reportForm.linenPic = true;
+							reportForm.roomPic = false;
+							reportForm.washPic = false;
+							reportForm.miniPic = false;
 							// wq根据选择的耗品类型显示不同的图
 							reportForm.changePic = function() {
 								var table = $("#tableType").val();

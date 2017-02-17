@@ -162,6 +162,11 @@ public class CheckOrRobController {
 		return map;
 	}
 
+	/**
+	 * word导出
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/exportRobBylimits.do")
 	public ResponseEntity<byte[]> exportRobBylimits(HttpServletRequest request) {
 		String roomType = null;
@@ -204,6 +209,52 @@ public class CheckOrRobController {
 		}
 		return byteArr;
 	}
+	/**
+	 * excel导出
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportRobExcelBylimits.do")
+	public ResponseEntity<byte[]> exportRobExcelBylimits(HttpServletRequest request) {
+		String roomType = null;
+		String sortName = null;
+		String startTime = null;
+		String endTime = null;
+		String tableType = null;
+		if (StringUtil.strIsNotEmpty(request.getParameter("roomType"))) {
+			roomType = request.getParameter("roomType");// 房间类型(sort_no)
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("sortName"))) {
+			sortName = request.getParameter("sortName");// 房间类型名称(sort_name)
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.monthFirstDay(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.monthLastDay(request.getParameter("endTime"));// 结束时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
+			tableType = request.getParameter("tableType");// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("roomType", roomType);
+		map.put("sortName", sortName);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = null;
+
+		ResponseEntity<byte[]> byteArr = null;
+		if (tableType.equals("0")) {
+			byteArr = checkOrRobService.exportRobEfficiencyExcel(map,path);
+		} else {
+			byteArr = checkOrRobService.exportRobDetailExcel(map,path);
+		}
+		return byteArr;
+	}
+	
 	/**
 	 * 做房用时分析导出
 	 * 

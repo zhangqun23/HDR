@@ -2,6 +2,8 @@ package com.mvc.dao;
 
 import java.util.List;
 
+import com.mvc.entityReport.WorkRoomNum;
+
 /**
  * 工作量相关的dao层接口
  * 
@@ -21,5 +23,8 @@ public interface WorkLoadDao {
 
 	// 获取员工总数
 	Integer staffCount(String startTime, String endTime);
+
+	// 获取员工打扫的房间数信息
+	List<Object> getWorkRoomNumList(String startTime, String endTime);
 
 }

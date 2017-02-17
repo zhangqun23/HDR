@@ -20,6 +20,7 @@ import com.mvc.entity.StaffInfo;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.entityReport.WorkLoadMonth;
+import com.mvc.entityReport.WorkRoomNum;
 import com.mvc.repository.StaffInfoRepository;
 import com.mvc.service.WorkLoadService;
 import com.utils.CollectionUtil;
@@ -553,6 +554,27 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		}
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
+	}
+
+	// 获取员工打扫的房间数统计信息
+	@Override
+	public List<WorkRoomNum> getWorkRoomNumInfo(String startTime, String endTime) {
+
+		return null;
+	}
+
+	// 导出员工打扫的房间数统计信息Word
+	@Override
+	public ResponseEntity<byte[]> exportWorkRoomNumWord(Map<String, Object> map) {
+
+		return null;
+	}
+
+	// 导出员工打扫的房间数统计信息Excel
+	@Override
+	public ResponseEntity<byte[]> exportWorkRoomNumExcel(Map<String, Object> map) {
+
+		return null;
 	}
 
 }

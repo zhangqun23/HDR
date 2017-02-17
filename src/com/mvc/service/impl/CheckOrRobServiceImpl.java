@@ -273,8 +273,8 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	public ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map,String path) {
 		ResponseEntity<byte[]> byteArr = null;
 		String sortName = (String) map.remove("sortName");
-		String startDate = (String) map.get("startDate");
-		String endDate = (String) map.get("endDate");
+		String startDate = ((String) map.get("startTime")).substring(0, 7);
+		String endDate = ((String) map.get("endTime")).substring(0, 7);
 		String fileName = "客房部员工抢房（" + sortName + "）效率统计表.xlsx";
 		String title = "客房部员工抢房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
 		try {
@@ -335,8 +335,33 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 
 	@Override
 	public ResponseEntity<byte[]> exportRobDetailExcel(Map<String, Object> map,String path) {
-		// TODO Auto-generated method stub
-		return null;
+		ResponseEntity<byte[]> byteArr = null;
+		String sortName = (String) map.remove("sortName");
+		String startDate = ((String) map.get("startTime")).substring(0, 7);
+		String endDate = ((String) map.get("endTime")).substring(0, 7);
+		String fileName = "客房部员工抢房（" + sortName + "）明细表.xlsx";
+		String title = "客房部员工抢房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
+		try {
+			ExcelHelper<RobDetail> ex = new ExcelHelper<RobDetail>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			// 获取列表和文本信息
+			List<Object> listSource = checkOrRobDao.selectRobDetail(map);
+			Iterator<Object> it = listSource.iterator();
+			List<RobDetail> listGoal = objToRobDetail(it);
+
+			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）","检查人" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<RobDetail>) listGoal, out, "yyyy-MM-dd", -1, 0);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
 	}
 
 	@Override

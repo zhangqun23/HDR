@@ -72,6 +72,26 @@ public class CustomerServiceController {
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
+	/**
+	 * 导出酒店对客服务信息excel统计表
+	 */
+	@RequestMapping("/exportDepWorkloadExcel.do")
+	public ResponseEntity<byte[]> exportDepWorkloadExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startTime = null;
+		String endTime = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		startTime = request.getParameter("startTime");
+		endTime = request.getParameter("endTime");
+		map.put("start_Time", startTime);
+		map.put("end_Time", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportCustomerServiceExcel(map, path);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
 	
 
 	/*
@@ -114,6 +134,29 @@ public class CustomerServiceController {
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
+	/**
+	 *导出部门对客服务工作量excel统计表
+	 */
+	@RequestMapping("/exportStaffWorkloadExcel.do")
+	public ResponseEntity<byte[]> exportStaffWorkloadExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startTime = null;
+		String endTime = null;
+		String departId = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		startTime = request.getParameter("startTime");
+		endTime = request.getParameter("endTime");
+		departId = request.getParameter("departId");
+		map.put("start_Time", startTime);
+		map.put("end_Time", endTime);
+		map.put("depart_Id", departId);
+
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomWorkloadExcel(map, path);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
 
 	/*
 	 * ***********************************王慧敏报表2*******************************
@@ -126,9 +169,11 @@ public class CustomerServiceController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map = hotelCustomerService.JsonObjToMap(jsonObject);
 		List<HouseCustomerServiceType> list = hotelCustomerService.findRoomType(map);
-
+		String str=hotelCustomerService.listtypeToListGoalWord(map);
+		
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", str);
 
 		return jsonObject.toString();
 	}
@@ -157,6 +202,29 @@ public class CustomerServiceController {
 		String picPath=request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMWORKTYPE_PATH);// 模板路径
 		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomType(map, path,picPath, modelPath);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+	/**
+	 *导出部门对客服务类型excel统计表
+	 */
+	@RequestMapping("/exportTypeExcel.do")
+	public ResponseEntity<byte[]> exportTypeExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startTime = null;
+		String endTime = null;
+		String departId = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		startTime = request.getParameter("startTime");
+		endTime = request.getParameter("endTime");
+		departId = request.getParameter("departId");
+		map.put("start_Time", startTime);
+		map.put("end_Time", endTime);
+		map.put("depart_Id", departId);
+
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomTypeExcel(map, path);
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}

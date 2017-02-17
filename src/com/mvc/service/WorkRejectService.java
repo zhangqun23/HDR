@@ -23,5 +23,7 @@ public interface WorkRejectService {
 
 	ResponseEntity<byte[]> exportWorRejectBylimits(Map<String, Object> map, String path, String tempPath);
 
+	ResponseEntity<byte[]> exportWorRejectExcelBylimits(Map<String, Object> map);
+
 	ResponseEntity<byte[]> exportWorkRejectAna(Map<String, Object> map, String path, String tempPath, String picPath);
 }

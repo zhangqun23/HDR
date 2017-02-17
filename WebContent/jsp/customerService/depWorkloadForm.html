@@ -27,10 +27,10 @@
 						type="button" value="查询" ng-click="selectDepWorkload()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Word"
-						onclick="this.form.action='../customerServiceInformation/exportDepWorkload.do';this.form.submit();"></li>
+						onclick="this.form.action='../customerServiceInformation/exportDepWorkload.do';this.form.submit();setExportFlagCookie();"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
-						onclick="this.form.action='../customerServiceInformation/exportDepWorkloadExcel.do';this.form.submit();"></li>
+						onclick="this.form.action='../customerServiceInformation/exportDepWorkloadExcel.do';this.form.submit();setExportFlagCookie();"></li>
 				</ul>
 
 			</form>

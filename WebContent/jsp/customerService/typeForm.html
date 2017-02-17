@@ -32,10 +32,10 @@
 						type="button" value="查询" ng-click="selectType()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Word"
-						onclick="this.form.action='../customerServiceInformation/exportType.do';this.form.submit();"></li>
+						onclick="this.form.action='../customerServiceInformation/exportType.do';this.form.submit();setExportFlagCookie();"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
-						onclick="this.form.action='../customerServiceInformation/exportTypeExcel.do';this.form.submit();"></li>
+						onclick="this.form.action='../customerServiceInformation/exportTypeExcel.do';this.form.submit();setExportFlagCookie();"></li>
 					<li><input id="bar-svg" name="bar-svg" type="text"
 						class="hidden" /></li>
 					<li><input id="analyseResult" name="analyseResult" type="text"

@@ -33,10 +33,10 @@
 						type="button" value="查询" ng-click="selectStaffWorkload()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Word"
-						onclick="this.form.action='../customerServiceInformation/exportStaffWorkload.do';this.form.submit();"></li>
+						onclick="this.form.action='../customerServiceInformation/exportStaffWorkload.do';this.form.submit();setExportFlagCookie();"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
-						onclick="this.form.action='../customerServiceInformation/exportStaffWorkloadExcel.do';this.form.submit();"></li>
+						onclick="this.form.action='../customerServiceInformation/exportStaffWorkloadExcel.do';this.form.submit();setExportFlagCookie();"></li>
 				</ul>
 
 			</form>

@@ -1,10 +1,13 @@
 package com.mvc.service.impl;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +24,10 @@ import com.mvc.entity.DepartmentInfo;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.entityReport.WorkHouse;
+import com.mvc.entityReport.WorkLoad;
+import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.service.CheckOrRobService;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.StringUtil;
@@ -264,6 +270,36 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
+	public ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map,String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		String sortName = (String) map.remove("sortName");
+		String startDate = (String) map.get("startDate");
+		String endDate = (String) map.get("endDate");
+		String fileName = "客房部员工抢房（" + sortName + "）效率统计表.xlsx";
+		String title = "客房部员工抢房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
+		try {
+			ExcelHelper<RobEfficiency> ex = new ExcelHelper<RobEfficiency>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			// 获取列表和文本信息
+			List<Object> listSource = checkOrRobDao.selectRobEfficiency(map);
+			Iterator<Object> it = listSource.iterator();
+			List<RobEfficiency> listGoal = objToRobEfficiency(it);
+
+			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率","超时率","返回率" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
+	}
+	@Override
 	public ResponseEntity<byte[]> exportRobDetail(Map<String, Object> map, String path, String tempPath) {
 		String sortName = (String) map.remove("sortName");
 
@@ -295,6 +331,12 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		}
 
 		return byteArr;
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportRobDetailExcel(Map<String, Object> map,String path) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -354,5 +396,6 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 
 		return byteArr;
 	}
+
 
 }

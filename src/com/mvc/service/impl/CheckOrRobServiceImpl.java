@@ -174,7 +174,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 				month = Integer.valueOf(obj[1].toString());
 				if (month == j) {
 					if (obj[0] != null && obj[2] != null) {
-						useTime[j-1] = Float.parseFloat(StringUtil.divide(obj[0].toString(), obj[2].toString()));
+						useTime[j - 1] = Float.parseFloat(StringUtil.divide(obj[0].toString(), obj[2].toString()));
 					}
 				} else {
 					useTime[i] = 0f;
@@ -270,7 +270,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map,String path) {
+	public ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map, String path) {
 		ResponseEntity<byte[]> byteArr = null;
 		String sortName = (String) map.remove("sortName");
 		String startDate = ((String) map.get("startTime")).substring(0, 7);
@@ -287,8 +287,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			Iterator<Object> it = listSource.iterator();
 			List<RobEfficiency> listGoal = objToRobEfficiency(it);
 
-			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率","超时率","返回率" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
+					"返回率" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -299,6 +300,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		}
 		return byteArr;
 	}
+
 	@Override
 	public ResponseEntity<byte[]> exportRobDetail(Map<String, Object> map, String path, String tempPath) {
 		String sortName = (String) map.remove("sortName");
@@ -334,7 +336,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> exportRobDetailExcel(Map<String, Object> map,String path) {
+	public ResponseEntity<byte[]> exportRobDetailExcel(Map<String, Object> map, String path) {
 		ResponseEntity<byte[]> byteArr = null;
 		String sortName = (String) map.remove("sortName");
 		String startDate = ((String) map.get("startTime")).substring(0, 7);
@@ -351,8 +353,8 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			Iterator<Object> it = listSource.iterator();
 			List<RobDetail> listGoal = objToRobDetail(it);
 
-			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）","检查人" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<RobDetail>) listGoal, out, "yyyy-MM-dd", -1, 0);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）", "检查人" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<RobDetail>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -421,6 +423,5 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 
 		return byteArr;
 	}
-
 
 }

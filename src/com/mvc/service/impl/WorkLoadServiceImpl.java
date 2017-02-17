@@ -20,6 +20,7 @@ import com.mvc.entity.StaffInfo;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.entityReport.WorkLoadMonth;
+import com.mvc.entityReport.WorkRoomNum;
 import com.mvc.repository.StaffInfoRepository;
 import com.mvc.service.WorkLoadService;
 import com.utils.CollectionUtil;
@@ -194,7 +195,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			workLoadList = getWorkLoadSummaryList(startDate, endDate);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房", "过夜房", "离退房", "实际工作量", "超出工作量", "排名" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection) workLoadList, out, "yyyy-MM-dd", -1, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+			ex.export2007Excel(title, header, (Collection) workLoadList, out, "yyyy-MM-dd", -1, 2, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -354,7 +355,8 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			List<WorkLoadLevel> workLoadLevelList = toWorkLoadLevelList(workLoadList);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "实际工作天数", "额定工作量", "实际工作量", "超出工作量", "超出幅度" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<WorkLoadLevel>) workLoadLevelList, out, "yyyy-MM-dd", -1, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			ex.export2007Excel(title, header, (Collection<WorkLoadLevel>) workLoadLevelList, out, "yyyy-MM-dd", -1, 1,
+					1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容,1表示一行表头
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -553,6 +555,27 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		}
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
+	}
+
+	// 获取员工打扫的房间数统计信息
+	@Override
+	public List<WorkRoomNum> getWorkRoomNumInfo(String startTime, String endTime) {
+
+		return null;
+	}
+
+	// 导出员工打扫的房间数统计信息Word
+	@Override
+	public ResponseEntity<byte[]> exportWorkRoomNumWord(Map<String, Object> map) {
+
+		return null;
+	}
+
+	// 导出员工打扫的房间数统计信息Excel
+	@Override
+	public ResponseEntity<byte[]> exportWorkRoomNumExcel(Map<String, Object> map) {
+
+		return null;
 	}
 
 }

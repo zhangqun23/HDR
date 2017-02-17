@@ -34,4 +34,8 @@ public interface CheckOrRobService {
 	ResponseEntity<byte[]> exportRobAnalyseByLimits(Map<String, Object> map, String path, String tempPath,
 			String picPath);
 
+	ResponseEntity<byte[]> exportRobDetailExcel(Map<String, Object> map, String path);
+
+	ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map, String path);
+
 }

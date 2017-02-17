@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.entityReport.WorkReject;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkRejectService;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
 import com.utils.SvgPngConverter;
@@ -329,6 +331,37 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportWorRejectExcelBylimits(Map<String, Object> map) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");
+		map.put("deptId", departmentInfo.getDepartmentId());
+		ResponseEntity<byte[]> byteArr = null;
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String path = (String) map.get("path");
+		String title = "客房部员工做房驳回率统计表";
+		String fileName = "客房部员工做房驳回率统计表.xlsx";
+		try {
+			ExcelHelper<WorkReject> wh = new ExcelHelper<WorkReject>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workRejectDao.selectWorkRejectByLimits(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkReject> listGoal = objToWorkReject(it);
+
+			WorkReject sum = sumWorkReject(listGoal);
+			listGoal.add(sum);
+			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
+			wh.export2007Excel(title, header,listGoal, out, "yyyy-MM-dd", -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

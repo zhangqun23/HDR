@@ -84,10 +84,16 @@ public interface ExpendFormService {
 	// 布草统计分析
 	List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map);
 
+	// 导出耗品统计表excel
+	ResponseEntity<byte[]> exportExpendExcel(Map<String, Object> map);
+
 	/********** zjn添加 **********/
 	// 导出房间或卫生间耗品分析图
 	ResponseEntity<byte[]> exportRoomOrWashExpendPic(Map<String, String> map);
 
-	// 导出布草用量分析图
-	ResponseEntity<byte[]> exportLinenExpendPic(Map<String, String> map);
+	// 导出布草或迷你吧用量分析图
+	ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map);
+
+	//获取布草统计列表
+	List<LinenExpend> getLinenExpendList(Map<String, Object> map);
 }

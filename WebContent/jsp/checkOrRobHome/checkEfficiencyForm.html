@@ -28,10 +28,10 @@
 						ng-click="selectCheckEfficiencyByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Word"
-						onclick="this.form.action='../checkHouse/exportCheckHouseList.do';this.form.submit();"></li>
+						onclick="this.form.action='../checkHouse/exportCheckHouseList.do';this.form.submit();setExportFlagCookie();"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
-						onclick="this.form.action='../checkHouse/exportCheckHouseExcel.do';this.form.submit();"></li>
+						onclick="this.form.action='../checkHouse/exportCheckHouseExcel.do';this.form.submit();setExportFlagCookie();"></li>
 				</ul>
 
 			</form>

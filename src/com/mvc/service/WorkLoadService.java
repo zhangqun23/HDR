@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 
 import com.mvc.entityReport.WorkLoad;
+import com.mvc.entityReport.WorkRoomNum;
 
 /**
  * 工作量相关的service层接口
@@ -38,4 +39,14 @@ public interface WorkLoadService {
 
 	// 导出员工工作量分析图
 	ResponseEntity<byte[]> exportWorkLoadAnalyse(Map<String, String> map);
+
+	// 获取员工打扫的房间数统计信息
+	List<WorkRoomNum> getWorkRoomNumInfo(String startTime, String endTime);
+
+	// 导出员工打扫的房间数统计信息Word
+	ResponseEntity<byte[]> exportWorkRoomNumWord(Map<String, Object> map);
+
+	// 导出员工打扫的房间数统计信息Excel
+	ResponseEntity<byte[]> exportWorkRoomNumExcel(Map<String, Object> map);
+
 }

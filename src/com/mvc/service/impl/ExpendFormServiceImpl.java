@@ -1250,7 +1250,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String endTime = map.get("endTime");
 		String expendType = map.get("expendType");
 		String picName = "pic.png";
-		if (expendType.equals("0")) {
+		if (expendType.equals("1")) {
 			fileName = "房间耗品用量分析图.docx";
 		} else {
 			fileName = "卫生间耗品用量分析图.docx";
@@ -1278,17 +1278,23 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	// 导出布草用量分析图
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public ResponseEntity<byte[]> exportLinenExpendPic(Map<String, String> map) {
+	public ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map) {
 		ResponseEntity<byte[]> byteArr = null;
 		WordHelper wh = new WordHelper();
 		Map<String, Object> contentMap = new HashMap<String, Object>();
 		Map<String, Object> picMap = new HashMap<String, Object>();
-		String fileName = "客房部布草用量分析图.docx";
+		String fileName = "";
 		String path = map.get("path");
 		String modelPath = map.get("modelPath");
 		String picCataPath = map.get("picCataPath");
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
+		String expendType = map.get("expendType");
+		if (expendType.equals("0")) {
+			fileName = "布草用量分析图.docx";
+		} else {
+			fileName = "迷你吧用量分析图.docx";
+		}
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 		// 图片相关
 		String[] svgs = new String[2];

@@ -41,6 +41,10 @@
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEffAnalyseForm">抢房效率分析</a><i></i></li>
 				<li id="checkHomeTime"><cite></cite> <a
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkEfficiencyForm">领班查房效率统计</a><i></i></li>
+				<li id="checkOutHome"><cite></cite><a
+					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkOutHomeForm">查退房效率统计</a></li>
+				<li id="checkOutAnalyse"><cite></cite><a
+					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkOutAnalyseForm">查退房效率分析</a></li>
 			</ul>
 		</dd>
 

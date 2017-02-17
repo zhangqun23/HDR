@@ -41,14 +41,18 @@
 					type="button" value="查询" ng-click="selectRobEffAnalyseByLimits()"></li>
 				<li><input id="chart1-svg" name="chart1SVGStr" type="text"
 					class="hidden" /></li>
+				<li><input id="analyseResult" name="analyseResult" type="text"
+					class="hidden" /></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
-					type="submit" value="导出"></li>
+					type="submit" value="导出" onclick="setExportFlagCookie()"></li>
 			</ul>
 		</form>
 
 	</div>
 	<div id="lineChart1"
 		style="min-width: 400px; width: 1000px; height: 400px"></div>
+	<label ng-show="listRemark"
+		style="color: red; font-size: medium; marginTop: 20px">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 </div>
 
 

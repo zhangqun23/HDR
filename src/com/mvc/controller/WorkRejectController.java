@@ -126,7 +126,7 @@ public class WorkRejectController {
 
 	// zq导出驳回统计表
 	@RequestMapping("/exportWorRejectBylimits.do")
-	public ResponseEntity<byte[]> exportWorRejectBylimits(HttpServletRequest request , HttpServletResponse response) {
+	public ResponseEntity<byte[]> exportWorRejectBylimits(HttpServletRequest request, HttpServletResponse response) {
 		String startTime = null;
 		String endTime = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
@@ -145,9 +145,33 @@ public class WorkRejectController {
 		return byteArr;
 	}
 
+	// zq导出驳回统计表Excel
+	@RequestMapping("/exportWorRejectExcelBylimits.do")
+	public ResponseEntity<byte[]> exportWorRejectExcelBylimits(HttpServletRequest request,
+			HttpServletResponse response) {
+		String startTime = null;
+		String endTime = null;
+		ResponseEntity<byte[]> byteArr = null;
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.monthFirstDay(request.getParameter("startTime"));// 起始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.monthLastDay(request.getParameter("endTime"));
+		}
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+		map.put("path", path);
+		byteArr = workRejectService.exportWorRejectExcelBylimits(map);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
 	// zq驳回折线图的分析
 	@RequestMapping("/exportWorkRejectAnalyseBylimits.do")
-	public ResponseEntity<byte[]> exportWorkRejectAnalyseBylimits(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<byte[]> exportWorkRejectAnalyseBylimits(HttpServletRequest request,
+			HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String cleanType = null;

@@ -11,20 +11,26 @@
 
 	<div>
 		<div>
-			<form action="../workReject/exportWorRejectBylimits.do" method="post"
+			<form action="" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>起止年月</label><input type="text" name="startTime"
 						ng-model="wrLimit.startTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endTime" ng-model="wrLimit.endTime" required
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""><label>—</label><input type="text"
+						name="endTime" ng-model="wrLimit.endTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectWorkRejectByLimits()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='../workReject/exportWorRejectBylimits.do';this.form.submit();setExportFlagCookie();setExportFlagCookie();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='../workReject/exportWorRejectExcelBylimits.do';this.form.submit();setExportFlagCookie();setExportFlagCookie();"></li>
 				</ul>
 
 			</form>

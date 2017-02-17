@@ -11,7 +11,7 @@
 
 	<div>
 		<div>
-			<form action="exportRobBylimits.do" method="post"
+			<form action="" method="post"
 				enctype="multipart/form-data">
 				<ul class="projectListLimit">
 					<li><label>报表类型</label><select class="dfselect layoutStyle"
@@ -23,10 +23,12 @@
 					<li><label>起止年月</label><input type="text" name="startTime"
 						ng-model="reLimit.startTime" required
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""><label>—</label><input
-						type="text" name="endTime" required ng-model="reLimit.endTime"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""><label>—</label><input type="text"
+						name="endTime" required ng-model="reLimit.endTime"
 						class="dfselect dateLayoutStyle"
-						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) " onChange=""></li>
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
 					<li><label>房间类型</label><select class="dfselect layoutStyle"
 						style="width: 140px" ng-model="reLimit.roomType" required
 						name="roomType" id="roomSortType" ng-change="getSortNameByNo()"><option
@@ -36,8 +38,12 @@
 						ng-model="sortName"></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectRobByLimits()"></li>
-					<li><input class="btn layoutStyle" style="width: 60px"
-						type="submit" value="导出"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='exportRobBylimits.do';this.form.submit();setExportFlagCookie();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='exportRobExcelBylimits.do';this.form.submit();setExportFlagCookie();"></li>
 				</ul>
 
 			</form>
@@ -77,7 +83,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<table class="tablelist tablestyle hidden" id="detailTable" >
+	<table class="tablelist tablestyle hidden" id="detailTable">
 		<caption align="top" class="tableTitle">客房部员工抢房 {{sortName}}
 			明细表</caption>
 		<thead>
@@ -107,10 +113,10 @@
 			</tr>
 		</tbody>
 	</table>
-<div class="tcdPageCode">页码容器</div>
+	<div class="tcdPageCode">页码容器</div>
 
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-	
+
 </div>
 
 

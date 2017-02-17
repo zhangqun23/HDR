@@ -20,6 +20,7 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.entityReport.WorkReject;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkRejectService;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
 import com.utils.SvgPngConverter;
@@ -329,6 +330,36 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportWorRejectExcelBylimits(Map<String, Object> map) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");
+		map.put("deptId", departmentInfo.getDepartmentId());
+		ResponseEntity<byte[]> byteArr = null;
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String path = (String) map.get("path");
+		String title = "客房部员工做房驳回率统计表(" + startTime + "至" + endTime + ")";
+		String fileName = "客房部员工做房驳回率统计表.xlsx";
+		try {
+			ExcelHelper<WorkReject> wh = new ExcelHelper<WorkReject>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workRejectDao.selectWorkRejectByLimits(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkReject> listGoal = objToWorkReject(it);
+
+			WorkReject sum = sumWorkReject(listGoal);
+			listGoal.add(sum);
+			String[] header = { "序号", "员工姓名", "员工编号", "实际工作天数", "额定工作量", "实际工作量", "超出工作量", "超出幅度" };// 顺序必须和对应实体一致
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -77,11 +77,17 @@ public interface ExpendFormService {
 	
 	// 迷你吧统计分页
 	List<MiniExpend> selectMiniPage(Map<String, Object> map, Pager pager);
+	
+	// 导出迷你吧使用量统计表
+	ResponseEntity<byte[]> exportMiniExpendForm(Map<String, Object> map, String path, String tempPath);
+
+	// 布草统计分析
+	List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map);
 
 	/********** zjn添加 **********/
 	// 导出房间或卫生间耗品分析图
 	ResponseEntity<byte[]> exportRoomOrWashExpendPic(Map<String, String> map);
 
-	// 导出布草用量分析图
-	ResponseEntity<byte[]> exportLinenExpendPic(Map<String, String> map);
+	// 导出布草或迷你吧用量分析图
+	ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map);
 }

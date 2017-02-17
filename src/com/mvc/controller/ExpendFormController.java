@@ -72,46 +72,6 @@ public class ExpendFormController {
 	}
 
 	/**
-	 * 导出布草消耗，word格式
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/exportLinenExpendForm.do")
-	public ResponseEntity<byte[]> exportLinenExpendForm(HttpServletRequest request) {
-		String formType = null;
-		String formName = null;
-		String startTime = null;
-		String endTime = null;
-
-		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
-			formType = request.getParameter("formType");// 报表类型
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
-			formName = request.getParameter("formName");// 报表类型名称
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
-			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
-			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
-		}
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("formType", formType);
-		map.put("formName", formName);
-		map.put("startTime", startTime);
-		map.put("endTime", endTime);
-
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.LINENEXPEND_PATH);// 模板路径
-		ResponseEntity<byte[]> byteArr = expendFormService.exportLinenExpendForm(map, path, tempPath);
-
-		return byteArr;
-	}
-
-	/**
 	 *
 	 * 布草使用量分析
 	 */
@@ -150,46 +110,6 @@ public class ExpendFormController {
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
-	}
-
-	/**
-	 * 导出房间消耗，word格式
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/exportRoomExpendForm.do")
-	public ResponseEntity<byte[]> exportRoomExpendForm(HttpServletRequest request) {
-		String formType = null;
-		String formName = null;
-		String startTime = null;
-		String endTime = null;
-
-		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
-			formType = request.getParameter("formType");// 报表类型
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
-			formName = request.getParameter("formName");// 报表类型名称
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
-			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
-			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
-		}
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("formType", formType);
-		map.put("formName", formName);
-		map.put("startTime", startTime);
-		map.put("endTime", endTime);
-
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMEXPEND_PATH);// 模板路径
-		ResponseEntity<byte[]> byteArr = expendFormService.exportRoomExpendForm(map, path, tempPath);
-
-		return byteArr;
 	}
 
 	/**
@@ -234,46 +154,6 @@ public class ExpendFormController {
 	}
 
 	/**
-	 * 导出卫生间耗品消耗，word格式
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/exportWashExpendForm.do")
-	public ResponseEntity<byte[]> exportWashExpendForm(HttpServletRequest request) {
-		String formType = null;
-		String formName = null;
-		String startTime = null;
-		String endTime = null;
-
-		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
-			formType = request.getParameter("formType");// 报表类型
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
-			formName = request.getParameter("formName");// 报表类型名称
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
-			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
-		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
-			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
-		}
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("formType", formType);
-		map.put("formName", formName);
-		map.put("startTime", startTime);
-		map.put("endTime", endTime);
-
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WASHEXPEND_PATH);// 模板路径
-		ResponseEntity<byte[]> byteArr = expendFormService.exportWashExpendForm(map, path, tempPath);
-
-		return byteArr;
-	}
-
-	/**
 	 *
 	 * 卫生间耗品使用量分析
 	 */
@@ -313,7 +193,24 @@ public class ExpendFormController {
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
 	}
+	
+	/**
+	 *
+	 * 迷你吧使用量分析
+	 */
+	@RequestMapping("/selectMiniExpendAnalyseByMlimits.do")
+	public @ResponseBody String selectMiniExpendAnalyse(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("amlimit"));
 
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		List<ExpendAnalyse> list = expendFormService.selectMiniExpendAnalyse(map);
+
+		jsonObject = new JSONObject();
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
+	
 	/**
 	 * 将JsonObject转换成Map
 	 * 
@@ -355,6 +252,68 @@ public class ExpendFormController {
 
 		return map;
 	}
+	
+	/**
+	 * 导出耗品消耗，word格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportExpendForm.do")
+	public ResponseEntity<byte[]> exportExpendForm(HttpServletRequest request, HttpServletResponse response) {
+		String formType = null;
+		String formName = null;
+		String startTime = null;
+		String endTime = null;
+		String tableType = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
+			formType = request.getParameter("formType");// 报表类型
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
+			formName = request.getParameter("formName");// 报表类型名称
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))){
+			tableType =  request.getParameter("tableType");//耗品类型选择
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formType", formType);
+		map.put("formName", formName);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = null;
+		ResponseEntity<byte[]> byteArr = null;
+		switch(tableType){
+		case "0":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.LINENEXPEND_PATH);// 模板路径
+			byteArr = expendFormService.exportLinenExpendForm(map, path, tempPath);
+			break;
+		case "1":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMEXPEND_PATH);// 模板路径
+			byteArr = expendFormService.exportRoomExpendForm(map, path, tempPath);
+			break;
+		case "2":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WASHEXPEND_PATH);// 模板路径
+			byteArr = expendFormService.exportWashExpendForm(map, path, tempPath);
+			break;
+		case "3":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.MINIEXPEND_PATH);// 模板路径
+			byteArr = expendFormService.exportMiniExpendForm(map, path, tempPath);
+			break;
+		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
 
 	/********** zjn添加 **********/
 	/**
@@ -370,7 +329,7 @@ public class ExpendFormController {
 		String svg = "";
 		String startTime = "";
 		String endTime = "";
-		String expendType = "0";// 0代表房间耗品用量分析图;1代表卫生间易耗品分析图
+		String expendType = "1";// 1代表房间耗品用量分析图;2代表卫生间易耗品分析图
 		ResponseEntity<byte[]> byteArr = null;
 		Map<String, String> map = new HashMap<String, String>();
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
@@ -385,7 +344,7 @@ public class ExpendFormController {
 			svg = request.getParameter("chartSVGStr");
 			startTime = request.getParameter("startTime");
 			endTime = request.getParameter("endTime");
-			if (expendType.equals("1")) {
+			if (expendType.equals("2")) {
 				modelPath = request.getSession().getServletContext()
 						.getRealPath(ReportFormConstants.WASHEXPENDPIC_PATH);// 卫生间易耗品分析图模板路径
 			}
@@ -403,19 +362,20 @@ public class ExpendFormController {
 	}
 
 	/**
-	 * 导出房间耗品用量分析图，word格式
+	 * 导出布草或者迷你吧用量分析图，word格式
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/exportLinenExpendPic.do")
-	public ResponseEntity<byte[]> exportLinenExpendPic(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping("/exportLinenOrMiniExpendPic.do")
+	public ResponseEntity<byte[]> exportLinenOrMiniExpendPic(HttpServletRequest request, HttpServletResponse response) {
 
 		String svg1 = "";
 		String svg2 = "";
 		String startTime = "";
 		String endTime = "";
+		String expendType = "0";// 0代表布草用量分析图;3代表迷你吧用量分析图
 		ResponseEntity<byte[]> byteArr = null;
 		Map<String, String> map = new HashMap<String, String>();
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
@@ -437,6 +397,10 @@ public class ExpendFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
 			endTime = request.getParameter("endTime");
 		}
+		if (expendType.equals("3")) {
+			modelPath = request.getSession().getServletContext()
+					.getRealPath(ReportFormConstants.MINIEXPENDPIC_PATH);// 卫生间易耗品分析图模板路径
+		}
 		map.put("path", path);
 		map.put("modelPath", modelPath);
 		map.put("picCataPath", picCataPath);
@@ -444,7 +408,7 @@ public class ExpendFormController {
 		map.put("svg2", svg2);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
-		byteArr = expendFormService.exportLinenExpendPic(map);
+		byteArr = expendFormService.exportLinenOrMiniExpendPic(map);
 
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;

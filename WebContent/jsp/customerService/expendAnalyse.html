@@ -41,18 +41,28 @@
 					<li><input id="roombar-svg" name="chartSVGStr3" class="hidden" type="text"  /></li>
 					<li><input id="washbar-svg" name="chartSVGStr4" class="hidden" type="text"  /></li>	
 					<li><input id="minibar-svg" name="chartSVGStr6" class="hidden" type="text"  /></li>	
-					<li><input id="minipie-svg" name="chartSVGStr5" class="hidden" type="text"/></li>	
+					<li><input id="minipie-svg" name="chartSVGStr5" class="hidden" type="text"/></li>
+					<li><input id="analyseResult" name="analyseResult" type="text" class="hidden" /></li>	
 				</ul>
 
 			</form>
 		</div>
 		<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+		
 	</div>
 	<div id="linenpieChart" style="min-width: 400px; width: 500px; height: 500px;margin:0 auto"  ng-show="linenPic"></div>
 	<div id="linenbar1" style="width: 800px;margin: 0 auto" ng-show="linenPic"></div>
+	<label ng-show="listRemark" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark1}}</label>
 	<div id="roombar1" style="width: 800px; height: 1200px; margin: 0 auto" ng-show="roomPic"></div>
+	<label ng-show="listRemark" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark2}}</label>
 	<div id="washbar1" style="width: 800px; height: 1200px; margin: 0 auto" ng-show="washPic"></div>
+	<label ng-show="listRemark" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark3}}</label>
 	<div id="minipieChart" style="min-width: 400px; width: 600px; height: 400px;margin:0 auto" ng-show="miniPic"></div>
 	<div id="minibar1" style="width: 800px;margin: 0 auto" ng-show="miniPic"></div>
+	<label ng-show="listRemark" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark4}}</label>
+	
+</div>
+	
+	
 	
 						

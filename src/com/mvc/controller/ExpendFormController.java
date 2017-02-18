@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
-import com.mvc.entityReport.ExpendAnalyse;
 import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
 import com.mvc.entityReport.MiniCount;
@@ -78,13 +77,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectLinenExpendAnalyseByLlimits.do")
 	public @ResponseBody String selectLinenExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("allimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectLinenExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectLinenExpendAnalyse(map);
+		return list;
 	}
 
 	/**
@@ -119,13 +115,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectRoomExpendAnalyseByRlimits.do")
 	public @ResponseBody String selectRoomExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("arlimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectRoomExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectRoomExpendAnalyse(map);
+		return list;
 	}
 
 	/**
@@ -160,13 +153,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectWashExpendAnalyseByWlimits.do")
 	public @ResponseBody String selectWashExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("wrlimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectWashExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectWashExpendAnalyse(map);
+		return list;
 	}
 	
 	/**
@@ -201,13 +191,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectMiniExpendAnalyseByMlimits.do")
 	public @ResponseBody String selectMiniExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("amlimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectMiniExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectMiniExpendAnalyse(map);
+		return list;
 	}
 
 	
@@ -361,7 +348,7 @@ public class ExpendFormController {
 	}
 	
 	/**
-	 * 导出房间或者卫生间耗品用量分析图，word格式
+	 * 导出耗品用量分析图，word格式
 	 * 
 	 * @param request
 	 * @param response
@@ -374,6 +361,7 @@ public class ExpendFormController {
 		String startTime = "";
 		String endTime = "";
 		String tableType = "";
+		String analyseResult = "";
 		ResponseEntity<byte[]> byteArr = null;
 		Map<String, String> map = new HashMap<String, String>();
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
@@ -388,6 +376,9 @@ public class ExpendFormController {
 		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
 			tableType = request.getParameter("tableType");
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
+			analyseResult = request.getParameter("analyseResult");
 		}
 		switch(tableType){
 		case "0":
@@ -410,6 +401,7 @@ public class ExpendFormController {
 			map.put("startTime", startTime);
 			map.put("endTime", endTime);
 			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
 			byteArr = expendFormService.exportLinenOrMiniExpendPic(map);
 			break;
 		case "1":
@@ -426,6 +418,7 @@ public class ExpendFormController {
 			map.put("startTime", startTime);
 			map.put("endTime", endTime);
 			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
 			byteArr = expendFormService.exportRoomOrWashExpendPic(map);
 			break;
 		case "2":
@@ -442,6 +435,7 @@ public class ExpendFormController {
 			map.put("startTime", startTime);
 			map.put("endTime", endTime);
 			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
 			byteArr = expendFormService.exportRoomOrWashExpendPic(map);
 			break;
 		case "3":
@@ -463,6 +457,7 @@ public class ExpendFormController {
 			map.put("startTime", startTime);
 			map.put("endTime", endTime);
 			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
 			byteArr = expendFormService.exportLinenOrMiniExpendPic(map);
 			break;
 		}
@@ -471,6 +466,27 @@ public class ExpendFormController {
 		return byteArr;
 		
 	}
+	/**
+	 * 员工耗品统计
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/selectStaExpendByLimits.do")
+	public @ResponseBody String selectStaExpendByLimits(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("sLimit"));
 
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		//int totalRow = Integer.parseInt(expendFormService.countTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		//pager.setTotalRow(totalRow);
+
+		//List<LinenExpend> list = expendFormService.selectStaExpendPage(map, pager);
+		jsonObject = new JSONObject();
+		//jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
+	}
 
 }

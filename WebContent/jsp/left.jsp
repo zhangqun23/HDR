@@ -64,10 +64,25 @@
 					href="${ctx}/customerService/toReportFormPage.do#/expendForm">耗品用量统计</a><i></i></li>
 				<li id="expendAnalyse"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/expendAnalyse">耗品用量分析</a><i></i></li>
-				<li id="staffExpend"><cite></cite> <a
+						<li id="staffExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/staffExpend">员工领取物品统计</a><i></i></li>
 			</ul>
 
+		</dd>
+		<dd>
+			<div class="title">
+				<span><img src="${ctx}/images/leftico04.png" /></span>工程部服务统计
+			</div>
+			<ul id="projectService-ul" class="menuson">
+				<li id="proWorkLoad"><cite></cite><a
+					href="${ctx}/projectWorkLoad/toProjectPage.do#/proWorkLoadForm">员工工作量统计</a><i></i></li>
+				<li id="proWorkLoadAnalyse"><cite></cite><a
+					href="${ctx}/projectWorkLoad/toProjectPage.do#/proWorkLoadAnalyse">员工工作量分析</a><i></i></li>
+				<li id="proMaterial"><cite></cite><a
+					href="${ctx}/projectWorkLoad/toProjectPage.do#/proMaterialForm">工程物料管理统计</a><i></i></li>
+				<li id="proMaintain"><cite></cite><a
+					href="${ctx}/projectWorkLoad/toProjectPage.do#/proMaintainForm">工程维修项统计</a><i></i></li>
+			</ul>
 		</dd>
 	</dl>
 </section>

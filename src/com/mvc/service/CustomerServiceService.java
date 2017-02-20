@@ -47,16 +47,4 @@ public interface CustomerServiceService {
 	// 根据部门ID筛选员工信息
 	List<Object> findStaffByDepId(String departid);
 
-	//导出酒店对客服务信息excel统计表
-	ResponseEntity<byte[]> exportCustomerServiceExcel(Map<String, Object> map, String path);
-
-	//导出部门对客服务工作量excel统计表
-	ResponseEntity<byte[]> exportRoomWorkloadExcel(Map<String, Object> map, String path);
-
-	//导出部门对客服务类型excel统计表
-	ResponseEntity<byte[]> exportRoomTypeExcel(Map<String, Object> map, String path);
-	
-	//得出服务类型文字分析
-	String listtypeToListGoalWord(Map<String, Object> map);
-
 }

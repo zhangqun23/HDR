@@ -146,14 +146,16 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	// lwt例行任务员工工作量统计
-	services.selectWorkloadByLimits = function(data) {
+
+	// zjn例行任务员工工作量或者打扫房间数统计
+	services.selectWorkLoadOrRoomByLimits = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'workLoad/getWorkLoadSummaryList.do',
+			url : baseUrl + 'workLoad/getWorkLoadOrRoomSummaryList.do',
 			data : data
 		});
 	}
+
 	// lwt例行任务员工工作量分析
 	services.selectStaffWorkLoadAnalyse = function(data) {
 		return $http({
@@ -496,11 +498,12 @@ app
 								});
 							}
 							// zq查询客服人员列表
-							function selectRoomStaffs() {
-								services.selectRoomStaffs().success(
-										function(data) {
-											reportForm.staffs = data.list;
-										});
+							function selectRoomStaffs(deptType) {
+								services.selectRoomStaffs({
+									deptType : deptType
+								}).success(function(data) {
+									reportForm.staffs = data.list;
+								});
 							}
 							// zq获取所选房间类型
 							function getSelectedRoomType(roomSortNo) {
@@ -800,6 +803,7 @@ app
 
 							// lwt例行任务工作量统计界面设置条件
 							reportForm.workloadLimit = {
+								tableType : "0",
 								startTime : "",
 								endTime : ""
 							};
@@ -830,14 +834,18 @@ app
 									alert("截止时间不能大于开始时间！");
 									return false;
 								}
+								if (reportForm.workloadLimit.tableType == "") {
+									alert("请选择统计类型！");
+									return false;
+								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
 								var workloadLimit = JSON
 										.stringify(reportForm.workloadLimit);
 								services
-										.selectWorkloadByLimits(
+										.selectWorkLoadOrRoomByLimits(
 												{
-													// limit : workloadLimit
+													tableType : reportForm.workloadLimit.tableType,
 													startDate : reportForm.workloadLimit.startTime,
 													endDate : reportForm.workloadLimit.endTime
 												})
@@ -847,7 +855,11 @@ app
 															.fadeOut(200);
 													$(".tipLoading").fadeOut(
 															200);
-													reportForm.workloadList = data.workLoadList;
+													if (reportForm.workloadLimit.tableType == '0') {
+														reportForm.workloadList = data.workLoadList;
+													} else {
+														reportForm.workRoomList = data.workLoadList;
+													}
 													if (data.workLoadList.length) {
 														reportForm.listIsShow = false;
 													} else {
@@ -855,7 +867,18 @@ app
 													}
 												});
 							}
+							// zjn根据选择的报表类型显示不同的报表
+							reportForm.changeTable = function() {
+								var table = $("#tableType").val();
+								if (table == '0') {
+									$("#workLoadTable").show();
+									$("#workRoomNumTable").hide();
 
+								} else {
+									$("#workLoadTable").hide();
+									$("#workRoomNumTable").show();
+								}
+							}
 							// lwt根据条件分析员工的工作量
 							reportForm.selectStaffWorkLoadAnalyse = function() {
 								if (reportForm.staffWorkloadLimit.checkYear == "") {
@@ -995,7 +1018,6 @@ app
 													reportForm.remark = data.analyseResult;
 													$("#analyseResult").val(
 															data.analyseResult);
-													alert(data.analyseResult);
 													if (data.analyseResult) {
 														reportForm.listIsShow = false;
 														reportForm.listRemark = true;
@@ -1028,8 +1050,6 @@ app
 								services
 										.selectWorkloadLevel(
 												{
-													// limit :
-													// workLoadLevelLimit
 													startDate : reportForm.workLoadLevelLimit.startTime,
 													endDate : reportForm.workLoadLevelLimit.endTime
 												})
@@ -1335,7 +1355,7 @@ app
 
 								} else if ($location.path().indexOf(
 										'/workHouseAnalyseForm') == 0) {
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 									selectRoomSorts();
 
 								} else if ($location.path().indexOf(
@@ -1346,17 +1366,17 @@ app
 
 								} else if ($location.path().indexOf(
 										'/workEffAnalyseForm') == 0) {
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 									selectRoomSorts();
 								} else if ($location.path().indexOf(
 										'/workloadAnalysis') == 0) {
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 								} else if ($location.path().indexOf(
 										'/workRejectForm') == 0) {
 
 								} else if ($location.path().indexOf(
 										'/workRejectAnalyseForm') == 0) {
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 								}
 							}
 							initData();

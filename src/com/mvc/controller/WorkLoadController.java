@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.dao.WorkLoadDao;
 import com.mvc.entityReport.WorkLoad;
+import com.mvc.entityReport.WorkRoomNum;
 import com.mvc.service.WorkLoadService;
 import com.utils.CookieUtil;
 import com.utils.StringUtil;
@@ -23,7 +24,7 @@ import com.utils.StringUtil;
 import net.sf.json.JSONObject;
 
 /**
- * 工作量相关报表
+ * 客房部员工工作量相关报表
  * 
  * @author zjn
  * @date 2016年12月7日
@@ -43,20 +44,30 @@ public class WorkLoadController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/getWorkLoadSummaryList.do")
+	@RequestMapping("/getWorkLoadOrRoomSummaryList.do")
 	public @ResponseBody String getWorkLoadSummaryList(HttpServletRequest request) {
 		String startDate = "";
 		String endDate = "";
+		Integer tableType = 0;
 		JSONObject jsonObject = new JSONObject();
-		List<WorkLoad> workLoadList = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
-			workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
+			tableType = Integer.valueOf(request.getParameter("tableType"));
+
+			if (tableType == 0) {
+				List<WorkLoad> workLoadList = null;
+				workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
+				jsonObject.put("workLoadList", workLoadList);
+			} else {
+				List<WorkRoomNum> workRoomNumList = null;
+				workRoomNumList = workLoadService.getWorkRoomNumInfo(startDate, endDate);
+				jsonObject.put("workLoadList", workRoomNumList);
+			}
 		}
-		jsonObject.put("workLoadList", workLoadList);
 		return jsonObject.toString();
 	}
 
@@ -71,22 +82,36 @@ public class WorkLoadController {
 	public ResponseEntity<byte[]> exportWorkLoadSummaryWord(HttpServletRequest request, HttpServletResponse response) {
 		String startDate = "";
 		String endDate = "";
+		Integer tableType = 0;
 		ResponseEntity<byte[]> byteArr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
 
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
+			tableType = Integer.valueOf(request.getParameter("tableType"));
+			String modelPath = "";
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-			String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORDLOAD_PATH);// 模板路径
 
+			if (tableType == 0) {
+				modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKLOAD_PATH);// 模板路径
+			} else {
+				modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKROOMNUM_PATH);// 模板路径
+			}
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
 			map.put("endDate", endDate);
 			map.put("path", path);
 			map.put("modelPath", modelPath);
-			byteArr = workLoadService.exportWorkLoadSummaryWord(map);
+
+			if (tableType == 0) {
+				byteArr = workLoadService.exportWorkLoadSummaryWord(map);
+			} else {
+				byteArr = workLoadService.exportWorkRoomNumWord(map);
+			}
+
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
@@ -103,20 +128,29 @@ public class WorkLoadController {
 	public ResponseEntity<byte[]> exportWorkLoadSummaryExcel(HttpServletRequest request, HttpServletResponse response) {
 		String startDate = "";
 		String endDate = "";
+		Integer tableType = 0;
 		ResponseEntity<byte[]> byteArr = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
+				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
 
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
+			tableType = Integer.valueOf(request.getParameter("tableType"));
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
 			map.put("endDate", endDate);
 			map.put("path", path);
-			byteArr = workLoadService.exportWorkLoadSummaryExcel(map);
+
+			if (tableType == 0) {
+				byteArr = workLoadService.exportWorkLoadSummaryExcel(map);
+			} else {
+				byteArr = workLoadService.exportWorkRoomNumExcel(map);
+			}
+
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
@@ -163,7 +197,7 @@ public class WorkLoadController {
 			endDate = request.getParameter("endDate");
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 			String modelPath = request.getSession().getServletContext()
-					.getRealPath(ReportFormConstants.WORDLOADLEVEL_PATH);// 模板路径
+					.getRealPath(ReportFormConstants.WORKLOADLEVEL_PATH);// 模板路径
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);

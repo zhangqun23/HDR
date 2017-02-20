@@ -1,16 +1,10 @@
 package com.mvc.entityReport;
 
-/**
- * 房间耗品
- * 
- * @author wq
- * @date 2017年1月12日
- */
-
-public class WashExpend {
+public class StaWash {
 	
 	private String orderNum;// 序号
-	private String room_id;//房号
+	private String staff_id;// 员工编号
+	private String staff_name;// 员工姓名
 	private String toth_num;//牙具数目
 	private String ropa_num;//卷纸数目
 	private String rins_num;//洗发液数目
@@ -37,18 +31,23 @@ public class WashExpend {
 	private String tocl_num;//洁厕灵数目
 	private String babr_num;//浴缸刷数目
 	private String clbr_num;//恭桶刷数目
-	
 	public String getOrderNum() {
 		return orderNum;
 	}
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
 	}
-	public String getRoom_id() {
-		return room_id;
+	public String getStaff_id() {
+		return staff_id;
 	}
-	public void setRoom_id(String room_id) {
-		this.room_id = room_id;
+	public void setStaff_id(String staff_id) {
+		this.staff_id = staff_id;
+	}
+	public String getStaff_name() {
+		return staff_name;
+	}
+	public void setStaff_name(String staff_name) {
+		this.staff_name = staff_name;
 	}
 	public String getToth_num() {
 		return toth_num;
@@ -164,17 +163,17 @@ public class WashExpend {
 	public void setScpa_num(String scpa_num) {
 		this.scpa_num = scpa_num;
 	}
-	public String getRugl_num() {
-		return rugl_num;
-	}
-	public void setRugl_num(String rugl_num) {
-		this.rugl_num = rugl_num;
-	}
 	public String getDete_num() {
 		return dete_num;
 	}
 	public void setDete_num(String dete_num) {
 		this.dete_num = dete_num;
+	}
+	public String getRugl_num() {
+		return rugl_num;
+	}
+	public void setRugl_num(String rugl_num) {
+		this.rugl_num = rugl_num;
 	}
 	public String getThim_num() {
 		return thim_num;

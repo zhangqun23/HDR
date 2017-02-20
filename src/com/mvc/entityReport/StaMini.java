@@ -1,9 +1,10 @@
 package com.mvc.entityReport;
 
-public class MiniStaff {
+public class StaMini {
+
 	private String orderNum; // 序号
-	private String satff_id;  //员工编号
-	private String satff_name;  //员工姓名
+	private String staff_id;  //员工编号
+	private String staff_name;  //员工姓名
 	private String redb_num; //红牛
 	private String coco_num; //可口可乐
 	private String pari_num; //法国巴黎水
@@ -27,17 +28,17 @@ public class MiniStaff {
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
 	}
-	public String getSatff_id() {
-		return satff_id;
+	public String getStaff_id() {
+		return staff_id;
 	}
-	public void setSatff_id(String satff_id) {
-		this.satff_id = satff_id;
+	public void setStaff_id(String staff_id) {
+		this.staff_id = staff_id;
 	}
-	public String getSatff_name() {
-		return satff_name;
+	public String getStaff_name() {
+		return staff_name;
 	}
-	public void setSatff_name(String satff_name) {
-		this.satff_name = satff_name;
+	public void setStaff_name(String staff_name) {
+		this.staff_name = staff_name;
 	}
 	public String getRedb_num() {
 		return redb_num;

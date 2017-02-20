@@ -372,7 +372,7 @@ app
 							function getStaffExpendBySlimits(p){
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								services.selectStaExpendFormByLimits({
+								services.selectStaExpendByLimits({
 									sLimit : expendFormLimit,
 									page : p
 								}).success(function(data) {
@@ -402,7 +402,7 @@ app
 								expendFormLimit = JSON
 										.stringify(reportForm.sLimit);
 									services
-											.selectStaffFormBySlimits({
+											.selectStaExpendByLimits({
 												sLimit : expendFormLimit,
 												page : 1
 											})
@@ -413,7 +413,6 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														reportForm.expendFormList = data.list;
-														reportForm.staffCount = data.staffCount;
 														pageTurn(
 																data.totalPage,
 																1,
@@ -460,7 +459,6 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														reportForm.linenExpendFormList = data.list;
-														reportForm.linenCount = data.linenCount;
 														pageTurn(
 																data.totalPage,
 																1,

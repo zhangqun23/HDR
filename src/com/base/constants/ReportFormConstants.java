@@ -20,6 +20,7 @@ public class ReportFormConstants {
 	// word模版所在包名
 	public static final String DICTIONARY = "word\\";
 
+	/********************* 客房部相关 **************************************/
 	// 客房部员工工作量汇总表
 	public static final String WORKLOAD_PATH = DICTIONARY + "workLoadSummary.docx";
 	// 客房部员工工作量饱和度分析表
@@ -57,6 +58,14 @@ public class ReportFormConstants {
 	public static final String WASHEXPENDPIC_PATH = DICTIONARY + "washExpendPic.docx";
 	// 迷你吧用量分析图
 	public static final String MINIEXPENDPIC_PATH = DICTIONARY + "miniExpendPic.docx";
+	// 员工领取布草统计表
+	public static final String STALINEN_PATH = DICTIONARY + "staLinen.docx";
+	// 员工领取房间耗品统计表
+	public static final String STAROOM_PATH = DICTIONARY + "staRoom.docx";
+	// 员工领取卫生间耗品统计表
+	public static final String STAWASH_PATH = DICTIONARY + "staWash.docx";
+	// 员工领取迷你吧统计表
+	public static final String STAMINI_PATH = DICTIONARY + "staMini.docx";
 
 	// 抢房效率表
 	public static final String ROBEFFICIENCY_PATH = DICTIONARY + "robEfficiency.docx";
@@ -76,5 +85,12 @@ public class ReportFormConstants {
 	public static final String ROOMWORKLOAD_PATH = DICTIONARY + "roomWorkload.docx";
 	// 导出部门对客服务类型统计
 	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
+
+	/********************* 工程部相关 **************************************/
+	// 导出部门对客服务类型统计
+	public static final String PROWORKLOAD_PATH = DICTIONARY + "proWorkLoad.docx";
+
+	// 客房部单个员工工作量分析图
+	public static final String PROWORKLOADANALYSE_PATH = DICTIONARY + "proWorkLoadAnalyse.docx";
 
 }

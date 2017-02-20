@@ -209,15 +209,15 @@ public class ExpendFormController {
 		String formName = null;
 		String startTime = null;
 		String endTime = null;
+		String tableType = null;
 		if (jsonObject.containsKey("formType")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("formType"))) {
 				formType = jsonObject.getString("formType");// 报表类型
 			}
 		}
 		if (jsonObject.containsKey("formName")) {
-			if (StringUtil.strIsNotEmpty(jsonObject.getString(""
-					+ ""))) {
-				formType = jsonObject.getString("formName");// 报表类型名称
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("formName"))) {
+				formName = jsonObject.getString("formName");// 报表类型
 			}
 		}
 		if (jsonObject.containsKey("startTime")) {
@@ -230,12 +230,18 @@ public class ExpendFormController {
 				endTime = StringUtil.dayLastTime(jsonObject.getString("endTime"));// 结束时间
 			}
 		}
+		if (jsonObject.containsKey("tableType")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("tableType"))) {
+				tableType = jsonObject.getString("tableType");// 报表类型名称
+			}
+		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("formType", formType);
 		map.put("formName", formName);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
+		map.put("tableType", tableType);
 
 		return map;
 	}
@@ -477,16 +483,102 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("sLimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		//int totalRow = Integer.parseInt(expendFormService.countTotal(map).toString());
+		int totalRow = Integer.parseInt(expendFormService.countStaTotal(map).toString());
 		Pager pager = new Pager();
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
-		//pager.setTotalRow(totalRow);
-
-		//List<LinenExpend> list = expendFormService.selectStaExpendPage(map, pager);
+		pager.setTotalRow(totalRow);
+		
 		jsonObject = new JSONObject();
-		//jsonObject.put("list", list);
+		jsonObject = expendFormService.selectStaExpendPage(map, pager);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
+	}
+	/**
+	 * 导出员工领取耗品，word格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportStaExpendForm.do")
+	public ResponseEntity<byte[]> exportStaExpendForm(HttpServletRequest request, HttpServletResponse response) {
+		String tableType = null;
+		String startTime = null;
+		String endTime = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
+			tableType = request.getParameter("tableType");// 报表类型
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tableType", tableType);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = null;
+		ResponseEntity<byte[]> byteArr = null;
+		switch(tableType){
+		case "0":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.STALINEN_PATH);// 模板路径
+			byteArr = expendFormService.exportStaLinen(map, path, tempPath);
+			break;
+		case "1":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.STAROOM_PATH);// 模板路径
+			byteArr = expendFormService.exportStaRoom(map, path, tempPath);
+			break;
+		case "2":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.STAWASH_PATH);// 模板路径
+			byteArr = expendFormService.exportStaWash(map, path, tempPath);
+			break;
+		case "3":
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.STAMINI_PATH);// 模板路径
+			byteArr = expendFormService.exportStaMini(map, path, tempPath);
+			break;
+		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+	
+	/**
+	 * 导出员工领取耗品统计，Excel格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportStaExpendExcel.do")
+	public ResponseEntity<byte[]> exportStaExpendExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startTime = null;
+		String endTime = null;
+		String tableType = null;
+		ResponseEntity<byte[]> byteArr = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))){
+			tableType =  request.getParameter("tableType");//耗品类型选择
+		}
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+		map.put("tableType", tableType);
+		map.put("path", path);		
+		byteArr = expendFormService.exportStaExpendExcel(map);
+		
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
 	}
 
 }

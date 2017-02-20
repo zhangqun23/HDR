@@ -1,16 +1,10 @@
 package com.mvc.entityReport;
 
-/**
- * 房间耗品
- * 
- * @author wq
- * @date 2017年1月12日
- */
-
-public class RoomExpend {
-
+public class StaRoom {
+	
 	private String orderNum;// 序号
-	private String room_id;//房号
+	private String staff_id;// 员工编号
+	private String staff_name;// 员工姓名
 	private String umbr_num;//雨伞数量
 	private String coff_num;//咖啡数量
 	private String suge_num;//白糖数量
@@ -51,11 +45,17 @@ public class RoomExpend {
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
 	}
-	public String getRoom_id() {
-		return room_id;
+	public String getStaff_id() {
+		return staff_id;
 	}
-	public void setRoom_id(String room_id) {
-		this.room_id = room_id;
+	public void setStaff_id(String staff_id) {
+		this.staff_id = staff_id;
+	}
+	public String getStaff_name() {
+		return staff_name;
+	}
+	public void setStaff_name(String staff_name) {
+		this.staff_name = staff_name;
 	}
 	public String getUmbr_num() {
 		return umbr_num;
@@ -261,7 +261,5 @@ public class RoomExpend {
 	public void setArel_num(String arel_num) {
 		this.arel_num = arel_num;
 	}
-	
-	
-	
+
 }

@@ -35,10 +35,10 @@
 						type="button" value="查询" ng-click="selectStaExpendByLimits()"></li>
 						<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Word"
-						onclick="this.form.action='.do';this.form.submit();setExportFlagCookie();"></li>
+						onclick="this.form.action='exportStaExpendForm.do';this.form.submit();setExportFlagCookie();"></li>
 						<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
-						onclick="this.form.action='.do';this.form.submit();setExportFlagCookie();"></li>
+						onclick="this.form.action='exportStaExpendExcel.do';this.form.submit();setExportFlagCookie();"></li>
 				</ul>
 			</form>
 		</div>
@@ -68,7 +68,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="linen in linenExpendFormList">
+			<tr ng-repeat="linen in expendFormList">
 				<td>{{linen.orderNum}}</td>
 				<td>{{linen.staff_id}}</td>
 				<td>{{linen.staff_name}}</td>
@@ -133,7 +133,7 @@
 		        <th class="a">信封(航空)</th>
 		      
 		      </tr>
-		<tbody ng-repeat="room in roomExpendFormList">
+		<tbody ng-repeat="room in expendFormList">
 			<tr>
 				<td rowspan="2">{{room.orderNum}}</td>
 				<td rowspan="2">{{room.staff_id}}</td>
@@ -213,7 +213,7 @@
 		        <th class="a">浴缸刷</th>
 		        <th class="a">恭桶刷</th>
 			</tr>
-		<tbody ng-repeat="wash in washExpendFormList">
+		<tbody ng-repeat="wash in expendFormList">
 			<tr>
 				<td rowspan="2">{{wash.orderNum}}</td>
 				<td rowspan="2">{{wash.staff_id}}</td>
@@ -274,11 +274,11 @@
 		        <th class="a">安全套</th>
 			</tr>
 			
-		<tbody ng-repeat="mini in miniExpendFormList">
+		<tbody ng-repeat="mini in expendFormList">
 			<tr>
 				<td>{{mini.orderNum}}</td>
-				<td>{{mini.satff_id}}</td>
-				<td>{{mini.satff_name}}</td>
+				<td>{{mini.staff_id}}</td>
+				<td>{{mini.staff_name}}</td>
 				<td>{{mini.redb_num}}</td>
 				<td>{{mini.coco_num}}</td>
 				<td>{{mini.pari_num}}</td>

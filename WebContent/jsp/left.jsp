@@ -64,7 +64,7 @@
 					href="${ctx}/customerService/toReportFormPage.do#/expendForm">耗品用量统计</a><i></i></li>
 				<li id="expendAnalyse"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/expendAnalyse">耗品用量分析</a><i></i></li>
-				<li id="staffExpend"><cite></cite> <a
+						<li id="staffExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/staffExpend">员工领取物品统计</a><i></i></li>
 			</ul>
 

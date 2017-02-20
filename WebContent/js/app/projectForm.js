@@ -510,7 +510,7 @@ app
 												});
 								if ($location.path().indexOf(
 										'/proWorkLoadAnalyse') == 0) {
-									selectRoomSorts(1);
+									selectRoomStaffs(1);
 
 								}
 							}

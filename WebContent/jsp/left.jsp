@@ -82,6 +82,8 @@
 					href="${ctx}/projectWorkLoad/toProjectPage.do#/proMaterialForm">工程物料管理统计</a><i></i></li>
 				<li id="proMaintain"><cite></cite><a
 					href="${ctx}/projectWorkLoad/toProjectPage.do#/proMaintainForm">工程维修项统计</a><i></i></li>
+				<li id="proMaintainAnalyse"><cite></cite><a
+					href="${ctx}/projectWorkLoad/toProjectPage.do#/proMaintainAnalyse">工程维修项统计分析</a><i></i></li>
 			</ul>
 		</dd>
 	</dl>

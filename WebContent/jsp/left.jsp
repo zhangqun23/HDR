@@ -67,8 +67,6 @@
 			</ul>
 
 		</dd>
-<<<<<<< HEAD
-=======
 		<dd>
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>工程部服务统计
@@ -84,7 +82,6 @@
 					href="${ctx}/project/toProjectPage.do#/proMaintainForm">工程维修项统计</a><i></i></li>
 			</ul>
 		</dd>
->>>>>>> 38da65fc8558efa505e374672710da9e3369a10a
 	</dl>
 </section>
 <script>

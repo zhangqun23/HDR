@@ -32,8 +32,8 @@ public class ReportFormServiceImpl implements ReportFormService {
 	}
 
 	@Override
-	public List<StaffInfo> selectRoomStaff() {
-		List<StaffInfo> list = reportFormDao.selectRoomStaff("客房部");
+	public List<StaffInfo> selectStaffByDept(String deptType) {
+		List<StaffInfo> list = reportFormDao.selectStaffByDept(deptType);
 		return list;
 	}
 

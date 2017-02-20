@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.base.enums.DeptType;
 import com.mvc.entity.RoomSort;
 import com.mvc.entity.StaffInfo;
 import com.mvc.service.ReportFormService;
+import com.utils.StringUtil;
 
 import net.sf.json.JSONObject;
 
@@ -41,10 +43,23 @@ public class ReportFormController {
 	}
 
 	@RequestMapping("/selectRoomStaffs.do")
-	public @ResponseBody String selectRoomStaff(HttpServletRequest request) {
+	public @ResponseBody String selectStaffByDept(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
-		List<StaffInfo> list = reportFormService.selectRoomStaff();
-		jsonObject.put("list", list);
+		if (StringUtil.strIsNotEmpty(request.getParameter("deptType"))) {
+			String deptType = request.getParameter("deptType");
+			switch (deptType) {
+			case "0":
+				deptType = DeptType.客房部.value;
+				break;
+			case "1":
+				deptType = DeptType.工程部.value;
+				break;
+			default:
+				break;
+			}
+			List<StaffInfo> list = reportFormService.selectStaffByDept(deptType);
+			jsonObject.put("list", list);
+		}
 		return jsonObject.toString();
 	}
 

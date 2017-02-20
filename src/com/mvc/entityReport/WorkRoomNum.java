@@ -1,7 +1,7 @@
 package com.mvc.entityReport;
 
 /**
- * 员工打扫房间数汇总表
+ * 客房部员工打扫房间数汇总表
  * 
  * @author zjn
  * @date 2017年2月17日

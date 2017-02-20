@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
+import com.mvc.entityReport.ExpendAnalyse;
 import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
 import com.mvc.entityReport.MiniCount;
@@ -54,7 +55,7 @@ public interface ExpendFormService {
 	Long countminiTotal(Map<String, Object> map);
 
 	// 布草统计分析
-	String selectLinenExpendAnalyse(Map<String, Object> map);
+	List<ExpendAnalyse> selectLinenExpendAnalyse(Map<String, Object> map);
 
 	// 房间耗品统计分页
 	List<RoomExpend> selectRoomExpend(Map<String, Object> map, Pager pager);
@@ -63,7 +64,7 @@ public interface ExpendFormService {
 	ResponseEntity<byte[]> exportRoomExpendForm(Map<String, Object> map, String path, String tempPath);
 
 	// 房间耗品统计分析
-	String selectRoomExpendAnalyse(Map<String, Object> map);
+	List<ExpendAnalyse> selectRoomExpendAnalyse(Map<String, Object> map);
 
 	// 卫生间耗品统计分页
 	List<WashExpend> selectWashExpend(Map<String, Object> map, Pager pager);
@@ -72,7 +73,7 @@ public interface ExpendFormService {
 	ResponseEntity<byte[]> exportWashExpendForm(Map<String, Object> map, String path, String tempPath);
 
 	// 卫生间耗品统计分析
-	String selectWashExpendAnalyse(Map<String, Object> map);
+	List<ExpendAnalyse> selectWashExpendAnalyse(Map<String, Object> map);
 	
 	// 迷你吧统计分页
 	List<MiniExpend> selectMiniPage(Map<String, Object> map, Pager pager);
@@ -80,11 +81,8 @@ public interface ExpendFormService {
 	// 导出迷你吧使用量统计表
 	ResponseEntity<byte[]> exportMiniExpendForm(Map<String, Object> map, String path, String tempPath);
 
-	// 迷你吧统计分析
-	String selectMiniExpendAnalyse(Map<String, Object> map);
-
-	// 导出耗品统计表excel
-	ResponseEntity<byte[]> exportExpendExcel(Map<String, Object> map);
+	// 布草统计分析
+	List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map);
 
 	/********** zjn添加 **********/
 	// 导出房间或卫生间耗品分析图
@@ -92,7 +90,4 @@ public interface ExpendFormService {
 
 	// 导出布草或迷你吧用量分析图
 	ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map);
-
-	//获取布草统计列表
-	List<LinenExpend> getLinenExpendList(Map<String, Object> map);
 }

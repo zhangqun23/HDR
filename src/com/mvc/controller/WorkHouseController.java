@@ -58,13 +58,47 @@ public class WorkHouseController {
 	}
 
 	/**
-	 * 部门员工做房用时统计
+	 * 部门员工做房用时统计Word
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/exportWorkHouseBylimits.do")
 	public ResponseEntity<byte[]> exportWorkHouse(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = requestToMap(request);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKHOUSE_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path, tempPath);
+
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
+	/**
+	 * 部门员工做房用时统计Excel
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportWorkHouseExcelBylimits.do")
+	public ResponseEntity<byte[]> exportWorkHouseExcel(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = requestToMap(request);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouseExcel(map, path);
+
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
+	/**
+	 * 将request转换成Map
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private Map<String, Object> requestToMap(HttpServletRequest request) {
 		String roomType = null;
 		String sortName = null;
 		String startTime = null;
@@ -88,12 +122,7 @@ public class WorkHouseController {
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKHOUSE_PATH);// 模板路径
-		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkHouse(map, path, tempPath);
-
-		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
-		return byteArr;
+		return map;
 	}
 
 	/**
@@ -178,7 +207,7 @@ public class WorkHouseController {
 	}
 
 	/**
-	 * 获取单个员工做房用时（---后期用缓存优化）
+	 * 获取单个员工做房用时
 	 * 
 	 * @param request
 	 * @return
@@ -306,13 +335,47 @@ public class WorkHouseController {
 	}
 
 	/**
-	 * 部门员工工作效率统计导出
+	 * 部门员工工作效率统计导出Word
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/exportWorkEfficiencyBylimits.do")
 	public ResponseEntity<byte[]> exportWorkEffByLimits(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = requestToMapEff(request);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFF_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffByLimits(map, path, tempPath);
+
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
+	/**
+	 * 部门员工工作效率统计导出Excel
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportWorkEfficiencyExcelBylimits.do")
+	public ResponseEntity<byte[]> exportWorkEffByLimitsExcel(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = requestToMapEff(request);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffByLimitsExcel(map, path);
+
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
+	/**
+	 * 将request转换成Map(工作效率)
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private Map<String, Object> requestToMapEff(HttpServletRequest request) {
 		String startTime = null;
 		String endTime = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
@@ -326,12 +389,7 @@ public class WorkHouseController {
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFF_PATH);// 模板路径
-		ResponseEntity<byte[]> byteArr = workHouseService.exportWorkEffByLimits(map, path, tempPath);
-
-		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
-		return byteArr;
+		return map;
 	}
 
 	/**

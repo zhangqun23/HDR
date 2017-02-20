@@ -43,14 +43,21 @@ public class ExcelHelper<T> {
 	/**
 	 * 导出2007版单sheet的Excel
 	 * 
-	 * @param title：表格标题
-	 * @param headers:Excel表头
-	 * @param list：Excel单元格内容
-	 * @param out：输出流
+	 * @param title
+	 *            表格标题
+	 * @param headers
+	 *            Excel表头
+	 * @param list
+	 *            Excel单元格内容
+	 * @param out
+	 *            输出流
 	 * @param pattern
-	 * @param mergeColumn：合并单元格列数，-1表示没有合并单元格
-	 * @param hideColumn：隐藏表格内容的最后几列，0表示没有隐藏
-	 * @param titleRow:表头行数
+	 * @param mergeColumn
+	 *            合并单元格列数，-1表示没有合并单元格
+	 * @param hideColumn
+	 *            隐藏表格内容的最后几列，0表示没有隐藏
+	 * @param titleRow
+	 *            表头行数，null或0代表没有表头
 	 */
 	public void export2007Excel(String title, String[] headers, Collection<T> list, OutputStream out, String pattern,
 			Integer mergeColumn, Integer hideColumn, Integer titleRow) {
@@ -89,21 +96,28 @@ public class ExcelHelper<T> {
 	/**
 	 * 导出2007版Excel
 	 * 
-	 * @param title:表格标题名
-	 * @param headers:表格属性列名数组
-	 * @param list:需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的:
+	 * @param title
+	 *            表格标题名
+	 * @param headers
+	 *            表格属性列名数组
+	 * @param list
+	 *            需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的:
 	 *            javabean属性的数据类型有基本数据类型及String,Date,byte[](图片数据)
-	 * @param pattern:如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
-	 * @param mergeColumn：合并单元格列数，-1表示没有合并单元格
-	 * @param hideColumn：隐藏表格内容的最后几列，0表示没有隐藏
-	 * @param titleRow：表头行数
+	 * @param pattern
+	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
+	 * @param mergeColumn
+	 *            合并单元格列数，-1表示没有合并单元格
+	 * @param hideColumn
+	 *            隐藏表格内容的最后几列，0表示没有隐藏
+	 * @param titleRow
+	 *            表头行数
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
 			String pattern, Integer mergeColumn, Integer hideColumn, Integer titleRow) {
 		XSSFSheet sheet = workbook.createSheet(title);
 		if (titleRow == null) {
-			titleRow = 1;
+			titleRow = 0;
 		}
 		dealHeader(headerSource, titleRow, workbook, sheet, title);
 		XSSFRow row = null;
@@ -384,7 +398,7 @@ public class ExcelHelper<T> {
 			String ele = null;
 			int num = 0;// 记录需要合并表头的列数(连续)
 			boolean flag = true;
-			int m = 0;// 记录需要拆分字符串(即："[")数量
+			int sumLen = 0;// 子列长度累加
 			List<String> listMerge = new ArrayList<String>();
 			for (int i = 0; i < headers.length; i++) {
 				ele = headers[i];
@@ -395,13 +409,14 @@ public class ExcelHelper<T> {
 					String firstTitle = ele.substring(0, beginIndex);// 第一行表头名解析，格式：抹尘房
 					String tmp = ele.substring(beginIndex + 1, endIndex);// 第一行表头名解析，格式：数量,总用时,平均用时,排名
 					String[] arr = tmp.split(",");// 将[]中内容解析成数组
+					int len = arr.length;
 
-					m++;
-					int a1 = (i - m + 1) * m;// 起始列
-					int a2 = (i - m + 1) * m + arr.length - 1;// 终止列
+					int a1 = i + sumLen;
+					int a2 = a1 + len - 1;
+					sumLen += len - 1;
 					listMerge.add(a1 + "," + a2);// 格式："起始列,终止列"
 
-					for (int j = 0; j < arr.length; j++) {
+					for (int j = 0; j < len; j++) {
 						list1.add(firstTitle);// 重复补齐，在创建cell时再合并
 						list2.add(arr[j]);
 					}

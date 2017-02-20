@@ -24,7 +24,7 @@ public interface ProjectWorkLoadService {
 	// 导出工程部所有员工工作量word
 	ResponseEntity<byte[]> exportProWorkLoadWord(Map<String, Object> map);
 
-	// 导出工程部所有员工工作量word
+	// 导出工程部所有员工工作量Excel
 	ResponseEntity<byte[]> exportProWorkLoadExcel(Map<String, Object> map);
 
 	// 获取工程部单个员工工作量分析图所需数据

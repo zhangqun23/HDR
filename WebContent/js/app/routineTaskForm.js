@@ -738,7 +738,7 @@ app
 													lineChartForm(lineData,
 															"#lineChart",
 															title, xAxis, yAxis);
-													lineChartForm(lineData,
+													lineChartForm(lineData1,
 															"#lineChart1",
 															title1, xAxis,
 															yAxis);

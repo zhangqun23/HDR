@@ -1,6 +1,7 @@
 package com.mvc.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
+import com.mvc.entityReport.ProjectWorkLoad;
 import com.mvc.service.ProjectWorkLoadService;
 import com.utils.CookieUtil;
 import com.utils.StringUtil;
@@ -30,7 +32,7 @@ import net.sf.json.JSONObject;
 public class ProjectWorkLoadController {
 
 	@Autowired
-	ProjectWorkLoadService projectWorkLoadService;
+	ProjectWorkLoadService proWorkLoadService;
 
 	/**
 	 * 初始化页面
@@ -50,6 +52,7 @@ public class ProjectWorkLoadController {
 	 */
 	@RequestMapping("/selectProWorkLoad.do")
 	public @ResponseBody String getProWorkLoadList(HttpServletRequest request) {
+
 		String startDate = "";
 		String endDate = "";
 		JSONObject jsonObject = new JSONObject();
@@ -59,10 +62,9 @@ public class ProjectWorkLoadController {
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
 
-			// List<WorkLoad> workLoadList = null;
-			// workLoadList = workLoadService.getWorkLoadSummaryList(startDate,
-			// endDate);
-			// jsonObject.put("workLoadList", workLoadList);
+			List<ProjectWorkLoad> proWorkLoadList = null;
+			proWorkLoadList = proWorkLoadService.getProWorkLoadList(startDate, endDate);
+			jsonObject.put("list", proWorkLoadList);
 		}
 		return jsonObject.toString();
 	}
@@ -76,6 +78,7 @@ public class ProjectWorkLoadController {
 	 */
 	@RequestMapping("/exportProWorkLoadWord.do")
 	public ResponseEntity<byte[]> exportProWorkLoadWord(HttpServletRequest request, HttpServletResponse response) {
+
 		String startDate = "";
 		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
@@ -87,15 +90,14 @@ public class ProjectWorkLoadController {
 			endDate = request.getParameter("endDate");
 			String modelPath = "";
 			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-			modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKLOAD_PATH);// 模板路径
+			modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PROWORKLOAD_PATH);// 模板路径
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("startDate", startDate);
 			map.put("endDate", endDate);
 			map.put("path", path);
 			map.put("modelPath", modelPath);
 
-			// byteArr = workLoadService.exportWorkLoadSummaryWord(map);
-
+			byteArr = proWorkLoadService.exportProWorkLoadWord(map);
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
@@ -110,6 +112,7 @@ public class ProjectWorkLoadController {
 	 */
 	@RequestMapping("/exportProWorkLoadExcel.do")
 	public ResponseEntity<byte[]> exportProWorkLoadExcel(HttpServletRequest request, HttpServletResponse response) {
+
 		String startDate = "";
 		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
@@ -126,7 +129,88 @@ public class ProjectWorkLoadController {
 			map.put("endDate", endDate);
 			map.put("path", path);
 
-			// byteArr = workLoadService.exportWorkLoadSummaryExcel(map);
+			byteArr = proWorkLoadService.exportProWorkLoadExcel(map);
+		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+
+	/**
+	 * 获取单个员工工作量分析图信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectProWorkLoadAnalyse.do")
+	public @ResponseBody String selectProWorkLoadAnalyse(HttpServletRequest request) {
+		// String checkYear = "2016";
+		// String quarter = "0";
+		// String staffId = "542";
+
+		String str = "";
+		String checkYear = "";
+		String quarter = "";
+		String staffId = "";
+		Map<String, String> map = new HashMap<String, String>();
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
+			checkYear = request.getParameter("checkYear");
+			quarter = request.getParameter("quarter");
+			staffId = request.getParameter("staffId");
+			map.put("checkYear", checkYear);
+			map.put("quarter", quarter);
+			map.put("staffId", staffId);
+
+			str = proWorkLoadService.getProWorkLoadAnalyse(map);
+		}
+		return str;
+	}
+
+	/**
+	 * 导出单个员工工作量分析图，word格式
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/exportProWorkLoadAnalyse.do")
+	public ResponseEntity<byte[]> exportProWorkLoadAnalyse(HttpServletRequest request, HttpServletResponse response) {
+
+		String svg = "";
+		String checkYear = "";
+		String quarter = "";
+		String staffId = "";
+		String analyseResult = "";
+		ResponseEntity<byte[]> byteArr = null;
+		Map<String, String> map = new HashMap<String, String>();
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+		String modelPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.PROWORKLOADANALYSE_PATH);// 模板路径
+		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
+
+			svg = request.getParameter("chartSVGStr");
+			checkYear = request.getParameter("checkYear");
+			quarter = request.getParameter("quarter");
+			staffId = request.getParameter("staffId");
+			analyseResult = request.getParameter("analyseResult");
+
+			map.put("path", path);
+			map.put("modelPath", modelPath);
+			map.put("picCataPath", picCataPath);
+			map.put("svg", svg);
+			map.put("checkYear", checkYear);
+			map.put("quarter", quarter);
+			map.put("staffId", staffId);
+			map.put("analyseResult", analyseResult);
+			byteArr = proWorkLoadService.exportProWorkLoadAnalyse(map);
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;

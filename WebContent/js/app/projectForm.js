@@ -71,6 +71,15 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/proWorkLoadAnalyse', {
 		templateUrl : '/HDR/jsp/projectForm/proWorkloadAnalyse.html',
 		controller : 'ReportController'
+	}).when('/proMaintainForm', {
+		templateUrl : '/HDR/jsp/projectForm/proMaintainForm.html',
+		controller : 'ReportController'
+	}).when('/proMaintainAnalyse', {
+		templateUrl : '/HDR/jsp/projectForm/proMaintainAnalyse.html',
+		controller : 'ReportController'
+	}).when('/proMaterialForm', {
+		templateUrl : '/HDR/jsp/projectForm/proMaterialForm.html',
+		controller : 'ReportController'
 	})
 } ]);
 
@@ -494,6 +503,56 @@ app
 													}
 												});
 							};
+							// zq工程部维修项报表统计
+							reportForm.pmLimit = {
+								startTime : '',
+								endTime : ''
+							}
+							reportForm.selectProMaintain = function() {
+								if (reportForm.pmLimit.startTime == '') {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.pmLimit.endTime == '') {
+									alert("请选择截止时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								proMaintainLimit = JSON
+										.stringify(reportForm.pmLimit);
+								services.selectProMaintain({
+									limit : proMaintainLimit
+								}).success(function(data) {
+									reportForm.pmList = data.list;
+									if (data.list) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+							// 显示隐藏表格
+							var showOrHide = {
+								toiletIssue : false,
+								lockerIssue : false,
+								barIssue : false,
+								bedRoomIssue : false,
+								airConditionerIssue : false,
+								carpetIssue : false,
+								windowIssue : false,
+								doorIssue : false,
+								publicIssue : false
+							};
+							reportForm.showContInfo = function(target) {
+								alert(target.name);
+							}
+							reportForm.hideContInfo = function() {
+
+								$('#contInformation').hide();
+								$('#contShow').show();
+								$('#contHide').hide();
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");

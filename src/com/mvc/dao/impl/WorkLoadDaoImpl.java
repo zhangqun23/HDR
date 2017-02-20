@@ -109,25 +109,30 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		String serviceSort = "例行打扫";
+		startTime += " 00:00:00";
+		endTime += " 23:59:59";
 
-		sql.append("select p.staff_name ,p.staff_no,aa1.clean_room,aa2.checkout_room,aa3.overnight_room ");
+		sql.append(
+				"select p.staff_name ,p.staff_no,(CASE WHEN aa1.clean_room IS NULL THEN 0 ELSE aa1.clean_room END)clean_room, ");
+		sql.append(
+				" (CASE WHEN checkout_room IS NULL THEN 0 ELSE checkout_room END)checkout_room,(CASE WHEN overnight_room IS NULL THEN 0 ELSE overnight_room  END)overnight_room ");
 		sql.append(" from (select si.Staff_name staff_name ,si.Staff_no staff_no,cf.service_sort,ci.clean_type from");
 		sql.append(
 				" case_info ci left join  staff_info si on ci.case_author=si.Staff_id left join call_info cf on ci.call_id =cf.call_id ");
-		sql.append(" where cf.service_sort='" + serviceSort + "' and ci.close_time between '" + startTime + "' and '"
-				+ startTime + "' group by ci.case_author) as p");
+		sql.append(" where cf.service_sort='" + serviceSort + "' and Staff_name is not null and ci.close_time between '"
+				+ startTime + "' and '" + endTime + "' group by ci.case_author) as p");
 		sql.append(
 				" left join ( select si.Staff_no staff_no, count(case_id)clean_room from case_info ci left join  staff_info si on ci.case_author=si.Staff_id ");
 		sql.append(" where ci.clean_type='" + CleanType.抹尘房.value + "' and ci.close_time between '" + startTime
-				+ "' and '" + startTime + "' group by staff_no) as aa1 on p.staff_no=aa1.staff_no");
+				+ "' and '" + endTime + "' group by staff_no) as aa1 on p.staff_no=aa1.staff_no");
 		sql.append(
 				" left join ( select si.Staff_no staff_no, count(case_id)checkout_room from case_info ci left join  staff_info si on ci.case_author=si.Staff_id ");
 		sql.append(" where ci.clean_type='" + CleanType.离退房.value + "' and ci.close_time between  '" + startTime
-				+ "' and '" + startTime + "' group by staff_no) as aa2 on p.staff_no=aa2.staff_no");
+				+ "' and '" + endTime + "' group by staff_no) as aa2 on p.staff_no=aa2.staff_no");
 		sql.append(
 				" left join ( select si.Staff_no staff_no, count(case_id)overnight_room from case_info ci left join  staff_info si on ci.case_author=si.Staff_id");
 		sql.append(" where  ci.clean_type='" + CleanType.过夜房.value + "' and ci.close_time between  '" + startTime
-				+ "' and '" + startTime + "'  group by staff_no) as aa3 on p.staff_no=aa3.staff_no");
+				+ "' and '" + endTime + "'  group by staff_no) as aa3 on p.staff_no=aa3.staff_no");
 
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();

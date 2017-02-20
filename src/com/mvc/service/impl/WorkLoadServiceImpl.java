@@ -175,7 +175,6 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 	}
 
 	// 导出所有员工工作量汇总表，excel格式
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportWorkLoadSummaryExcel(Map<String, Object> map) {
 		ResponseEntity<byte[]> byteArr = null;
@@ -195,7 +194,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			workLoadList = getWorkLoadSummaryList(startDate, endDate);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房", "过夜房", "离退房", "实际工作量", "超出工作量", "排名" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection) workLoadList, out, "yyyy-MM-dd", -1, 2, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			ex.export2007Excel(title, header, (Collection<WorkLoad>) workLoadList, out, "yyyy-MM-dd", -1, 2, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -561,21 +560,152 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 	@Override
 	public List<WorkRoomNum> getWorkRoomNumInfo(String startTime, String endTime) {
 
-		return null;
+		List<Object> listSource = workLoadDao.getWorkRoomNumList(startTime, endTime);
+
+		Iterator<Object> it = listSource.iterator();
+		List<WorkRoomNum> listGoal = objToWorkRoomNum(it);
+		return listGoal;
+	}
+
+	// List<Object>类型转换成List<WorkRoomNum>
+	private List<WorkRoomNum> objToWorkRoomNum(Iterator<Object> it) {
+		Object[] obj = null;
+		WorkRoomNum workRoomNum = null;
+		List<WorkRoomNum> listGoal = new ArrayList<WorkRoomNum>();
+
+		Integer totalClean = 0;
+		Integer totalCheckout = 0;
+		Integer totalOvernight = 0;
+		Integer totalOneStaff = 0;
+		Integer totalAllStaff = 0;
+
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
+			workRoomNum = new WorkRoomNum();
+
+			workRoomNum.setStaffName(obj[0].toString());
+			workRoomNum.setStaffNo(obj[1].toString());
+			workRoomNum.setCleanRoom(Integer.valueOf(obj[2].toString()));// 抹尘房总数
+			workRoomNum.setCheckoutRoom(Integer.valueOf(obj[3].toString()));// 离退房总数
+			workRoomNum.setOvernightRoom(Integer.valueOf(obj[4].toString()));// 过夜房总数
+
+			totalOneStaff = Integer.valueOf(obj[2].toString()) + Integer.valueOf(obj[3].toString())
+					+ Integer.valueOf(obj[4].toString());// 单个员工总数
+			totalClean += Integer.valueOf(obj[2].toString());// 所有员工抹尘房总数
+			totalCheckout += Integer.valueOf(obj[3].toString());// 所有员工离退房总数
+			totalOvernight += Integer.valueOf(obj[4].toString());// 所有员工过夜房总数
+			totalAllStaff += totalOneStaff;// 所有员工总数
+			workRoomNum.setTotalNum(totalOneStaff);
+
+			listGoal.add(workRoomNum);
+		}
+		// 按员工实际工作量进行排序并编号
+		sortAndWriteWorkRoomNum(listGoal, "totalNum", false, "rank");
+
+		Iterator<WorkRoomNum> itGoal = listGoal.iterator();
+		int i = 0;
+		workRoomNum = null;
+		while (itGoal.hasNext()) {
+			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
+			workRoomNum = (WorkRoomNum) itGoal.next();
+			workRoomNum.setOrderNum(String.valueOf(i));
+		}
+		// 列表最后一行追加合计
+		workRoomNum = new WorkRoomNum();
+		workRoomNum.setStaffName("合计：");
+		workRoomNum.setCleanRoom(totalClean);// 抹尘房总数
+		workRoomNum.setCheckoutRoom(totalCheckout);// 离退房总数
+		workRoomNum.setOvernightRoom(totalOvernight);// 过夜房总数
+		workRoomNum.setTotalNum(totalAllStaff);// 所有员工总数
+		listGoal.add(workRoomNum);
+
+		return listGoal;
+	}
+
+	/**
+	 * 排序并插入序号
+	 * 
+	 * @param list
+	 * @param filedName
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @param writeField
+	 *            向指定字段插入序号
+	 */
+	private void sortAndWriteWorkRoomNum(List<WorkRoomNum> list, String filedName, boolean ascFlag, String writeField) {
+		CollectionUtil.sort(list, filedName, ascFlag);
+		CollectionUtil<WorkRoomNum> collectionUtil = new CollectionUtil<WorkRoomNum>();
+		collectionUtil.writeSort(list, writeField);
 	}
 
 	// 导出员工打扫的房间数统计信息Word
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public ResponseEntity<byte[]> exportWorkRoomNumWord(Map<String, Object> map) {
 
-		return null;
+		String startDate = (String) map.get("startDate");
+		String endDate = (String) map.get("endDate");
+		String path = (String) map.get("path");
+		String modelPath = (String) map.get("modelPath");
+		String fileName = "客房部员打扫房间数汇总表.docx";
+
+		WordHelper wh = new WordHelper();
+		ResponseEntity<byte[]> byteArr = null;
+		List<WorkRoomNum> workRoomNumList = null;
+		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+
+		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+
+		// 获取列表和文本信息
+		workRoomNumList = getWorkRoomNumInfo(startDate, endDate);
+		listMap.put("0", workRoomNumList);// 注意：key存放该list在word中表格的索引，value存放list
+		contentMap.put("${startDate}", startDate);
+		contentMap.put("${endDate}", endDate);
+		try {
+			OutputStream out = new FileOutputStream(path);// 保存路径
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byteArr = FileHelper.downloadFile(fileName, path);
+		return byteArr;
 	}
 
 	// 导出员工打扫的房间数统计信息Excel
 	@Override
 	public ResponseEntity<byte[]> exportWorkRoomNumExcel(Map<String, Object> map) {
+		ResponseEntity<byte[]> byteArr = null;
+		List<WorkRoomNum> workRoomNumist = null;
 
-		return null;
+		String startDate = (String) map.get("startDate");
+		String endDate = (String) map.get("endDate");
+		String path = (String) map.get("path");
+		String fileName = "客房部员工工作量汇总表.xlsx";
+		String title = "客房部员工工作量汇总表(" + startDate + "至" + endDate + ")";
+		try {
+			ExcelHelper<WorkRoomNum> ex = new ExcelHelper<WorkRoomNum>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			// 获取列表和文本信息
+			workRoomNumist = getWorkRoomNumInfo(startDate, endDate);
+
+			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房数量", "过夜房数量", "离退房数量", "总数量", "排名" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<WorkRoomNum>) workRoomNumist, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏字段,1表示一行表头
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
 	}
 
 }

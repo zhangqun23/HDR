@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/engineerController")
-public class EngineerServiceController {
+public class EngineerController {
 
 	@RequestMapping("/toEngineerPage.do")
 	public String replyPagePath() {

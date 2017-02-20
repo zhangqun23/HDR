@@ -9,7 +9,7 @@ import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkRoomNum;
 
 /**
- * 工作量相关的service层接口
+ * 客房部员工工作量相关的service层接口
  * 
  * @author zjn
  * @date 2016年12月7日

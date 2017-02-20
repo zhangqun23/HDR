@@ -13,5 +13,5 @@ import com.mvc.entity.StaffInfo;
 public interface ReportFormDao {
 
 	// 获取客房部员工
-	List<StaffInfo> selectRoomStaff(String department_name);
+	List<StaffInfo> selectStaffByDept(String department_name);
 }

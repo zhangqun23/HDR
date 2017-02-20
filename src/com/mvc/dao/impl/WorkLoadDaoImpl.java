@@ -140,4 +140,79 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		return list;
 	}
 
+	// 获取工程部员工工作量汇总列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getProWorkLoadInfo(String startTime, String endTime) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		startTime += " 00:00:00";
+		endTime += " 23:59:59";
+
+		sql.append(" select si.Staff_name staff_name,si.Staff_no staff_no,count(Staff_id)work_load ");
+		sql.append(
+				" from engineer_info ei left join alert_reciever_list  ar on ei.case_id=ar.alert_id left join staff_info si on si.Staff_id=receiver_id ");
+		sql.append(" where ei.close_time between '" + startTime + "' and '" + endTime + "'");
+		sql.append(" group by Staff_id");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 获取工程部全体员工实际总工作量
+	@Override
+	public Float getTotalActualProWorkLoad(String startTime, String endTime) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder selectSql = new StringBuilder();
+
+		selectSql.append("select count(Staff_id)work_load");
+		selectSql.append(
+				" from engineer_info ei left join alert_reciever_list  ar on ei.case_id=ar.alert_id left join staff_info si on si.Staff_id=receiver_id");
+		selectSql.append(" where ei.close_time between '" + startTime + "' and '" + endTime + "'");
+
+		Query query = em.createNativeQuery(selectSql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		em.close();
+		return Float.valueOf(totalRow.toString());
+	}
+
+	// 获取工程部某个员工每个月的实际总工作量
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getMonthProWorkLoad(String startTime, String endTime, Integer staffId) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+
+		sql.append("select DATE_FORMAT(ei.close_time,'%m') months,count(Staff_id)work_load  ");
+		sql.append(
+				" from engineer_info ei left join alert_reciever_list  ar on ei.case_id=ar.alert_id left join staff_info si on si.Staff_id=receiver_id");
+		sql.append(" where ei.close_time between '" + startTime + "' and '" + endTime + "' ");
+		sql.append(" and si.Staff_id='" + staffId + "'");
+		sql.append(" group by months");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	// 获取统计的工程部员工总数
+	@Override
+	public Integer proStaffCount(String startTime, String endTime) {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder selectSql = new StringBuilder();
+
+		selectSql.append("select count(*) from (select count(Staff_id) ");
+		selectSql.append(
+				" from engineer_info ei left join alert_reciever_list  ar on ei.case_id=ar.alert_id left join staff_info si on si.Staff_id=receiver_id ");
+		selectSql.append(" where close_time between '" + startTime + "' and '" + endTime + "'");
+		selectSql.append(" group by Staff_id )as a");
+		Query query = em.createNativeQuery(selectSql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		em.close();
+		return Integer.valueOf(totalRow.toString());
+	}
+
 }

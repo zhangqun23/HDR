@@ -1,6 +1,8 @@
 package com.mvc.service.impl;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.PictureUtil;
 import com.utils.StringUtil;
@@ -54,7 +57,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
-	// 部门员工做房用时统计
+	// 部门员工做房用时统计Word
 	@Override
 	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
@@ -89,6 +92,43 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	// 部门员工做房用时统计Excel
+	@Override
+	public ResponseEntity<byte[]> exportWorkHouseExcel(Map<String, Object> map, String path) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+		String sortName = (String) map.remove("sortName");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			ExcelHelper<WorkHouse> ex = new ExcelHelper<WorkHouse>();
+			String fileName = "客房部员工" + sortName + "做房时间统计表.xlsx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workHouseDao.selectWorkHouse(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkHouse> listGoal = objToWorkHouse(it);
+
+			WorkHouse sum = sumWorkHouse(listGoal);// 合计
+			listGoal.add(sum);
+
+			String title = "客房部员工" + sortName + "做房时间统计表";
+			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,总用时,平均用时,排名]", "过夜房[数量,总用时,平均用时,排名]",
+					"离退房[数量,总用时,平均用时,排名]" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 2);
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return byteArr;
@@ -491,7 +531,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
-	// 部门员工工作效率统计导出
+	// 部门员工工作效率统计导出Word
 	@Override
 	public ResponseEntity<byte[]> exportWorkEffByLimits(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
@@ -499,7 +539,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 		ResponseEntity<byte[]> byteArr = null;
 		try {
-			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			WordHelper<WorkEfficiency> wh = new WordHelper<WorkEfficiency>();
 			String fileName = "客房部员工工作效率统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
@@ -524,6 +564,40 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	// 部门员工工作效率统计导出Excel
+	@Override
+	public ResponseEntity<byte[]> exportWorkEffByLimitsExcel(Map<String, Object> map, String path) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			ExcelHelper<WorkEfficiency> ex = new ExcelHelper<WorkEfficiency>();
+			String fileName = "客房部员工工作效率统计表.xlsx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workHouseDao.selectWorkEffByLimits(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkEfficiency> listGoal = objToWorkEff(it);
+
+			WorkEfficiency sum = sumWorkEff(listGoal);// 合计
+			listGoal.add(sum);
+
+			String title = "客房部员工工作效率统计表";
+			String[] header = { "序号", "员工姓名", "员工编号", "当班时间(分钟)", "做房时间(分钟)", "做房效率", "工作时间(分钟)", "工作效率" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 1);
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return byteArr;

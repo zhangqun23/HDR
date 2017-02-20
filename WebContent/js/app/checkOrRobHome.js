@@ -74,6 +74,12 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/checkEfficiencyForm', {
 		templateUrl : '/HDR/jsp/checkOrRobHome/checkEfficiencyForm.html',
 		controller : 'CheckOrRobHomeController'
+	}).when('/checkOutHomeForm', {
+		templateUrl : '/HDR/jsp/checkOrRobHome/checkOutHomeForm.html',
+		controller : 'CheckOrRobHomeController'
+	}).when('/checkOutAnalyseForm', {
+		templateUrl : '/HDR/jsp/checkOrRobHome/checkOutAnalyseForm.html',
+		controller : 'CheckOrRobHomeController'
 	})
 } ]);
 
@@ -128,6 +134,30 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq获取查退房效率表
+	services.selectCheckOutEfficiencyByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'checkOrRobHome/selectCheckOutEfficiency.do',
+			data : data
+		});
+	};
+	// zq获取查退房明细表
+	services.selectCheckOutDetailByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'checkOrRobHome/selectCheckOutDetailByLimits.do',
+			data : data
+		});
+	};
+	// zq获取查退房效率分析
+	services.selectCheckOutAnalyseByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'checkOrRobHome/selectCheckOutAnalyseByLimits.do',
+			data : data
+		});
+	}
 	return services;
 } ]);
 app
@@ -186,6 +216,20 @@ app
 							checkRob.ceLimit = {
 								startTime : "",
 								endTime : ""
+							}
+							// 查退房效率统计查询限制条件
+							checkRob.coLimit = {
+								tableType : "0",
+								startTime : "",
+								endTime : "",
+								roomType : ""
+							}
+							// 查退房效率统计查询限制条件
+							checkRob.coaLimit = {
+								checkYear : "",
+								quarter : "0",
+								roomType : "",
+								staffId : ""
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
@@ -573,6 +617,222 @@ app
 													}
 												});
 							}
+							// zq获取查房明细或效率表
+							checkRob.selectCheckOutRooms = function() {
+
+								if (checkRob.coLimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (checkRob.coLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (checkRob.coLimit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								checkOutLimit = JSON
+										.stringify(checkRob.coLimit);
+								if (checkRob.coLimit.tableType == '0') {
+									services
+											.selectCheckOutEfficiencyByLimits({
+												limit : checkOutLimit,
+												page : 1
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
+														checkRob.checkOutEfficiencyList = data.list;
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
+													});
+								} else {
+									services
+											.selectCheckOutDetailByLimits({
+												limit : checkOutLimit,
+												page : 1
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
+														checkRob.CheckOutDetailList = data.list;
+														pageTurn(
+																data.totalPage,
+																1,
+																getCheckOutDetailByLimits);
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
+													});
+								}
+
+							}
+
+							// 换页查询查退房明细表
+							function getCheckOutDetailByLimits(p) {
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services.selectCheckOutDetailByLimits({
+									limit : checkOutLimit,
+									page : p
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									checkRob.CheckOutDetailList = data.list;
+									if (data.list.length) {
+										checkRob.listIsShow = false;
+									} else {
+										checkRob.listIsShow = true;
+									}
+								});
+							}
+							// zq查退房效率分析
+							checkRob.selectCheckOutAnalyse = function() {
+								if (checkRob.coaLimit.checkYear == "") {
+									alert("请填写查询年份！");
+									return false;
+								}
+								if (checkRob.coaLimit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
+								if (checkRob.coaLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								var CheckOutAnalyseLimit = JSON
+										.stringify(checkRob.coaLimit);
+								services
+										.selectCheckOutAnalyseByLimits({
+											limit : CheckOutAnalyseLimit
+										})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													var title = "客房员工 "
+															+ " "
+															+ getSelectedRoomType(checkRob.coaLimit.roomType)
+															+ " "
+															+ "查退房效率分析折线图";// 折线图标题显示
+													var xAxis = [];// 横坐标显示
+													var yAxis = "查退房效率";// 纵坐标显示
+													var nowQuarter = checkRob.coaLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(checkRob.coaLimit.staffId)
+															+ "员工查退房效率";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工查退房效率的平均Data
+													var averageData = [];// 个人平均查退房效率
+													var userData = [];
+													for ( var item in data.list) {
+														userData
+																.push(changeNumType(data.list[item]));
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkEfficiency),
+																12);
+														averageData = getAverageData(
+																changeNumType(data.averWorkEfficiency),
+																12);
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkEfficiency),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkEfficiency),
+																3);
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkEfficiency),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkEfficiency),
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkEfficiency),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkEfficiency),
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkEfficiency),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkEfficiency),
+																3);
+														break;
+													}
+													combine(lineData,
+															"个人平均查退房效率",
+															averageData);
+													combine(lineData,
+															"全体平均查退房效率",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+													lineChartForm(lineData,
+															"#lineChart1",
+															title, xAxis, yAxis);
+													$('#chart1-svg')
+															.val(
+																	$(
+																			"#lineChart1")
+																			.highcharts()
+																			.getSVG());
+													if (data.analyseResult) {
+														checkRob.listRemark = true;
+														checkRob.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
+													} else {
+														checkRob.listRemark = false;
+														checkRob.remark = "";
+														$("#analyseResult")
+																.val("");
+													}
+												});
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -598,6 +858,13 @@ app
 								} else if ($location.path().indexOf(
 										'/checkEfficiencyForm') == 0) {
 									selectRoomSorts();
+								} else if ($location.path().indexOf(
+										'/checkOutHomeForm') == 0) {
+									selectRoomSorts();
+								} else if ($location.path().indexOf(
+										'/checkOutAnalyseForm') == 0) {
+									selectRoomSorts();
+									selectRoomStaffs();
 								}
 							}
 							initData();

@@ -260,8 +260,6 @@ public class RoomExpend {
 	}
 	public void setArel_num(String arel_num) {
 		this.arel_num = arel_num;
-	}
-	
-	
+	}	
 	
 }

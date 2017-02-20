@@ -101,30 +101,6 @@ public class ExcelHelper<T> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
 			String pattern, Integer mergeColumn, Integer hideColumn, Integer titleRow) {
-
-		// XSSFSheet sheet = workbook.createSheet(title);
-		// // 生成样式
-		// XSSFCellStyle titleStyle = getTitleStyle(workbook);
-		// XSSFCellStyle headerStyle = getStyle(workbook, "header");
-		// XSSFCellStyle contentStyle = getStyle(workbook, "content");
-		//
-		// // 合并单元格，设置表名样式
-		// Cell titleCell = mergeTitle(sheet, headerSource);
-		// titleCell.setCellStyle(titleStyle);
-		// titleCell.setCellValue(title);
-		//
-		// // 产生表格标题行
-		// XSSFRow row = sheet.createRow(1);// 从第二行开始生成表格
-		// row.setHeight((short) 500);// 行高设置成25px
-		//
-		// String[] headers = hidHeader(headerSource);
-		// for (int i = 0; i < headers.length; i++) {
-		// XSSFCell cell = row.createCell(i);
-		// cell.setCellStyle(headerStyle);
-		// XSSFRichTextString text = new XSSFRichTextString(headers[i]);
-		// cell.setCellValue(text);
-		// }
-
 		XSSFSheet sheet = workbook.createSheet(title);
 		if (titleRow == null) {
 			titleRow = 1;
@@ -406,30 +382,52 @@ public class ExcelHelper<T> {
 			List<String> list1 = new ArrayList<String>();// 记录第一行
 			List<String> list2 = new ArrayList<String>();// 记录第二行
 			String ele = null;
+			int num = 0;// 记录需要合并表头的列数(连续)
+			boolean flag = true;
+			int m = 0;// 记录需要拆分字符串(即："[")数量
+			List<String> listMerge = new ArrayList<String>();
 			for (int i = 0; i < headers.length; i++) {
 				ele = headers[i];
 				if (ele.contains("[") && ele.contains("]")) {
+					flag = false;
 					int beginIndex = ele.indexOf('[');
 					int endIndex = ele.indexOf(']');
 					String firstTitle = ele.substring(0, beginIndex);// 第一行表头名解析，格式：抹尘房
-					String tmp = ele.substring(beginIndex, endIndex);// 第一行表头名解析，格式：数量,总用时,平均用时,排名
+					String tmp = ele.substring(beginIndex + 1, endIndex);// 第一行表头名解析，格式：数量,总用时,平均用时,排名
 					String[] arr = tmp.split(",");// 将[]中内容解析成数组
+
+					m++;
+					int a1 = (i - m + 1) * m;// 起始列
+					int a2 = (i - m + 1) * m + arr.length - 1;// 终止列
+					listMerge.add(a1 + "," + a2);// 格式："起始列,终止列"
+
 					for (int j = 0; j < arr.length; j++) {
 						list1.add(firstTitle);// 重复补齐，在创建cell时再合并
 						list2.add(arr[j]);
 					}
 				} else {
+					if (flag) {
+						num++;
+					}
 					list1.add(ele);
 					list2.add(ele);
 				}
 			}
 
-			createTitleRow(sheet, (String[]) list1.toArray(), titleStyle, title);
-			createHeaderRow(sheet, (String[]) list1.toArray(), headerStyle, 1);// 第一行
-			createHeaderRow(sheet, (String[]) list2.toArray(), headerStyle, 2);// 第二行
+			String[] tmpArr = new String[list1.size()];
+			list1.toArray(tmpArr);
+			createTitleRow(sheet, tmpArr, titleStyle, title);
+			createHeaderRow(sheet, tmpArr, headerStyle, 1, listMerge);// 第一行
+			list2.toArray(tmpArr);
+			createHeaderRow(sheet, tmpArr, headerStyle, 2, null);// 第二行
+
+			// 合并表头
+			for (int i = 0; i < num; i++) {// 合并行
+				addMergedRegion(sheet, i, 1, 2, workbook);
+			}
 		} else {
 			createTitleRow(sheet, headers, titleStyle, title);
-			createHeaderRow(sheet, headers, headerStyle, 1);
+			createHeaderRow(sheet, headers, headerStyle, 1, null);
 		}
 	}
 
@@ -453,11 +451,13 @@ public class ExcelHelper<T> {
 	 * @param sheet
 	 * @param headers
 	 * @param headerStyle
+	 * @param mapMerge
+	 *            表头需要合并列
 	 */
-	private void createHeaderRow(XSSFSheet sheet, String[] headers, XSSFCellStyle headerStyle, Integer index) {
+	private void createHeaderRow(XSSFSheet sheet, String[] headers, XSSFCellStyle headerStyle, Integer index,
+			List<String> listMerge) {
 		// 产生表格标题行
 		XSSFRow row = sheet.createRow(index);// 从第index行开始生成表格
-		// XSSFRow row = sheet.createRow(1);// 从第二行开始生成表格
 		row.setHeight((short) 500);// 行高设置成25px
 
 		String[] headerArr = hidHeader(headers);
@@ -466,6 +466,13 @@ public class ExcelHelper<T> {
 			cell.setCellStyle(headerStyle);
 			XSSFRichTextString text = new XSSFRichTextString(headerArr[i]);
 			cell.setCellValue(text);
+		}
+
+		if (listMerge != null) {
+			for (String ele : listMerge) {
+				String[] arr = ele.split(",");
+				sheet.addMergedRegion(new CellRangeAddress(1, 1, Integer.parseInt(arr[0]), Integer.parseInt(arr[1])));// 起始行，结束行，起始列，结束列
+			}
 		}
 	}
 

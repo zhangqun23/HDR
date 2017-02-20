@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,11 +27,14 @@ import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CollectionUtil;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.Pager;
 import com.utils.PictureUtil;
 import com.utils.StringUtil;
 import com.utils.WordHelper;
+
+import net.sf.json.JSONObject;
 
 /**
  * 耗品相关的service层接口实现
@@ -320,6 +324,69 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		}
 		return byteArr;
 	}
+	
+	// 获取布草统计列表
+	public List<LinenExpend> getLinenExpendList(Map<String, Object> map) {
+		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
+		List<Object> listSource = expendFormDao.selectlinenExpend(map, listCondition);
+
+		Iterator<Object> it = listSource.iterator();
+		List<LinenExpend> listGoal = objToLinenExpand(it);
+		
+		LinenExpend sum = sumLinenExpend(listGoal);// 合计
+		LinenExpend avg = avgLinenExpend(listGoal);// 平均
+		listGoal.add(sum);
+		listGoal.add(avg);
+		
+		return listGoal;
+	}
+	
+	// 获取房间耗品统计列表
+	public List<RoomExpend> getRoomExpendList(Map<String, Object> map) {
+		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
+
+		Iterator<Object> it = listSource.iterator();
+		List<RoomExpend> listGoal = objToRoomExpand(it);
+		
+		RoomExpend sum = sumRoomExpend(listGoal);// 合计
+		RoomExpend avg = avgRoomExpend(listGoal);// 平均
+		listGoal.add(sum);
+		listGoal.add(avg);
+		
+		return listGoal;
+	}
+	
+	// 获取卫生间耗品统计列表
+	public List<WashExpend> getWashExpendList(Map<String, Object> map) {
+		List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
+		List<Object> listSource = expendFormDao.selectwashExpend(map, listCondition);
+
+		Iterator<Object> it = listSource.iterator();
+		List<WashExpend> listGoal = objToWashExpand(it);
+		
+		WashExpend sum = sumWashExpend(listGoal);// 合计
+		WashExpend avg = avgWashExpend(listGoal);// 平均
+		listGoal.add(sum);
+		listGoal.add(avg);
+
+		return listGoal;
+	}
+	
+	// 获取迷你吧统计列表
+	public List<MiniExpend> getMiniExpendList(Map<String, Object> map) {
+		List<Object> listSource = expendFormDao.selectminiExpend(map);
+
+		Iterator<Object> it = listSource.iterator();
+		List<MiniExpend> listGoal = objToMiniExpand(it);
+		
+		MiniExpend sum = sumMiniExpend(listGoal);// 合计
+		MiniExpend avg = avgMiniExpend(listGoal);// 平均
+		listGoal.add(sum);
+		listGoal.add(avg);
+
+		return listGoal;
+	}
 
 	/**
 	 * 布草list求和
@@ -470,14 +537,14 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<ExpendAnalyse> listGoal = new ArrayList<ExpendAnalyse>();
 		Object[] obj = null;
 		ExpendAnalyse expendAnalyse = null;
-		while (it.hasNext()) {
+		do{
 			obj = (Object[]) it.next();
 			expendAnalyse = new ExpendAnalyse();
 			expendAnalyse.setGoods_name(obj[0].toString());
 			expendAnalyse.setGoods_num(obj[1].toString());
 
 			listGoal.add(expendAnalyse);
-		}
+		}while (it.hasNext());
 
 		return listGoal;
 	}
@@ -1184,46 +1251,127 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	// 布草统计分析
 	@Override
-	public List<ExpendAnalyse> selectLinenExpendAnalyse(Map<String, Object> map) {
-
+	public String selectLinenExpendAnalyse(Map<String, Object> map) {
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectLinenExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用布草。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
-
-		return listGoal;
+		analyseResult += getAnalyseResult("布草", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
+		
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
 	}
 
 	// 房间耗品统计分析
 	@Override
-	public List<ExpendAnalyse> selectRoomExpendAnalyse(Map<String, Object> map) {
+	public String selectRoomExpendAnalyse(Map<String, Object> map) {
 
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectRoomExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用房间耗品。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
+		analyseResult += getAnalyseResult("房间易耗品", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
 
-		return listGoal;
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
 	}
 
 	// 卫生间耗品统计分析
 	@Override
-	public List<ExpendAnalyse> selectWashExpendAnalyse(Map<String, Object> map) {
+	public String selectWashExpendAnalyse(Map<String, Object> map) {
 
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectWashExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用房间耗品。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+		analyseResult += getAnalyseResult("卫生间易耗品", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
 
-		return listGoal;
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
 	}
 	
 	// 迷你吧统计分析
 	@Override
-	public List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map) {
+	public String selectMiniExpendAnalyse(Map<String, Object> map) {
 
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectMiniExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用房间耗品。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+		analyseResult += getAnalyseResult("迷你吧", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
 
-		return listGoal;
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
+	}
+	
+	// 获取分析结果
+	public String getAnalyseResult(String arg,List<Object> listSource){
+		String analyseResult = "";
+		Object[] obj = null;
+			switch(arg){
+				case "布草":
+					Iterator<Object> it = listSource.iterator();
+					obj = (Object[]) it.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+				case "房间易耗品":
+					Iterator<Object> it1 = listSource.iterator();
+					obj = (Object[]) it1.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+				case "卫生间易耗品":
+					Iterator<Object> it2 = listSource.iterator();
+					obj = (Object[]) it2.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+				case "迷你吧":
+					Iterator<Object> it3 = listSource.iterator();
+					obj = (Object[]) it3.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+			
+		}
+		return analyseResult;
 	}
 
 	// 查询布草总条数
@@ -1248,9 +1396,10 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String svg = map.get("svg");
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
-		String expendType = map.get("expendType");
+		String tableType = map.get("tableType");
+		String analyseResult = map.get("analyseResult");
 		String picName = "pic.png";
-		if (expendType.equals("1")) {
+		if (tableType.equals("1")) {
 			fileName = "房间耗品用量分析图.docx";
 		} else {
 			fileName = "卫生间耗品用量分析图.docx";
@@ -1260,6 +1409,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
+		contentMap.put("${analyseResult}", analyseResult);
 		contentMap.put("${pic}", picMap);
 
 		try {
@@ -1289,8 +1439,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String picCataPath = map.get("picCataPath");
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
-		String expendType = map.get("expendType");
-		if (expendType.equals("0")) {
+		String tableType = map.get("tableType");
+		String analyseResult = map.get("analyseResult");
+		if (tableType.equals("0")) {
 			fileName = "布草用量分析图.docx";
 		} else {
 			fileName = "迷你吧用量分析图.docx";
@@ -1315,9 +1466,10 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		}
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
+		contentMap.put("${analyseResult}", analyseResult);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, 1, out);
+			wh.export2007Word(modelPath, null, contentMap, 2, out);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -1591,6 +1743,117 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			avg.setComo_num(String.valueOf(StringUtil.save2Float(sum_como_num / chu)));
 		}
 		return avg;
+	}
+	
+	// 导出耗品统计表，excel格式
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportExpendExcel(Map<String, Object> map) {
+		ResponseEntity<byte[]> byteArr = null;
+		List<LinenExpend> linenExpendList = null;
+		List<RoomExpend> roomExpendList = null;
+		List<WashExpend> washExpendList = null;
+		List<MiniExpend> miniExpendList = null;
+
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String tableType = (String) map.get("tableType");
+		String path = (String) map.get("path");
+		
+		switch(tableType){
+			case "0":
+				String linenfileName = "客房部布草使用量统计表.xlsx";
+				String linentitle = "(客房部布草使用量统计表" + startTime.substring(0,10) + "至 " + endTime.substring(0,10) + ")";
+				try {
+					ExcelHelper<LinenExpend> ex = new ExcelHelper<LinenExpend>();
+					path = FileHelper.transPath(linenfileName, path);// 解析后的上传路径
+					OutputStream out = new FileOutputStream(path);
+
+					// 获取列表和文本信息
+					linenExpendList = getLinenExpendList(map);
+
+					String[] header = { "序号", "房号", "被罩", "拼尘罩", "洗衣袋", "床单", "面巾", "浴巾", "方巾","中巾" ,"地巾", "浴袍", "枕套", "枕芯", "毛毯", "购物袋" };// 顺序必须和对应实体一致
+					ex.export2007Excel(linentitle, header, (Collection) linenExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+
+					out.close();
+					byteArr = FileHelper.downloadFile(linenfileName, path);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "1":
+				String roomfileName = "客房部房间耗品使用量统计表.xlsx";
+				String roomtitle = "(客房部房间耗品使用量统计表" + startTime.substring(0,10) + "至 " + endTime.substring(0,10) + ")";
+				try {
+					ExcelHelper<RoomExpend> ex = new ExcelHelper<RoomExpend>();
+					path = FileHelper.transPath(roomfileName, path);// 解析后的上传路径
+					OutputStream out = new FileOutputStream(path);
+
+					// 获取列表和文本信息
+					roomExpendList = getRoomExpendList(map);
+
+					String[] header = {"序号","房号","雨伞","咖啡","白糖","伴侣","铅笔","橡皮","即扫牌","面巾纸","环保卡","手提袋","袋泡茶","送餐牌","意见书","立顿红茶","请勿打扰牌","电视节目单","信封(普通)",
+							"便签","杯垫","火柴","地图","尺子","信纸","回形针","圆珠笔","针线包","洗衣单","低卡糖","擦鞋布","防毒面具","立顿绿茶","拖鞋(儿童)","彩色曲别针","信封(航空)"};// 顺序必须和对应实体一致
+					ex.export2007Excel(roomtitle, header, (Collection) roomExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+
+					out.close();
+					byteArr = FileHelper.downloadFile(roomfileName, path);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "2":
+				String washfileName = "客房部卫生间耗品使用量统计表.xlsx";
+				String washtitle = "(客房部卫生间耗品使用量统计表" + startTime.substring(0,10) + "至 " + endTime.substring(0,10) + ")";
+				try {
+					ExcelHelper<WashExpend> ex = new ExcelHelper<WashExpend>();
+					path = FileHelper.transPath(washfileName, path);// 解析后的上传路径
+					OutputStream out = new FileOutputStream(path);
+
+					// 获取列表和文本信息
+					washExpendList = getWashExpendList(map);
+
+					String[] header = {"序号","房号","牙具","卷纸","	洗发液","沐浴露","护发素","润肤露","护理包","黑垃圾袋","抽纸","卫生袋","浴帽","剃须刨","梳子",
+							"擦鞋布","手皂","指甲锉","干花","浴盐","百洁布","橡皮手套","洗涤灵","洗消净","浴室清洁剂","洁厕灵","擦鞋布","浴缸刷","恭桶刷"};// 顺序必须和对应实体一致
+					ex.export2007Excel(washtitle, header, (Collection)washExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+
+					out.close();
+					byteArr = FileHelper.downloadFile(washfileName, path);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "3":
+				String minifileName = "客房部迷你吧使用量统计表.xlsx";
+				String minititle = "(客房部迷你吧使用量统计表" + startTime.substring(0,10) + "至 " + endTime.substring(0,10) + ")";
+				try {
+					ExcelHelper<MiniExpend> ex = new ExcelHelper<MiniExpend>();
+					path = FileHelper.transPath(minifileName, path);// 解析后的上传路径
+					OutputStream out = new FileOutputStream(path);
+
+					// 获取列表和文本信息
+					miniExpendList = getMiniExpendList(map);
+
+					String[] header = {"序号","房号","红牛","可口可乐","巴黎水","大依云","加多宝","小依云","昆仑山","红葡萄酒","威士忌","伏加特","金酒","青岛",
+							"雪碧","指甲刀","ABC卫生巾","扑克牌","普通安全套"};// 顺序必须和对应实体一致
+					ex.export2007Excel(minititle, header, (Collection)miniExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+
+					out.close();
+					byteArr = FileHelper.downloadFile(minifileName, path);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+		}
+		return byteArr;
 	}
 
 

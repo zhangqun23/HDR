@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
-import com.mvc.entityReport.ExpendAnalyse;
 import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
 import com.mvc.entityReport.MiniCount;
@@ -78,13 +77,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectLinenExpendAnalyseByLlimits.do")
 	public @ResponseBody String selectLinenExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("allimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectLinenExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectLinenExpendAnalyse(map);
+		return list;
 	}
 
 	/**
@@ -119,13 +115,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectRoomExpendAnalyseByRlimits.do")
 	public @ResponseBody String selectRoomExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("arlimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectRoomExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectRoomExpendAnalyse(map);
+		return list;
 	}
 
 	/**
@@ -160,13 +153,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectWashExpendAnalyseByWlimits.do")
 	public @ResponseBody String selectWashExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("wrlimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectWashExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectWashExpendAnalyse(map);
+		return list;
 	}
 	
 	/**
@@ -201,13 +191,10 @@ public class ExpendFormController {
 	@RequestMapping("/selectMiniExpendAnalyseByMlimits.do")
 	public @ResponseBody String selectMiniExpendAnalyse(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("amlimit"));
-
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<ExpendAnalyse> list = expendFormService.selectMiniExpendAnalyse(map);
-
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		
+		String list = expendFormService.selectMiniExpendAnalyse(map);
+		return list;
 	}
 
 	
@@ -314,82 +301,72 @@ public class ExpendFormController {
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
-
-	/********** zjn添加 **********/
+	
 	/**
-	 * 导出房间或者卫生间耗品用量分析图，word格式
+	 * 导出耗品消耗，Excel格式
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/exportRoomOrWashExpendPic.do")
-	public ResponseEntity<byte[]> exportRoomOrWashExpendPic(HttpServletRequest request, HttpServletResponse response) {
-
-		String svg = "";
-		String startTime = "";
-		String endTime = "";
-		String expendType = "1";// 1代表房间耗品用量分析图;2代表卫生间易耗品分析图
+	@RequestMapping("/exportExpendExcel.do")
+	public ResponseEntity<byte[]> exportExpendExcel(HttpServletRequest request, HttpServletResponse response) {
+		String formType = null;
+		String formName = null;
+		String startTime = null;
+		String endTime = null;
+		String tableType = null;
 		ResponseEntity<byte[]> byteArr = null;
-		Map<String, String> map = new HashMap<String, String>();
-		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
-		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMEXPENDPIC_PATH);// 房间耗品用量分析图模板路径
 
-		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("startTime"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
-
-			expendType = request.getParameter("expendType");
-			svg = request.getParameter("chartSVGStr");
-			startTime = request.getParameter("startTime");
-			endTime = request.getParameter("endTime");
-			if (expendType.equals("2")) {
-				modelPath = request.getSession().getServletContext()
-						.getRealPath(ReportFormConstants.WASHEXPENDPIC_PATH);// 卫生间易耗品分析图模板路径
-			}
-			map.put("path", path);
-			map.put("modelPath", modelPath);
-			map.put("picCataPath", picCataPath);
-			map.put("svg", svg);
-			map.put("startTime", startTime);
-			map.put("endTime", endTime);
-			map.put("expendType", expendType);
-			byteArr = expendFormService.exportRoomOrWashExpendPic(map);
+		if (StringUtil.strIsNotEmpty(request.getParameter("formType"))) {
+			formType = request.getParameter("formType");// 报表类型
 		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("formName"))) {
+			formName = request.getParameter("formName");// 报表类型名称
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
+			startTime = StringUtil.dayFirstTime(request.getParameter("startTime"));// 开始时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))){
+			tableType =  request.getParameter("tableType");//耗品类型选择
+		}
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formType", formType);
+		map.put("formName", formName);
+		map.put("startTime", startTime);
+		map.put("endTime", endTime);
+		map.put("tableType", tableType);
+		map.put("path", path);		
+		byteArr = expendFormService.exportExpendExcel(map);
+		
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
-
+	
 	/**
-	 * 导出布草或者迷你吧用量分析图，word格式
+	 * 导出耗品用量分析图，word格式
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/exportLinenOrMiniExpendPic.do")
-	public ResponseEntity<byte[]> exportLinenOrMiniExpendPic(HttpServletRequest request, HttpServletResponse response) {
-
+	@RequestMapping("/exportExpendPic.do")
+	public ResponseEntity<byte[]> exportExpendPic(HttpServletRequest request, HttpServletResponse response) {
 		String svg1 = "";
 		String svg2 = "";
 		String startTime = "";
 		String endTime = "";
-		String expendType = "0";// 0代表布草用量分析图;3代表迷你吧用量分析图
+		String tableType = "";
+		String analyseResult = "";
 		ResponseEntity<byte[]> byteArr = null;
 		Map<String, String> map = new HashMap<String, String>();
 		String picCataPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH + "\\");// 图片地址
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
-		String modelPath = request.getSession().getServletContext()
-				.getRealPath(ReportFormConstants.LINENEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
 
-		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr1"))) {
-			svg1 = request.getParameter("chartSVGStr1");
-		}
-
-		if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr2"))) {
-			svg2 = request.getParameter("chartSVGStr2");
-		}
 		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))) {
 			startTime = request.getParameter("startTime");
 		}
@@ -397,21 +374,119 @@ public class ExpendFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
 			endTime = request.getParameter("endTime");
 		}
-		if (expendType.equals("3")) {
-			modelPath = request.getSession().getServletContext()
-					.getRealPath(ReportFormConstants.MINIEXPENDPIC_PATH);// 卫生间易耗品分析图模板路径
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
+			tableType = request.getParameter("tableType");
 		}
-		map.put("path", path);
-		map.put("modelPath", modelPath);
-		map.put("picCataPath", picCataPath);
-		map.put("svg1", svg1);
-		map.put("svg2", svg2);
-		map.put("startTime", startTime);
-		map.put("endTime", endTime);
-		byteArr = expendFormService.exportLinenOrMiniExpendPic(map);
+		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
+			analyseResult = request.getParameter("analyseResult");
+		}
+		switch(tableType){
+		case "0":
+			if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr1"))) {
+				svg1 = request.getParameter("chartSVGStr1");
+			}
 
+			if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr2"))) {
+				svg2 = request.getParameter("chartSVGStr2");
+			}
+
+			
+			String modelPath = request.getSession().getServletContext()
+			.getRealPath(ReportFormConstants.LINENEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
+			map.put("path", path);
+			map.put("modelPath", modelPath);
+			map.put("picCataPath", picCataPath);
+			map.put("svg1", svg1);
+			map.put("svg2", svg2);	
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
+			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
+			byteArr = expendFormService.exportLinenOrMiniExpendPic(map);
+			break;
+		case "1":
+			if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr3"))) {
+				svg1 = request.getParameter("chartSVGStr3");
+			}
+
+			String roommodelPath = request.getSession().getServletContext()
+			.getRealPath(ReportFormConstants.ROOMEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
+			map.put("path", path);
+			map.put("modelPath", roommodelPath);
+			map.put("picCataPath", picCataPath);
+			map.put("svg", svg1);	
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
+			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
+			byteArr = expendFormService.exportRoomOrWashExpendPic(map);
+			break;
+		case "2":
+			if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr4"))) {
+				svg1 = request.getParameter("chartSVGStr4");
+			}
+
+			String washmodelPath = request.getSession().getServletContext()
+			.getRealPath(ReportFormConstants.ROOMEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
+			map.put("path", path);
+			map.put("modelPath", washmodelPath);
+			map.put("picCataPath", picCataPath);
+			map.put("svg", svg1);	
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
+			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
+			byteArr = expendFormService.exportRoomOrWashExpendPic(map);
+			break;
+		case "3":
+			if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr5"))) {
+				svg1 = request.getParameter("chartSVGStr5");
+			}
+
+			if (StringUtil.strIsNotEmpty(request.getParameter("chartSVGStr6"))) {
+				svg2 = request.getParameter("chartSVGStr6");
+			}
+			String minimodelPath = request.getSession().getServletContext()
+			.getRealPath(ReportFormConstants.MINIEXPENDPIC_PATH);// 房间布草耗品用量分析图模板路径
+			
+			map.put("path", path);
+			map.put("modelPath", minimodelPath);
+			map.put("picCataPath", picCataPath);
+			map.put("svg1", svg1);
+			map.put("svg2", svg2);	
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
+			map.put("tableType", tableType);
+			map.put("analyseResult", analyseResult);
+			byteArr = expendFormService.exportLinenOrMiniExpendPic(map);
+			break;
+		}
+		
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
+		
+	}
+	/**
+	 * 员工耗品统计
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping("/selectStaExpendByLimits.do")
+	public @ResponseBody String selectStaExpendByLimits(HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("sLimit"));
+
+		Map<String, Object> map = JsonObjToMap(jsonObject);
+		//int totalRow = Integer.parseInt(expendFormService.countTotal(map).toString());
+		Pager pager = new Pager();
+		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
+		//pager.setTotalRow(totalRow);
+
+		//List<LinenExpend> list = expendFormService.selectStaExpendPage(map, pager);
+		jsonObject = new JSONObject();
+		//jsonObject.put("list", list);
+		jsonObject.put("totalPage", pager.getTotalPage());
+		return jsonObject.toString();
 	}
 
 }

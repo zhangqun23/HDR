@@ -1,6 +1,6 @@
 var app = angular
 		.module(
-				'engineerForm',
+				'projectForm',
 				[ 'ngRoute' ],
 				function($httpProvider) {// ngRoute引入路由依赖
 					$httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -65,8 +65,8 @@ app.run([ '$rootScope', '$location', function($rootScope, $location) {
 
 // 路由配置
 app.config([ '$routeProvider', function($routeProvider) {
-	$routeProvider.when('/engWorkLoadForm', {
-		templateUrl : '/HDR/jsp/engineerForm/workloadForm.html',
+	$routeProvider.when('/proWorkLoadForm', {
+		templateUrl : '/HDR/jsp/projectForm/proWorkloadForm.html',
 		controller : 'ReportController'
 	})
 } ]);
@@ -87,6 +87,13 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'reportForm/selectRoomStaffs.do',
+			data : data
+		});
+	};
+	services.selectProWorkLoad = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'project/selectProWorkLoad.do',
 			data : data
 		});
 	};
@@ -132,7 +139,7 @@ app
 
 							/**
 							 * zq公共函数始
-							 */ 
+							 */
 							function preventDefault(e) {
 								if (e && e.preventDefault) {
 									// 阻止默认浏览器动作(W3C)
@@ -303,7 +310,38 @@ app
 							}
 							/**
 							 * zq公共函数终
-							 */ 
+							 */
+							reportForm.pwLimit = {
+								startTime : "",
+								endTime : ""
+							};
+							// zq添加员工工作量统计表
+							reportForm.selectProWorkLoad = function() {
+								if (reportForm.pwLimit.startTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.pwLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								var proWorkLoadLimit = JSON
+										.stringify(reportForm.pwLimit);
+								services.selectProWorkLoad({
+									limit : proWorkLoadLimit
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.workloadList = data.list;
+									if (data.list) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");

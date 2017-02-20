@@ -73,13 +73,13 @@
 			<div class="title">
 				<span><img src="${ctx}/images/leftico04.png" /></span>工程部服务统计
 			</div>
-			<ul id="engineerService-ul" class="menuson">
-				<li id="engWorkLoad"><cite></cite><a
-					href="${ctx}/engineerController/toEngineerPage.do#/engWorkLoadForm">员工工作量统计</a></li>
-				<li id="engWorkLoad"><cite></cite><a
-					href="${ctx}/engineerController/toEngineerPage.do#/engMaterialForm">工程物料管理统计</a></li>
-				<li id="engWorkLoad"><cite></cite><a
-					href="${ctx}/engineerController/toEngineerPage.do#/engMaintainForm">工程维修项统计</a></li>
+			<ul id="projectService-ul" class="menuson">
+				<li id="proWorkLoad"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proWorkLoadForm">员工工作量统计</a><i></i></li>
+				<li id="proMaterial"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proMaterialForm">工程物料管理统计</a><i></i></li>
+				<li id="proMaintain"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proMaintainForm">工程维修项统计</a><i></i></li>
 			</ul>
 		</dd>
 	</dl>

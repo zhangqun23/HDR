@@ -9,7 +9,7 @@
 
 <div class="rightinfo">
 	<div class="tools" style="">
-		<form action="../engineerController/exportEngWorkLoadAnalyse.do" method="post"
+		<form action="../project/exportProWorkLoadAnalyse.do" method="post"
 			enctype="multipart/form-data">
 			<ul class="projectListLimit">
 				<li><label>年份</label><input type="text" name="checkYear"
@@ -29,7 +29,7 @@
 						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
 				</select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
-					type="button" value="查询" ng-click=""></li>
+					type="button" value="查询" ng-click="selectProWorkLoadAnalyse()"></li>
 				<li><input id="chart1-svg" name="chartSVGStr" type="text"
 					class="hidden" /></li>
 					<li><input id="analyseResult" name="analyseResult" type="text"

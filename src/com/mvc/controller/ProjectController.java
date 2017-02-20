@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2017-2-19
  */
 @Controller
-@RequestMapping("/engineerController")
-public class EngineerController {
+@RequestMapping("/project")
+public class ProjectController {
 
-	@RequestMapping("/toEngineerPage.do")
+	@RequestMapping("/toProjectPage.do")
 	public String replyPagePath() {
-		return "engineerForm/index";
+		return "projectForm/index";
 	}
 }

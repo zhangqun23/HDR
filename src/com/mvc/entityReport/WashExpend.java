@@ -206,5 +206,4 @@ public class WashExpend {
 	public void setClbr_num(String clbr_num) {
 		this.clbr_num = clbr_num;
 	}
-
 }

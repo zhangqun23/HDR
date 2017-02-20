@@ -34,6 +34,8 @@ import com.utils.PictureUtil;
 import com.utils.StringUtil;
 import com.utils.WordHelper;
 
+import net.sf.json.JSONObject;
+
 /**
  * 耗品相关的service层接口实现
  * 
@@ -535,14 +537,14 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<ExpendAnalyse> listGoal = new ArrayList<ExpendAnalyse>();
 		Object[] obj = null;
 		ExpendAnalyse expendAnalyse = null;
-		while (it.hasNext()) {
+		do{
 			obj = (Object[]) it.next();
 			expendAnalyse = new ExpendAnalyse();
 			expendAnalyse.setGoods_name(obj[0].toString());
 			expendAnalyse.setGoods_num(obj[1].toString());
 
 			listGoal.add(expendAnalyse);
-		}
+		}while (it.hasNext());
 
 		return listGoal;
 	}
@@ -1249,46 +1251,127 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	// 布草统计分析
 	@Override
-	public List<ExpendAnalyse> selectLinenExpendAnalyse(Map<String, Object> map) {
-
+	public String selectLinenExpendAnalyse(Map<String, Object> map) {
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectLinenExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用布草。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
-
-		return listGoal;
+		analyseResult += getAnalyseResult("布草", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
+		
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
 	}
 
 	// 房间耗品统计分析
 	@Override
-	public List<ExpendAnalyse> selectRoomExpendAnalyse(Map<String, Object> map) {
+	public String selectRoomExpendAnalyse(Map<String, Object> map) {
 
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectRoomExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用房间耗品。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
+		analyseResult += getAnalyseResult("房间易耗品", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
 
-		return listGoal;
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
 	}
 
 	// 卫生间耗品统计分析
 	@Override
-	public List<ExpendAnalyse> selectWashExpendAnalyse(Map<String, Object> map) {
+	public String selectWashExpendAnalyse(Map<String, Object> map) {
 
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectWashExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用房间耗品。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+		analyseResult += getAnalyseResult("卫生间易耗品", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
 
-		return listGoal;
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
 	}
 	
 	// 迷你吧统计分析
 	@Override
-	public List<ExpendAnalyse> selectMiniExpendAnalyse(Map<String, Object> map) {
+	public String selectMiniExpendAnalyse(Map<String, Object> map) {
 
+		String analyseResult = "分析结果：";// 分析结果
 		List<Object> listSource = expendFormDao.selectMiniExpendAnalyse(map);
+		JSONObject jsonObject = new JSONObject();
+		if(listSource == null || listSource.size() == 0){
+			analyseResult += "没有使用房间耗品。";
+			jsonObject.put("analyseResult", analyseResult);
+		}
+		else{
 		Iterator<Object> it = listSource.iterator();
-		List<ExpendAnalyse> listGoal = objToExpandAnalyse(it);
+		analyseResult += getAnalyseResult("迷你吧", listSource);
+		List<ExpendAnalyse> list = objToExpandAnalyse(it);
 
-		return listGoal;
+		jsonObject.put("list", list);
+		jsonObject.put("analyseResult", analyseResult);
+		}
+		return jsonObject.toString();
+	}
+	
+	// 获取分析结果
+	public String getAnalyseResult(String arg,List<Object> listSource){
+		String analyseResult = "";
+		Object[] obj = null;
+			switch(arg){
+				case "布草":
+					Iterator<Object> it = listSource.iterator();
+					obj = (Object[]) it.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+				case "房间易耗品":
+					Iterator<Object> it1 = listSource.iterator();
+					obj = (Object[]) it1.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+				case "卫生间易耗品":
+					Iterator<Object> it2 = listSource.iterator();
+					obj = (Object[]) it2.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+				case "迷你吧":
+					Iterator<Object> it3 = listSource.iterator();
+					obj = (Object[]) it3.next();
+					analyseResult += "在查询时间段内使用量最多的物品为：" + (obj[0].toString());
+					analyseResult += "，使用了" + (obj[1].toString()) + "件，";
+					analyseResult += "应加大该物品的供应量。";
+					break;
+			
+		}
+		return analyseResult;
 	}
 
 	// 查询布草总条数
@@ -1314,6 +1397,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
 		String tableType = map.get("tableType");
+		String analyseResult = map.get("analyseResult");
 		String picName = "pic.png";
 		if (tableType.equals("1")) {
 			fileName = "房间耗品用量分析图.docx";
@@ -1325,6 +1409,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
+		contentMap.put("${analyseResult}", analyseResult);
 		contentMap.put("${pic}", picMap);
 
 		try {
@@ -1355,6 +1440,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
 		String tableType = map.get("tableType");
+		String analyseResult = map.get("analyseResult");
 		if (tableType.equals("0")) {
 			fileName = "布草用量分析图.docx";
 		} else {
@@ -1380,6 +1466,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		}
 		contentMap.put("${startTime}", startTime);
 		contentMap.put("${endTime}", endTime);
+		contentMap.put("${analyseResult}", analyseResult);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, null, contentMap, 2, out);

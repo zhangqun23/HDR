@@ -29,6 +29,7 @@ import com.utils.WordHelper;
 import com.base.enums.CleanType;
 
 import net.sf.json.JSONObject;
+import sun.org.mozilla.javascript.internal.regexp.SubString;
 
 /**
  * 部门员工做房驳回统计业务层实现
@@ -154,7 +155,8 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			}
 
 		}
-		jsonObject.put("reasonList", reasonArr);// 全体员工平均做房驳回效率
+		jsonObject.put("reasonList", reasonArr);// 员工平均做房驳回原因统计
+		jsonObject.put("analyseResult", "分析结果：");
 		return jsonObject.toString();
 	}
 
@@ -342,10 +344,10 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");
 		map.put("deptId", departmentInfo.getDepartmentId());
 		ResponseEntity<byte[]> byteArr = null;
-		String startTime = (String) map.get("startTime");
+		String startTime = (String)map.get("startTime");
 		String endTime = (String) map.get("endTime");
 		String path = (String) map.get("path");
-		String title = "客房部员工做房驳回率统计表";
+		String title = "客房部员工做房驳回率统计表(" + startTime.substring(0, 10) + "至" + endTime.substring(0, 10) + ")";
 		String fileName = "客房部员工做房驳回率统计表.xlsx";
 		try {
 			ExcelHelper<WorkReject> wh = new ExcelHelper<WorkReject>();
@@ -359,7 +361,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			WorkReject sum = sumWorkReject(listGoal);
 			listGoal.add(sum);
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
-			wh.export2007Excel(title, header,listGoal, out, "yyyy-MM-dd", -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 
 		} catch (Exception ex) {

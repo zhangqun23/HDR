@@ -68,6 +68,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/proWorkLoadForm', {
 		templateUrl : '/HDR/jsp/projectForm/proWorkloadForm.html',
 		controller : 'ReportController'
+	}).when('/proWorkLoadAnalyse', {
+		templateUrl : '/HDR/jsp/projectForm/proWorkloadAnalyse.html',
+		controller : 'ReportController'
 	})
 } ]);
 
@@ -211,11 +214,12 @@ app
 								});
 							}
 							// zq查询客服人员列表
-							function selectRoomStaffs() {
-								services.selectRoomStaffs().success(
-										function(data) {
-											reportForm.staffs = data.list;
-										});
+							function selectRoomStaffs(deptType) {
+								services.selectRoomStaffs({
+									deptType : deptType
+								}).success(function(data) {
+									reportForm.staffs = data.list;
+								});
 							}
 							// zq获取所选房间类型
 							function getSelectedRoomType(roomSortNo) {
@@ -342,6 +346,147 @@ app
 									}
 								});
 							}
+							reportForm.pwaLimit = {
+								checkYear : '',
+								quarter : '0',
+								staffId : ''
+							};
+							// zq获取工程部工作量折线图分析
+							reportForm.selectProWorkLoadAnalyse = function() {
+								if (reportForm.pwaLimit.checkYear == '') {
+									alert("请选择查询年份！");
+									return false;
+								}
+								if (reportForm.pwaLimit.staffId == '') {
+									alert("请选择查询员工！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								var pwaLimits = JSON
+										.stringify(reportForm.pwaLimit);
+								services
+										.selectProWorkLoadAnalyse({
+											limit : pwaLimits
+										})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													var title = "工程部员工（"
+															+ getSelectedStaff(reportForm.pwaLimit.staffId)
+															+ "）"
+															+ reportForm.pwaLimit.checkYear
+															+ "年度  "
+															+ getSelectedQuarter(reportForm.pwaLimit.quarter)
+															+ "  工作量汇总表";// 折线图标题显示
+													var xAxis = [];// 横坐标显示
+													var yAxis = "工作量";// 纵坐标显示
+													var nowQuarter = reportForm.pwaLimit.quarter;// 当前的选择季度
+													var lineName = getSelectedStaff(reportForm.pwaLimit.staffId)
+															+ "员工工作量";
+													var lineData = [];// 最终传入chart1中的data
+													var allAverageData = [];// 全体员工平均工作量的平均Data
+													var averageData = [];// 个人平均工作量
+													var userData = [];// 个人工作量
+													for ( var item in data.list) {
+														userData
+																.push(changeNumType(data.list[item]));
+													}
+													switch (nowQuarter) {
+													case '0':
+														xAxis = [ '1月', '2月',
+																'3月', '4月',
+																'5月', '6月',
+																'7月', '8月',
+																'9月', '10月',
+																'11月', '12月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkLoad),
+																12);
+														averageData = getAverageData(
+																changeNumType(data.averWorkLoad),
+																12);
+
+														break;
+													case '1':
+														xAxis = [ '1月', '2月',
+																'3月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkLoad),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkLoad),
+																3);
+
+														break;
+													case '2':
+														xAxis = [ '4月', '5月',
+																'6月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkLoad),
+																3);
+														averageData = getAverageData(
+																data.averWorkLoad,
+																3);
+														break;
+													case '3':
+														xAxis = [ '7月', '8月',
+																'9月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkLoad),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkLoad),
+																3);
+														break;
+													case '4':
+														xAxis = [ '10月', '11月',
+																'12月' ];
+														allAverageData = getAverageData(
+																changeNumType(data.allAverWorkLoad),
+																3);
+														averageData = getAverageData(
+																changeNumType(data.averWorkLoad),
+																3);
+														break;
+													}
+
+													combine(lineData,
+															"个人平均工作量",
+															averageData);
+													combine(lineData,
+															"全体平均工作量",
+															allAverageData);
+													combine(lineData, lineName,
+															userData);
+
+													lineChartForm(lineData,
+															"#lineChart",
+															title, xAxis, yAxis);
+
+													$('#chart-svg')
+															.val(
+																	$(
+																			"#lineChart")
+																			.highcharts()
+																			.getSVG());
+													if (data.analyseResult) {
+														reportForm.listRemark = true;
+														reportForm.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
+													} else {
+														reportForm.listRemark = false;
+														reportForm.remark = "";
+														$("#analyseResult")
+																.val("");
+													}
+												});
+							};
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -356,8 +501,9 @@ app
 																	/(fill|stroke)="rgba([ 0-9]+,[ 0-9]+,[ 0-9]+),([ 0-9\.]+)"/g,
 																	'$1="rgb($2)" $1-opacity="$3"');
 												});
-								if ($location.path().indexOf('/workHouseForm') == 0) {
-									selectRoomSorts();
+								if ($location.path().indexOf(
+										'/proWorkLoadAnalyse') == 0) {
+									selectRoomSorts(1);
 
 								}
 							}

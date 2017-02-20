@@ -93,4 +93,7 @@ public class ReportFormConstants {
 	// 客房部单个员工工作量分析图
 	public static final String PROWORKLOADANALYSE_PATH = DICTIONARY + "proWorkLoadAnalyse.docx";
 
+	// 工程物料
+	public static final String ENGINEMATERIAL_PATH = DICTIONARY + "EngineMaterial.docx";
+
 }

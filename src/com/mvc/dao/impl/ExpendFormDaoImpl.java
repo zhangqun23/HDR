@@ -49,6 +49,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 		
 	}
@@ -74,6 +75,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 		
 	}
@@ -99,6 +101,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 		
 	}
@@ -125,6 +128,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 			
 	}
@@ -259,6 +263,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 	}
 
@@ -415,6 +420,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 	}
 
@@ -742,6 +748,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();
+		System.out.println(list);
 		return list;
 	}
 

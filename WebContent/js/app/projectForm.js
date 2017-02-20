@@ -535,8 +535,8 @@ app
 							// 显示隐藏表格
 							var showOrHide = {
 								toiletIssue : false,
-								barIssue : false,
 								lockerIssue : false,
+								barIssue : false,
 								bedRoomIssue : false,
 								airConditionerIssue : false,
 								carpetIssue : false,

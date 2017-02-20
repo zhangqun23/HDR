@@ -86,18 +86,14 @@ public class ReportFormConstants {
 	// 导出部门对客服务类型统计
 	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
 
-<<<<<<< HEAD
-	/************* 工程部 **************/
-
-	// 工程物料
-	public static final String ENGINEMATERIAL_PATH = DICTIONARY + "EngineMaterial.docx";
-=======
 	/********************* 工程部相关 **************************************/
 	// 导出部门对客服务类型统计
 	public static final String PROWORKLOAD_PATH = DICTIONARY + "proWorkLoad.docx";
 
 	// 客房部单个员工工作量分析图
 	public static final String PROWORKLOADANALYSE_PATH = DICTIONARY + "proWorkLoadAnalyse.docx";
->>>>>>> 80f7177b7414c79890d81d52d247d3bec4b8f0ad
+
+	// 工程物料
+	public static final String ENGINEMATERIAL_PATH = DICTIONARY + "EngineMaterial.docx";
 
 }

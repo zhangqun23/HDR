@@ -1,0 +1,64 @@
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="">首页</a></li>
+		<li><a href="">工程部服务统计</a></li>
+		<li><a href="">工程维修项统计</a></li>
+	</ul>
+</div>
+
+<div class="rightinfo">
+
+	<div>
+		<div>
+			<form action="" method="post" enctype="multipart/form-data">
+				<ul class="projectListLimit">
+
+					<li><label>起止日期</label><input type="text" name="startDate"
+						required ng-model="startTime" class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""><label>—</label><input type="text"
+						name="endDate" required ng-model="endTime"
+						class="dfselect dateLayoutStyle"
+						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
+						onChange=""></li>
+					<li><input class="btn layoutStyle" style="width: 60px"
+						type="button" value="查询" ng-click=""></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Word"
+						onclick="this.form.action='';this.form.submit();setExportFlagCookie();"></li>
+					<li><input class="btn layoutStyle" style="width: 80px"
+						type="submit" value="导出Excel"
+						onclick="this.form.action='';this.form.submit();setExportFlagCookie();"></li>
+				</ul>
+			</form>
+		</div>
+
+	</div>
+
+	<table class="tablelist tablestyle">
+		<caption align="top" class="tableTitle">
+			<div class="tableTitle">工程部维修项统计</div>
+			<div>统计时间：{{startTime}}&nbsp;至 &nbsp;{{endTime}}</div>
+		</caption>
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">维修类型</th>
+				<th class="width10">任务数量</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="ml in maintainList">
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<div class="tcdPageCode">页码容器</div>
+</div>
+
+
+

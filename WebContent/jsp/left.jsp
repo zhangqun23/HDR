@@ -67,6 +67,24 @@
 			</ul>
 
 		</dd>
+<<<<<<< HEAD
+=======
+		<dd>
+			<div class="title">
+				<span><img src="${ctx}/images/leftico04.png" /></span>工程部服务统计
+			</div>
+			<ul id="projectService-ul" class="menuson">
+				<li id="proWorkLoad"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proWorkLoadForm">员工工作量统计</a><i></i></li>
+				<li id="proWorkLoadAnalyse"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proWorkLoadAnalyse">员工工作量分析</a><i></i></li>
+				<li id="proMaterial"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proMaterialForm">工程物料管理统计</a><i></i></li>
+				<li id="proMaintain"><cite></cite><a
+					href="${ctx}/project/toProjectPage.do#/proMaintainForm">工程维修项统计</a><i></i></li>
+			</ul>
+		</dd>
+>>>>>>> 38da65fc8558efa505e374672710da9e3369a10a
 	</dl>
 </section>
 <script>

@@ -6,12 +6,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
+import com.mvc.service.ProjectWorkLoadService;
 import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
@@ -27,6 +29,9 @@ import net.sf.json.JSONObject;
 @RequestMapping("/projectWorkLoad")
 public class ProjectWorkLoadController {
 
+	@Autowired
+	ProjectWorkLoadService projectWorkLoadService;
+
 	/**
 	 * 初始化页面
 	 * 
@@ -38,13 +43,13 @@ public class ProjectWorkLoadController {
 	}
 
 	/**
-	 * 获取所有员工工作量汇总列表信息
+	 * 获取工程部所有员工工作量汇总列表信息
 	 * 
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/getWorkLoadSummaryList.do")
-	public @ResponseBody String getWorkLoadSummaryList(HttpServletRequest request) {
+	@RequestMapping("/selectProWorkLoad.do")
+	public @ResponseBody String getProWorkLoadList(HttpServletRequest request) {
 		String startDate = "";
 		String endDate = "";
 		JSONObject jsonObject = new JSONObject();
@@ -63,14 +68,14 @@ public class ProjectWorkLoadController {
 	}
 
 	/**
-	 * 导出所有员工工作量汇总表，word格式
+	 * 导出工程部所有员工工作量汇总表，word格式
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/exportWorkLoadSummaryWord.do")
-	public ResponseEntity<byte[]> exportWorkLoadSummaryWord(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping("/exportProWorkLoadWord.do")
+	public ResponseEntity<byte[]> exportProWorkLoadWord(HttpServletRequest request, HttpServletResponse response) {
 		String startDate = "";
 		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;
@@ -97,14 +102,14 @@ public class ProjectWorkLoadController {
 	}
 
 	/**
-	 * 导出所有员工工作量汇总表，excel格式
+	 * 导出工程部所有员工工作量汇总表，excel格式
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/exportWorkLoadSummaryExcel.do")
-	public ResponseEntity<byte[]> exportWorkLoadSummaryExcel(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping("/exportProWorkLoadExcel.do")
+	public ResponseEntity<byte[]> exportProWorkLoadExcel(HttpServletRequest request, HttpServletResponse response) {
 		String startDate = "";
 		String endDate = "";
 		ResponseEntity<byte[]> byteArr = null;

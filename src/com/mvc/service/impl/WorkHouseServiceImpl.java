@@ -54,6 +54,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Iterator<Object> it = listSource.iterator();
 		List<WorkHouse> listGoal = objToWorkHouse(it);
 
+		WorkHouse sum = sumWorkHouse(listGoal);// 合计
+		listGoal.add(sum);
+
 		return listGoal;
 	}
 

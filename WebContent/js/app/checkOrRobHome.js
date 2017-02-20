@@ -280,11 +280,12 @@ app
 								});
 							}
 							// zq查询客服人员列表
-							function selectRoomStaffs() {
-								services.selectRoomStaffs().success(
-										function(data) {
-											checkRob.staffs = data.list;
-										});
+							function selectRoomStaffs(deptType) {
+								services.selectRoomStaffs({
+									deptType : deptType
+								}).success(function(data) {
+									checkRob.staffs = data.list;
+								});
 							}
 							// zq获取所选房间类型
 							function getSelectedRoomType(roomSortNo) {
@@ -690,7 +691,7 @@ app
 								} else if ($location.path().indexOf(
 										'/robEffAnalyseForm') == 0) {
 									selectRoomSorts();
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 								} else if ($location.path().indexOf(
 										'/checkEfficiencyForm') == 0) {
 									selectRoomSorts();
@@ -700,7 +701,7 @@ app
 								} else if ($location.path().indexOf(
 										'/checkOutAnalyseForm') == 0) {
 									selectRoomSorts();
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 								}
 							}
 							initData();

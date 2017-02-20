@@ -28,7 +28,7 @@ public class ReportFormDaoImpl implements ReportFormDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<StaffInfo> selectRoomStaff(String department_name) {
+	public List<StaffInfo> selectStaffByDept(String department_name) {
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
 		sql.append(

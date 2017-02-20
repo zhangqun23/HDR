@@ -1,7 +1,7 @@
 package com.mvc.entityReport;
 
 /**
- * 按月统计工作量
+ * 客房部员工按月统计工作量
  * 
  * @author zjn
  * @date 2017年1月12日

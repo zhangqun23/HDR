@@ -24,7 +24,7 @@ import com.utils.StringUtil;
 import net.sf.json.JSONObject;
 
 /**
- * 工作量相关报表
+ * 客房部员工工作量相关报表
  * 
  * @author zjn
  * @date 2016年12月7日

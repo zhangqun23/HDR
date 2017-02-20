@@ -96,7 +96,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectProWorkLoad = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'project/selectProWorkLoad.do',
+			url : baseUrl + 'projectWorkLoad/selectProWorkLoad.do',
+			data : data
+		});
+	};
+	services.selectProWorkLoadAnalyse == function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectWorkLoad/selectProWorkLoadAnalyse.do',
 			data : data
 		});
 	};

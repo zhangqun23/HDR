@@ -77,4 +77,9 @@ public class ReportFormConstants {
 	// 导出部门对客服务类型统计
 	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
 
+	/************* 工程部 **************/
+
+	// 工程物料
+	public static final String ENGINEMATERIAL_PATH = DICTIONARY + "EngineMaterial.docx";
+
 }

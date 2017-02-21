@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.EngineerRepairDao;
 import com.mvc.entity.EngineerCaseSort;
+import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.ProjectRepair;
 import com.mvc.service.EngineerRepairService;
 import com.utils.StringUtil;
@@ -84,26 +85,35 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			projectRepair.setOrderNum(String.valueOf(i));
 			projectRepair.setRepairParentType(objects[3].toString());//父类型
 			projectRepair.setRepairType(objects[1].toString());//子类型
-			projectRepair.setServiceLoad(objects[4].toString());//数量
-			
+			projectRepair.setServiceLoad(objects[4].toString());//数量			
 			
 			if(map.containsKey(objects[3].toString())){
 				int m=map.get(objects[3].toString());
-				map.put(objects[3].toString(), m+Integer.valueOf(objects[4].toString()));
-				
-			}
-			
-			listGoal.add(projectRepair);
+				map.put(objects[3].toString(), m+Integer.valueOf(objects[4].toString()));	
+			}	
+			listGoal.add(projectRepair);	
+		}
+		Iterator<ProjectRepair> itGoal = listGoal.iterator();
+		projectRepair = null;
+		while (itGoal.hasNext()) {
+			projectRepair = itGoal.next();
+			projectRepair.setEngineerAmount(map.get(projectRepair.getRepairParentType()).toString());
 			
 		}
 		
-		
-		
-		
-		
-		return null;
+		return listGoal;
 		
 	}
+	/*
+	 * ***********************************王慧敏报表图标*******************************
+	 */
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * ***********************************王慧敏报表服务类型*******************************
 	 */

@@ -102,6 +102,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq查询工程部工作量统计表
 	services.selectProWorkLoad = function(data) {
 		return $http({
 			method : 'post',
@@ -109,10 +110,35 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
-	services.selectProWorkLoadAnalyse == function(data) {
+	// zq查询工程部工作量分析数据以生成折线图
+	services.selectProWorkLoadAnalyse = function(data) {
 		return $http({
 			method : 'post',
 			url : baseUrl + 'projectWorkLoad/selectProWorkLoadAnalyse.do',
+			data : data
+		});
+	};
+	// zq获取工程维修类型列表
+	services.findProRepairTypes = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectRepair/findProRepairTypes.do',
+			data : data
+		});
+	};
+	// zq获取工程维修统计表
+	services.selectProMaintain = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectRepair/selectProjectRepair.do',
+			data : data
+		});
+	};
+	// zq获取工程维修扇形统计图
+	services.selectProMaintainAnalyse = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectRepair/selectProjectIcon.do',
 			data : data
 		});
 	};
@@ -521,111 +547,94 @@ app
 								$(".tipLoading").fadeIn(200);
 								proMaintainLimit = JSON
 										.stringify(reportForm.pmLimit);
+								services.selectProMaintain({
+									limit : proMaintainLimit
+								}).success(function(data) {
+									$(".overlayer").fadeOut(200);
+									$(".tipLoading").fadeOut(200);
+									reportForm.list = data.list;
+									if (data.list) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+							}
+							reportForm.pmaLimit = {
+								checkYear : '',
+								quarter : '0',
+								repairType : ''
+							};
+							// zq工程维修项的分析扇形图
+							reportForm.selectProMaintainAnalyse = function() {
+								if (reportForm.pmaLimit.checkYear == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.pmaLimit.repairType == "") {
+									alert("请选择维修类型！");
+									return false;
+								}
+								var pmaLimits = JSON
+										.stringify(reportForm.pmaLimit);
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
 								services
-										.selectProMaintain({
-											limit : proMaintainLimit
+										.selectProMaintainAnalyse({
+											limit : pmaLimits
 										})
 										.success(
 												function(data) {
-													reportForm.toiletList = data.toiletList;
-													reportForm.lockerList = data.lockerList;
-													reportForm.barList = data.barList;
-													reportForm.bedRoomList = data.bedRoomList;
-													reportForm.airConditionerList = data.airConditionerList;
-													reportForm.carpetList = data.carpetList;
-													reportForm.windowList = data.windowList;
-													reportForm.doorList = data.doorList;
-													reportForm.publicList = data.publicList;
-													if (data.list) {
-														reportForm.listIsShow = false;
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													var title = "工程维修项统计分析扇形图";
+													var pieItems = [];
+													for ( var item in data.list) {
+														if (data.list[item] != '') {
+															combinePie(
+																	pieItems,
+																	data.list[item],
+																	parseInt(data.list[item]));
+														}
+													}
+													pieChartForm("#pieChart",
+															title, "维修项占比",
+															pieItems);
+													$('#chart-svg')
+															.val(
+																	$(
+																			"#pieChart")
+																			.highcharts()
+																			.getSVG());
+													if (data.analyseResult) {
+														reportForm.listRemark = true;
+														reportForm.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
 													} else {
-														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
+														reportForm.remark = "";
+														$("#analyseResult")
+																.val("");
 													}
 												});
-							}
-							// 显示隐藏表格
-							reportForm.showOrHide = {
-								toiletIssue : false,
-								lockerIssue : false,
-								barIssue : false,
-								bedRoomIssue : false,
-								airConditionerIssue : false,
-								carpetIssue : false,
-								windowIssue : false,
-								doorIssue : false,
-								publicIssue : false
-							};
-							reportForm.showContInfo = function(target) {
-
-								changeFalseToTrue(target.name);
-							};
-							reportForm.hideContInfo = function(target) {
-
-								changeTrueTofalse(target.name)
-							}
-							function changeFalseToTrue(data) {
-								switch (data) {
-								case 'toiletIssue':
-									reportForm.showOrHide.toiletIssue = true;
-									break;
-								case 'lockerIssue':
-									reportForm.showOrHide.lockerIssue = true;
-									break;
-								case 'barIssue':
-									reportForm.showOrHide.barIssue = true;
-									break;
-								case 'bedRoomIssue':
-									reportForm.showOrHide.bedRoomIssue = true;
-									break;
-								case 'airConditionerIssue':
-									reportForm.showOrHide.airConditionerIssue = true;
-									break;
-								case 'carpetIssue':
-									reportForm.showOrHide.carpetIssue = true;
-									break;
-								case 'windowIssue':
-									reportForm.showOrHide.windowIssue = true;
-									break;
-								case 'doorIssue':
-									reportForm.showOrHide.doorIssue = true;
-									break;
-								case 'publicIssue':
-									reportForm.showOrHide.publicIssue = true;
-									break;
-								}
 
 							}
-							function changeTrueTofalse(data) {
-								switch (data) {
-								case 'toiletIssue':
-									reportForm.showOrHide.toiletIssue = false;
-									break;
-								case 'lockerIssue':
-									reportForm.showOrHide.lockerIssue = false;
-									break;
-								case 'barIssue':
-									reportForm.showOrHide.barIssue = false;
-									break;
-								case 'bedRoomIssue':
-									reportForm.showOrHide.bedRoomIssue = false;
-									break;
-								case 'airConditionerIssue':
-									reportForm.showOrHide.airConditionerIssue = false;
-									break;
-								case 'carpetIssue':
-									reportForm.showOrHide.carpetIssue = false;
-									break;
-								case 'windowIssue':
-									reportForm.showOrHide.windowIssue = false;
-									break;
-								case 'doorIssue':
-									reportForm.showOrHide.doorIssue = false;
-									break;
-								case 'publicIssue':
-									reportForm.showOrHide.publicIssue = false;
-									break;
-								}
-
+							// zq为扇形图生成data
+							function combinePie(da, name, data1) {
+								var ss = [];
+								ss[0] = name;
+								ss[1] = data1;
+								da.push(ss);
+							}
+							function findProRepairTypes() {
+								services.findProRepairTypes().success(
+										function(data) {
+											reportForm.repairTypes = data.list;
+										});
 							}
 							// zq初始化
 							function initData() {
@@ -645,6 +654,9 @@ app
 										'/proWorkLoadAnalyse') == 0) {
 									selectRoomStaffs(1);
 
+								} else if ($location.path().indexOf(
+										'/proMaintainAnalyse') == 0) {
+									findProRepairTypes();
 								}
 							}
 							initData();

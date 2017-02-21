@@ -7,6 +7,7 @@
 <!-- AngularJS dependences -->
 <script type="text/javascript" src="${ctx}/js/lib/angular/angular.js"></script>
 <script type="text/javascript" src="${ctx}/js/app/exportForm.js"></script>
+<script type="text/javascript" src="${ctx}/js/lib/multiple-select.js"></script>
 <script type="text/javascript"
 	src="${ctx}/js/lib/angular/angular-route.js"></script>
 <script type="text/javascript">

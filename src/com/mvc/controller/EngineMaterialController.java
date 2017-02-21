@@ -28,7 +28,7 @@ import net.sf.json.JSONObject;
  * @date 2017年2月20日
  */
 @Controller
-@RequestMapping("/engineMaterial")
+@RequestMapping("/projectMaterial")
 public class EngineMaterialController {
 
 	@Autowired
@@ -40,7 +40,7 @@ public class EngineMaterialController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/selectEngineMaterialBylimits.do")
+	@RequestMapping("/selectprojectMaterialBylimits.do")
 	public @ResponseBody String selectEngineMaterial(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 
@@ -83,7 +83,7 @@ public class EngineMaterialController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/exportEngineMaterialWordBylimits.do")
+	@RequestMapping("/exportProjectMaterialWordBylimits.do")
 	public ResponseEntity<byte[]> exportEngineMaterial(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = requestToMap(request);
 
@@ -101,7 +101,7 @@ public class EngineMaterialController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/exportEngineMaterialExcelBylimits.do")
+	@RequestMapping("/exportProjectMaterialExcelBylimits.do")
 	public ResponseEntity<byte[]> exportWorkHouseExcel(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = requestToMap(request);
 

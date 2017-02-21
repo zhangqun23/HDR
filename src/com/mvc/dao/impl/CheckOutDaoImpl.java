@@ -12,6 +12,7 @@ import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
 import com.mvc.dao.CheckOutDao;
 import com.utils.Pager;
@@ -19,6 +20,7 @@ import com.utils.Pager;
 /**
  * @author 包阿儒汉 查退房DAO层实现
  */
+@Repository("checkOutDaoImpl")
 public class CheckOutDaoImpl implements CheckOutDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")

@@ -483,14 +483,9 @@ public class ExpendFormController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("sLimit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		int totalRow = Integer.parseInt(expendFormService.countStaTotal(map).toString());
-		Pager pager = new Pager();
-		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
-		pager.setTotalRow(totalRow);
 		
 		jsonObject = new JSONObject();
-		jsonObject = expendFormService.selectStaExpendPage(map, pager);
-		jsonObject.put("totalPage", pager.getTotalPage());
+		jsonObject = expendFormService.selectStaExpend(map);
 		return jsonObject.toString();
 	}
 	/**

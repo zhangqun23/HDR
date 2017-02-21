@@ -154,7 +154,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.selectCheckOutAnalyseByLimits = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + '/checkOutHome/selectCheckOutAnalyseByLimits.do',
+			url : baseUrl + '/checkOutHome/selectCheckOutEffAnalyseByLimits.do',
 			data : data
 		});
 	};

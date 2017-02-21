@@ -1867,42 +1867,75 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		return byteArr;
 	}
 
-	//员工领取耗品统计分页
+	//员工领取耗品统计
 	@Override
-	public JSONObject selectStaExpendPage(Map<String, Object> map, Pager pager) {
+	public JSONObject selectStaExpend(Map<String, Object> map) {
 		
 		String tableType = (String) map.get("tableType");
 		JSONObject jsonObject = new JSONObject();
+		String analyseResult = "分析结果：";// 分析结果
 		switch(tableType){
 		case "0":
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
-			List<Object> listSource = expendFormDao.selectStaPage(map, pager.getOffset(), pager.getPageSize(),
-					listCondition);
+			List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
 			Iterator<Object> it = listSource.iterator();
 			List<StaLinen> listGoal = objToLinenStaExpand(it);
+			
+			List<StaLinen> linenCount = new ArrayList<StaLinen>();
+			StaLinen sum = sumStaLinenExpend(listGoal);// 合计
+			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
+			linenCount.add(sum);
+			linenCount.add(avg);
+			//String sum_num = sum.getStaff_id();//算出耗品总数
+			
+			analyseResult +="";
 			jsonObject.put("list", listGoal);
+			jsonObject.put("count", linenCount);
+			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "1":
 			List<Integer> listCondition1 = expendFormDao.selectCondition("房间易耗品");
-			List<Object> listSource1 = expendFormDao.selectStaPage(map, pager.getOffset(), pager.getPageSize(),
-					listCondition1);
+			List<Object> listSource1 = expendFormDao.selectStaExpend(map, listCondition1);
 			Iterator<Object> it1 = listSource1.iterator();
 			List<StaRoom> listGoal1 = objToRoomStaExpand(it1);
+			
+			List<StaRoom> roomCount = new ArrayList<StaRoom>();
+			StaRoom sum1 = sumStaRoomExpend(listGoal1);// 合计
+			StaRoom avg1 = avgStaRoomExpend(listGoal1);// 平均
+			roomCount.add(sum1);
+			roomCount.add(avg1);
 			jsonObject.put("list", listGoal1);
+			jsonObject.put("count", roomCount);
+			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "2":
 			List<Integer> listCondition2 = expendFormDao.selectCondition("卫生间易耗品");
-			List<Object> listSource2 = expendFormDao.selectStaPage(map, pager.getOffset(), pager.getPageSize(),
-					listCondition2);
+			List<Object> listSource2 = expendFormDao.selectStaExpend(map, listCondition2);
 			Iterator<Object> it2 = listSource2.iterator();
 			List<StaWash> listGoal2 = objToWashStaExpand(it2);
+			
+			List<StaWash> washCount = new ArrayList<StaWash>();
+			StaWash sum2 = sumStaWashExpend(listGoal2);// 合计
+			StaWash avg2 = avgStaWashExpend(listGoal2);// 平均
+			washCount.add(sum2);
+			washCount.add(avg2);
 			jsonObject.put("list", listGoal2);
+			jsonObject.put("count", washCount);
+			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "3":
-			List<Object> listSource3 = expendFormDao.selectminiStaPage(map, pager.getOffset(), pager.getPageSize());
+			List<Object> listSource3 = expendFormDao.selectStaMini(map);
 			Iterator<Object> it3 = listSource3.iterator();
 			List<StaMini> listGoal3 = objToMiniStaExpand(it3);
+			
+			List<StaMini> miniCount = new ArrayList<StaMini>();
+			StaMini sum3 = sumStaMiniExpend(listGoal3);// 合计
+			StaMini avg3 = avgStaMiniExpend(listGoal3);// 平均
+			miniCount.add(sum3);
+			miniCount.add(avg3);
 			jsonObject.put("list", listGoal3);
+			jsonObject.put("count", miniCount);
+			jsonObject.put("analyseResult", analyseResult);
 			break;
 		}
 		
@@ -2145,7 +2178,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_laba_num = (long) 0;
 		Long sum_piin_num = (long) 0;
 		Long sum_blan_num = (long) 0;
-
+		Long sum_num = (long) 0;
+		
 		StaLinen staLinen = null;
 		while (it.hasNext()) {
 			staLinen = it.next();
@@ -2164,7 +2198,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_piin_num += Integer.valueOf(staLinen.getPiin_num());
 			sum_blan_num += Integer.valueOf(staLinen.getBlan_num());
 		}
+		sum_num = sum_bato_num+sum_facl_num+sum_besh_num+sum_hato_num+sum_medo_num+sum_medo_num
+				+sum_flto_num+sum_baro_num+sum_slba_num+sum_duto_num+sum_pill_num+sum_shop_num
+				+sum_piin_num+sum_shop_num+sum_laba_num+sum_piin_num+sum_blan_num;
 		sum.setOrderNum("合计");
+		sum.setStaff_id(String.valueOf(sum_num));
 		sum.setBato_num(String.valueOf(sum_bato_num));
 		sum.setFacl_num(String.valueOf(sum_facl_num));
 		sum.setBesh_num(String.valueOf(sum_besh_num));

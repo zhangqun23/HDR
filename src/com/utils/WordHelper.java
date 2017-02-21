@@ -42,11 +42,16 @@ public class WordHelper<T> {
 	/**
 	 * 导出2007版word（模板）
 	 * 
-	 * @param path:模板路径
-	 * @param listMap:表格内容
-	 * @param contentMap:特定字符串替换
-	 * @param rowNum:表头行数
-	 * @param out:输出
+	 * @param path
+	 *            模板路径
+	 * @param listMap
+	 *            表格内容
+	 * @param contentMap
+	 *            特定字符串替换
+	 * @param rowNum
+	 *            表头行数
+	 * @param out
+	 *            输出
 	 */
 	@SuppressWarnings("unchecked")
 	public void export2007Word(String path, Map<String, Object> listMap, Map<String, Object> contentMap, Integer rowNum,

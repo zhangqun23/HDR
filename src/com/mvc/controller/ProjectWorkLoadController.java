@@ -56,15 +56,19 @@ public class ProjectWorkLoadController {
 		String startDate = "";
 		String endDate = "";
 		JSONObject jsonObject = new JSONObject();
+		JSONObject limit = JSONObject.fromObject(request.getParameter("limit"));
 
-		if (StringUtil.strIsNotEmpty(request.getParameter("startDate"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("endDate"))) {
-			startDate = request.getParameter("startDate");
-			endDate = request.getParameter("endDate");
+		if (limit.containsKey("startTime") && limit.containsKey("endTime")) {
+			if (StringUtil.strIsNotEmpty(limit.getString("startTime"))
+					&& StringUtil.strIsNotEmpty(limit.getString("endTime"))) {
 
-			List<ProjectWorkLoad> proWorkLoadList = null;
-			proWorkLoadList = proWorkLoadService.getProWorkLoadList(startDate, endDate);
-			jsonObject.put("list", proWorkLoadList);
+				startDate = limit.getString("startTime");
+				endDate = limit.getString("endTime");
+				List<ProjectWorkLoad> proWorkLoadList = null;
+
+				proWorkLoadList = proWorkLoadService.getProWorkLoadList(startDate, endDate);
+				jsonObject.put("list", proWorkLoadList);
+			}
 		}
 		return jsonObject.toString();
 	}
@@ -143,29 +147,46 @@ public class ProjectWorkLoadController {
 	 */
 	@RequestMapping("/selectProWorkLoadAnalyse.do")
 	public @ResponseBody String selectProWorkLoadAnalyse(HttpServletRequest request) {
-		// String checkYear = "2016";
-		// String quarter = "0";
-		// String staffId = "542";
-
 		String str = "";
+		JSONObject limit = JSONObject.fromObject(request.getParameter("limit"));
+		Map<String, String> map = JsonObjToMap(limit);
+
+		str = proWorkLoadService.getProWorkLoadAnalyse(map);
+		return str;
+	}
+
+	/**
+	 * 将JsonObject转换成Map
+	 * 
+	 * @param jsonObject
+	 * @return
+	 */
+	private Map<String, String> JsonObjToMap(JSONObject jsonObject) {
 		String checkYear = "";
 		String quarter = "";
 		String staffId = "";
 		Map<String, String> map = new HashMap<String, String>();
 
-		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("quarter"))
-				&& StringUtil.strIsNotEmpty(request.getParameter("staffId"))) {
-			checkYear = request.getParameter("checkYear");
-			quarter = request.getParameter("quarter");
-			staffId = request.getParameter("staffId");
-			map.put("checkYear", checkYear);
-			map.put("quarter", quarter);
-			map.put("staffId", staffId);
-
-			str = proWorkLoadService.getProWorkLoadAnalyse(map);
+		if (jsonObject.containsKey("checkYear")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("checkYear"))) {
+				checkYear = jsonObject.getString("checkYear");// 年份
+				map.put("checkYear", checkYear);
+			}
 		}
-		return str;
+		if (jsonObject.containsKey("quarter")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("quarter"))) {
+				quarter = jsonObject.getString("quarter");// 季度，0代表全部年
+				map.put("quarter", quarter);
+			}
+		}
+		if (jsonObject.containsKey("staffId")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("staffId"))) {
+				staffId = jsonObject.getString("staffId");// 员工ID
+				map.put("staffId", staffId);
+			}
+		}
+
+		return map;
 	}
 
 	/**

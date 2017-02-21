@@ -155,6 +155,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 
 		}
 		jsonObject.put("reasonList", reasonArr);// 全体员工平均做房驳回效率
+		jsonObject.put("analyseResult", "分析结果：");
 		return jsonObject.toString();
 	}
 
@@ -359,7 +360,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			WorkReject sum = sumWorkReject(listGoal);
 			listGoal.add(sum);
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
-			wh.export2007Excel(title, header,listGoal, out, "yyyy-MM-dd", -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 
 		} catch (Exception ex) {

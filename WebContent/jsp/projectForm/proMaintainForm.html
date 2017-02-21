@@ -15,11 +15,11 @@
 				<ul class="projectListLimit">
 
 					<li><label>起止日期</label><input type="text" name="startDate"
-						required ng-model="pmLimit.startTime"
+						required ng-model="pmLimit.start_time"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 						onChange=""><label>—</label><input type="text"
-						name="endDate" ng-model="pmLimit.endTime"
+						name="endDate" ng-model="pmLimit.end_time"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 						onChange=""></li>

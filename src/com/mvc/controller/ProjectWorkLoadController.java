@@ -59,11 +59,11 @@ public class ProjectWorkLoadController {
 		JSONObject limit = JSONObject.fromObject(request.getParameter("limit"));
 
 		if (limit.containsKey("startTime") && limit.containsKey("endTime")) {
-			if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))
-					&& StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+			if (StringUtil.strIsNotEmpty(limit.getString("startTime"))
+					&& StringUtil.strIsNotEmpty(limit.getString("endTime"))) {
 
-				startDate = jsonObject.getString("startTime");
-				endDate = jsonObject.getString("endTime");
+				startDate = limit.getString("startTime");
+				endDate = limit.getString("endTime");
 				List<ProjectWorkLoad> proWorkLoadList = null;
 
 				proWorkLoadList = proWorkLoadService.getProWorkLoadList(startDate, endDate);

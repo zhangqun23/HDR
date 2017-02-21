@@ -521,19 +521,30 @@ app
 								$(".tipLoading").fadeIn(200);
 								proMaintainLimit = JSON
 										.stringify(reportForm.pmLimit);
-								services.selectProMaintain({
-									limit : proMaintainLimit
-								}).success(function(data) {
-									reportForm.pmList = data.list;
-									if (data.list) {
-										reportForm.listIsShow = false;
-									} else {
-										reportForm.listIsShow = true;
-									}
-								});
+								services
+										.selectProMaintain({
+											limit : proMaintainLimit
+										})
+										.success(
+												function(data) {
+													reportForm.toiletList = data.toiletList;
+													reportForm.lockerList = data.lockerList;
+													reportForm.barList = data.barList;
+													reportForm.bedRoomList = data.bedRoomList;
+													reportForm.airConditionerList = data.airConditionerList;
+													reportForm.carpetList = data.carpetList;
+													reportForm.windowList = data.windowList;
+													reportForm.doorList = data.doorList;
+													reportForm.publicList = data.publicList;
+													if (data.list) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+												});
 							}
 							// 显示隐藏表格
-							var showOrHide = {
+							reportForm.showOrHide = {
 								toiletIssue : false,
 								lockerIssue : false,
 								barIssue : false,
@@ -545,13 +556,76 @@ app
 								publicIssue : false
 							};
 							reportForm.showContInfo = function(target) {
-								alert(target.name);
-							}
-							reportForm.hideContInfo = function() {
 
-								$('#contInformation').hide();
-								$('#contShow').show();
-								$('#contHide').hide();
+								changeFalseToTrue(target.name);
+							};
+							reportForm.hideContInfo = function(target) {
+
+								changeTrueTofalse(target.name)
+							}
+							function changeFalseToTrue(data) {
+								switch (data) {
+								case 'toiletIssue':
+									reportForm.showOrHide.toiletIssue = true;
+									break;
+								case 'lockerIssue':
+									reportForm.showOrHide.lockerIssue = true;
+									break;
+								case 'barIssue':
+									reportForm.showOrHide.barIssue = true;
+									break;
+								case 'bedRoomIssue':
+									reportForm.showOrHide.bedRoomIssue = true;
+									break;
+								case 'airConditionerIssue':
+									reportForm.showOrHide.airConditionerIssue = true;
+									break;
+								case 'carpetIssue':
+									reportForm.showOrHide.carpetIssue = true;
+									break;
+								case 'windowIssue':
+									reportForm.showOrHide.windowIssue = true;
+									break;
+								case 'doorIssue':
+									reportForm.showOrHide.doorIssue = true;
+									break;
+								case 'publicIssue':
+									reportForm.showOrHide.publicIssue = true;
+									break;
+								}
+
+							}
+							function changeTrueTofalse(data) {
+								switch (data) {
+								case 'toiletIssue':
+									reportForm.showOrHide.toiletIssue = false;
+									break;
+								case 'lockerIssue':
+									reportForm.showOrHide.lockerIssue = false;
+									break;
+								case 'barIssue':
+									reportForm.showOrHide.barIssue = false;
+									break;
+								case 'bedRoomIssue':
+									reportForm.showOrHide.bedRoomIssue = false;
+									break;
+								case 'airConditionerIssue':
+									reportForm.showOrHide.airConditionerIssue = false;
+									break;
+								case 'carpetIssue':
+									reportForm.showOrHide.carpetIssue = false;
+									break;
+								case 'windowIssue':
+									reportForm.showOrHide.windowIssue = false;
+									break;
+								case 'doorIssue':
+									reportForm.showOrHide.doorIssue = false;
+									break;
+								case 'publicIssue':
+									reportForm.showOrHide.publicIssue = false;
+									break;
+								}
+
 							}
 							// zq初始化
 							function initData() {

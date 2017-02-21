@@ -42,6 +42,18 @@
 			<div>统计时间：{{pmLimit.startTime}}&nbsp;至
 				&nbsp;{{pmLimit.endTime}}</div>
 		</caption>
+	</table>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
+	<div class="formtitle div_bottom">
+		<span>卫生间问题<img src="../images/showInfo.png"
+			class="hand showInfo" id="contShow"
+			ng-click="hideContInfo($event.target)" name="toiletIssue"
+			ng-show="showOrHide.toiletIssue"><img
+			src="../images/hideInfo.png" class="hand  showInfo" id="contHide"
+			ng-show="!showOrHide.toiletIssue"
+			ng-click="showContInfo($event.target)" name="toiletIssue"></span>
+	</div>
+	<table class="tablelist tablestyle" ng-show="showOrHide.toiletIssue">
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
@@ -51,71 +63,249 @@
 				<th class="width10">总计</th>
 			</tr>
 		</thead>
+		<tbody>
+			<tr ng-repeat="t in toiletList">
+				<td class="width5">{{}}</td>
+				<td class="width10">{{}}</td>
+				<td class="width10">{{}}</td>
+				<td class="width10">{{}}</td>
+				<td class="width10">{{}}</td>
+			</tr>
+		</tbody>
 	</table>
-	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-	<div class="formtitle">
-		<span>卫生间问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="toiletIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
+	<div class="formtitle div_bottom">
 		<span>衣帽间问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="lockerIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="lockerIssue"
+			ng-show="showOrHide.lockerIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			name="lockerIssue" ng-show="!showOrHide.lockerIssue"
+			ng-click="showContInfo($event.target)"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle" ng-show="showOrHide.lockerIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="l in lockerList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>吧台问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="barIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="barIssue"
+			ng-show="showOrHide.barIssue"><img src="../images/hideInfo.png"
+			class="hand showInfo" id="contHide" ng-show="!showOrHide.barIssue"
+			ng-click="showContInfo($event.target)" name="barIssue"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle" ng-show="showOrHide.barIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="b in barList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>卧室问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="bedRoomIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="bedRoomIssue"
+			ng-show="showOrHide.bedRoomIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			ng-click="showContInfo($event.target)" name="bedRoomIssue"
+			ng-show="!showOrHide.bedRoomIssue"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle" ng-show="showOrHide.bedRoomIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="b in bedRoomList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>空调问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="airConditionerIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="airConditionerIssue"
+			ng-show="showOrHide.airConditionerIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			ng-click="showContInfo($event.target)" name="airConditionerIssue"
+			ng-show="!showOrHide.airConditionerIssue"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle"
+		ng-show="showOrHide.airConditionerIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="a in airConditionerList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>地毯问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="carpetIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="carpetIssue"
+			ng-show="showOrHide.carpetIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			ng-click="showContInfo($event.target)" name="carpetIssue"
+			ng-show="!showOrHide.carpetIssue"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle" ng-show="showOrHide.carpetIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="c in carpetList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>窗户问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="windowIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="windowIssue"
+			ng-show="showOrHide.windowIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			ng-click="showContInfo($event.target)" name="windowIssue"
+			ng-show="!showOrHide.windowIssue"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle" ng-show="showOrHide.windowIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="w in windowList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>门问题<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="doorIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="doorIssue"
+			ng-show="showOrHide.doorIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			ng-click="showContInfo($event.target)" name="doorIssue"
+			ng-show="!showOrHide.doorIssue"></span>
 	</div>
-	<div class="formtitle">
+	<table class="tablelist tablestyle" ng-show="showOrHide.doorIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="d in doorList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="formtitle div_bottom">
 		<span>公共区域<img src="../images/showInfo.png"
 			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="publicIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
+			ng-click="hideContInfo($event.target)" name="publicIssue"
+			ng-show="showOrHide.publicIssue"><img
+			src="../images/hideInfo.png" class="hand showInfo" id="contHide"
+			ng-click="showContInfo($event.target)" name="publicIssue"
+			ng-show="!showOrHide.publicIssue"></span>
 	</div>
+	<table class="tablelist tablestyle" ng-show="showOrHide.publicIssue"
+		name="publicIssue">
+		<thead>
+			<tr>
+				<th class="width5">序号</th>
+				<th class="width10">大区域</th>
+				<th class="width10">小区域</th>
+				<th class="width10">数量</th>
+				<th class="width10">总计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="p in publicList">
+				<td class="width5"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+				<td class="width10"></td>
+			</tr>
+		</tbody>
+	</table>
 
 	<div class="tcdPageCode">页码容器</div>
 </div>

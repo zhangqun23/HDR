@@ -24,7 +24,7 @@
 					style="width: 140px" ng-model="pmaLimit.repairType" name="repairType"
 					id="repairType" required><option
 							value="">请选择</option>
-						<option value="{{r.sort_id}}" ng-repeat="r in repairTypes">{{r.sort_name}}</option></select></li>
+						<option value="{{r.sortId}}" ng-repeat="r in repairTypes">{{r.sortName}}</option></select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
 					type="button" value="查询" ng-click="selectProMaintainAnalyse()"></li>
 				<li><input id="chart-svg" name="chartSVGStr" type="text"

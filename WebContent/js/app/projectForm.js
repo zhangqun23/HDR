@@ -122,7 +122,7 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 	services.findProRepairTypes = function(data) {
 		return $http({
 			method : 'post',
-			url : baseUrl + 'projectRepair/findProRepairTypes.do',
+			url : baseUrl + 'projectRepair/selectProjectType.do',
 			data : data
 		});
 	};
@@ -435,7 +435,7 @@ app
 													var userData = [];// 个人工作量
 													for ( var item in data.list) {
 														userData
-																.push(changeNumType(data.list[item]));
+																.push(changeNumType(data.list[item].proActWorkLoad));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -592,11 +592,11 @@ app
 													var title = "工程维修项统计分析扇形图";
 													var pieItems = [];
 													for ( var item in data.list) {
-														if (data.list[item] != '') {
+														if (data.list[item].repairType != '') {
 															combinePie(
 																	pieItems,
-																	data.list[item],
-																	parseInt(data.list[item]));
+																	data.list[item].repairType,
+																	parseInt(data.list[item].serviceLoad));
 														}
 													}
 													pieChartForm("#pieChart",

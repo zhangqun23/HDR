@@ -114,7 +114,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robDetail.setOrderNum(no + "");
 
 			robDetail.setWorkEffeciency(
-					StringUtil.divide(Float.parseFloat(obj[1].toString()) * 100 + "", obj[2].toString()));// 效率
+					StringUtil.divide(Float.parseFloat(obj[2].toString()) * 100 + "", obj[1].toString()));// 效率
 
 			no++;
 

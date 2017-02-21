@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.mvc.dao.impl;
 
 import java.util.List;
@@ -9,21 +12,22 @@ import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
 
-import com.mvc.dao.CheckOrRobDao;
+import com.mvc.dao.CheckOutDao;
 import com.utils.Pager;
 
-@Repository("checkOrRobDaoImpl")
-public class CheckOrRobDaoImpl implements CheckOrRobDao {
+/**
+ * @author 包阿儒汉 查退房DAO层实现
+ */
+public class CheckOutDaoImpl implements CheckOutDao {
 	@Autowired
 	@Qualifier("entityManagerFactory")
 	EntityManagerFactory emf;
 
 	@Override
-	public List<Object> selectRobEfficiency(Map<String, Object> map) {
+	public List<Object> selectCheckOutEfficiency(Map<String, Object> map) {
 		EntityManager em = emf.createEntityManager();
-		String sqlLimit = robEfficiencySQL(map);
+		String sqlLimit = checkOutEfficiencySQL(map);
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
@@ -49,7 +53,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = case_info.case_author ");
 		sql.append("WHERE ");
 		sql.append(" case_info.is_back > 0 ");
-		sql.append("AND call_info.service_sort = '抢房处理'");
+		sql.append("AND call_info.service_sort = '查房'");
 		sql.append(sqlLimit);
 		sql.append(" GROUP BY case_info.case_author ");
 		sql.append(") AS a ON a.staff_id = staff_info.staff_id ");
@@ -63,13 +67,13 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = case_info.case_author ");
 		sql.append("WHERE ");
 		sql.append(" case_info.flag > 0 ");
-		sql.append("AND call_info.service_sort = '抢房处理'");
+		sql.append("AND call_info.service_sort = '查房'");
 		sql.append(sqlLimit);
 		sql.append(" GROUP BY case_info.case_author ");
 		sql.append(") AS b ON b.staff_id = staff_info.staff_id ");
 
 		sql.append("WHERE ");
-		sql.append(" call_info.service_sort = '抢房处理'");
+		sql.append(" call_info.service_sort = '查房'");
 		sql.append(sqlLimit);
 		sql.append(" GROUP BY case_info.case_author");
 
@@ -86,7 +90,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 	 * @param map
 	 * @return
 	 */
-	private String robEfficiencySQL(Map<String, Object> map) {
+	private String checkOutEfficiencySQL(Map<String, Object> map) {
 		StringBuilder sql = new StringBuilder();
 
 		String roomType = (String) map.get("roomType");
@@ -102,32 +106,11 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 
 		return sql.toString();
 	}
-	/**
-	 * 抢房工作效率统计表
-	 * 
-	 * @param map
-	 * @return
-	 */
-	private String robDetailSQL(Map<String, Object> map) {
-		StringBuilder sql = new StringBuilder();
 
-		String roomType = (String) map.get("roomType");
-		String startTime = (String) map.get("startTime");
-		String endTime = (String) map.get("endTime");
-
-		if (roomType != null) {
-			sql.append(" and ci.sort_no='" + roomType + "' ");
-		}
-		if (startTime != null && endTime != null) {
-			sql.append(" and ci.open_time between '" + startTime + "'" + " and '" + endTime + "' ");
-		}
-
-		return sql.toString();
-	}
 	@Override
-	public List<Object> selectRobDetailByPage(Map<String, Object> map, Pager pager) {
+	public List<Object> selectCheckOutDetail(Map<String, Object> map) {
 		EntityManager em = emf.createEntityManager();
-		String sqlLimit = robDetailSQL(map);
+		String sqlLimit = checkOutSQL(map);
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
@@ -155,10 +138,8 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
-		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("AND call_info.service_sort = '查房' ");
 		sql.append(sqlLimit);
-		sql.append(" limit ");
-		sql.append(pager.getOffset() + "," + pager.getPageSize());
 
 		Query query = em.createNativeQuery(sql.toString());
 		@SuppressWarnings("unchecked")
@@ -167,10 +148,33 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		return list;
 	}
 
+	/**
+	 * 查退房
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private String checkOutSQL(Map<String, Object> map) {
+		StringBuilder sql = new StringBuilder();
+
+		String roomType = (String) map.get("roomType");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+
+		if (roomType != null) {
+			sql.append(" and ci.sort_no='" + roomType + "' ");
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and ci.open_time between '" + startTime + "'" + " and '" + endTime + "' ");
+		}
+
+		return sql.toString();
+	}
+
 	@Override
-	public int getTotalRowCountRobDetail(Map<String, Object> map) {
+	public int getTotalRowCountCheckOutDetail(Map<String, Object> map) {
 		EntityManager em = emf.createEntityManager();
-		String sqlLimit = robDetailSQL(map);
+		String sqlLimit = checkOutSQL(map);
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
@@ -192,7 +196,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
-		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("AND call_info.service_sort = '查房' ");
 		sql.append(sqlLimit);
 
 		Query query = em.createNativeQuery(sql.toString());
@@ -213,7 +217,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("FROM ");
 		sql.append("case_info ");
 		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.call_id ");
-		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("AND call_info.service_sort = '查房' ");
 		sql.append("WHERE ");
 		sql.append("close_time BETWEEN '");
 		sql.append(startTime);
@@ -245,7 +249,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("FROM ");
 		sql.append("case_info ");
 		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.call_id ");
-		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("AND call_info.service_sort = '查房' ");
 		sql.append("WHERE ");
 		sql.append("close_time BETWEEN '");
 		sql.append(startTime);
@@ -273,7 +277,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("FROM ");
 		sql.append("case_info ");
 		sql.append("INNER JOIN call_info ON call_info.call_id = case_info.call_id ");
-		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("AND call_info.service_sort = '查房' ");
 		sql.append("WHERE ");
 		sql.append("close_time BETWEEN '");
 		sql.append(startTime);
@@ -294,9 +298,9 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 	}
 
 	@Override
-	public List<Object> selectRobDetail(Map<String, Object> map) {
+	public List<Object> selectCheckOutDetailByPage(Map<String, Object> map, Pager pager) {
 		EntityManager em = emf.createEntityManager();
-		String sqlLimit = robDetailSQL(map);
+		String sqlLimit = checkOutSQL(map);
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
@@ -324,7 +328,10 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("AND call_info.service_sort = '查房' ");
 		sql.append(sqlLimit);
+		sql.append(" limit ");
+		sql.append(pager.getOffset() + "," + pager.getPageSize());
 
 		Query query = em.createNativeQuery(sql.toString());
 		@SuppressWarnings("unchecked")

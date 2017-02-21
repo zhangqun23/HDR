@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.mvc.service.impl;
 
 import java.io.FileInputStream;
@@ -15,18 +18,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.base.enums.CleanType;
-import com.mvc.dao.CheckOrRobDao;
-import com.mvc.entity.DepartmentInfo;
-import com.mvc.entityReport.RobDetail;
-import com.mvc.entityReport.RobEfficiency;
+import com.mvc.dao.impl.CheckOutDaoImpl;
+import com.mvc.entityReport.CheckOutDetail;
+import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.WorkHouse;
-import com.mvc.entityReport.WorkLoad;
-import com.mvc.entityReport.WorkLoadLevel;
-import com.mvc.service.CheckOrRobService;
+import com.mvc.service.CheckOutService;
 import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.Pager;
@@ -38,99 +36,90 @@ import com.utils.WordHelper;
  * @author 包阿儒汉
  *
  */
-@Service("checkOrRobServiceImpl")
-public class CheckOrRobServiceImpl implements CheckOrRobService {
+public class CheckOutServiceImpl implements CheckOutService {
 	@Autowired
-	CheckOrRobDao checkOrRobDao;
+	CheckOutDaoImpl checkOutDao;
 
 	@Override
-	public List<RobEfficiency> selectRobEfficiency(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		List<Object> listSource = checkOrRobDao.selectRobEfficiency(map);
+	public List<CheckOutEfficiency> selectCheckOutEfficiency(Map<String, Object> map) {
+		List<Object> listSource = checkOutDao.selectCheckOutEfficiency(map);
 		Iterator<Object> it = listSource.iterator();
-		List<RobEfficiency> listGoal = objToRobEfficiency(it);
+		List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
 
 		return listGoal;
 	}
 
-	private List<RobEfficiency> objToRobEfficiency(Iterator<Object> it) {
-		List<RobEfficiency> listGoal = new ArrayList<RobEfficiency>();
+	private List<CheckOutEfficiency> objToCheckOutEfficiency(Iterator<Object> it) {
+		List<CheckOutEfficiency> listGoal = new ArrayList<CheckOutEfficiency>();
 		Object[] obj = null;
 		int no = 1;
 		DecimalFormat fnum = new DecimalFormat("##0.00");
 
-		RobEfficiency robEfficiency = null;
+		CheckOutEfficiency checkOutEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
-			robEfficiency = new RobEfficiency();
-			robEfficiency.setAuthorName(obj[1].toString());
-			robEfficiency.setAuthorNo(obj[2].toString());
-			robEfficiency.setSumTime(obj[3].toString());
-			robEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
-			robEfficiency.setWorkCount(obj[5].toString());
-			robEfficiency
+			checkOutEfficiency = new CheckOutEfficiency();
+			checkOutEfficiency.setAuthorName(obj[1].toString());
+			checkOutEfficiency.setAuthorNo(obj[2].toString());
+			checkOutEfficiency.setSumTime(obj[3].toString());
+			checkOutEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
+			checkOutEfficiency.setWorkCount(obj[5].toString());
+			checkOutEfficiency
 					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
 
 			String UsedTimeAvg = StringUtil.divide(obj[2].toString(), obj[4].toString());
-			robEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
-			String backRate = StringUtil.divide(obj[6].toString(), obj[4].toString());
-			robEfficiency.setBackRate(backRate);// 驳回率
+			checkOutEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
 			String timeOutRate = StringUtil.divide(obj[7].toString(), obj[4].toString());
-			robEfficiency.setTimeOutRate(timeOutRate);// 超时率
+			checkOutEfficiency.setTimeOutRate(timeOutRate);// 超时率
 
-			robEfficiency.setOrderNum(no + "");
+			checkOutEfficiency.setOrderNum(no + "");
 			no++;
 
-			listGoal.add(robEfficiency);
+			listGoal.add(checkOutEfficiency);
 		}
 		return listGoal;
 	}
 
 	@Override
-	public List<RobDetail> selectRobDetailByLimits(Map<String, Object> map, Pager pager) {
-		List<Object> listSource = checkOrRobDao.selectRobDetailByPage(map, pager);
+	public List<CheckOutDetail> selectCheckOutDetail(Map<String, Object> map, Pager pager) {
+		List<Object> listSource = checkOutDao.selectCheckOutDetailByPage(map, pager);
 		Iterator<Object> it = listSource.iterator();
-		List<RobDetail> listGoal = objToRobDetail(it);
+		List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
 
 		return listGoal;
-
 	}
 
-	private List<RobDetail> objToRobDetail(Iterator<Object> it) {
-		List<RobDetail> listGoal = new ArrayList<RobDetail>();
+	private List<CheckOutDetail> objToCheckOutDetail(Iterator<Object> it) {
+		List<CheckOutDetail> listGoal = new ArrayList<CheckOutDetail>();
 		Object[] obj = null;
 		int no = 1;
-		RobDetail robDetail = null;
+		CheckOutDetail checkOutDetail = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
-			robDetail = new RobDetail();
-			robDetail.setRoomNo(obj[0].toString());
-			robDetail.setUsedTime(obj[1].toString());
-			robDetail.setGivenTime(obj[2].toString());
-			robDetail.setAuthorName(obj[3].toString());
-			robDetail.setIsBack(obj[4].toString());
-			robDetail.setCheckUsedTime(obj[5].toString());
-			robDetail.setCheckerName(obj[6].toString());
-			robDetail.setOrderNum(no + "");
+			checkOutDetail = new CheckOutDetail();
+			checkOutDetail.setRoomNo(obj[0].toString());
+			checkOutDetail.setUsedTime(obj[1].toString());
+			checkOutDetail.setGivenTime(obj[2].toString());
+			checkOutDetail.setAuthorName(obj[3].toString());
+			checkOutDetail.setOrderNum(no + "");
 
-			robDetail.setWorkEffeciency(
+			checkOutDetail.setWorkEffeciency(
 					StringUtil.divide(Float.parseFloat(obj[2].toString()) * 100 + "", obj[1].toString()));// 效率
 
 			no++;
 
-			listGoal.add(robDetail);
+			listGoal.add(checkOutDetail);
 		}
 		return listGoal;
 	}
 
 	@Override
-	public int getTotalRowCountRobDetail(Map<String, Object> map) {
-
-		return checkOrRobDao.getTotalRowCountRobDetail(map);
+	public int getTotalRowCountCheckOutDetail(Map<String, Object> map) {
+		return checkOutDao.getTotalRowCountCheckOutDetail(map);
 	}
 
 	@Override
-	public String selectRobEffAnalyseByLimits(Map<String, String> map) {
+	public String selectCheckOutEffAnalyseByLimits(Map<String, String> map) {
 		float[] useTime = null;
 		String allAverWorkEfficiency = null;
 		String averWorkEfficiency = null;
@@ -144,14 +133,14 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		String roomType = map.get("roomType");
 
 		List<Object> listObj = new ArrayList<>();
-		listObj = checkOrRobDao.avgPerMonthsStaff(startTime, endTime, staffId, roomType);
+		listObj = checkOutDao.avgPerMonthsStaff(startTime, endTime, staffId, roomType);
 		useTime = handelPerMonthsStaff(listObj, startMonth, monthNum);// 补齐月份
 
 		allAverWorkEfficiency = (Math
-				.round(Float.parseFloat(checkOrRobDao.allAverWorkEfficiency(startTime, endTime, roomType)) * 100) / 100)
+				.round(Float.parseFloat(checkOutDao.allAverWorkEfficiency(startTime, endTime, roomType)) * 100) / 100)
 				+ "";
 		averWorkEfficiency = (Math.round(
-				Float.parseFloat(checkOrRobDao.averWorkEfficiency(startTime, endTime, roomType, staffId)) * 100) / 100)
+				Float.parseFloat(checkOutDao.averWorkEfficiency(startTime, endTime, roomType, staffId)) * 100) / 100)
 				+ "";
 
 		JSONObject jsonObj = new JSONObject();
@@ -236,7 +225,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> exportRobEfficiency(Map<String, Object> map, String path, String tempPath) {
+	public ResponseEntity<byte[]> exportCheckOutEfficiency(Map<String, Object> map, String path, String tempPath) {
 		String sortName = (String) map.remove("sortName");
 
 		ResponseEntity<byte[]> byteArr = null;
@@ -246,9 +235,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = checkOrRobDao.selectRobEfficiency(map);
+			List<Object> listSource = checkOutDao.selectCheckOutEfficiency(map);
 			Iterator<Object> it = listSource.iterator();
-			List<RobEfficiency> listGoal = objToRobEfficiency(it);
+			List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
 
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -270,39 +259,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map, String path) {
-		ResponseEntity<byte[]> byteArr = null;
-		String sortName = (String) map.remove("sortName");
-		String startDate = ((String) map.get("startTime")).substring(0, 7);
-		String endDate = ((String) map.get("endTime")).substring(0, 7);
-		String fileName = "客房部员工抢房（" + sortName + "）效率统计表.xlsx";
-		String title = "客房部员工抢房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
-		try {
-			ExcelHelper<RobEfficiency> ex = new ExcelHelper<RobEfficiency>();
-			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-			OutputStream out = new FileOutputStream(path);
-
-			// 获取列表和文本信息
-			List<Object> listSource = checkOrRobDao.selectRobEfficiency(map);
-			Iterator<Object> it = listSource.iterator();
-			List<RobEfficiency> listGoal = objToRobEfficiency(it);
-
-			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
-					"返回率" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
-
-			out.close();
-			byteArr = FileHelper.downloadFile(fileName, path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return byteArr;
-	}
-
-	@Override
-	public ResponseEntity<byte[]> exportRobDetail(Map<String, Object> map, String path, String tempPath) {
+	public ResponseEntity<byte[]> exportCheckOutDetail(Map<String, Object> map, String path, String tempPath) {
 		String sortName = (String) map.remove("sortName");
 
 		ResponseEntity<byte[]> byteArr = null;
@@ -312,9 +269,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			List<Object> listSource = checkOrRobDao.selectRobDetail(map);
+			List<Object> listSource = checkOutDao.selectCheckOutDetail(map);
 			Iterator<Object> it = listSource.iterator();
-			List<RobDetail> listGoal = objToRobDetail(it);
+			List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
 
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -336,40 +293,8 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
-	public ResponseEntity<byte[]> exportRobDetailExcel(Map<String, Object> map, String path) {
-		ResponseEntity<byte[]> byteArr = null;
-		String sortName = (String) map.remove("sortName");
-		String startDate = ((String) map.get("startTime")).substring(0, 7);
-		String endDate = ((String) map.get("endTime")).substring(0, 7);
-		String fileName = "客房部员工抢房（" + sortName + "）明细表.xlsx";
-		String title = "客房部员工抢房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
-		try {
-			ExcelHelper<RobDetail> ex = new ExcelHelper<RobDetail>();
-			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-			OutputStream out = new FileOutputStream(path);
-
-			// 获取列表和文本信息
-			List<Object> listSource = checkOrRobDao.selectRobDetail(map);
-			Iterator<Object> it = listSource.iterator();
-			List<RobDetail> listGoal = objToRobDetail(it);
-
-			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）", "检查人" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<RobDetail>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
-
-			out.close();
-			byteArr = FileHelper.downloadFile(fileName, path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return byteArr;
-	}
-
-	@Override
-	public ResponseEntity<byte[]> exportRobAnalyseByLimits(Map<String, Object> map, String path, String tempPath,
+	public ResponseEntity<byte[]> exportCheckOutAnalyseByLimits(Map<String, Object> map, String path, String tempPath,
 			String picPath) {
-
 		String staffName = (String) map.get("staffName");
 		String sortName = (String) map.get("sortName");
 		String year = (String) map.get("checkYear");
@@ -421,6 +346,69 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			ex.printStackTrace();
 		}
 
+		return byteArr;
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportCheckOutDetailExcel(Map<String, Object> map, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		String sortName = (String) map.remove("sortName");
+		String startDate = ((String) map.get("startTime")).substring(0, 7);
+		String endDate = ((String) map.get("endTime")).substring(0, 7);
+		String fileName = "客房部员工抢房（" + sortName + "）明细表.xlsx";
+		String title = "客房部员工抢房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
+		try {
+			ExcelHelper<CheckOutDetail> ex = new ExcelHelper<CheckOutDetail>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			// 获取列表和文本信息
+			List<Object> listSource = checkOutDao.selectCheckOutDetail(map);
+			Iterator<Object> it = listSource.iterator();
+			List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
+
+			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）", "检查人" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportCheckOutEfficiencyExcel(Map<String, Object> map, String path) {
+		ResponseEntity<byte[]> byteArr = null;
+		String sortName = (String) map.remove("sortName");
+		String startDate = ((String) map.get("startTime")).substring(0, 7);
+		String endDate = ((String) map.get("endTime")).substring(0, 7);
+		String fileName = "客房部员工抢房（" + sortName + "）效率统计表.xlsx";
+		String title = "客房部员工抢房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
+		try {
+			ExcelHelper<CheckOutEfficiency> ex = new ExcelHelper<CheckOutEfficiency>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			// 获取列表和文本信息
+			List<Object> listSource = checkOutDao.selectCheckOutEfficiency(map);
+			Iterator<Object> it = listSource.iterator();
+			List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
+
+			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
+					"返回率" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return byteArr;
 	}
 

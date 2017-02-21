@@ -1886,7 +1886,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
 			linenCount.add(sum);
 			linenCount.add(avg);
+			//String sum_num = sum.getStaff_id();//算出耗品总数
 			
+			analyseResult +="";
 			jsonObject.put("list", listGoal);
 			jsonObject.put("count", linenCount);
 			jsonObject.put("analyseResult", analyseResult);
@@ -2176,7 +2178,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_laba_num = (long) 0;
 		Long sum_piin_num = (long) 0;
 		Long sum_blan_num = (long) 0;
-
+		Long sum_num = (long) 0;
+		
 		StaLinen staLinen = null;
 		while (it.hasNext()) {
 			staLinen = it.next();
@@ -2195,7 +2198,11 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_piin_num += Integer.valueOf(staLinen.getPiin_num());
 			sum_blan_num += Integer.valueOf(staLinen.getBlan_num());
 		}
+		sum_num = sum_bato_num+sum_facl_num+sum_besh_num+sum_hato_num+sum_medo_num+sum_medo_num
+				+sum_flto_num+sum_baro_num+sum_slba_num+sum_duto_num+sum_pill_num+sum_shop_num
+				+sum_piin_num+sum_shop_num+sum_laba_num+sum_piin_num+sum_blan_num;
 		sum.setOrderNum("合计");
+		sum.setStaff_id(String.valueOf(sum_num));
 		sum.setBato_num(String.valueOf(sum_bato_num));
 		sum.setFacl_num(String.valueOf(sum_facl_num));
 		sum.setBesh_num(String.valueOf(sum_besh_num));

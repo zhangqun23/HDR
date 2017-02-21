@@ -1,9 +1,10 @@
 package com.mvc.entityReport;
 
-public class LinenStaff {
+public class StaLinen {
+	
 	private String orderNum;// 序号
-	private String satff_id;// 员工编号
-	private String satff_name;// 员工姓名
+	private String staff_id;// 员工编号
+	private String staff_name;// 员工姓名
 	private String slba_num;// 被罩数量
 	private String duto_num;// 拼尘罩数量
 	private String laba_num;// 洗衣袋数量
@@ -24,17 +25,17 @@ public class LinenStaff {
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
 	}
-	public String getSatff_id() {
-		return satff_id;
+	public String getStaff_id() {
+		return staff_id;
 	}
-	public void setSatff_id(String satff_id) {
-		this.satff_id = satff_id;
+	public void setStaff_id(String staff_id) {
+		this.staff_id = staff_id;
 	}
-	public String getSatff_name() {
-		return satff_name;
+	public String getStaff_name() {
+		return staff_name;
 	}
-	public void setSatff_name(String satff_name) {
-		this.satff_name = satff_name;
+	public void setStaff_name(String staff_name) {
+		this.staff_name = staff_name;
 	}
 	public String getSlba_num() {
 		return slba_num;
@@ -120,4 +121,5 @@ public class LinenStaff {
 	public void setShop_num(String shop_num) {
 		this.shop_num = shop_num;
 	}
+
 }

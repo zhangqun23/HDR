@@ -15,6 +15,8 @@ import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.utils.Pager;
 
+import net.sf.json.JSONObject;
+
 /**
  * 耗品统计
  * 
@@ -52,6 +54,9 @@ public interface ExpendFormService {
 	
 	// 查询迷你吧总条数
 	Long countminiTotal(Map<String, Object> map);
+	
+	//查询员工领取耗品总条数
+	Long countStaTotal(Map<String, Object> map);
 
 	// 布草统计分析
 	String selectLinenExpendAnalyse(Map<String, Object> map);
@@ -92,7 +97,26 @@ public interface ExpendFormService {
 
 	// 导出布草或迷你吧用量分析图
 	ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map);
-
+	/********** zjn结束 **********/
+	
 	//获取布草统计列表
 	List<LinenExpend> getLinenExpendList(Map<String, Object> map);
+
+	//员工领取耗品统计分页
+	JSONObject selectStaExpendPage (Map<String, Object> map, Pager pager);
+	
+	// 导出员工领取布草量统计表
+	ResponseEntity<byte[]> exportStaLinen(Map<String, Object> map, String path, String tempPath);
+	
+	// 导出员工领取房间耗品量统计表
+	ResponseEntity<byte[]> exportStaRoom(Map<String, Object> map, String path, String tempPath);
+		
+	// 导出员工领取卫生间耗品量统计表
+	ResponseEntity<byte[]> exportStaWash(Map<String, Object> map, String path, String tempPath);
+
+	// 导出员工领取迷你吧量统计表
+	ResponseEntity<byte[]> exportStaMini(Map<String, Object> map, String path, String tempPath);
+
+	// 导出员工领取耗品统计
+	ResponseEntity<byte[]> exportStaExpendExcel(Map<String, Object> map);
 }

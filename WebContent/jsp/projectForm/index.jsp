@@ -5,7 +5,7 @@
 			+ path + "/";
 %>
 <jsp:include page="/jsp/top.jsp" />
-<section id="engineerForm" ng-app="engineerForm" class="main">
+<section id="projectForm" ng-app="projectForm" class="main">
 	<div ng-view></div>
 </section>
 <jsp:include page="/jsp/left.jsp" />
@@ -15,12 +15,12 @@
 <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"
 	type="text/javascript" charset="utf-8"></script>
 <script src="${ctx}/js/app/chart.js"></script>
-<script src="${ctx}/js/app/engineerForm.js"></script>
+<script src="${ctx}/js/app/projectForm.js"></script>
 <script src="${ctx}/js/lib/My97DatePicker/WdatePicker.js"></script>
 <script>
 	$(function() {
 		$('dd').find('ul').css("display", "none");
-		$('#report-ul').css("display", "block");
+		$('#projectService-ul').css("display", "block");
 		var currentPage = sessionStorage.getItem("currentPage");
 		if (currentPage) {
 			$("#" + currentPage).addClass("active");

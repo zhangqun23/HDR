@@ -33,7 +33,7 @@ import com.utils.WordHelper;
 import net.sf.json.JSONObject;
 
 /**
- * 工作量相关的service层接口实现
+ * 客房部工作量相关的service层接口实现
  * 
  * @author zjn
  * @date 2016年12月7日

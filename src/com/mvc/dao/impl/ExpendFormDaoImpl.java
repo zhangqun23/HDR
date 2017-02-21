@@ -745,5 +745,161 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return list;
 	}
 
+	// 员工领取耗品分页总条数
+	@Override
+	public Long countStaTotal(Map<String, Object> map) {
 
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = staExpendSQL(map);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select count(distinct(tl.staff_id)) from temp_list tl ");
+		sql.append("left join goods_info gi on tl.goods_id=gi.Goods_id  ");
+		sql.append("left join case_info ci on ci.call_id=tl.call_id ");
+		sql.append("where gi.Display=1 and  " + sqlLimit);
+		
+		Query query = em.createNativeQuery(sql.toString());
+		BigInteger totalRow = (BigInteger) query.getSingleResult();// count返回值为BigInteger类型
+		em.close();
+		return totalRow.longValue();
+	}
+	
+	// 员工领取耗品统计SQL条件
+	private String staExpendSQL(Map<String, Object> map) {
+		StringBuilder sql = new StringBuilder();
+
+		String tableType = (String) map.get("tableType");
+		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
+		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+
+		if(tableType != null){
+			switch(tableType){
+				case "0":
+					sql.append(" gi.Goods_Typeid='dt0303' ");//布草
+					break;
+				case "1":
+					sql.append(" gi.Goods_Typeid='dt0301' ");//房间耗品
+					break;
+				case "2":
+					sql.append(" gi.Goods_Typeid='dt0302' ");//卫生间耗品
+					break;
+				case "3":
+					sql.append(" gi.Goods_Typeid in ('dt0202','dt0201') "); //迷你吧
+					break;
+			}
+		}
+		if (startTime != null && endTime != null) {
+			sql.append(" and ci.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		return sql.toString();
+	}
+
+	//布草、房间耗品、卫生间耗品统计分页
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectStaPage(Map<String, Object> map, Integer offset, Integer end,
+			List<Integer> listCondition) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = staExpendSQL(map);
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("select a.staff_id,a.staff_name," + getSelSQL(listCondition) + " from ");
+		sql.append(getStaSizeSQL(listCondition, sqlLimit));
+		sql.append(" limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("offset", offset).setParameter("end", end);
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	//布草、房间耗品、卫生间耗品统计分页条件
+	private String getStaSizeSQL(List<Integer> list, String sqlLimit) {
+		StringBuilder sql = new StringBuilder();
+		String sqlStr = null;
+		if (list != null) {
+			Integer size = list.size();
+			for (int i = 0; i < size; i++) {
+				if (i == 0) {
+					sql.append("(select distinct tl.staff_id,si.staff_name from temp_list tl ");
+					sql.append("left join staff_info si on si.staff_id=tl.staff_id left join goods_info gi on tl.goods_id=gi.Goods_id ");
+					sql.append("left join case_info ci on ci.call_id=tl.call_id");
+					sql.append(" where gi.Display=1 and si.staff_name is not null and " + sqlLimit + " order by tl.staff_id asc ) as a ");
+					sql.append(" left join (select staff_id,sum(tl.num) num from temp_list tl ");
+					sql.append(" left join case_info ci on ci.call_id=tl.call_id");
+					sql.append(" left join goods_info gi on tl.goods_id=gi.Goods_id ");
+					sql.append(" where tl.goods_id=" + list.get(i) + " and " + sqlLimit);
+					sql.append(" group by staff_id) as a0 ");
+					sql.append(" on a.staff_id=a0.staff_id left join ");
+				} else {
+					sql.append("(select staff_id,sum(tl.num) num from temp_list tl ");
+					sql.append(" left join case_info ci on ci.call_id=tl.call_id");
+					sql.append(" left join goods_info gi on tl.goods_id=gi.Goods_id ");
+					sql.append(" where tl.goods_id=" + list.get(i) + " and "  + sqlLimit);
+					sql.append(" group by staff_id) as a" + i);
+					sql.append(" on a" + i + ".staff_id=a.staff_id left join ");
+				}
+			}
+			sqlStr = sql.toString().substring(0, sql.toString().length() - 10);
+		}
+		return sqlStr;
+	}
+	//迷你吧统计分页
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectminiStaPage(Map<String, Object> map, Integer offset, Integer end) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = staExpendSQL(map);
+
+		StringBuilder sqlid = new StringBuilder();
+		sqlid.append("select goods_id from goods_info where goods_info.Display=1 ");
+		sqlid.append("and goods_info.Goods_Typeid in ('dt0202','dt0201') order by goods_id asc;");
+		Query queryid = em.createNativeQuery(sqlid.toString());
+		List<Integer> listCondition = queryid.getResultList();
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("select a.staff_id,a.staff_name," + getSelSQL(listCondition) + " from ");
+		sql.append(getStaSizeSQL(listCondition, sqlLimit));
+		sql.append(" limit :offset,:end");
+		Query query = em.createNativeQuery(sql.toString());
+		query.setParameter("offset", offset).setParameter("end", end);
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	//人员布草、房间耗品、卫生间耗品导出
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectStaExpend(Map<String, Object> map, List<Integer> listCondition) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = staExpendSQL(map);
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("select a.staff_id,a.staff_name," + getSelSQL(listCondition) + " from ");
+		sql.append(getStaSizeSQL(listCondition, sqlLimit));
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	@Override
+	public List<Object> selectStaMini(Map<String, Object> map) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = staExpendSQL(map);
+
+		StringBuilder sqlid = new StringBuilder();
+		sqlid.append("select goods_id from goods_info where goods_info.Display=1 ");
+		sqlid.append("and goods_info.Goods_Typeid in ('dt0202','dt0201') order by goods_id asc;");
+		Query queryid = em.createNativeQuery(sqlid.toString());
+		List<Integer> listCondition = queryid.getResultList();
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("select a.staff_id,a.staff_name," + getSelSQL(listCondition) + " from ");
+		sql.append(getStaSizeSQL(listCondition, sqlLimit));
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	
 }

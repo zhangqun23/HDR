@@ -1,7 +1,7 @@
 package com.mvc.entityReport;
 
 /**
- * 员工工作量饱和度分析
+ * 客房部员工工作量饱和度分析
  * 
  * @author zjn
  * @date 2016年12月7日

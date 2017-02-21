@@ -42,6 +42,9 @@
 		<a href="/HDR/workLoad/getWorkLoadSummaryList.do">zjn测试房间数信息</a>
 		<a href="/HDR/workLoad/exportWorkLoadSummaryList.do">zjn测试房间数Word</a>
 		<a href="/HDR/workLoad/exportWorkLoadSummaryExcel.do">zjn测试房间数Excel</a>
+		
+		<a href="/HDR/projectRepair/selectProjectRepair.do">huiminjun测试</a>
+		
 			<form action="/HDR/login/login.do" method="post" id="login-form">
 				<ul>
 					<li><input name="userName" type="text" class="loginuser"

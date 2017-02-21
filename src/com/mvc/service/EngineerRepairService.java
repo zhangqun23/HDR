@@ -19,12 +19,12 @@ public interface EngineerRepairService {
 	Map<String, Object> JsonObjToMap(JSONObject jsonObject);
 
 	//查询工程维修项统计
-	List<ProjectRepair> findEngineerRepair(Map<String, Object> map);
+	String findEngineerRepair(Map<String, Object> map);
 
 	//查询工程维修项统计维修类型
 	List<EngineerCaseSort> findEngineerRepairType();
 
 	//查询工程维修项统计图标
-	List<ProjectRepair> findProjectIcon(Map<String, Object> map);
+	String getProjectRepairIcon(Map<String, String> map);
 
 }

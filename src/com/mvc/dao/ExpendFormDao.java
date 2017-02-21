@@ -76,12 +76,6 @@ public interface ExpendFormDao {
 	
 	// 卫生间耗品统计分析
 	List<Object> selectMiniExpendAnalyse(Map<String, Object> map);
-
-	// 查询员工领取耗品分页
-	List<Object> selectStaPage(Map<String, Object> map, Integer offset, Integer end, List<Integer> listCondition);
-
-	// 查询员工领取迷你吧分页
-	List<Object> selectminiStaPage(Map<String, Object> map, Integer offset, Integer end);
 	
 	// 员工领取布草量、房间耗品、卫生间耗品(用于导出)
 	List<Object> selectStaExpend(Map<String, Object> map, List<Integer> listCondition);

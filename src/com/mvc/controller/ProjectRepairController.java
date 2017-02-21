@@ -51,7 +51,7 @@ public class ProjectRepairController {
 	public @ResponseBody String selectProjectIcon(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map = engineerRepairService.JsonObjToMap(jsonObject);
-		List<ProjectRepair> list = engineerRepairService.findEngineerRepair(map);
+		List<ProjectRepair> list = engineerRepairService.findProjectIcon(map);
 
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);

@@ -24,4 +24,7 @@ public interface EngineerRepairService {
 	//查询工程维修项统计维修类型
 	List<EngineerCaseSort> findEngineerRepairType();
 
+	//查询工程维修项统计图标
+	List<ProjectRepair> findProjectIcon(Map<String, Object> map);
+
 }

@@ -18,9 +18,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.mvc.dao.impl.CheckOutDaoImpl;
+import com.mvc.dao.CheckOutDao;
 import com.mvc.entityReport.CheckOutDetail;
 import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.WorkHouse;
@@ -36,9 +37,10 @@ import com.utils.WordHelper;
  * @author 包阿儒汉
  *
  */
+@Service("checkOutServiceImpl")
 public class CheckOutServiceImpl implements CheckOutService {
 	@Autowired
-	CheckOutDaoImpl checkOutDao;
+	CheckOutDao checkOutDao;
 
 	@Override
 	public List<CheckOutEfficiency> selectCheckOutEfficiency(Map<String, Object> map) {

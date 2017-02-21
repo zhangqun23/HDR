@@ -62,8 +62,8 @@ public class ProjectWorkLoadController {
 			if (StringUtil.strIsNotEmpty(limit.getString("startTime"))
 					&& StringUtil.strIsNotEmpty(limit.getString("endTime"))) {
 
-				startDate = jsonObject.getString("startTime");
-				endDate = jsonObject.getString("endTime");
+				startDate = limit.getString("startTime");
+				endDate = limit.getString("endTime");
 				List<ProjectWorkLoad> proWorkLoadList = null;
 
 				proWorkLoadList = proWorkLoadService.getProWorkLoadList(startDate, endDate);

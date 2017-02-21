@@ -10,7 +10,7 @@
 <link href="${ctx}/css/li.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/css/wang.css" rel="stylesheet" type="text/css" />
 </head>
- 
+
 <body style="background:url(${ctx}/images/topbg.gif) repeat-x;">
 	<header>
 		<div class="topleft">
@@ -25,7 +25,7 @@
 				<li><a href="/HDR/login/logout.do">安全退出</a></li>
 			</ul>
 
-		<!-- 	<div class="user">
+			<!-- 	<div class="user">
 
 				<span id="userNum"></span> <i>消息</i><a
 					href=""><b
@@ -33,13 +33,13 @@
 			</div> -->
 
 		</div>
-		
+
 	</header>
 	<section class="containner">
-	<!-- 加载模态框 -->
-    <div class="overlayer"></div>
-    <div class="tipLoading" >
-	<img class="tipimage" src="../images/wait.gif"/><div class="tiptext" >正在加载，请稍后……</div>
-    </div>
-    <!-- 加载模态框 -->		
-		
+		<!-- 加载模态框 -->
+		<div class="overlayer"></div>
+		<div class="tipLoading">
+			<img class="tipimage" src="../images/wait.gif" />
+			<div class="tiptext">正在加载，请稍后……</div>
+		</div>
+		<!-- 加载模态框 -->

@@ -1,5 +1,6 @@
 package com.mvc.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mvc.dao.EngineerRepairDao;
-import com.mvc.entityReport.EngineerRepair;
+import com.mvc.entity.EngineerCaseSort;
+import com.mvc.entityReport.ProjectRepair;
 import com.mvc.service.EngineerRepairService;
 import com.utils.StringUtil;
 
@@ -48,7 +50,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("start_time", starttime);
+		map.put("start_time",starttime);
 		map.put("end_time", endtime);
 		map.put("repairtype", repairtype);
 		return map;
@@ -56,11 +58,55 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 	//查询工程维修项统计
 	@Override
-	public List<EngineerRepair> findEngineerRepair(Map<String, Object> map) {
+	public List<ProjectRepair> findEngineerRepair(Map<String, Object> map) {
 		List<Object> listSource = engineerRepairDao.getEngineerRepairList(map);
-		Iterator<Object> it = listSource.iterator();
-		//List<EngineerRepair> listGoal = listsourceToListGoal(it);
+		//List<String> list=engineerRepairDao.getEngineerRepairList(map);
+	
+		List<ProjectRepair> listGoal = listsourceToListGoal(listSource);
 		return null;
+	}
+	private List<ProjectRepair> listsourceToListGoal(List<Object> listSource){
+		Iterator<Object> it = listSource.iterator();
+		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
+		Object[] objects;
+		ProjectRepair projectRepair;
+		int i=0;
+		while(it.hasNext()){
+			i++;
+			objects=(Object[]) it.next();
+			projectRepair=new ProjectRepair();
+			
+			projectRepair.setOrderNum(String.valueOf(i));
+			projectRepair.setRepairParentType(objects[3].toString());//父类型
+			projectRepair.setRepairType(objects[1].toString());//子类型
+			projectRepair.setServiceLoad(objects[4].toString());//数量
+			
+			Map<String, Integer> map=new HashMap<String, Integer>();
+			for(int j=0;j<listSource.size();j++){
+				map.put( listSource.get(j).toString(), 0);
+				System.out.println(listSource.get(j).toString());
+			}
+			String amount;
+			while(it.hasNext()){
+				Object[] obj=(Object[]) it.next();
+				if(projectRepair.getRepairParentType().equals(objects[3].toString())){
+					amount=StringUtil.add(projectRepair.getRepairParentType(), objects[4].toString());
+				}
+				
+			}
+			
+		}
+		return null;
+		
+	}
+	/*
+	 * ***********************************王慧敏报表服务类型*******************************
+	 */
+	//工程维修项统计服务类型
+	@Override
+	public List<EngineerCaseSort> findEngineerRepairType() {
+		List<EngineerCaseSort> list = engineerRepairDao.getEngineerRepairTypeList();
+		return list;
 	}
 
 }

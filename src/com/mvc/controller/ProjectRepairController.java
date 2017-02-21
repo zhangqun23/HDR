@@ -64,7 +64,7 @@ public class ProjectRepairController {
 	/**
 	 * 查询工程维修项统计维修类型
 	 */
-	@RequestMapping("/selectProjectType")
+	@RequestMapping("/selectProjectType.do")
 	public @ResponseBody String selectProjectType(HttpServletRequest request) {
 		JSONObject jsonObject =new JSONObject();
 		List<EngineerCaseSort> list= engineerRepairService.findEngineerRepairType();

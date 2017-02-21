@@ -9,25 +9,25 @@
 
 <div class="rightinfo">
 	<div class="tools" style="">
-		<form action="../engineerController/exportEngWorkLoadAnalyse.do"
+		<form action=""
 			method="post" enctype="multipart/form-data">
 			<ul class="projectListLimit">
 				<li><label>年份</label><input type="text" name="checkYear"
-					ng-model="checkYear" class="dfselect dateLayoutStyle"
+					ng-model="pmaLimit.checkYear" class="dfselect dateLayoutStyle"
 					onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 					onChange=""></li>
 				<li><label>季度</label><select class="dfselect layoutStyle"
-					style="width: 73px" ng-model="quarter" name="quarter"><option
+					style="width: 73px" ng-model="pmaLimit.quarter" name="quarter"><option
 							value="{{q.id}}" ng-repeat="q in quarters">{{q.type}}</option>
 				</select></li>
-				<li><label>员工</label><select class="dfselect layoutStyle"
-					style="width: 110px" ng-model="staffId" name="staffId">
-						<option value="">请选择</option>
-						<option value="{{s.staff_id}}" ng-repeat="s in staffs">{{s.staff_no}}{{s.staff_name}}</option>
-				</select></li>
+				<li><label>类型</label><select class="dfselect layoutStyle"
+					style="width: 140px" ng-model="pmaLimit.repairType" name="repairType"
+					id="repairType" required><option
+							value="">请选择</option>
+						<option value="{{r.sortId}}" ng-repeat="r in repairTypes">{{r.sortName}}</option></select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
-					type="button" value="查询" ng-click=""></li>
-				<li><input id="chart1-svg" name="chartSVGStr" type="text"
+					type="button" value="查询" ng-click="selectProMaintainAnalyse()"></li>
+				<li><input id="chart-svg" name="chartSVGStr" type="text"
 					class="hidden" /></li>
 				<li><input id="analyseResult" name="analyseResult" type="text"
 					class="hidden" /></li>
@@ -37,7 +37,7 @@
 		</form>
 
 	</div>
-	<div id="lineChart1"
+	<div id="pieChart"
 		style="min-width: 400px; width: 1000px; height: 400px"></div>
 	<label ng-show="listRemark"
 		style="color: red; font-size: medium; marginTop: 20px">&nbsp;&nbsp;&nbsp;{{remark}}</label>

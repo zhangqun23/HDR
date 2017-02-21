@@ -150,6 +150,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq获取工程物料统计表
+	services.selectProMaterialByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectMaterial/selectprojectMaterialBylimits.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -663,15 +671,15 @@ app
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
 
-								var pmfLimits = JSON, stringify
-								(reportForm.pmfLimit);
+								var pmfLimits = JSON
+										.stringify(reportForm.pmfLimit);
 								services.selectProMaterialByLimits({
 									limit : pmfLimits
 								}).success(function(data) {
 									$('.overlayer').fadeOut(200);
 									$('.tipLoading').fadeOut(200);
 									reportForm.materialList = data.list;
-									if (data.list) {
+									if (data.list.length) {
 										reportForm.listIsShow = false;
 									} else {
 										reportForm.listIsShow = true;

@@ -1,7 +1,7 @@
 package com.mvc.entityReport;
 
 /**
- * 员工工作量汇总表
+ * 客房部员工工作量汇总表
  * 
  * @author zjn
  * @date 2016年12月7日

@@ -43,18 +43,26 @@ public class ExcelHelper<T> {
 	/**
 	 * 导出2007版单sheet的Excel
 	 * 
-	 * @param title：表格标题
-	 * @param headers:Excel表头
-	 * @param list：Excel单元格内容
-	 * @param out：输出流
+	 * @param title
+	 *            表格标题
+	 * @param headers
+	 *            Excel表头
+	 * @param list
+	 *            Excel单元格内容
+	 * @param out
+	 *            输出流
 	 * @param pattern
-	 * @param mergeColumn：合并单元格列数，-1表示没有合并单元格
-	 * @param hideColumn：隐藏表格内容的最后几列，0表示没有隐藏
+	 * @param mergeColumn
+	 *            合并单元格列数，-1表示没有合并单元格
+	 * @param hideColumn
+	 *            隐藏表格内容的最后几列，0表示没有隐藏
+	 * @param titleRow
+	 *            表头行数，null或0代表没有表头
 	 */
 	public void export2007Excel(String title, String[] headers, Collection<T> list, OutputStream out, String pattern,
-			Integer mergeColumn, Integer hideColumn) {
+			Integer mergeColumn, Integer hideColumn, Integer titleRow) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		export2007Excel(workbook, title, headers, list, pattern, mergeColumn, hideColumn);
+		export2007Excel(workbook, title, headers, list, pattern, mergeColumn, hideColumn, titleRow);
 		write2007Out(workbook, out);
 	}
 
@@ -68,17 +76,19 @@ public class ExcelHelper<T> {
 	 * @param pattern
 	 * @param mergeColumn
 	 * @param hideColumn
+	 * @param titleRow
 	 */
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void export2007MutiExcel(Map<Integer, String> titlesMap, Map<Integer, String[]> headerMap,
-			Map<Integer, List> map, OutputStream out, String pattern, Integer mergeColumn, Integer hideColumn) {
+			Map<Integer, List> map, OutputStream out, String pattern, Integer mergeColumn, Integer hideColumn,
+			Integer titleRow) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		for (int i = 0; i < map.size(); i++) {
 			Collection<T> list = map.get(i);
 			String[] headers = headerMap.get(i);
 			String title = titlesMap.get(i);
-			export2007Excel(workbook, title, headers, list, pattern, mergeColumn, hideColumn);
+			export2007Excel(workbook, title, headers, list, pattern, mergeColumn, hideColumn, titleRow);
 		}
 		write2007Out(workbook, out);
 	}
@@ -86,42 +96,36 @@ public class ExcelHelper<T> {
 	/**
 	 * 导出2007版Excel
 	 * 
-	 * @param title:表格标题名
-	 * @param headers:表格属性列名数组
-	 * @param list:需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的:
+	 * @param title
+	 *            表格标题名
+	 * @param headers
+	 *            表格属性列名数组
+	 * @param list
+	 *            需要显示的数据集合,集合中一定要放置符合javabean风格的类的对象。此方法支持的:
 	 *            javabean属性的数据类型有基本数据类型及String,Date,byte[](图片数据)
-	 * @param pattern:如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
-	 * @param mergeColumn：合并单元格列数，-1表示没有合并单元格
-	 * @param hideColumn：隐藏表格内容的最后几列，0表示没有隐藏
+	 * @param pattern
+	 *            如果有时间数据，设定输出格式。默认为"yyy-MM-dd"
+	 * @param mergeColumn
+	 *            合并单元格列数，-1表示没有合并单元格
+	 * @param hideColumn
+	 *            隐藏表格内容的最后几列，0表示没有隐藏
+	 * @param titleRow
+	 *            表头行数
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
-			String pattern, Integer mergeColumn, Integer hideColumn) {
+			String pattern, Integer mergeColumn, Integer hideColumn, Integer titleRow) {
 		XSSFSheet sheet = workbook.createSheet(title);
-		// 生成样式
-		XSSFCellStyle titleStyle = getTitleStyle(workbook);
-		XSSFCellStyle headerStyle = getStyle(workbook, "header");
+		if (titleRow == null) {
+			titleRow = 0;
+		}
+		dealHeader(headerSource, titleRow, workbook, sheet, title);
+		XSSFRow row = null;
 		XSSFCellStyle contentStyle = getStyle(workbook, "content");
 
-		// 合并单元格，设置表名样式
-		Cell titleCell = mergeTitle(sheet, headerSource);
-		titleCell.setCellStyle(titleStyle);
-		titleCell.setCellValue(title);
-
-		// 产生表格标题行
-		XSSFRow row = sheet.createRow(1);// 从第二行开始生成表格
-		row.setHeight((short) 500);// 行高设置成25px
-
-		String[] headers = hidHeader(headerSource);
-		for (int i = 0; i < headers.length; i++) {
-			XSSFCell cell = row.createCell(i);
-			cell.setCellStyle(headerStyle);
-			XSSFRichTextString text = new XSSFRichTextString(headers[i]);
-			cell.setCellValue(text);
-		}
 		// 遍历集合数据，产生数据行
 		Iterator<T> it = list.iterator();
-		int index = 1;
+		int index = titleRow;
 		while (it.hasNext()) {
 			index++;
 			row = sheet.createRow(index);
@@ -369,4 +373,122 @@ public class ExcelHelper<T> {
 		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, len));// 起始行，结束行，起始列，结束列
 		return titleCell;
 	}
+
+	/**
+	 * 
+	 * 两行表头处理
+	 * 
+	 * @param headers
+	 *            格式：抹尘房[数量,总用时,平均用时,排名]
+	 * @param titleRow
+	 *            表头共有几行
+	 * @param workbook
+	 * @param sheet
+	 * @param title
+	 *            标题名
+	 */
+	private void dealHeader(String[] headers, Integer titleRow, XSSFWorkbook workbook, XSSFSheet sheet, String title) {
+		// 生成样式
+		XSSFCellStyle titleStyle = getTitleStyle(workbook);
+		XSSFCellStyle headerStyle = getStyle(workbook, "header");
+
+		if (titleRow == 2) {
+			List<String> list1 = new ArrayList<String>();// 记录第一行
+			List<String> list2 = new ArrayList<String>();// 记录第二行
+			String ele = null;
+			int num = 0;// 记录需要合并表头的列数(连续)
+			boolean flag = true;
+			int sumLen = 0;// 子列长度累加
+			List<String> listMerge = new ArrayList<String>();
+			for (int i = 0; i < headers.length; i++) {
+				ele = headers[i];
+				if (ele.contains("[") && ele.contains("]")) {
+					flag = false;
+					int beginIndex = ele.indexOf('[');
+					int endIndex = ele.indexOf(']');
+					String firstTitle = ele.substring(0, beginIndex);// 第一行表头名解析，格式：抹尘房
+					String tmp = ele.substring(beginIndex + 1, endIndex);// 第一行表头名解析，格式：数量,总用时,平均用时,排名
+					String[] arr = tmp.split(",");// 将[]中内容解析成数组
+					int len = arr.length;
+
+					int a1 = i + sumLen;
+					int a2 = a1 + len - 1;
+					sumLen += len - 1;
+					listMerge.add(a1 + "," + a2);// 格式："起始列,终止列"
+
+					for (int j = 0; j < len; j++) {
+						list1.add(firstTitle);// 重复补齐，在创建cell时再合并
+						list2.add(arr[j]);
+					}
+				} else {
+					if (flag) {
+						num++;
+					}
+					list1.add(ele);
+					list2.add(ele);
+				}
+			}
+
+			String[] tmpArr = new String[list1.size()];
+			list1.toArray(tmpArr);
+			createTitleRow(sheet, tmpArr, titleStyle, title);
+			createHeaderRow(sheet, tmpArr, headerStyle, 1, listMerge);// 第一行
+			list2.toArray(tmpArr);
+			createHeaderRow(sheet, tmpArr, headerStyle, 2, null);// 第二行
+
+			// 合并表头
+			for (int i = 0; i < num; i++) {// 合并行
+				addMergedRegion(sheet, i, 1, 2, workbook);
+			}
+		} else {
+			createTitleRow(sheet, headers, titleStyle, title);
+			createHeaderRow(sheet, headers, headerStyle, 1, null);
+		}
+	}
+
+	/**
+	 * 合并单元格，设置表名样式
+	 * 
+	 * @param sheet
+	 * @param headers
+	 * @param titleStyle
+	 * @param title
+	 */
+	private void createTitleRow(XSSFSheet sheet, String[] headers, XSSFCellStyle titleStyle, String title) {
+		Cell titleCell = mergeTitle(sheet, headers);// 合并单元格，设置表名样式
+		titleCell.setCellStyle(titleStyle);
+		titleCell.setCellValue(title);
+	}
+
+	/**
+	 * 产生表格标题行
+	 * 
+	 * @param sheet
+	 * @param headers
+	 * @param headerStyle
+	 * @param mapMerge
+	 *            表头需要合并列
+	 */
+	private void createHeaderRow(XSSFSheet sheet, String[] headers, XSSFCellStyle headerStyle, Integer index,
+			List<String> listMerge) {
+		// 产生表格标题行
+		XSSFRow row = sheet.createRow(index);// 从第index行开始生成表格
+		row.setHeight((short) 500);// 行高设置成25px
+
+		String[] headerArr = hidHeader(headers);
+		for (int i = 0; i < headerArr.length; i++) {
+			XSSFCell cell = row.createCell(i);
+			cell.setCellStyle(headerStyle);
+			XSSFRichTextString text = new XSSFRichTextString(headerArr[i]);
+			cell.setCellValue(text);
+		}
+
+		if (listMerge != null) {
+			for (String ele : listMerge) {
+				String[] arr = ele.split(",");
+				sheet.addMergedRegion(new CellRangeAddress(1, 1, Integer.parseInt(arr[0]), Integer.parseInt(arr[1])));// 起始行，结束行，起始列，结束列
+			}
+		}
+	}
+
 }

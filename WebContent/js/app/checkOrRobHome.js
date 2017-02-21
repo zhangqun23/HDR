@@ -74,6 +74,12 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/checkEfficiencyForm', {
 		templateUrl : '/HDR/jsp/checkOrRobHome/checkEfficiencyForm.html',
 		controller : 'CheckOrRobHomeController'
+	}).when('/checkOutHomeForm', {
+		templateUrl : '/HDR/jsp/checkOrRobHome/checkOutHomeForm.html',
+		controller : 'CheckOrRobHomeController'
+	}).when('/checkOutAnalyseForm', {
+		templateUrl : '/HDR/jsp/checkOrRobHome/checkOutAnalyseForm.html',
+		controller : 'CheckOrRobHomeController'
 	})
 } ]);
 
@@ -125,6 +131,21 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 		return $http({
 			method : 'post',
 			url : baseUrl + '/checkHouse/getCheckHouseList.do',
+			data : data
+		});
+	};
+	// zq获取查退房效率表
+	services.selectCheckOutEfficiency = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + '/checkHouse/selectCheckOutEfficiency.do',
+			data : data
+		});
+	};
+	services.selectCheckOutDetailByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + '/checkHouse/selectCheckOutEfficiency.do',
 			data : data
 		});
 	};
@@ -186,6 +207,13 @@ app
 							checkRob.ceLimit = {
 								startTime : "",
 								endTime : ""
+							}
+							// 查退房效率统计查询限制条件
+							checkRob.coLimit = {
+								tableType : "0",
+								startTime : "",
+								endTime : "",
+								roomType : ""
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
@@ -252,11 +280,12 @@ app
 								});
 							}
 							// zq查询客服人员列表
-							function selectRoomStaffs() {
-								services.selectRoomStaffs().success(
-										function(data) {
-											checkRob.staffs = data.list;
-										});
+							function selectRoomStaffs(deptType) {
+								services.selectRoomStaffs({
+									deptType : deptType
+								}).success(function(data) {
+									checkRob.staffs = data.list;
+								});
 							}
 							// zq获取所选房间类型
 							function getSelectedRoomType(roomSortNo) {
@@ -573,6 +602,74 @@ app
 													}
 												});
 							}
+							// zq获取查房明细或效率表
+							checkRob.selectCheckOutRooms = function() {
+
+								if (checkRob.coLimit.startTime == "") {
+									alert("请选择开始时间！");
+									return false;
+								}
+								if (checkRob.coLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (checkRob.coLimit.roomType == "") {
+									alert("请选择房间类型！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								checkOutLimit = JSON
+										.stringify(checkRob.coLimit);
+								if (checkRob.coLimit.tableType == '0') {
+									services
+											.selectCheckOutEfficiencyByLimits({
+												limit : checkOutLimit,
+												page : 1
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
+														checkRob.checkOutEfficiencyList = data.list;
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
+													});
+								} else {
+									services
+											.selectCheckOutDetailByLimits({
+												limit : checkOutLimit,
+												page : 1
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
+														checkRob.CheckOutDetailList = data.list;
+														pageTurn(
+																data.totalPage,
+																1,
+																getCheckOutDetailByLimits);
+														if (data.list.length) {
+															checkRob.listIsShow = false;
+														} else {
+															checkRob.listIsShow = true;
+														}
+													});
+								}
+
+							}
+
+							// 换页查询查退房明细表
+							function getCheckOutDetailByLimits(p) {
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -594,10 +691,17 @@ app
 								} else if ($location.path().indexOf(
 										'/robEffAnalyseForm') == 0) {
 									selectRoomSorts();
-									selectRoomStaffs();
+									selectRoomStaffs(0);
 								} else if ($location.path().indexOf(
 										'/checkEfficiencyForm') == 0) {
 									selectRoomSorts();
+								} else if ($location.path().indexOf(
+										'/checkOutHomeForm') == 0) {
+									selectRoomSorts();
+								} else if ($location.path().indexOf(
+										'/checkOutAnalyseForm') == 0) {
+									selectRoomSorts();
+									selectRoomStaffs(0);
 								}
 							}
 							initData();

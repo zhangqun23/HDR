@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -344,7 +345,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
 		String path = (String) map.get("path");
-		String title = "客房部员工做房驳回率统计表(" + startTime + "至" + endTime + ")";
+		String title = "客房部员工做房驳回率统计表";
 		String fileName = "客房部员工做房驳回率统计表.xlsx";
 		try {
 			ExcelHelper<WorkReject> wh = new ExcelHelper<WorkReject>();
@@ -357,7 +358,8 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 
 			WorkReject sum = sumWorkReject(listGoal);
 			listGoal.add(sum);
-			String[] header = { "序号", "员工姓名", "员工编号", "实际工作天数", "额定工作量", "实际工作量", "超出工作量", "超出幅度" };// 顺序必须和对应实体一致
+			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
+			wh.export2007Excel(title, header,listGoal, out, "yyyy-MM-dd", -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 
 		} catch (Exception ex) {

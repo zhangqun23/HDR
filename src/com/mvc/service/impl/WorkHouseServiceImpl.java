@@ -1,6 +1,8 @@
 package com.mvc.service.impl;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.PictureUtil;
 import com.utils.StringUtil;
@@ -51,10 +54,13 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Iterator<Object> it = listSource.iterator();
 		List<WorkHouse> listGoal = objToWorkHouse(it);
 
+		WorkHouse sum = sumWorkHouse(listGoal);// 合计
+		listGoal.add(sum);
+
 		return listGoal;
 	}
 
-	// 部门员工做房用时统计
+	// 部门员工做房用时统计Word
 	@Override
 	public ResponseEntity<byte[]> exportWorkHouse(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
@@ -89,6 +95,46 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
+	// 部门员工做房用时统计Excel
+	@Override
+	public ResponseEntity<byte[]> exportWorkHouseExcel(Map<String, Object> map, String path) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+		String sortName = (String) map.remove("sortName");
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			ExcelHelper<WorkHouse> ex = new ExcelHelper<WorkHouse>();
+			String fileName = "客房部员工" + sortName + "做房时间统计表.xlsx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workHouseDao.selectWorkHouse(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkHouse> listGoal = objToWorkHouse(it);
+
+			WorkHouse sum = sumWorkHouse(listGoal);// 合计
+			listGoal.add(sum);
+
+			String startTime = (String) map.get("startTime");
+			String endTime = (String) map.get("endTime");
+			String title = "客房部员工" + sortName + "做房时间统计表(" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7)
+					+ ")";
+			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,总用时,平均用时,排名]", "过夜房[数量,总用时,平均用时,排名]",
+					"离退房[数量,总用时,平均用时,排名]" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 2);
+
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return byteArr;
@@ -180,14 +226,14 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Object[] obj = null;
 		String averWorkTime = null;
 		Boolean flag = true;
-		Long sumNum = (long) 0;
-		Long sumTime = (long) 0;
+		long sumNum = (long) 0;
+		long sumTime = (long) 0;
 		List<Object> averList = workHouseDao.selectAllAverWorkTime(map);// 获取全体员工平均做房用时
 		Iterator<Object> it = averList.iterator();
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
-			sumNum += Long.valueOf(obj[1].toString());
-			sumTime += Long.valueOf(obj[2].toString());
+			sumNum += Long.parseLong(obj[1].toString());
+			sumTime += Long.parseLong(obj[2].toString());
 			if (flag) {
 				if (obj[0].toString().trim().equals(staffId)) {
 					averWorkTime = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均做房用时
@@ -198,10 +244,35 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		if (averWorkTime != null) {
 			jsonObject.put("averWorkTime", Float.valueOf(averWorkTime));
 		}
-		String allAverWorkTime = StringUtil.divide(sumTime.toString(), sumNum.toString());
+		String allAverWorkTime = StringUtil.divide(String.valueOf(sumTime), String.valueOf(sumNum));
+		String analyseResult = getWorkHouseAnaRe(averWorkTime, allAverWorkTime);
 		jsonObject.put("allAverWorkTime", Float.valueOf(allAverWorkTime));// 全体员工平均做房用时
+		jsonObject.put("analyseResult", analyseResult);// 分析结果
 
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 做房用时分析结果
+	 * 
+	 * @param averWorkTime
+	 *            个人
+	 * @param allAverWorkTime
+	 *            全体
+	 * @return
+	 */
+	private String getWorkHouseAnaRe(String averWorkTime, String allAverWorkTime) {
+		String analyseResult = "分析结果:  ";
+		Float dValue = Float.valueOf(allAverWorkTime) - Float.valueOf(averWorkTime);
+		Float level = Float.valueOf(StringUtil.divide(dValue.toString(), allAverWorkTime));
+		if (Math.abs(level) <= 0.05) {
+			analyseResult += "良好(该员工平均做房用时与全体员工平均做房用时相差不大)";
+		} else if (level > 0.05) {
+			analyseResult += "优秀(该员工平均做房用时高于全体员工平均做房用时)";
+		} else if (level < 0.05) {
+			analyseResult += "不合格(该员工平均做房用时远低于全体员工平均做房用时)";
+		}
+		return analyseResult;
 	}
 
 	/**
@@ -249,27 +320,27 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		WorkHouse sum = new WorkHouse();
 		Iterator<WorkHouse> it = list.iterator();
 
-		Long sum_num_dust = (long) 0;// 抹尘房
-		Long sum_total_time_dust = (long) 0;
-		Float sum_avg_time_dust = 0f;
-		Long sum_num_night = (long) 0;// 过夜房
-		Long sum_total_time_night = (long) 0;
-		Float sum_avg_time_night = 0f;
-		Long sum_num_leave = (long) 0;// 离退房
-		Long sum_total_time_leave = (long) 0;
-		Float sum_avg_time_leave = 0f;
+		long sum_num_dust = (long) 0;// 抹尘房
+		long sum_total_time_dust = (long) 0;
+		float sum_avg_time_dust = 0f;
+		long sum_num_night = (long) 0;// 过夜房
+		long sum_total_time_night = (long) 0;
+		float sum_avg_time_night = 0f;
+		long sum_num_leave = (long) 0;// 离退房
+		long sum_total_time_leave = (long) 0;
+		float sum_avg_time_leave = 0f;
 
 		WorkHouse workHouse = null;
 		while (it.hasNext()) {
 			workHouse = it.next();
-			sum_num_dust += Integer.valueOf(workHouse.getNum_dust());// 抹尘房
-			sum_total_time_dust += Integer.valueOf(workHouse.getTotal_time_dust());
+			sum_num_dust += Integer.parseInt(workHouse.getNum_dust());// 抹尘房
+			sum_total_time_dust += Integer.parseInt(workHouse.getTotal_time_dust());
 			sum_avg_time_dust += workHouse.getAvg_time_dust();
-			sum_num_night += Integer.valueOf(workHouse.getNum_night());// 过夜房
-			sum_total_time_night += Integer.valueOf(workHouse.getTotal_time_night());
+			sum_num_night += Integer.parseInt(workHouse.getNum_night());// 过夜房
+			sum_total_time_night += Integer.parseInt(workHouse.getTotal_time_night());
 			sum_avg_time_night += workHouse.getAvg_time_night();
-			sum_num_leave += Integer.valueOf(workHouse.getNum_leave());// 离退房
-			sum_total_time_leave += Integer.valueOf(workHouse.getTotal_time_leave());
+			sum_num_leave += Integer.parseInt(workHouse.getNum_leave());// 离退房
+			sum_total_time_leave += Integer.parseInt(workHouse.getTotal_time_leave());
 			sum_avg_time_leave += workHouse.getAvg_time_leave();
 		}
 		sum.setOrderNum("合计");
@@ -406,14 +477,14 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Object[] obj = null;
 		String averHouseEff = null;
 		Boolean flag = true;
-		Long sumDutyTime = (long) 0;
-		Long sumHouseTime = (long) 0;
+		long sumDutyTime = (long) 0;
+		long sumHouseTime = (long) 0;
 		List<Object> averList = workHouseDao.selectAllAverHouseEff(map);// 获取全体员工平均做房效率
 		Iterator<Object> it = averList.iterator();
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
-			sumDutyTime += Long.valueOf(obj[1].toString());
-			sumHouseTime += Long.valueOf(obj[2].toString());
+			sumDutyTime += Long.parseLong(obj[1].toString());
+			sumHouseTime += Long.parseLong(obj[2].toString());
 			if (flag) {
 				if (obj[0].toString().trim().equals(staffId)) {
 					averHouseEff = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均做房效率
@@ -424,22 +495,22 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		if (averHouseEff != null) {
 			jsonObject.put("averWorkEfficiency1", Float.valueOf(averHouseEff));
 		}
-		String allAverHouseEff = StringUtil.divide(sumHouseTime.toString(), sumDutyTime.toString());
+		String allAverHouseEff = StringUtil.divide(String.valueOf(sumHouseTime), String.valueOf(sumDutyTime));
 		jsonObject.put("allAverWorkEfficiency1", Float.valueOf(allAverHouseEff));// 全体员工平均做房效率
 
 		obj = null;// 先清空对象，再重新赋值
 		String averWorkEff = null;
 		flag = true;
 		sumDutyTime = (long) 0;
-		Long sumWorkTime = (long) 0;
+		long sumWorkTime = (long) 0;
 		averList = null;
 		it = null;
 		averList = workHouseDao.selectAllAverHouseEff(map);// 获取全体员工平均工作效率
 		it = averList.iterator();
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
-			sumDutyTime += Long.valueOf(obj[1].toString());
-			sumWorkTime += Long.valueOf(obj[2].toString());
+			sumDutyTime += Long.parseLong(obj[1].toString());
+			sumWorkTime += Long.parseLong(obj[2].toString());
 			if (flag) {
 				if (obj[0].toString().trim().equals(staffId)) {
 					averWorkEff = StringUtil.divide(obj[2].toString(), obj[1].toString());// 员工平均工作效率
@@ -450,10 +521,39 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		if (averWorkEff != null) {
 			jsonObject.put("averWorkEfficiency", Float.valueOf(averWorkEff));
 		}
-		String allAverWorkEff = StringUtil.divide(sumWorkTime.toString(), sumDutyTime.toString());
+		String allAverWorkEff = StringUtil.divide(String.valueOf(sumWorkTime), String.valueOf(sumDutyTime));
 		jsonObject.put("allAverWorkEfficiency", Float.valueOf(allAverWorkEff));// 全体员工平均工作效率
+		String analyseResult1 = getWorkEffAnaRe(averWorkEff, allAverWorkEff, "工作");
+		jsonObject.put("analyseResult1", analyseResult1);// 工作效率分析
+		String analyseResult2 = getWorkEffAnaRe(averHouseEff, allAverHouseEff, "做房");
+		jsonObject.put("analyseResult2", analyseResult2);// 做房效率分析
 
 		return jsonObject.toString();
+	}
+
+	/**
+	 * 做房效率分析结果
+	 * 
+	 * @param averEff
+	 *            个人
+	 * @param allAverEff
+	 *            全体
+	 * @param content
+	 *            做房/工作
+	 * @return
+	 */
+	private String getWorkEffAnaRe(String averEff, String allAverEff, String content) {
+		String analyseResult = "分析结果:  ";
+		Float dValue = Float.valueOf(allAverEff) - Float.valueOf(averEff);
+		Float level = Float.valueOf(StringUtil.divide(dValue.toString(), allAverEff));
+		if (Math.abs(level) <= 0.05) {
+			analyseResult += "良好(该员工平均" + content + "效率与全体员工平均" + content + "效率相差不大)";
+		} else if (level > 0.05) {
+			analyseResult += "优秀(该员工平均" + content + "效率高于全体员工平均" + content + "效率)";
+		} else if (level < 0.05) {
+			analyseResult += "不合格(该员工平均" + content + "效率远低于全体员工平均" + content + "效率)";
+		}
+		return analyseResult;
 	}
 
 	/**
@@ -491,7 +591,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return listGoal;
 	}
 
-	// 部门员工工作效率统计导出
+	// 部门员工工作效率统计导出Word
 	@Override
 	public ResponseEntity<byte[]> exportWorkEffByLimits(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
@@ -499,7 +599,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 		ResponseEntity<byte[]> byteArr = null;
 		try {
-			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
+			WordHelper<WorkEfficiency> wh = new WordHelper<WorkEfficiency>();
 			String fileName = "客房部员工工作效率统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
@@ -529,6 +629,42 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		return byteArr;
 	}
 
+	// 部门员工工作效率统计导出Excel
+	@Override
+	public ResponseEntity<byte[]> exportWorkEffByLimitsExcel(Map<String, Object> map, String path) {
+		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
+		map.put("deptId", departmentInfo.getDepartmentId());
+
+		ResponseEntity<byte[]> byteArr = null;
+		try {
+			ExcelHelper<WorkEfficiency> ex = new ExcelHelper<WorkEfficiency>();
+			String fileName = "客房部员工工作效率统计表.xlsx";
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			List<Object> listSource = workHouseDao.selectWorkEffByLimits(map);
+			Iterator<Object> it = listSource.iterator();
+			List<WorkEfficiency> listGoal = objToWorkEff(it);
+
+			WorkEfficiency sum = sumWorkEff(listGoal);// 合计
+			listGoal.add(sum);
+
+			String startTime = (String) map.get("startTime");
+			String endTime = (String) map.get("endTime");
+			String title = "客房部员工工作效率统计表(" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7) + ")";
+			String[] header = { "序号", "员工姓名", "员工编号", "当班时间(分钟)", "做房时间(分钟)", "做房效率", "工作时间(分钟)", "工作效率" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 1);
+			out.close();
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return byteArr;
+	}
+
 	/**
 	 * list求和(工作效率)
 	 * 
@@ -539,16 +675,16 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		WorkEfficiency sum = new WorkEfficiency();
 		Iterator<WorkEfficiency> it = list.iterator();
 
-		Long sum_work_time = (long) 0;// 当班时间
-		Long sum_house_time = (long) 0;// 做房时间
-		Long sum_house_serv_time = (long) 0;// 做房+客服时间
+		long sum_work_time = (long) 0;// 当班时间
+		long sum_house_time = (long) 0;// 做房时间
+		long sum_house_serv_time = (long) 0;// 做房+客服时间
 
 		WorkEfficiency WorkEff = null;
 		while (it.hasNext()) {
 			WorkEff = it.next();
-			sum_work_time += Integer.valueOf(WorkEff.getWork_time());
-			sum_house_time += Integer.valueOf(WorkEff.getHouse_time());
-			sum_house_serv_time += Integer.valueOf(WorkEff.getHouse_serv_time());
+			sum_work_time += Integer.parseInt(WorkEff.getWork_time());
+			sum_house_time += Integer.parseInt(WorkEff.getHouse_time());
+			sum_house_serv_time += Integer.parseInt(WorkEff.getHouse_serv_time());
 		}
 		sum.setOrderNum("合计");
 		sum.setWork_time(String.valueOf(sum_work_time));

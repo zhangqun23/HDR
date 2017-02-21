@@ -39,8 +39,9 @@
 
 		<span class="systemlogo"></span>
 		<div class="loginbox">
-		<a href="/HDR/workLoad/exportWorkLoadSummaryExcel.do">zjn测试工作量分析</a>
-		<a href="/HDR/workLoad/exportWorkLoadLevelExcel.do">zjn测试饱和度分析</a>
+			<a href="/HDR/workLoad/getWorkLoadSummaryList.do">zjn测试房间数信息</a> <a
+				href="/HDR/workLoad/exportWorkLoadSummaryList.do">zjn测试房间数Word</a> <a
+				href="/HDR/workLoad/exportWorkLoadSummaryExcel.do">zjn测试房间数Excel</a>
 			<form action="/HDR/login/login.do" method="post" id="login-form">
 				<ul>
 					<li><input name="userName" type="text" class="loginuser"

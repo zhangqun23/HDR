@@ -60,13 +60,18 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 	@Override
 	public List<ProjectRepair> findEngineerRepair(Map<String, Object> map) {
 		List<Object> listSource = engineerRepairDao.getEngineerRepairList(map);
-		//List<String> list=engineerRepairDao.getEngineerRepairList(map);
+		List<String> list=engineerRepairDao.getProjectRepairList(map);
 	
-		List<ProjectRepair> listGoal = listsourceToListGoal(listSource);
-		return null;
+		List<ProjectRepair> listGoal = listsourceToListGoal(listSource,list);
+		return listGoal;
 	}
-	private List<ProjectRepair> listsourceToListGoal(List<Object> listSource){
+	private List<ProjectRepair> listsourceToListGoal(List<Object> listSource,List<String> list){
 		Iterator<Object> it = listSource.iterator();
+		Map<String, Integer> map=new HashMap<String, Integer>();
+		for(int j=0;j<list.size();j++){
+			map.put(list.get(j), 0);
+			System.out.println(list.get(j));
+		}
 		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
 		Object[] objects;
 		ProjectRepair projectRepair;
@@ -81,21 +86,21 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			projectRepair.setRepairType(objects[1].toString());//子类型
 			projectRepair.setServiceLoad(objects[4].toString());//数量
 			
-			Map<String, Integer> map=new HashMap<String, Integer>();
-			for(int j=0;j<listSource.size();j++){
-				map.put( listSource.get(j).toString(), 0);
-				System.out.println(listSource.get(j).toString());
-			}
-			String amount;
-			while(it.hasNext()){
-				Object[] obj=(Object[]) it.next();
-				if(projectRepair.getRepairParentType().equals(objects[3].toString())){
-					amount=StringUtil.add(projectRepair.getRepairParentType(), objects[4].toString());
-				}
+			
+			if(map.containsKey(objects[3].toString())){
+				int m=map.get(objects[3].toString());
+				map.put(objects[3].toString(), m+Integer.valueOf(objects[4].toString()));
 				
 			}
 			
+			listGoal.add(projectRepair);
+			
 		}
+		
+		
+		
+		
+		
 		return null;
 		
 	}

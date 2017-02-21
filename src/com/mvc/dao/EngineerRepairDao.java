@@ -18,4 +18,7 @@ public interface EngineerRepairDao {
 	//工程维修项统计服务类型
 	List<EngineerCaseSort> getEngineerRepairTypeList();
 
+	//获取工程维修父名称
+	List<String> getProjectRepairList(Map<String, Object> map);
+
 }

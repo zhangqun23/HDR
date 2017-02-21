@@ -368,19 +368,6 @@ app
 									reportForm.miniExpendFormList = data.list;
 								});
 							}
-							// wq员工耗品统计换页函数
-							function getStaffExpendBySlimits(p){
-								$(".overlayer").fadeIn(200);
-								$(".tipLoading").fadeIn(200);
-								services.selectStaExpendByLimits({
-									sLimit : expendFormLimit,
-									page : p
-								}).success(function(data) {
-									$(".overlayer").fadeOut(200);
-									$(".tipLoading").fadeOut(200);
-									reportForm.expendFormList = data.list;
-								});	
-							}
 							// wq查询员工领取耗品用量统计
 							reportForm.selectStaExpendByLimits = function() {
 								if (reportForm.sLimit.startTime == "") {
@@ -403,8 +390,7 @@ app
 										.stringify(reportForm.sLimit);
 									services
 											.selectStaExpendByLimits({
-												sLimit : expendFormLimit,
-												page : 1
+												sLimit : expendFormLimit
 											})
 											.success(
 													function(data) {
@@ -413,14 +399,21 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														reportForm.expendFormList = data.list;
-														pageTurn(
-																data.totalPage,
-																1,
-																getStaffExpendBySlimits);
+														reportForm.expendCount = data.count;
+														reportForm.analyseResult = data.result;
 														if (data.list) {
 															reportForm.listIsShow = false;
 														} else {
 															reportForm.listIsShow = true;
+														}
+														if (data.analyseResult) {
+															reportForm.listRemark = true;
+															reportForm.remark = data.analyseResult;
+															$("#analyseResult").val(data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult").val("");
 														}
 													});
 								
@@ -459,8 +452,9 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														reportForm.linenExpendFormList = data.list;
+														reportForm.totalPage = data.totalPage;
 														pageTurn(
-																data.totalPage,
+																reportForm.totalPage,
 																1,
 																getLinenExpendFormByLlimits);
 														reportForm.linenCount = data.linenCount;
@@ -509,8 +503,9 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														reportForm.washExpendFormList = data.list;
+														reportForm.totalPage = data.totalPage;
 														pageTurn(
-																data.totalPage,
+																reportForm.totalPage,
 																1,
 																getWashExpendFormByWlimits);
 														reportForm.washCount = data.washCount;
@@ -534,8 +529,9 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														reportForm.miniExpendFormList = data.list;
+														reportForm.totalPage = data.totalPage;
 														pageTurn(
-																data.totalPage,
+																reportForm.totalPage,
 																1,
 																getMiniExpendFormByMlimits);
 														reportForm.miniCount = data.miniCount;
@@ -554,6 +550,9 @@ app
 							reportForm.miniTable = false;
 							// wq根据选择的耗品类型显示不同的报表
 							reportForm.changeTable = function() {
+								reportForm.expendFormList = "";
+								reportForm.expendCount = "";
+								reportForm.listRemark = false;
 								var table = $("#tableType").val();
 								switch (table) {
 								case '0':
@@ -965,6 +964,7 @@ app
 							// wq根据选择的耗品类型显示不同的图
 							reportForm.changePic = function() {
 								var table = $("#tableType").val();
+								reportForm.listRemark = '';
 								switch (table) {
 								case '0':
 									reportForm.linenPic = true;

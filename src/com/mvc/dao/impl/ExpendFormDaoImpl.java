@@ -794,25 +794,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return sql.toString();
 	}
 
-	//布草、房间耗品、卫生间耗品统计分页
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> selectStaPage(Map<String, Object> map, Integer offset, Integer end,
-			List<Integer> listCondition) {
-		EntityManager em = emf.createEntityManager();
-		String sqlLimit = staExpendSQL(map);
-		
-		StringBuilder sql = new StringBuilder();
-		sql.append("select a.staff_id,a.staff_name," + getSelSQL(listCondition) + " from ");
-		sql.append(getStaSizeSQL(listCondition, sqlLimit));
-		sql.append(" limit :offset,:end");
-		Query query = em.createNativeQuery(sql.toString());
-		query.setParameter("offset", offset).setParameter("end", end);
-		List<Object> list = query.getResultList();
-		em.close();
-		return list;
-	}
-	//布草、房间耗品、卫生间耗品统计分页条件
+	//布草、房间耗品、卫生间耗品统计条件
 	private String getStaSizeSQL(List<Integer> list, String sqlLimit) {
 		StringBuilder sql = new StringBuilder();
 		String sqlStr = null;
@@ -843,30 +825,8 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		}
 		return sqlStr;
 	}
-	//迷你吧统计分页
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> selectminiStaPage(Map<String, Object> map, Integer offset, Integer end) {
-		EntityManager em = emf.createEntityManager();
-		String sqlLimit = staExpendSQL(map);
 
-		StringBuilder sqlid = new StringBuilder();
-		sqlid.append("select goods_id from goods_info where goods_info.Display=1 ");
-		sqlid.append("and goods_info.Goods_Typeid in ('dt0202','dt0201') order by goods_id asc;");
-		Query queryid = em.createNativeQuery(sqlid.toString());
-		List<Integer> listCondition = queryid.getResultList();
-		
-		StringBuilder sql = new StringBuilder();
-		sql.append("select a.staff_id,a.staff_name," + getSelSQL(listCondition) + " from ");
-		sql.append(getStaSizeSQL(listCondition, sqlLimit));
-		sql.append(" limit :offset,:end");
-		Query query = em.createNativeQuery(sql.toString());
-		query.setParameter("offset", offset).setParameter("end", end);
-		List<Object> list = query.getResultList();
-		em.close();
-		return list;
-	}
-	//人员布草、房间耗品、卫生间耗品导出
+	//人员布草、房间耗品、卫生间耗品统计
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectStaExpend(Map<String, Object> map, List<Integer> listCondition) {
@@ -881,7 +841,9 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		em.close();
 		return list;
 	}
-
+	
+	//人员迷你吧统计
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectStaMini(Map<String, Object> map) {
 		EntityManager em = emf.createEntityManager();

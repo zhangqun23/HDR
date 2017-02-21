@@ -103,7 +103,7 @@ public interface ExpendFormService {
 	List<LinenExpend> getLinenExpendList(Map<String, Object> map);
 
 	//员工领取耗品统计分页
-	JSONObject selectStaExpendPage (Map<String, Object> map, Pager pager);
+	JSONObject selectStaExpend (Map<String, Object> map);
 	
 	// 导出员工领取布草量统计表
 	ResponseEntity<byte[]> exportStaLinen(Map<String, Object> map, String path, String tempPath);

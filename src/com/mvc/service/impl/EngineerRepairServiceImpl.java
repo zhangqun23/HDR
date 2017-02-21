@@ -183,13 +183,12 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public List<ProjectRepair> findProjectIcon(Map<String, Object> map) {
+	/*public List<ProjectRepair> findProjectIcon(Map<String, Object> map) {
 		List<Object> listSource = engineerRepairDao.getEngineerRepairList(map);
 	
 		List<ProjectRepair> listGoal = listsourceToListGoalIcon(listSource);
 		return listGoal;
-	}
+	}*/
 	
 	private List<ProjectRepair> listsourceToListGoalIcon(List<Object> listSource){
 		Iterator<Object> it = listSource.iterator();

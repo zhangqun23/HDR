@@ -4,7 +4,7 @@ package com.mvc.entityReport;
  * @author wanghuimin
  * @date 2017年2月20日
  */
-public class EngineerRepair {
+public class ProjectRepair {
 	private String orderNum;// 序号
 	private String repairParentType;//维修父类型
 	private String repairType;//维修子类型

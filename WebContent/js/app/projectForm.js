@@ -142,6 +142,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq获取材料父类型列表
+	services.selectProMaterials = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectMaterial/selectProMaterials.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -534,6 +542,7 @@ app
 								startTime : '',
 								endTime : ''
 							}
+
 							reportForm.selectProMaintain = function() {
 								if (reportForm.pmLimit.startTime == '') {
 									alert("请选择起始时间！");
@@ -552,7 +561,7 @@ app
 								}).success(function(data) {
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
-									reportForm.list = data.list;
+									reportForm.repairList = data.list;
 									if (data.list) {
 										reportForm.listIsShow = false;
 									} else {
@@ -636,6 +645,14 @@ app
 											reportForm.repairTypes = data.list;
 										});
 							}
+
+							// zq获取材料父类型
+							function selectProMaterials() {
+								services.selectProMaterials().success(
+										function(data) {
+											reportForm.materials = data.list
+										});
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -657,6 +674,9 @@ app
 								} else if ($location.path().indexOf(
 										'/proMaintainAnalyse') == 0) {
 									findProRepairTypes();
+								} else if ($location.path().indexOf(
+										'/proMaterialForm')) {
+									proMaterialForm();
 								}
 							}
 							initData();

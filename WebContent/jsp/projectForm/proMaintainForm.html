@@ -24,8 +24,7 @@
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 						onChange=""></li>
 					<li><label>员工</label><select class="dfselect layoutStyle"
-						style="width: 110px" ng-model="staffId" name="staffId"
-						multiple="multiple">
+						style="width: 110px" ng-model="staffId" name="staffId">
 							<option value="">请选择</option>
 							<option>1</option>
 							<option>2</option>
@@ -63,12 +62,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="t in toiletList">
-				<td class="width5">{{}}</td>
-				<td class="width10">{{}}</td>
-				<td class="width10">{{}}</td>
-				<td class="width10">{{}}</td>
-				<td class="width10">{{}}</td>
+			<tr ng-repeat="r in repairList">
+				<td class="width5">{{r.orderNum}}</td>
+				<td class="width10">{{r.repairParentType}}</td>
+				<td class="width10">{{r.repairType}}</td>
+				<td class="width10">{{r.serviceLoad}}</td>
+				<td class="width10">{{r.engineerAmount}}</td>
 			</tr>
 		</tbody>
 	</table>

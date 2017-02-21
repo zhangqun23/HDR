@@ -212,10 +212,10 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 			allAverageData = totalActualWorkLoad / monthNum / staffCount;
 			analyseResult = getAnalyseResult(averageData, allAverageData);
 
-			jsonObject.put("allAverageData", allAverageData);
-			jsonObject.put("averageData", averageData);
-			jsonObject.put("workLoadMonths", workLoadMonths);
-			jsonObject.put("analyseResult", analyseResult);
+			jsonObject.put("allAverWorkLoad", allAverageData);// 全体平均工作量
+			jsonObject.put("averWorkLoad", averageData);// 个人平均工作量
+			jsonObject.put("list", workLoadMonths);// 个人每个月的工作量
+			jsonObject.put("analyseResult", analyseResult);// 分析结果
 		}
 
 		return jsonObject.toString();

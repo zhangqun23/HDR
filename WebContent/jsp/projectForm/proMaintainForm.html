@@ -23,6 +23,14 @@
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 						onChange=""></li>
+					<li><label>员工</label><select class="dfselect layoutStyle"
+						style="width: 110px" ng-model="staffId" name="staffId"
+						multiple="multiple">
+							<option value="">请选择</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+					</select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectProMaintain()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
@@ -31,6 +39,7 @@
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
 						onclick="this.form.action='';this.form.submit();setExportFlagCookie();"></li>
+
 				</ul>
 			</form>
 		</div>
@@ -42,6 +51,8 @@
 			<div>统计时间：{{pmLimit.startTime}}&nbsp;至
 				&nbsp;{{pmLimit.endTime}}</div>
 		</caption>
+	</table>
+	<table class="tablelist tablestyle">
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
@@ -51,72 +62,17 @@
 				<th class="width10">总计</th>
 			</tr>
 		</thead>
+		<tbody>
+			<tr ng-repeat="t in toiletList">
+				<td class="width5">{{}}</td>
+				<td class="width10">{{}}</td>
+				<td class="width10">{{}}</td>
+				<td class="width10">{{}}</td>
+				<td class="width10">{{}}</td>
+			</tr>
+		</tbody>
 	</table>
 	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
-	<div class="formtitle">
-		<span>卫生间问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="toiletIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>衣帽间问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="lockerIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>吧台问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="barIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>卧室问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="bedRoomIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>空调问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="airConditionerIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>地毯问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="carpetIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>窗户问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="windowIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>门问题<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="doorIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-	<div class="formtitle">
-		<span>公共区域<img src="../images/showInfo.png"
-			class="hand showInfo" id="contShow"
-			ng-click="showContInfo($event.target)" name="publicIssue"><img
-			src="../images/hideInfo.png" class="hand hideE showInfo"
-			id="contHide" ng-click="hideContInfo($event.target)"></span>
-	</div>
-
 	<div class="tcdPageCode">页码容器</div>
 </div>
 

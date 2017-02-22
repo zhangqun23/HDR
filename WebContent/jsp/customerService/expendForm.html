@@ -91,6 +91,7 @@
 				<td>{{linenCount.sum_shop}}</td>
 		</tbody>
 	</table>
+	<label ng-show="listRemark1" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 	<table class="tablelist tablestyle" ng-show="linenTable">
 		<caption align="top" class="table_bottom">房间布草使用量</caption>
 		<thead>
@@ -220,7 +221,7 @@
 				<td>{{roomCount.sum_arel}}</td>
 		</tbody>
 	</table>
-	
+	<label ng-show="listRemark2" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 	<table class="tablelist tablestyle"  ng-show="roomTable">
 	<caption  align="top" class="table_bottom">房间易耗品使用量</caption>
 			<tr>
@@ -378,7 +379,7 @@
 				<td>{{washCount.sum_clbr}}</td>
 		</tbody>
 	</table>
-	
+	<label ng-show="listRemark3" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 	<table class="tablelist tablestyle" ng-show="washTable">
 	<caption  align="top" class="table_bottom">卫生间易耗品使用量</caption>
 			<tr>
@@ -493,7 +494,7 @@
 				<td>{{miniCount.sum_como}}</td>
 		</tbody>
 	</table>
-	
+	<label ng-show="listRemark4" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 	<table class="tablelist tablestyle" ng-show="miniTable">
 	<caption align="top" class="table_bottom">迷你吧使用量</caption>
 			<tr>

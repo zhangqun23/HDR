@@ -247,5 +247,16 @@ public class StringUtil {
 	public static String dayLastTime(String str) {
 		return str + " 23:59:59";
 	}
+	/**
+	 * 将Float型字符串转换成%形式
+	 * 
+	 * @param strFloat
+	 * @return
+	 */
+	public static String strfloatToPer(Float strFloat) {
+		String str = "";
+		str = strFloat*100 + "%";
+		return str;
+	}
 
 }

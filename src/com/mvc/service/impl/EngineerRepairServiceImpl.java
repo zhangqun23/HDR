@@ -465,7 +465,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			picPath = FileHelper.transPath(picName1, picPath);
 		}
 		Map<String, Object> picMap = new HashMap<String, Object>();
-		picMap = PictureUtil.getHighPicMap(picName1, picPath, photo);
+		picMap = PictureUtil.getPicMap(picPath, photo);
 		WordHelper wh = new WordHelper();
 
 		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据

@@ -60,6 +60,9 @@ public class CheckOutServiceImpl implements CheckOutService {
 		CheckOutEfficiency checkOutEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
+			if (obj[0] == null) {
+				continue;
+			}
 			checkOutEfficiency = new CheckOutEfficiency();
 			checkOutEfficiency.setAuthorName(obj[1].toString());
 			checkOutEfficiency.setAuthorNo(obj[2].toString());
@@ -69,7 +72,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			checkOutEfficiency
 					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
 
-			String UsedTimeAvg = StringUtil.divide(obj[2].toString(), obj[4].toString());
+			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			checkOutEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
 			String timeOutRate = StringUtil.divide(obj[7].toString(), obj[4].toString());
 			checkOutEfficiency.setTimeOutRate(timeOutRate);// 超时率
@@ -98,6 +101,12 @@ public class CheckOutServiceImpl implements CheckOutService {
 		CheckOutDetail checkOutDetail = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
+			if (obj[3] == null) {
+				continue;
+			}
+			if (obj[0] == null) {
+				continue;
+			}
 			checkOutDetail = new CheckOutDetail();
 			checkOutDetail.setRoomNo(obj[0].toString());
 			checkOutDetail.setUsedTime(obj[1].toString());

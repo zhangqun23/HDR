@@ -67,6 +67,83 @@ public class EngineerRepairDaoImpl implements EngineerRepairDao {
 		em.close();
 		return list;
 	}
+	//获取工程维修父类名称
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getProjectRepairList(Map<String, Object> map) {
+		String starttime = null;//开始时间
+		String endtime = null;//结束时间
+		/*if((String)map.get("start_time")!=null){
+			starttime=(String) map.get("start_time");
+		}
+		if((String)map.get("end_time")!=null){
+			endtime=(String) map.get("end_time");
+		}*/
+		starttime="2016-11-1";
+		endtime="2017-11-1";
+		
+		EntityManager em=emf.createEntityManager();
+		StringBuilder sql=new StringBuilder();
+		sql.append(" select parent_name from");
+	    sql.append("(select sort_id,sort_name,parent_name,father_id from engineer_case_sort) as aa ");
+		sql.append("left join ");
+		sql.append("(select sort_id,close_time,count(1) as amount from engineer_info GROUP by sort_id) as bb on aa.sort_id=bb.sort_id  where close_time between '"+ starttime +"' and '"+ endtime +"' group by aa.sort_id");
+		Query query=em.createNativeQuery(sql.toString());
+		List<String> list=query.getResultList();
+		em.close();
+		return list;
+	}
+	//获取工程维修父类名称(去重)
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<String> getProjectRepairListNo(Map<String, Object> map) {
+				String starttime = null;//开始时间
+				String endtime = null;//结束时间
+				/*if((String)map.get("start_time")!=null){
+					starttime=(String) map.get("start_time");
+				}
+				if((String)map.get("end_time")!=null){
+					endtime=(String) map.get("end_time");
+				}*/
+				starttime="2016-11-1";
+				endtime="2017-11-1";
+				
+				EntityManager em=emf.createEntityManager();
+				StringBuilder sql=new StringBuilder();
+				sql.append(" select distinct parent_name from");
+			    sql.append("(select sort_id,sort_name,parent_name,father_id from engineer_case_sort) as aa ");
+				sql.append("left join ");
+				sql.append("(select sort_id,close_time,count(1) as amount from engineer_info GROUP by sort_id) as bb on aa.sort_id=bb.sort_id  where close_time between '"+ starttime +"' and '"+ endtime +"' group by aa.sort_id");
+				Query query=em.createNativeQuery(sql.toString());
+				List<String> list=query.getResultList();
+				em.close();
+				return list;
+			}
+	/*
+	 * ***********************************王慧敏报表图标*******************************
+	 */
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<Object> getProjectRepairIcon(Map<String, Object> dateMap) {
+				String startTime = (String) dateMap.get("startTime");
+				String endTime = (String) dateMap.get("endTime");
+				String repairType=(String) dateMap.get("repairType");
+				
+				EntityManager em=emf.createEntityManager();
+				StringBuilder sql=new StringBuilder();
+				sql.append(" select aa.sort_id,sort_name,father_id,parent_name,COALESCE(bb.amount,0) as amount from");
+			    sql.append("(select sort_id,sort_name,parent_name,father_id from engineer_case_sort) as aa ");
+				sql.append("left join ");
+				sql.append("(select sort_id,close_time,count(1) as amount from engineer_info GROUP by sort_id) as bb on aa.sort_id=bb.sort_id  where close_time between '"+ startTime +"' and '"+ endTime +"' and father_id='"+ repairType +"' group by aa.sort_id");
+				Query query=em.createNativeQuery(sql.toString());
+				List<Object> list=query.getResultList();
+				em.close();
+				return list;
+				
+			}
+			
+	
+	
 	
 
 }

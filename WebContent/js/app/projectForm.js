@@ -142,6 +142,22 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	};
+	// zq获取材料父类型列表
+	services.selectProMaterials = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectMaterial/selectProMaterials.do',
+			data : data
+		});
+	};
+	// zq获取工程物料统计表
+	services.selectProMaterialByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + 'projectMaterial/selectprojectMaterialBylimits.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -531,15 +547,17 @@ app
 							};
 							// zq工程部维修项报表统计
 							reportForm.pmLimit = {
-								startTime : '',
-								endTime : ''
+								start_time : '',
+								end_time : '',
+								repairtype : '-1'
 							}
+
 							reportForm.selectProMaintain = function() {
-								if (reportForm.pmLimit.startTime == '') {
+								if (reportForm.pmLimit.start_time == '') {
 									alert("请选择起始时间！");
 									return false;
 								}
-								if (reportForm.pmLimit.endTime == '') {
+								if (reportForm.pmLimit.end_time == '') {
 									alert("请选择截止时间！");
 									return false;
 								}
@@ -552,7 +570,7 @@ app
 								}).success(function(data) {
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
-									reportForm.list = data.list;
+									reportForm.repairList = data.list;
 									if (data.list) {
 										reportForm.listIsShow = false;
 									} else {
@@ -591,35 +609,47 @@ app
 															200);
 													var title = "工程维修项统计分析扇形图";
 													var pieItems = [];
-													for ( var item in data.list) {
-														if (data.list[item].repairType != '') {
-															combinePie(
-																	pieItems,
-																	data.list[item].repairType,
-																	parseInt(data.list[item].serviceLoad));
+													if (data.list.length) {
+														for ( var item in data.list) {
+															if (data.list[item].repairType != '') {
+																combinePie(
+																		pieItems,
+																		data.list[item].repairType,
+																		parseInt(data.list[item].serviceLoad));
+															}
 														}
-													}
-													pieChartForm("#pieChart",
-															title, "维修项占比",
-															pieItems);
-													$('#chart-svg')
-															.val(
-																	$(
-																			"#pieChart")
-																			.highcharts()
-																			.getSVG());
-													if (data.analyseResult) {
-														reportForm.listRemark = true;
-														reportForm.remark = data.analyseResult;
-														$("#analyseResult")
+														pieChartForm(
+																"#pieChart",
+																title, "维修项占比",
+																pieItems);
+														$('#chart-svg')
 																.val(
-																		data.analyseResult);
+																		$(
+																				"#pieChart")
+																				.highcharts()
+																				.getSVG());
+														if (data.analyseResult) {
+															reportForm.listRemark = true;
+															reportForm.remark = data.analyseResult;
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult")
+																	.val("");
+														}
+														reportForm.listIsShow = false;
 													} else {
-														reportForm.listRemark = false;
-														reportForm.remark = "";
 														$("#analyseResult")
 																.val("");
+														reportForm.listRemark = "";
+														$("#pieChart").empty();
+														$('#chart-svg').val("");
+														reportForm.listIsShow = true;
 													}
+
 												});
 
 							}
@@ -630,10 +660,56 @@ app
 								ss[1] = data1;
 								da.push(ss);
 							}
+							// zq获取工程维修类型下拉列表
 							function findProRepairTypes() {
 								services.findProRepairTypes().success(
 										function(data) {
 											reportForm.repairTypes = data.list;
+										});
+							}
+							// zq工程物料统计表
+							reportForm.pmfLimit = {
+								startTime : '',
+								endTime : '',
+								materialType : ''
+							};
+							reportForm.selectProMaterialByLimits = function() {
+								if (reportForm.pmfLimit.startTime == '') {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.pmfLimit.startTime == '') {
+									alert("请选择截止时间！");
+									return false;
+								}
+								if (reportForm.pmfLimit.materialType == '') {
+									alert("请选择查找类型！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+
+								var pmfLimits = JSON
+										.stringify(reportForm.pmfLimit);
+								services.selectProMaterialByLimits({
+									limit : pmfLimits
+								}).success(function(data) {
+									$('.overlayer').fadeOut(200);
+									$('.tipLoading').fadeOut(200);
+									reportForm.materialList = data.list;
+									if (data.list.length) {
+										reportForm.listIsShow = false;
+									} else {
+										reportForm.listIsShow = true;
+									}
+								});
+
+							}
+							// zq获取材料父类型
+							function selectProMaterials() {
+								services.selectProMaterials().success(
+										function(data) {
+											reportForm.materials = data.list
 										});
 							}
 							// zq初始化
@@ -655,8 +731,14 @@ app
 									selectRoomStaffs(1);
 
 								} else if ($location.path().indexOf(
+										'/proMaintainForm') == 0) {
+									findProRepairTypes();
+								} else if ($location.path().indexOf(
 										'/proMaintainAnalyse') == 0) {
 									findProRepairTypes();
+								} else if ($location.path().indexOf(
+										'/proMaterialForm')) {
+									selectProMaterials();
 								}
 							}
 							initData();

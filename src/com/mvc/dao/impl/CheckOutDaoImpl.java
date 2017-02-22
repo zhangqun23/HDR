@@ -41,7 +41,7 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append("count(1) AS work_count,");
 		sql.append("COALESCE (a.back_num, 0) AS back_num,");
 		sql.append("COALESCE (b.out_time_num, 0) AS out_time_num, ");
-		sql.append(" sum(case_info.given_time/case_info.use_time)/count(1) as rob_effeciency_avg ");
+		sql.append("COALESCE( sum(case_info.given_time/case_info.use_time)/count(1),0) as rob_effeciency_avg ");
 		sql.append("FROM case_info ");
 		sql.append("LEFT JOIN call_info ON case_info.call_id = call_info.call_id ");
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = case_info.case_author ");
@@ -75,7 +75,8 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append(") AS b ON b.staff_id = staff_info.staff_id ");
 
 		sql.append("WHERE ");
-		sql.append(" call_info.service_sort = '查房'");
+		sql.append(" call_info.service_sort = '查房' ");
+		sql.append("and staff_info.staff_id is not null ");
 		sql.append(sqlLimit);
 		sql.append(" GROUP BY case_info.case_author");
 
@@ -120,27 +121,17 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append("ci.use_time,");
 		sql.append("ci.given_time,");
 		sql.append("staff_info.Staff_name,");
-		sql.append("ci.is_back,");
-		sql.append("check_case.use_time AS check_used_time,");
-		sql.append("checkAuthor.staff_name AS checker_name ");
+		sql.append("ci.is_back ");
 		sql.append("FROM ");
 		sql.append("case_info ci ");
 		sql.append("LEFT JOIN call_info ON call_info.call_id = ci.call_id ");
-		sql.append(" INNER JOIN check_case ON check_case.case_id = ci.case_id ");
-		sql.append("AND check_case.create_time = ( ");
-		sql.append("SELECT ");
-		sql.append("max(create_time) ");
-		sql.append("FROM ");
-		sql.append("check_case ");
-		sql.append("WHERE ");
-		sql.append("case_id = ci.case_id ");
-		sql.append("LIMIT 1 ) ");
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = ci.case_author ");
 		sql.append("LEFT JOIN room_info ON room_info.room_id = call_info.room_id ");
-		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
 		sql.append("AND call_info.service_sort = '查房' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append(sqlLimit);
 
 		Query query = em.createNativeQuery(sql.toString());
@@ -177,28 +168,19 @@ public class CheckOutDaoImpl implements CheckOutDao {
 	public int getTotalRowCountCheckOutDetail(Map<String, Object> map) {
 		EntityManager em = emf.createEntityManager();
 		String sqlLimit = checkOutSQL(map);
-
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
 		sql.append("count(1) ");
 		sql.append("FROM ");
 		sql.append("case_info ci ");
 		sql.append("LEFT JOIN call_info ON call_info.call_id = ci.call_id ");
-		sql.append(" INNER JOIN check_case ON check_case.case_id = ci.case_id ");
-		sql.append("AND check_case.create_time = ( ");
-		sql.append("SELECT ");
-		sql.append("max(create_time) ");
-		sql.append("FROM ");
-		sql.append("check_case ");
-		sql.append("WHERE ");
-		sql.append("case_id = ci.case_id ");
-		sql.append("LIMIT 1 ) ");
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = ci.case_author ");
 		sql.append("LEFT JOIN room_info ON room_info.room_id = call_info.room_id ");
-		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
 		sql.append("AND call_info.service_sort = '查房' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append(sqlLimit);
 
 		Query query = em.createNativeQuery(sql.toString());
@@ -310,27 +292,17 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append("ci.use_time,");
 		sql.append("ci.given_time,");
 		sql.append("staff_info.Staff_name,");
-		sql.append("ci.is_back,");
-		sql.append("check_case.use_time AS check_used_time,");
-		sql.append("checkAuthor.staff_name AS checker_name ");
+		sql.append("ci.is_back ");
 		sql.append("FROM ");
 		sql.append("case_info ci ");
 		sql.append("LEFT JOIN call_info ON call_info.call_id = ci.call_id ");
-		sql.append(" INNER JOIN check_case ON check_case.case_id = ci.case_id ");
-		sql.append("AND check_case.create_time = ( ");
-		sql.append("SELECT ");
-		sql.append("max(create_time) ");
-		sql.append("FROM ");
-		sql.append("check_case ");
-		sql.append("WHERE ");
-		sql.append("case_id = ci.case_id ");
-		sql.append("LIMIT 1 ) ");
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = ci.case_author ");
 		sql.append("LEFT JOIN room_info ON room_info.room_id = call_info.room_id ");
-		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
 		sql.append("AND call_info.service_sort = '查房' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append(sqlLimit);
 		sql.append(" limit ");
 		sql.append(pager.getOffset() + "," + pager.getPageSize());

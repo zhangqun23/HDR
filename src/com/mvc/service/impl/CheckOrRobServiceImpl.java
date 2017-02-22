@@ -62,6 +62,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		RobEfficiency robEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
+			if (obj[0]==null) {
+				continue;
+			}
 			robEfficiency = new RobEfficiency();
 			robEfficiency.setAuthorName(obj[1].toString());
 			robEfficiency.setAuthorNo(obj[2].toString());
@@ -71,7 +74,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robEfficiency
 					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
 
-			String UsedTimeAvg = StringUtil.divide(obj[2].toString(), obj[4].toString());
+			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			robEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
 			String backRate = StringUtil.divide(obj[6].toString(), obj[4].toString());
 			robEfficiency.setBackRate(backRate);// 驳回率

@@ -400,14 +400,39 @@ app
 																.fadeOut(200);
 														reportForm.expendFormList = data.list;
 														reportForm.expendCount = data.count;
-														reportForm.analyseResult = data.result;
+														reportForm.analyseResult = data.analyseResult;
 														if (data.list) {
 															reportForm.listIsShow = false;
 														} else {
 															reportForm.listIsShow = true;
 														}
-														if (data.analyseResult) {
-															reportForm.listRemark = true;
+														if (reportForm.analyseResult) {
+															switch (reportForm.sLimit.tableType) {
+															case '0':
+																reportForm.listRemark1 = true;
+																reportForm.listRemark2 = false;
+																reportForm.listRemark3 = false;
+																reportForm.listRemark4 = false;
+																break;
+															case '1':
+																reportForm.listRemark1 = false;
+																reportForm.listRemark2 = true;
+																reportForm.listRemark3 = false;
+																reportForm.listRemark4 = false;
+																break;
+															case '2':
+																reportForm.listRemark1 = false;
+																reportForm.listRemark2 = false;
+																reportForm.listRemark3 = true;
+																reportForm.listRemark4 = false;
+																break;
+															case '3':
+																reportForm.listRemark1 = false;
+																reportForm.listRemark2 = false;
+																reportForm.listRemark3 = false;
+																reportForm.listRemark4 = true;
+																break;
+																}
 															reportForm.remark = data.analyseResult;
 															$("#analyseResult").val(data.analyseResult);
 														} else {
@@ -453,11 +478,24 @@ app
 																.fadeOut(200);
 														reportForm.linenExpendFormList = data.list;
 														reportForm.totalPage = data.totalPage;
+														reportForm.analyseResult = data.analyseResult;
 														pageTurn(
 																reportForm.totalPage,
 																1,
 																getLinenExpendFormByLlimits);
 														reportForm.linenCount = data.linenCount;
+														if (reportForm.analyseResult) {
+															reportForm.remark = data.analyseResult;
+															reportForm.listRemark1 = true;
+															reportForm.listRemark2 = false;
+															reportForm.listRemark3 = false;
+															reportForm.listRemark4 = false;
+															$("#analyseResult").val(data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult").val("");
+														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
 														} else {
@@ -483,6 +521,19 @@ app
 																1,
 																getRoomExpendFormByRlimits);
 														reportForm.roomCount = data.roomCount;
+														reportForm.analyseResult = data.analyseResult;
+														if (reportForm.analyseResult) {
+															reportForm.remark = data.analyseResult;
+															reportForm.listRemark1 = false;
+															reportForm.listRemark2 = true;
+															reportForm.listRemark3 = false;
+															reportForm.listRemark4 = false;
+															$("#analyseResult").val(data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult").val("");
+														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
 														} else {
@@ -509,6 +560,19 @@ app
 																1,
 																getWashExpendFormByWlimits);
 														reportForm.washCount = data.washCount;
+														reportForm.analyseResult = data.analyseResult;
+														if (reportForm.analyseResult) {
+															reportForm.remark = data.analyseResult;
+															reportForm.listRemark1 = false;
+															reportForm.listRemark2 = false;
+															reportForm.listRemark3 = true;
+															reportForm.listRemark4 = false;
+															$("#analyseResult").val(data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult").val("");
+														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
 														} else {
@@ -535,6 +599,19 @@ app
 																1,
 																getMiniExpendFormByMlimits);
 														reportForm.miniCount = data.miniCount;
+														reportForm.analyseResult = data.analyseResult;
+														if (reportForm.analyseResult) {
+															reportForm.remark = data.analyseResult;
+															reportForm.listRemark1 = false;
+															reportForm.listRemark2 = false;
+															reportForm.listRemark3 = false;
+															reportForm.listRemark4 = true;
+															$("#analyseResult").val(data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult").val("");
+														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
 														} else {
@@ -552,7 +629,10 @@ app
 							reportForm.changeTable = function() {
 								reportForm.expendFormList = "";
 								reportForm.expendCount = "";
-								reportForm.listRemark = false;
+								reportForm.listRemark1 = false;
+								reportForm.listRemark2 = false;
+								reportForm.listRemark3 = false;
+								reportForm.listRemark4 = false;
 								var table = $("#tableType").val();
 								switch (table) {
 								case '0':

@@ -9,7 +9,7 @@
 
 <div class="rightinfo">
 	<div class="tools" style="">
-		<form action=""
+		<form action="../projectRepair/exportProRepairAnalyse.do"
 			method="post" enctype="multipart/form-data">
 			<ul class="projectListLimit">
 				<li><label>年份</label><input type="text" name="checkYear"
@@ -21,8 +21,8 @@
 							value="{{q.id}}" ng-repeat="q in quarters">{{q.type}}</option>
 				</select></li>
 				<li><label>类型</label><select class="dfselect layoutStyle"
-					style="width: 140px" ng-model="pmaLimit.repairType" name="repairType"
-					id="repairType" required><option
+					style="width: 140px" ng-model="pmaLimit.repairType"
+					name="repairType" id="repairType" required><option
 							value="">请选择</option>
 						<option value="{{r.sortId}}" ng-repeat="r in repairTypes">{{r.sortName}}</option></select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
@@ -37,6 +37,7 @@
 		</form>
 
 	</div>
+	<label class="error-label" ng-show="listIsShow">对不起，未找到相关数据</label>
 	<div id="pieChart"
 		style="min-width: 400px; width: 1000px; height: 400px"></div>
 	<label ng-show="listRemark"

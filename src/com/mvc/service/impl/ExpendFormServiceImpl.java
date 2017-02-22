@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,53 +55,65 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	//布草总数统计
 	@Override
-	public LinenCount linenTotleCount(Map<String, Object> map){
-		
+	public JSONObject linenTotleCount(Map<String, Object> map){
+		String analyseResult = "分析结果：";
 		List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
 		List<Object> listSource = expendFormDao.linenTotleCount(map, listCondition);
 		
 		Iterator<Object> it = listSource.iterator();
 		LinenCount listGoal = objToLinenCount(it);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("linenCount", listGoal);
+		jsonObject.put("analyseResult", analyseResult);
 
-		return listGoal;
+		return jsonObject;
 	}
 	
 	//房间耗品总数统计
 	@Override
-	public RoomCount roomTotleCount(Map<String, Object> map){
-			
+	public JSONObject roomTotleCount(Map<String, Object> map){
+		String analyseResult = "分析结果：";
 		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
 		List<Object> listSource = expendFormDao.roomTotleCount(map, listCondition);
-			
+
+		JSONObject jsonObject = new JSONObject();
 		Iterator<Object> it = listSource.iterator();
 		RoomCount listGoal = objToRoomCount(it);
+		jsonObject.put("roomCount",listGoal);
+		jsonObject.put("analyseResult", analyseResult);
 		
-		return listGoal;
+		return jsonObject;
 	}
 		
 	//卫生间耗品总数统计
 	@Override
-	public WashCount washTotleCount(Map<String, Object> map){
-			
+	public JSONObject washTotleCount(Map<String, Object> map){
+		String analyseResult = "分析结果：";	
 		List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
 		List<Object> listSource = expendFormDao.washTotleCount(map, listCondition);
-			
+		
+		JSONObject jsonObject = new JSONObject();
 		Iterator<Object> it = listSource.iterator();
 		WashCount listGoal = objToWashCount(it);
-
-		return listGoal;
+		jsonObject.put("washCount",listGoal);
+		jsonObject.put("analyseResult", analyseResult);
+		
+		return jsonObject;
 	}
 	
 	//迷你吧总数统计
 	@Override
-	public MiniCount miniTotleCount(Map<String, Object> map){
-		
+	public JSONObject miniTotleCount(Map<String, Object> map){
+		String analyseResult = "分析结果：";
 		List<Object> listSource = expendFormDao.miniTotleCount(map);
-			
+
+		JSONObject jsonObject = new JSONObject();
 		Iterator<Object> it = listSource.iterator();
 		MiniCount listGoal = objToMiniCount(it);
+		jsonObject.put("miniCount",listGoal);
+		jsonObject.put("analyseResult", analyseResult);
 
-		return listGoal;
+		return jsonObject;
 	}
 	
 	// 布草统计
@@ -1873,7 +1886,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		
 		String tableType = (String) map.get("tableType");
 		JSONObject jsonObject = new JSONObject();
-		String analyseResult = "分析结果：";// 分析结果
+		String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
 		switch(tableType){
 		case "0":
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
@@ -1886,9 +1899,32 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
 			linenCount.add(sum);
 			linenCount.add(avg);
-			//String sum_num = sum.getStaff_id();//算出耗品总数
+			Float sum_num = Float.parseFloat(sum.getStaff_id());//算出耗品总数
 			
-			analyseResult +="";
+			Map<String, Integer> linenmap = new HashMap<String, Integer>();
+			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
+			linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
+			linenmap.put("laba_num", Integer.parseInt(sum.getLaba_num()));
+			linenmap.put("besh_num", Integer.parseInt(sum.getBesh_num()));
+			linenmap.put("facl_num", Integer.parseInt(sum.getFacl_num()));
+			linenmap.put("bato_num", Integer.parseInt(sum.getBato_num()));
+			linenmap.put("hato_num", Integer.parseInt(sum.getHato_num()));
+			linenmap.put("medo_num", Integer.parseInt(sum.getMedo_num()));
+			linenmap.put("flto_num", Integer.parseInt(sum.getFlto_num()));
+			linenmap.put("baro_num", Integer.parseInt(sum.getBaro_num()));
+			linenmap.put("pill_num", Integer.parseInt(sum.getPill_num()));
+			linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
+			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
+			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
+			linenmap = CollectionUtil.sortByValue(linenmap);
+			Set set = linenmap.keySet();
+			Iterator itt = set.iterator();
+			for (int i=0;i<3;i++) {
+			String key = (String) itt.next();
+			Integer value = linenmap.get(key);
+			analyseResult += key+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"，";
+			}
+			
 			jsonObject.put("list", listGoal);
 			jsonObject.put("count", linenCount);
 			jsonObject.put("analyseResult", analyseResult);
@@ -2125,6 +2161,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaLinen> le = new WordHelper<StaLinen>();
 			String fileName = "客房部员工领取布草量统计表.docx";
+			String analyseResult = (String) map.get("analyseResult");
+			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -2145,7 +2183,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
-
+			contentMap.put("${analyseResult}", analyseResult);
 			le.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -2293,6 +2331,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取房间耗品量统计表.docx";
+			String analyseResult = (String) map.get("analyseResult");
+			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -2313,7 +2353,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
-
+			contentMap.put("${analyseResult}", analyseResult);
+			
 			le.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -2577,6 +2618,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取卫生间耗品量统计表.docx";
+			String analyseResult = (String) map.get("analyseResult");
+			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -2597,7 +2640,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
-
+			contentMap.put("${analyseResult}", analyseResult);
+			
 			le.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -2812,6 +2856,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取迷你吧量统计表.docx";
+			String analyseResult = (String) map.get("analyseResult");
+			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -2829,6 +2875,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			String startTime = (String) map.get("startTime");
 			String endTime = (String) map.get("endTime");
+			contentMap.put("${analyseResult}", analyseResult);
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
 

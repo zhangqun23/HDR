@@ -19,7 +19,7 @@
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 						onChange=""><label>—</label><input type="text"
-						name="endDate" ng-model="pmLimit.end_time"
+						name="end_time" ng-model="pmLimit.end_time"
 						class="dfselect dateLayoutStyle"
 						onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 						onChange=""></li>
@@ -27,7 +27,7 @@
 						style="width: 140px" ng-model="pmLimit.repairtype"
 						name="repairtype" id="repairtype" required><option
 								value="-1">全部</option>
-							<option value="r.sortId" ng-repeat="r in repairTypes">{{r.sortName}}</option></select></li>
+							<option value="{{r.sortId}}" ng-repeat="r in repairTypes">{{r.sortName}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectProMaintain()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"

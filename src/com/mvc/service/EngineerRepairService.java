@@ -33,4 +33,10 @@ public interface EngineerRepairService {
 	ResponseEntity<byte[]> exportProjectIconWord(Map<String, String> map, String path, String picPath,
 			String modelPath);
 
+	//导出工程维修项统计word
+	ResponseEntity<byte[]> exportProRepairWord(Map<String, Object> map, String path, String modelPath);
+
+	//导出工程维修项统计excel
+	ResponseEntity<byte[]> exportProRepairExcel(Map<String, Object> map, String path);
+
 }

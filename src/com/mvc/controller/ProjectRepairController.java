@@ -44,6 +44,52 @@ public class ProjectRepairController {
 
 		return strr;
 	}
+	/**
+	 * 导出工程维修项统计word
+	 */
+	@RequestMapping("/exportProRepairWord.do")
+	public ResponseEntity<byte[]> selectEngineerRepairWord(HttpServletRequest request,HttpServletResponse response) {
+		String starttime = null;
+		String endtime = null;
+		String repairtype=null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		starttime = request.getParameter("start_time");
+		endtime = request.getParameter("end_time");
+		repairtype=request.getParameter("repairtype");
+		map.put("start_time", starttime);
+		map.put("end_time", endtime);
+		map.put("repairtype", repairtype);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		String modelPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.ENGINEERREPAIRWORD_PATH);// 模板路径
+		ResponseEntity<byte[]> byteArr = engineerRepairService.exportProRepairWord(map, path, modelPath);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
+	/**
+	 * 导出工程维修项统计excel
+	 */
+	@RequestMapping("/exportProRepairExcel.do")
+	public ResponseEntity<byte[]> selectEngineerRepairExcel(HttpServletRequest request,HttpServletResponse response) {
+		String starttime = null;
+		String endtime = null;
+		String repairtype=null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		starttime = request.getParameter("start_time");
+		endtime = request.getParameter("end_time");
+		repairtype=request.getParameter("repairtype");
+		map.put("start_time", starttime);
+		map.put("end_time", endtime);
+		map.put("repairtype", repairtype);
+
+		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
+		ResponseEntity<byte[]> byteArr = engineerRepairService.exportProRepairExcel(map, path);
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
 
 	/*
 	 * ***********************************王慧敏报表*******************************

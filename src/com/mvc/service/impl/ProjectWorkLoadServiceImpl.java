@@ -167,7 +167,7 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 			proWorkLoadList = getProWorkLoadList(startDate, endDate);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "工作量", "排名" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<ProjectWorkLoad>) proWorkLoadList, out, "yyyy-MM-dd", -1, 0,
+			ex.export2007Excel(title, header, (Collection<ProjectWorkLoad>) proWorkLoadList, out, "yyyy-MM-dd",-1, -1,-1, 0,
 					1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 
 			out.close();

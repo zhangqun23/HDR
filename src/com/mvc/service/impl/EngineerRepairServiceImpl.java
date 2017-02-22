@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,14 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.mvc.dao.EngineerRepairDao;
 import com.mvc.entity.EngineerCaseSort;
 import com.mvc.entityReport.HoCustomerService;
-import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.ProjectRepair;
 import com.mvc.service.EngineerRepairService;
 import com.utils.CollectionUtil;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.PictureUtil;
 import com.utils.StringUtil;
@@ -72,7 +72,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 	// 查询工程维修项统计
 	@Override
 	public String findEngineerRepair(Map<String, Object> map) {
-		List<Object> listSource = engineerRepairDao.getEngineerRepairList(map);
+		List<Object> listSource = engineerRepairDao.findProjectRepairList(map);
 		List<String> list = engineerRepairDao.getProjectRepairList(map);// 父名称可能是重复的
 
 		List<ProjectRepair> listGoal = listsourceToListGoal(listSource, list);
@@ -95,7 +95,6 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
 		Object[] objects;
 		ProjectRepair projectRepair;
-
 		while (it.hasNext()) {
 			objects = (Object[]) it.next();
 			projectRepair = new ProjectRepair();
@@ -103,10 +102,10 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			projectRepair.setRepairType(objects[1].toString());// 子类型
 			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
 
-
 			if (map.containsKey(objects[3].toString())) {
-				int m = map.get(objects[3].toString());
-				map.put(objects[3].toString(), m + Integer.valueOf(objects[4].toString()));
+				Integer m = map.get(objects[3].toString());
+				m += Integer.valueOf(objects[4].toString());
+				map.put(objects[3].toString(), m);
 			}
 			listGoal.add(projectRepair);
 		}
@@ -229,6 +228,89 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		CollectionUtil.sort(list, filedName, ascFlag);
 	}
 
+	// 导出工程维修项统计word
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportProRepairWord(Map<String, Object> map, String path, String modelPath) {
+		ResponseEntity<byte[]> byteww = null;
+		String starttime = (String) map.get("start_time");// 开始时间
+		String endtime = (String) map.get("end_time");// 结束时间
+
+		List<ProjectRepair> listGoal = null;
+		String analyseResult = null;
+		WordHelper wh = new WordHelper();
+
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
+
+		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
+			List<Object> listSource = engineerRepairDao.findProjectRepairList(map);
+			List<String> list = engineerRepairDao.getProjectRepairList(map);// 父名称可能是重复的
+			listGoal = listsourceToListGoal(listSource, list);
+
+			analyseResult = listsourceToListGoalIcon(listSource, list, map);
+		}
+		if (listGoal != null) {
+			String fileName = starttime + "至" + endtime + "工程部维修项统计.docx";
+			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
+
+			// 获取列表和文本信息
+			listMap.put("0", listGoal);
+			contentMap.put("${starttime}", starttime);
+			contentMap.put("${endtime}", endtime);
+			contentMap.put("${analyseResult}", analyseResult);
+
+			try {
+				OutputStream out = new FileOutputStream(path0);// 保存路径
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byteww = FileHelper.downloadFile(fileName, path0);
+
+		}
+
+		return byteww;
+
+	}
+
+	// 导出工程维修项统计excel
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<byte[]> exportProRepairExcel(Map<String, Object> map, String path) {
+		ResponseEntity<byte[]> byteww = null;
+		try{
+			ExcelHelper<ProjectRepair> ex = new ExcelHelper<ProjectRepair>();
+			String starttime = (String) map.get("start_time");// 开始时间
+			String endtime = (String) map.get("end_time");// 结束时间
+			String fileName = starttime + "至" + endtime + "工程部维修项统计.xlsx";
+			
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);	
+			
+			List<Object> listSource = engineerRepairDao.findProjectRepairList(map);
+			List<String> list = engineerRepairDao.getProjectRepairList(map);// 父名称可能是重复的
+			List<ProjectRepair> listGoal = listsourceToListGoal(listSource, list);
+			
+			
+			String title = "工程部维修项统计("+ starttime + "至" + endtime +")";
+			
+			String[] header = { "序号", "大区域", "小区域", "数量", "总计"};
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1,1,4,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+			out.close();
+			byteww = FileHelper.downloadFile(fileName, path);
+		}catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return byteww;
+	}
+
 	/*
 	 * ***********************************王慧敏报表图标*******************************
 	 */
@@ -274,16 +356,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 		}
 
-		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名
-		// 测试
-		Iterator<ProjectRepair> itGoal0 = listGoal.iterator();
-		projectRepair = null;
-		while (itGoal0.hasNext()) {
-			i++;
-			projectRepair = itGoal0.next();
-			System.out.println(projectRepair.getServiceLoad());
-
-		}
+		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名		
 
 		Iterator<ProjectRepair> itGoalRange = listGoal.iterator();
 		projectRepair = null;
@@ -426,8 +499,8 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		default:
 			break;
 		}
-		dateMap.put("startTime", startTime);
-		dateMap.put("endTime", endTime);
+		dateMap.put("start_time", startTime);
+		dateMap.put("end_time", endTime);
 		dateMap.put("monthNum", monthNum);
 		dateMap.put("quarterName", checkYear + quarterName);
 		dateMap.put("startMonth", startMonth);

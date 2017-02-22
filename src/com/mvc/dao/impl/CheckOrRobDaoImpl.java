@@ -70,6 +70,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 
 		sql.append("WHERE ");
 		sql.append(" call_info.service_sort = '抢房处理'");
+		sql.append(" and staff_info.staff_id is not null ");
 		sql.append(sqlLimit);
 		sql.append(" GROUP BY case_info.case_author");
 
@@ -155,6 +156,8 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append(sqlLimit);
 		sql.append(" limit ");
@@ -192,6 +195,8 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append(sqlLimit);
 
@@ -324,6 +329,9 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append(sqlLimit);
 
 		Query query = em.createNativeQuery(sql.toString());

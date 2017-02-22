@@ -242,7 +242,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工抢房（" + sortName + "）效率统计表.docx";
+			String fileName = "客房部员工查退房（" + sortName + "）效率统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -276,7 +276,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工抢房（" + sortName + "）明细表.docx";
+			String fileName = "客房部员工查退房（" + sortName + "）明细表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -314,7 +314,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工" + sortName + "抢房效率分析.docx";
+			String fileName = "客房部员工查退房" + sortName + "效率分析.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -366,8 +366,8 @@ public class CheckOutServiceImpl implements CheckOutService {
 		String sortName = (String) map.remove("sortName");
 		String startDate = ((String) map.get("startTime")).substring(0, 7);
 		String endDate = ((String) map.get("endTime")).substring(0, 7);
-		String fileName = "客房部员工抢房（" + sortName + "）明细表.xlsx";
-		String title = "客房部员工抢房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
+		String fileName = "客房部员工查退房（" + sortName + "）明细表.xlsx";
+		String title = "客房部员工查退房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
 		try {
 			ExcelHelper<CheckOutDetail> ex = new ExcelHelper<CheckOutDetail>();
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
@@ -397,8 +397,8 @@ public class CheckOutServiceImpl implements CheckOutService {
 		String sortName = (String) map.remove("sortName");
 		String startDate = ((String) map.get("startTime")).substring(0, 7);
 		String endDate = ((String) map.get("endTime")).substring(0, 7);
-		String fileName = "客房部员工抢房（" + sortName + "）效率统计表.xlsx";
-		String title = "客房部员工抢房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
+		String fileName = "客房部员工查退房（" + sortName + "）效率统计表.xlsx";
+		String title = "客房部员工查退房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
 		try {
 			ExcelHelper<CheckOutEfficiency> ex = new ExcelHelper<CheckOutEfficiency>();
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径

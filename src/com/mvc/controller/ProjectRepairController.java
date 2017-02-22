@@ -89,7 +89,6 @@ public class ProjectRepairController {
 		JSONObject jsonObject =new JSONObject();
 		List<EngineerCaseSort> list= engineerRepairService.findEngineerRepairType();
 
-		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
 
 		return jsonObject.toString();

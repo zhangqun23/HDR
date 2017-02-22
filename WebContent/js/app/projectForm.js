@@ -397,10 +397,13 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.workloadList = data.list;
+									reportForm.remark = data.analyseResult;
 									if (data.list) {
 										reportForm.listIsShow = false;
+										reportForm.listRemark = true;
 									} else {
 										reportForm.listIsShow = true;
+										reportForm.listRemark = false;
 									}
 								});
 							}
@@ -576,10 +579,13 @@ app
 													$(".tipLoading").fadeOut(
 															200);
 													reportForm.repairList = data.list;
+													reportForm.remark = data.analyseResult;
 													if (data.list) {
 														reportForm.listIsShow = false;
+														reportForm.listRemark = true;
 													} else {
 														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
 													}
 													setTimeout(
 															'mergeCell("maintainTable",0,1,4)',
@@ -710,10 +716,13 @@ app
 													$('.tipLoading').fadeOut(
 															200);
 													reportForm.materialList = data.list;
-													if (data.list.length) {
+													reportForm.remark = data.analyseResult;
+													if (data.list) {
 														reportForm.listIsShow = false;
+														reportForm.listRemark = true;
 													} else {
 														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
 													}
 													setTimeout(
 															'mergeCell("materialTable",0,1,"")',

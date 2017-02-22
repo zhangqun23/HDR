@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.service.CheckOutService;
+import com.utils.CookieUtil;
 import com.utils.Pager;
 import com.utils.StringUtil;
 
@@ -168,7 +170,7 @@ public class CheckOutController {
 	 * @return
 	 */
 	@RequestMapping("/exportCheckOutRooms.do")
-	public ResponseEntity<byte[]> exportCheckOutRooms(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportCheckOutRooms(HttpServletRequest request, HttpServletResponse response) {
 		String roomType = null;
 		String sortName = null;
 		String startTime = null;
@@ -201,12 +203,13 @@ public class CheckOutController {
 
 		ResponseEntity<byte[]> byteArr = null;
 		if (tableType.equals("0")) {
-			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROBEFFICIENCY_PATH);// 模板路径
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.CHECKOUTEFFICIENCY_PATH);// 模板路径
 			byteArr = checkOutService.exportCheckOutEfficiency(map, path, tempPath);
 		} else {
-			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROBDETAIL_PATH);// 模板路径
+			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.CHECKOUTDETAIL_PATH);// 模板路径
 			byteArr = checkOutService.exportCheckOutDetail(map, path, tempPath);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -217,7 +220,7 @@ public class CheckOutController {
 	 * @return
 	 */
 	@RequestMapping("/exportCheckOutRoomsExcel.do")
-	public ResponseEntity<byte[]> exportRobExcelBylimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportCheckOutRoomsExcel(HttpServletRequest request, HttpServletResponse response) {
 		String roomType = null;
 		String sortName = null;
 		String startTime = null;
@@ -253,6 +256,7 @@ public class CheckOutController {
 		} else {
 			byteArr = checkOutService.exportCheckOutDetailExcel(map, path);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 
@@ -263,7 +267,7 @@ public class CheckOutController {
 	 * @return
 	 */
 	@RequestMapping("/exportCheckOutAnalyse.do")
-	public ResponseEntity<byte[]> exportCheckOutAnalyse(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportCheckOutAnalyse(HttpServletRequest request, HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String roomType = null;
@@ -300,10 +304,10 @@ public class CheckOutController {
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String tempPath = request.getSession().getServletContext()
-				.getRealPath(ReportFormConstants.ROBEFFICIENCYANALYSE_PATH);// 模板路径
+				.getRealPath(ReportFormConstants.CHECKOUTEFFICIENCYANALYSE_PATH);// 模板路径
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		ResponseEntity<byte[]> byteArr = checkOutService.exportCheckOutAnalyseByLimits(map, path, tempPath, picPath);
-
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 }

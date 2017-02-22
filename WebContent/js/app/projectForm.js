@@ -548,7 +548,8 @@ app
 							// zq工程部维修项报表统计
 							reportForm.pmLimit = {
 								start_time : '',
-								end_time : ''
+								end_time : '',
+								repairtype : '-1'
 							}
 
 							reportForm.selectProMaintain = function() {
@@ -608,35 +609,47 @@ app
 															200);
 													var title = "工程维修项统计分析扇形图";
 													var pieItems = [];
-													for ( var item in data.list) {
-														if (data.list[item].repairType != '') {
-															combinePie(
-																	pieItems,
-																	data.list[item].repairType,
-																	parseInt(data.list[item].serviceLoad));
+													if (data.list.length) {
+														for ( var item in data.list) {
+															if (data.list[item].repairType != '') {
+																combinePie(
+																		pieItems,
+																		data.list[item].repairType,
+																		parseInt(data.list[item].serviceLoad));
+															}
 														}
-													}
-													pieChartForm("#pieChart",
-															title, "维修项占比",
-															pieItems);
-													$('#chart-svg')
-															.val(
-																	$(
-																			"#pieChart")
-																			.highcharts()
-																			.getSVG());
-													if (data.analyseResult) {
-														reportForm.listRemark = true;
-														reportForm.remark = data.analyseResult;
-														$("#analyseResult")
+														pieChartForm(
+																"#pieChart",
+																title, "维修项占比",
+																pieItems);
+														$('#chart-svg')
 																.val(
-																		data.analyseResult);
+																		$(
+																				"#pieChart")
+																				.highcharts()
+																				.getSVG());
+														if (data.analyseResult) {
+															reportForm.listRemark = true;
+															reportForm.remark = data.analyseResult;
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
+														} else {
+															reportForm.listRemark = false;
+															reportForm.remark = "";
+															$("#analyseResult")
+																	.val("");
+														}
+														reportForm.listIsShow = false;
 													} else {
-														reportForm.listRemark = false;
-														reportForm.remark = "";
 														$("#analyseResult")
 																.val("");
+														reportForm.listRemark = "";
+														$("#pieChart").empty();
+														$('#chart-svg').val("");
+														reportForm.listIsShow = true;
 													}
+
 												});
 
 							}
@@ -657,7 +670,8 @@ app
 							// zq工程物料统计表
 							reportForm.pmfLimit = {
 								startTime : '',
-								endTime : ''
+								endTime : '',
+								materialType : ''
 							};
 							reportForm.selectProMaterialByLimits = function() {
 								if (reportForm.pmfLimit.startTime == '') {
@@ -666,6 +680,10 @@ app
 								}
 								if (reportForm.pmfLimit.startTime == '') {
 									alert("请选择截止时间！");
+									return false;
+								}
+								if (reportForm.pmfLimit.materialType == '') {
+									alert("请选择查找类型！");
 									return false;
 								}
 								$(".overlayer").fadeIn(200);
@@ -712,6 +730,9 @@ app
 										'/proWorkLoadAnalyse') == 0) {
 									selectRoomStaffs(1);
 
+								} else if ($location.path().indexOf(
+										'/proMaintainForm') == 0) {
+									findProRepairTypes();
 								} else if ($location.path().indexOf(
 										'/proMaintainAnalyse') == 0) {
 									findProRepairTypes();

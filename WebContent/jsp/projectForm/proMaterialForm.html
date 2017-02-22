@@ -27,7 +27,7 @@
 						style="width: 140px" ng-model="pmfLimit.materialType"
 						name="materialType" id="materialType" required><option
 								value="">请选择</option>
-							<option value="" ng-repeat=""></option></select></li>
+							<option value="m.sortId" ng-repeat="m in materials">{{m.sortName}}</option></select></li>
 					<li><input class="btn layoutStyle" style="width: 60px"
 						type="button" value="查询" ng-click="selectProMaterialByLimits()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"

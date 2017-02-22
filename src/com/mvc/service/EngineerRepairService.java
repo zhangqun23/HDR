@@ -3,6 +3,8 @@ package com.mvc.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+
 import com.mvc.entity.EngineerCaseSort;
 import com.mvc.entityReport.ProjectRepair;
 
@@ -26,5 +28,9 @@ public interface EngineerRepairService {
 
 	//查询工程维修项统计图标
 	String getProjectRepairIcon(Map<String, String> map);
+
+	//导出工程维修项统计图表
+	ResponseEntity<byte[]> exportProjectIconWord(Map<String, String> map, String path, String picPath,
+			String modelPath);
 
 }

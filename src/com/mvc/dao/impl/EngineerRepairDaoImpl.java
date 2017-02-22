@@ -31,14 +31,12 @@ public class EngineerRepairDaoImpl implements EngineerRepairDao {
 	public List<Object> getEngineerRepairList(Map<String, Object> map){
 		String starttime = null;//开始时间
 		String endtime = null;//结束时间
-		/*if((String)map.get("start_time")!=null){
+		if((String)map.get("start_time")!=null){
 			starttime=(String) map.get("start_time");
 		}
 		if((String)map.get("end_time")!=null){
 			endtime=(String) map.get("end_time");
-		}*/
-		starttime="2016-11-1";
-		endtime="2017-11-1";
+		}
 		
 		EntityManager em=emf.createEntityManager();
 		StringBuilder sql=new StringBuilder();
@@ -73,14 +71,12 @@ public class EngineerRepairDaoImpl implements EngineerRepairDao {
 	public List<String> getProjectRepairList(Map<String, Object> map) {
 		String starttime = null;//开始时间
 		String endtime = null;//结束时间
-		/*if((String)map.get("start_time")!=null){
+		if((String)map.get("start_time")!=null){
 			starttime=(String) map.get("start_time");
 		}
 		if((String)map.get("end_time")!=null){
 			endtime=(String) map.get("end_time");
-		}*/
-		starttime="2016-11-1";
-		endtime="2017-11-1";
+		}
 		
 		EntityManager em=emf.createEntityManager();
 		StringBuilder sql=new StringBuilder();

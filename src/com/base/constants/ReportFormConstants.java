@@ -96,4 +96,7 @@ public class ReportFormConstants {
 	// 工程物料
 	public static final String ENGINEMATERIAL_PATH = DICTIONARY + "EngineMaterial.docx";
 
+	// 工程维修项
+	public static final String PROJECTICONWORD_PATH = DICTIONARY + "ProjectIconWord.docx";
+
 }

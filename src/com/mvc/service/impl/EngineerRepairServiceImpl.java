@@ -1,5 +1,9 @@
 package com.mvc.service.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -17,7 +22,10 @@ import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.ProjectRepair;
 import com.mvc.service.EngineerRepairService;
 import com.utils.CollectionUtil;
+import com.utils.FileHelper;
+import com.utils.PictureUtil;
 import com.utils.StringUtil;
+import com.utils.WordHelper;
 
 import net.sf.json.JSONObject;
 
@@ -68,7 +76,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		List<String> list = engineerRepairDao.getProjectRepairList(map);// 父名称可能是重复的
 
 		List<ProjectRepair> listGoal = listsourceToListGoal(listSource, list);
-		String analyseResult=listsourceToListGoalIcon(listSource, list, map);
+		String analyseResult = listsourceToListGoalIcon(listSource, list, map);
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", listGoal);
@@ -287,7 +295,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			while (itGoalRange.hasNext() && w < 3) {
 				w++;
 				projectRepair = itGoalRange.next();
-				if (w < i) {
+				if (w < i && w < 3) {
 					analyseResult += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")，";
 				} else if (w == 3) {
 					analyseResult += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")。";
@@ -298,6 +306,77 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		jsonObject.put("list", listGoal);
 		jsonObject.put("analyseResult", analyseResult);
 		return jsonObject.toString();
+
+	}
+
+	// 工程报修图标添加文字
+	public String getProjectRepairIconn(Map<String, String> map) {
+		Map<String, Object> dateMap = getDate(map);
+		String repairType = map.get("repairType");
+
+		dateMap.put("repairType", repairType);
+		List<Object> listSource = engineerRepairDao.getProjectRepairIcon(dateMap);
+		String stww = listsourceToListGoalIconn(listSource);
+		return stww;
+
+	}
+
+	private String listsourceToListGoalIconn(List<Object> listSource) {
+		Iterator<Object> it = listSource.iterator();
+
+		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
+		Object[] objects;
+		ProjectRepair projectRepair;
+		String parentname = null;
+		String analyseResult;
+		while (it.hasNext()) {
+			objects = (Object[]) it.next();
+			projectRepair = new ProjectRepair();
+			projectRepair.setRepairType(objects[1].toString());// 子类型
+			projectRepair.setServiceLoad(objects[4].toString());// 数量
+			parentname = objects[3].toString();
+
+			listGoal.add(projectRepair);
+		}
+		// 序号
+		Iterator<ProjectRepair> itGoal = listGoal.iterator();
+		projectRepair = null;
+		int i = 0;
+		while (itGoal.hasNext()) {
+			i++;
+			projectRepair = itGoal.next();
+			projectRepair.setOrderNum(String.valueOf(i));
+
+		}
+
+		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名
+		Iterator<ProjectRepair> itGoalRange = listGoal.iterator();
+		projectRepair = null;
+		int w = 0;
+		analyseResult = parentname + "报修项排名前三的是：";
+		if (i <= 3) {
+			while (itGoalRange.hasNext()) {
+				w++;
+				projectRepair = itGoalRange.next();
+				if (w < i) {
+					analyseResult += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")，";
+				} else {
+					analyseResult += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")。";
+				}
+			}
+		} else {
+			while (itGoalRange.hasNext() && w < 3) {
+				w++;
+				projectRepair = itGoalRange.next();
+				if (w < i && w < 3) {
+					analyseResult += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")，";
+				} else if (w == 3) {
+					analyseResult += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")。";
+				}
+			}
+		}
+		
+		return analyseResult;
 
 	}
 
@@ -345,6 +424,73 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		dateMap.put("quarterName", checkYear + quarterName);
 		dateMap.put("startMonth", startMonth);
 		return dateMap;
+	}
+
+	// 导出工程报修图标
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public ResponseEntity<byte[]> exportProjectIconWord(Map<String, String> map, String path, String picPath,
+			String modelPath) {
+		ResponseEntity<byte[]> byteww = null;
+
+		String photo = (String) map.get("photo");// 图片
+		String checkYear = map.get("checkYear");
+		String quarter = map.get("quarter");
+		String quarterName = "";
+		switch (quarter) {
+		case "0":
+			quarterName = "全年";
+			break;
+		case "1":
+			quarterName = "年第一季度";
+			break;
+		case "2":
+			quarterName = "年第二季度";
+			break;
+		case "3":
+			quarterName = "年第三季度";
+			break;
+		case "4":
+			quarterName = "年第四季度";
+			break;
+		default:
+			break;
+		}
+
+		String analyseResult = getProjectRepairIconn(map);// 图片文字
+		// 添加图片
+		String picName1 = null;
+		if (StringUtil.strIsNotEmpty(photo)) {
+			picName1 = "pic1.png";
+			picPath = FileHelper.transPath(picName1, picPath);
+		}
+		Map<String, Object> picMap = new HashMap<String, Object>();
+		picMap = PictureUtil.getHighPicMap(picName1, picPath, photo);
+		WordHelper wh = new WordHelper();
+
+		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+
+		String fileName = checkYear + quarterName + "工程维修项统计分析.docx";
+		String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
+
+		// 文本信息
+		contentMap.put("${checkYear}", checkYear);
+		contentMap.put("${quarterName}", quarterName);
+		contentMap.put("${photo}", picMap);
+		contentMap.put("${analyseResult}", analyseResult);
+
+		try {
+			OutputStream out = new FileOutputStream(path0);// 保存路径
+			wh.export2007Word(modelPath, null, contentMap, 1, out);
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byteww = FileHelper.downloadFile(fileName, path0);
+
+		return byteww;
 	}
 
 	/*

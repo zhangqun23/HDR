@@ -14,13 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
-import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
-import com.mvc.entityReport.MiniCount;
 import com.mvc.entityReport.MiniExpend;
-import com.mvc.entityReport.RoomCount;
 import com.mvc.entityReport.RoomExpend;
-import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.mvc.service.ExpendFormService;
 import com.utils.CookieUtil;
@@ -61,10 +57,9 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 
-		LinenCount linenCount = expendFormService.linenTotleCount(map);
-		List<LinenExpend> list = expendFormService.selectLinenPage(map, pager);
 		jsonObject = new JSONObject();
-		jsonObject.put("linenCount", linenCount);
+		jsonObject = expendFormService.linenTotleCount(map);
+		List<LinenExpend> list = expendFormService.selectLinenPage(map, pager);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -99,10 +94,9 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 		
-		RoomCount roomCount = expendFormService.roomTotleCount(map);
-		List<RoomExpend> list = expendFormService.selectRoomExpend(map, pager);
 		jsonObject = new JSONObject();
-		jsonObject.put("roomCount", roomCount);
+		jsonObject = expendFormService.roomTotleCount(map);
+		List<RoomExpend> list = expendFormService.selectRoomExpend(map, pager);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -137,10 +131,9 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 		
-		WashCount washCount = expendFormService.washTotleCount(map);
-		List<WashExpend> list = expendFormService.selectWashExpend(map, pager);
 		jsonObject = new JSONObject();
-		jsonObject.put("washCount", washCount);
+		jsonObject = expendFormService.washTotleCount(map);
+		List<WashExpend> list = expendFormService.selectWashExpend(map, pager);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -175,10 +168,9 @@ public class ExpendFormController {
 		pager.setPage(Integer.parseInt(request.getParameter("page")));// 指定页码
 		pager.setTotalRow(totalRow);
 
-		MiniCount miniCount = expendFormService.miniTotleCount(map);
-		List<MiniExpend> list = expendFormService.selectMiniPage(map, pager);
 		jsonObject = new JSONObject();
-		jsonObject.put("miniCount", miniCount);
+		jsonObject = expendFormService.miniTotleCount(map);
+		List<MiniExpend> list = expendFormService.selectMiniPage(map, pager);
 		jsonObject.put("list", list);
 		jsonObject.put("totalPage", pager.getTotalPage());
 		return jsonObject.toString();
@@ -383,7 +375,7 @@ public class ExpendFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
 			tableType = request.getParameter("tableType");
 		}
-		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult"))) {
 			analyseResult = request.getParameter("analyseResult");
 		}
 		switch(tableType){
@@ -500,6 +492,7 @@ public class ExpendFormController {
 		String tableType = null;
 		String startTime = null;
 		String endTime = null;
+		String analyseResult = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("tableType"))) {
 			tableType = request.getParameter("tableType");// 报表类型
@@ -510,11 +503,15 @@ public class ExpendFormController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
 			endTime = StringUtil.dayLastTime(request.getParameter("endTime"));// 结束时间
 		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("result"))) {
+			analyseResult = request.getParameter("result");// 分析结果
+		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tableType", tableType);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
+		map.put("analyseResult", analyseResult);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String tempPath = null;

@@ -5,13 +5,9 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
-import com.mvc.entityReport.LinenCount;
 import com.mvc.entityReport.LinenExpend;
-import com.mvc.entityReport.MiniCount;
 import com.mvc.entityReport.MiniExpend;
-import com.mvc.entityReport.RoomCount;
 import com.mvc.entityReport.RoomExpend;
-import com.mvc.entityReport.WashCount;
 import com.mvc.entityReport.WashExpend;
 import com.utils.Pager;
 
@@ -26,16 +22,16 @@ import net.sf.json.JSONObject;
 public interface ExpendFormService {
 
 	// 布草总数统计
-	LinenCount linenTotleCount(Map<String, Object> map);
+	JSONObject linenTotleCount(Map<String, Object> map);
 	
 	// 房间耗品总数统计
-	RoomCount roomTotleCount(Map<String, Object> map);
+	JSONObject roomTotleCount(Map<String, Object> map);
 		
 	// 卫生间耗品总数统计
-	WashCount washTotleCount(Map<String, Object> map);
+	JSONObject washTotleCount(Map<String, Object> map);
 	
 	// 迷你吧总数统计
-	MiniCount miniTotleCount(Map<String, Object> map);
+	JSONObject miniTotleCount(Map<String, Object> map);
 
 	// 布草统计分页
 	List<LinenExpend> selectLinenPage(Map<String, Object> map, Pager pager);
@@ -105,18 +101,18 @@ public interface ExpendFormService {
 	//员工领取耗品统计分页
 	JSONObject selectStaExpend (Map<String, Object> map);
 	
-	// 导出员工领取布草量统计表
+	// 导出员工领取布草量统计表（word格式）
 	ResponseEntity<byte[]> exportStaLinen(Map<String, Object> map, String path, String tempPath);
 	
-	// 导出员工领取房间耗品量统计表
+	// 导出员工领取房间耗品量统计表（word格式）
 	ResponseEntity<byte[]> exportStaRoom(Map<String, Object> map, String path, String tempPath);
 		
-	// 导出员工领取卫生间耗品量统计表
+	// 导出员工领取卫生间耗品量统计表（word格式）
 	ResponseEntity<byte[]> exportStaWash(Map<String, Object> map, String path, String tempPath);
 
-	// 导出员工领取迷你吧量统计表
+	// 导出员工领取迷你吧量统计表（word格式）
 	ResponseEntity<byte[]> exportStaMini(Map<String, Object> map, String path, String tempPath);
 
-	// 导出员工领取耗品统计
+	// 导出员工领取耗品统计(excel格式)
 	ResponseEntity<byte[]> exportStaExpendExcel(Map<String, Object> map);
 }

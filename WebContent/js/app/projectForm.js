@@ -565,18 +565,26 @@ app
 								$(".tipLoading").fadeIn(200);
 								proMaintainLimit = JSON
 										.stringify(reportForm.pmLimit);
-								services.selectProMaintain({
-									limit : proMaintainLimit
-								}).success(function(data) {
-									$(".overlayer").fadeOut(200);
-									$(".tipLoading").fadeOut(200);
-									reportForm.repairList = data.list;
-									if (data.list) {
-										reportForm.listIsShow = false;
-									} else {
-										reportForm.listIsShow = true;
-									}
-								});
+								services
+										.selectProMaintain({
+											limit : proMaintainLimit
+										})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													reportForm.repairList = data.list;
+													if (data.list) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+													setTimeout(
+															'mergeCell("maintainTable",0,1,4)',
+															"0");
+												});
 							}
 							reportForm.pmaLimit = {
 								checkYear : '',
@@ -691,18 +699,26 @@ app
 
 								var pmfLimits = JSON
 										.stringify(reportForm.pmfLimit);
-								services.selectProMaterialByLimits({
-									limit : pmfLimits
-								}).success(function(data) {
-									$('.overlayer').fadeOut(200);
-									$('.tipLoading').fadeOut(200);
-									reportForm.materialList = data.list;
-									if (data.list.length) {
-										reportForm.listIsShow = false;
-									} else {
-										reportForm.listIsShow = true;
-									}
-								});
+								services
+										.selectProMaterialByLimits({
+											limit : pmfLimits
+										})
+										.success(
+												function(data) {
+													$('.overlayer')
+															.fadeOut(200);
+													$('.tipLoading').fadeOut(
+															200);
+													reportForm.materialList = data.list;
+													if (data.list.length) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+													setTimeout(
+															'mergeCell("materialTable",0,1,"")',
+															"0");
+												});
 
 							}
 							// zq获取材料父类型
@@ -784,3 +800,31 @@ app.filter('numFloat', function() {
 		return number;
 	}
 });
+// 合并单元格
+function mergeCell(tableId, startRow, col, col1) {
+	var tb = document.getElementById(tableId);
+	if (col >= tb.rows[0].cells.length) {
+		return false;
+	}
+	// 检查所有行
+	var endRow = tb.rows.length - 1;
+	for (var i = startRow; i < endRow; i++) {
+		// 判断当前行与下一行是否可以合并
+		if (tb.rows[startRow].cells[col].innerHTML == tb.rows[i + 1].cells[col].innerHTML) {
+			// 如果相同则删除下一行的该单元格
+			tb.rows[i + 1].removeChild(tb.rows[i + 1].cells[col]);
+			if (col1 != "") {
+				tb.rows[i + 1].removeChild(tb.rows[i + 1].cells[col1 - 1]);
+			}
+			// 更新rowSpan属性
+			tb.rows[startRow].cells[col].rowSpan = (tb.rows[startRow].cells[col].rowSpan | 0) + 1;
+			if (col1 != "") {
+				tb.rows[startRow].cells[col1].rowSpan = (tb.rows[startRow].cells[col1].rowSpan | 0) + 1;
+			}
+			// 当循环到终止行前一行并且起始行和终止行不相同时递归(因为上面的代码已经检查了i+1行，所以此处只到endRow-1)
+		} else {
+			// 增加起始行
+			startRow = i + 1;
+		}
+	}
+}

@@ -95,16 +95,14 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
 		Object[] objects;
 		ProjectRepair projectRepair;
-		String amount = "0.0";
 
 		while (it.hasNext()) {
 			objects = (Object[]) it.next();
 			projectRepair = new ProjectRepair();
 			projectRepair.setRepairParentType(objects[3].toString());// 父类型
 			projectRepair.setRepairType(objects[1].toString());// 子类型
-			projectRepair.setServiceLoad(objects[4].toString());// 数量
+			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
 
-			amount = StringUtil.add(amount, objects[4].toString());
 
 			if (map.containsKey(objects[3].toString())) {
 				int m = map.get(objects[3].toString());
@@ -148,14 +146,14 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
 		Object[] objects;
 		ProjectRepair projectRepair;
-		String amount = "0.0";
+		String amount = "0";
 
 		while (it.hasNext()) {
 			objects = (Object[]) it.next();
 			projectRepair = new ProjectRepair();
 			projectRepair.setRepairParentType(objects[3].toString());// 父类型
 			projectRepair.setRepairType(objects[1].toString());// 子类型
-			projectRepair.setServiceLoad(objects[4].toString());// 数量
+			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
 
 			amount = StringUtil.add(amount, objects[4].toString());
 
@@ -260,7 +258,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			objects = (Object[]) it.next();
 			projectRepair = new ProjectRepair();
 			projectRepair.setRepairType(objects[1].toString());// 子类型
-			projectRepair.setServiceLoad(objects[4].toString());// 数量
+			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
 			parentname = objects[3].toString();
 
 			listGoal.add(projectRepair);
@@ -277,6 +275,16 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		}
 
 		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名
+		// 测试
+		Iterator<ProjectRepair> itGoal0 = listGoal.iterator();
+		projectRepair = null;
+		while (itGoal0.hasNext()) {
+			i++;
+			projectRepair = itGoal0.next();
+			System.out.println(projectRepair.getServiceLoad());
+
+		}
+
 		Iterator<ProjectRepair> itGoalRange = listGoal.iterator();
 		projectRepair = null;
 		int w = 0;
@@ -333,7 +341,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			objects = (Object[]) it.next();
 			projectRepair = new ProjectRepair();
 			projectRepair.setRepairType(objects[1].toString());// 子类型
-			projectRepair.setServiceLoad(objects[4].toString());// 数量
+			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
 			parentname = objects[3].toString();
 
 			listGoal.add(projectRepair);
@@ -375,7 +383,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 				}
 			}
 		}
-		
+
 		return analyseResult;
 
 	}

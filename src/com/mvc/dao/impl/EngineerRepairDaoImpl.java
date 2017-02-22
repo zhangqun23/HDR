@@ -121,9 +121,12 @@ public class EngineerRepairDaoImpl implements EngineerRepairDao {
 			@SuppressWarnings("unchecked")
 			@Override
 			public List<Object> getProjectRepairIcon(Map<String, Object> dateMap) {
-				String startTime = (String) dateMap.get("startTime");
+				String startTime = (String) dateMap.get("startTime");						
 				String endTime = (String) dateMap.get("endTime");
 				String repairType=(String) dateMap.get("repairType");
+				
+				System.out.println(startTime);
+				System.out.println(endTime);
 				
 				EntityManager em=emf.createEntityManager();
 				StringBuilder sql=new StringBuilder();

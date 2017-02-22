@@ -36,7 +36,7 @@ public class EngineMaterialDaoImpl implements EngineMaterialDao {
 		StringBuilder sql = new StringBuilder();
 		sql.append(
 				"select msf.fsort_name,mh.material_name,mh.material_type,a.take_amount,mh.material_unit,a.task_num from ");
-		sql.append("(select mcr.material_id,mcr.take_amount,count(case_id) as task_num ");
+		sql.append("(select mcr.material_id,mcr.take_amount,mcr.out_time,count(case_id) as task_num ");
 		sql.append("from material_case_rela mcr where mcr.is_deleted=0 group by mcr.material_id) a ");
 		sql.append("left join material_house mh on mh.material_id=a.material_id ");
 		sql.append("left join material_sort_finance msf on msf.fsort_id=mh.fsort_id ");
@@ -61,7 +61,7 @@ public class EngineMaterialDaoImpl implements EngineMaterialDao {
 		String endTime = (String) map.get("endTime");
 
 		if (startTime != null && endTime != null) {
-			sql.append(" and mcr.out_time between '" + startTime + "'" + " and '" + endTime + "'");
+			sql.append(" and a.out_time between '" + startTime + "'" + " and '" + endTime + "'");
 		}
 
 		return sql.toString();

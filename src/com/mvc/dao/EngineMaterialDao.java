@@ -14,4 +14,6 @@ public interface EngineMaterialDao {
 	// 查询工程物料
 	List<Object> selectEngineMaterial(Map<String, Object> map);
 
+	// 统计不同类别工程物料
+	List<Object> selectSumEngineMaterial(Map<String, Object> map);
 }

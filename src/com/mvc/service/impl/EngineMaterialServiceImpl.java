@@ -134,4 +134,11 @@ public class EngineMaterialServiceImpl implements EngineMaterialService {
 		return byteArr;
 	}
 
+	// 获取物料分类
+	@Override
+	public List<String> selectMatSortName() {
+		
+		return null;
+	}
+
 }

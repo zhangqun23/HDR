@@ -24,4 +24,7 @@ public interface EngineMaterialService {
 	// 工程物料统计Excel
 	ResponseEntity<byte[]> exportEngineMaterialExcel(Map<String, Object> map, String path);
 
+	// 获取物料分类
+	List<String> selectMatSortName();
+
 }

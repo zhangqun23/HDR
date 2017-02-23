@@ -41,6 +41,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
+import com.mvc.entityReport.WorkEfficiency;
 
 public class WordHelper<T> {
 
@@ -82,7 +83,7 @@ public class WordHelper<T> {
 					Object val = entry.getValue();
 					Collection<T> list = (Collection<T>) val;
 					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
-					dynamicWord(doc, list, tableOrder, rowNum,mergeColumn);
+					dynamicWord(doc, list, tableOrder, rowNum, mergeColumn);
 
 				}
 			}
@@ -103,10 +104,11 @@ public class WordHelper<T> {
 	 * @param rowNum:表头行数
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum,Integer mergeColumn) {
+	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum,
+			Integer mergeColumn) {	
 		List<XWPFTable> tables;
-		XWPFTable table = null ;
-		int ww=0;//用于合并单元格
+		XWPFTable table = null;
+		int ww = 0;// 用于合并单元格
 		try {
 			tables = doc.getTables();
 			table = tables.get(tableOrder);// 变量
@@ -128,7 +130,6 @@ public class WordHelper<T> {
 				widthList.add(width);
 			}
 
-			
 			Iterator<T> it = list.iterator();
 			while (it.hasNext()) {
 				row = table.createRow();// 默认按第一行的列数创建行
@@ -151,7 +152,7 @@ public class WordHelper<T> {
 					Method getMethod = tCls.getMethod(getMethodName, new Class[] {});
 					Object value = getMethod.invoke(t, new Object[] {});
 					if (value != null) {
-						if (flag && fieldName.equals("timeOutRate")) {
+						if (flag && judgeField(fieldName)) {
 							cell.setText(StringUtil.strFloatToPer(String.valueOf(value)));// 转换成%
 						} else {
 							cell.setText(String.valueOf(value));// 写入单元格内容
@@ -165,47 +166,49 @@ public class WordHelper<T> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		table.getNumberOfRows();
+		Integer mm=table.getNumberOfRows();
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {
-			addMergedRegion0(table, mergeColumn, 2, table.getNumberOfRows());// 就是合并第一列的所有相同单元格
+			addMergedRegion0(table, mergeColumn, 1, mm);// 就是合并第一列的所有相同单元格
 		}
-		
+
 	}
 
 	// 纵向合并单元格
-	private static void merge(XWPFTable table, int col, int fromRow,int toRow){
-		for(int rowIndex = fromRow; rowIndex <= toRow; rowIndex++){
+	private static void merge(XWPFTable table, int col, int fromRow, int toRow) {
+		for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
 			XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
-			if(rowIndex == fromRow){
+			if (rowIndex == fromRow) {
 				getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.RESTART);
-			}
-			else{
+			} else {
 				getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.CONTINUE);
 			}
 		}
 	}
+
 	private static CTTcPrBase getCellCTTcPr(XWPFTableCell cell) {
 		CTTc cttc = cell.getCTTc();
-		CTTcPr tcPr=cttc.isSetTcPr() ? cttc.getTcPr() : cttc.addNewTcPr();
+		CTTcPr tcPr = cttc.isSetTcPr() ? cttc.getTcPr() : cttc.addNewTcPr();
 		return tcPr;
 	}
 
-	private static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
-		XWPFTableCell s_will = null;// 比较的字段
-		XWPFTableCell s_current = null;// 比较的字段
+	public static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
+		String s_will ;// 比较的字段
+		String s_current ;// 比较的字段
 		XWPFTableCell cell = null;
 		CTTcPr cellPr = null;
 		List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
 
 		// 获取第一行的数据,以便后面进行比较
-		XWPFTableRow row = table.getRow(0);
+		XWPFTableRow row = table.getRow(startRow);
 		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
-		s_will = cells.get(cellLine);// 比较的字段
+		
+		s_will =cells.get(cellLine).getCTTc().get;// 比较的字段 
 		// 获取单元格宽度
-		cellPr = cell.getCTTc().getTcPr();
+		cellPr = cells.get(cellLine).getCTTc().getTcPr();
 		BigInteger width = cellPr.getTcW().getW();
-		widthList.add(width);
+		widthList.add(width);  
+		
 
 		int count = 0;
 		boolean flag = false;
@@ -213,17 +216,20 @@ public class WordHelper<T> {
 		for (int i = startRow + 1; i <= endRow; i++) {
 			XWPFTableRow row0 = table.getRow(i);
 			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头最后一行
-			s_current = cells0.get(cellLine);// 比较的字段
+			s_current= cells0.get(cellLine).getText();// 比较的字段
+			System.out.println(s_current);
 			if (s_will.equals(s_current)) {
 				flag = true;
 				count++;
 			} else {
 				if (flag) {
-					/*cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
-					cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
-					cellPr.addNewVAlign().setVal(STVerticalJc.CENTER);// 表格内容垂直居中
-*/
-					merge(table, cellLine, merge_start_row, merge_start_row +count);
+					/*
+					 * cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
+					 * cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
+					 * cellPr.addNewVAlign().setVal(STVerticalJc.CENTER);//
+					 * 表格内容垂直居中
+					 */
+					merge(table, cellLine, merge_start_row, merge_start_row + count);
 
 				}
 				flag = false;
@@ -234,10 +240,25 @@ public class WordHelper<T> {
 
 			// 由于上面循环中合并的单元放在有下一次相同单元格的时候做的，所以最后如果几行有相同单元格则要运行下面的合并单元格。
 			if (i == endRow && count > 0) {
-				merge(table, cellLine, merge_start_row, merge_start_row +count);
+				merge(table, cellLine, merge_start_row, merge_start_row + count);
 			}
 		}
 
+	}
+	private static String getTableCellContent(XWPFTableCell cell) {
+		StringBuffer sb = new StringBuffer();
+		List<XWPFParagraph> cellPList = cell.getParagraphs();
+		if (cellPList != null && cellPList.size() > 0) {
+			for (XWPFParagraph xwpfPr : cellPList) {
+				List<XWPFRun> runs = xwpfPr.getRuns();
+				if (runs != null && runs.size() > 0) {
+					for (XWPFRun xwpfRun : runs) {
+						sb.append(xwpfRun.getText(0));
+					}
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -426,7 +447,21 @@ public class WordHelper<T> {
 		Boolean flag = false;
 		Class<? extends Object> cla = t.getClass();
 		if (cla == HoCustomerService.class || cla == HouseCustomerServiceLoad.class
-				|| cla == HouseCustomerServiceType.class) {
+				|| cla == HouseCustomerServiceType.class || cla == WorkEfficiency.class) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * 判断需要转换的字段属性
+	 * 
+	 * @param fieldName
+	 * @return
+	 */
+	private Boolean judgeField(String fieldName) {
+		Boolean flag = false;
+		if (fieldName.equals("timeOutRate") || fieldName.equals("house_eff") || fieldName.equals("house_serv_eff")) {
 			flag = true;
 		}
 		return flag;

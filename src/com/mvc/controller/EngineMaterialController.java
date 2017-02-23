@@ -135,4 +135,12 @@ public class EngineMaterialController {
 		return map;
 	}
 
+	@RequestMapping("/selectProMaterials.do")
+	public @ResponseBody String selectMatSortName() {
+		JSONObject jsonObject = new JSONObject();
+		List<String> list = engineMaterialService.selectMatSortName();
+		jsonObject.put("list", list);
+		return jsonObject.toString();
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.mvc.entityReport;
 
 public class MiniCount {
+	private String orderNum;
 	private String sum_redb; //红牛
 	private String sum_coco; //可口可乐
 	private String sum_pari; //法国巴黎水
@@ -119,5 +120,11 @@ public class MiniCount {
 	}
 	public void setSum_como(String sum_como) {
 		this.sum_como = sum_como;
+	}
+	public String getOrderNum() {
+		return orderNum;
+	}
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 }

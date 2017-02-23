@@ -57,15 +57,20 @@ public class WorkLoadController {
 			startDate = request.getParameter("startDate");
 			endDate = request.getParameter("endDate");
 			tableType = Integer.valueOf(request.getParameter("tableType"));
+			String analyseResult = "";
 
 			if (tableType == 0) {
 				List<WorkLoad> workLoadList = null;
 				workLoadList = workLoadService.getWorkLoadSummaryList(startDate, endDate);
+				analyseResult = workLoadService.getLoadAnalyseResult(workLoadList);
 				jsonObject.put("workLoadList", workLoadList);
+				jsonObject.put("analyseResult", analyseResult);
 			} else {
 				List<WorkRoomNum> workRoomNumList = null;
 				workRoomNumList = workLoadService.getWorkRoomNumInfo(startDate, endDate);
+				analyseResult = workLoadService.getRoomAnalyseResult(workRoomNumList);
 				jsonObject.put("workLoadList", workRoomNumList);
+				jsonObject.put("analyseResult", analyseResult);
 			}
 		}
 		return jsonObject.toString();

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mvc.service;
 
 import java.util.List;
@@ -32,5 +29,8 @@ public interface ProjectWorkLoadService {
 
 	// 导出工程部单个员工工作量分析图
 	ResponseEntity<byte[]> exportProWorkLoadAnalyse(Map<String, String> map);
+
+	// 获取分析结果
+	String getAnalyseResult(List<ProjectWorkLoad> list);
 
 }

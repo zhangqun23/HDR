@@ -2,6 +2,7 @@ package com.mvc.entityReport;
 
 public class LinenCount {
 	
+	private String orderNum;
 	private String sum_slba;// 被罩数量
 	private String sum_duto;// 拼尘罩数量
 	private String sum_laba;// 洗衣袋数量
@@ -99,5 +100,11 @@ public class LinenCount {
 	}
 	public void setSum_shop(String sum_shop) {
 		this.sum_shop = sum_shop;
+	}
+	public String getOrderNum() {
+		return orderNum;
+	}
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 }

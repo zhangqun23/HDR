@@ -1,6 +1,7 @@
 package com.mvc.entityReport;
 
 public class RoomCount {
+	private String orderNum;
 	private String sum_umbr;//雨伞数量
 	private String sum_coff;//咖啡数量
 	private String sum_suge;//白糖数量
@@ -238,5 +239,11 @@ public class RoomCount {
 	}
 	public void setSum_arel(String sum_arel) {
 		this.sum_arel = sum_arel;
+	}
+	public String getOrderNum() {
+		return orderNum;
+	}
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 }

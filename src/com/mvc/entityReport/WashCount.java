@@ -1,6 +1,7 @@
 package com.mvc.entityReport;
 
 public class WashCount {
+	private String orderNum;
 	private String sum_toth;//牙具数目
 	private String sum_ropa;//卷纸数目
 	private String sum_rins;//洗发液数目
@@ -182,5 +183,11 @@ public class WashCount {
 	}
 	public void setSum_clbr(String sum_clbr) {
 		this.sum_clbr = sum_clbr;
+	}
+	public String getOrderNum() {
+		return orderNum;
+	}
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 }

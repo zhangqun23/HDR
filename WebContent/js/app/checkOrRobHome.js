@@ -84,82 +84,103 @@ app.config([ '$routeProvider', function($routeProvider) {
 } ]);
 
 app.constant('baseUrl', '/HDR/');
-app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
-	var services = {};
-	// zq获取抢房效率列表
-	services.selectRobEfficiencyByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'checkOrRobHome/selectRobEfficiencyByLimits.do',
-			data : data
-		});
-	};
-	// zq获取房间类型列表
-	services.getRoomSorts = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'reportForm/getRoomSorts.do',
-			data : data
-		});
-	};
-	// zq获取全体成员
-	services.selectRoomStaffs = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'reportForm/selectRoomStaffs.do',
-			data : data
-		});
-	};
-	// zq获取抢房明细列表
-	services.selectRobDetailByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'checkOrRobHome/selectRobDetailByLimits.do',
-			data : data
-		});
-	}
-	// zq获取个人抢房工作效率折线图
-	services.selectRobEffAnalyseByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + 'checkOrRobHome/selectRobEffAnalyseByLimits.do',
-			data : data
-		});
-	};
-	// zq查询领班查房效率
-	services.selectCheckEfficiencyByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + '/checkHouse/getCheckHouseList.do',
-			data : data
-		});
-	};
-	// zq获取查退房效率表
-	services.selectCheckOutEfficiencyByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + '/checkOutHome/selectCheckOutEfficiency.do',
-			data : data
-		});
-	};
-	// zq查退房明细表
-	services.selectCheckOutDetailByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + '/checkOutHome/selectCheckOutDetailByLimits.do',
-			data : data
-		});
-	};
-	// zq查退房效率分析图
-	services.selectCheckOutAnalyseByLimits = function(data) {
-		return $http({
-			method : 'post',
-			url : baseUrl + '/checkOutHome/selectCheckOutEffAnalyseByLimits.do',
-			data : data
-		});
-	};
-	return services;
-} ]);
+app
+		.factory(
+				'services',
+				[
+						'$http',
+						'baseUrl',
+						function($http, baseUrl) {
+							var services = {};
+							// zq获取抢房效率列表
+							services.selectRobEfficiencyByLimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'checkOrRobHome/selectRobEfficiencyByLimits.do',
+									data : data
+								});
+							};
+							// zq获取房间类型列表
+							services.getRoomSorts = function(data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'reportForm/getRoomSorts.do',
+									data : data
+								});
+							};
+							// zq获取全体成员
+							services.selectRoomStaffs = function(data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'reportForm/selectRoomStaffs.do',
+									data : data
+								});
+							};
+							// zq获取抢房明细列表
+							services.selectRobDetailByLimits = function(data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'checkOrRobHome/selectRobDetailByLimits.do',
+									data : data
+								});
+							}
+							// zq获取个人抢房工作效率折线图
+							services.selectRobEffAnalyseByLimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ 'checkOrRobHome/selectRobEffAnalyseByLimits.do',
+									data : data
+								});
+							};
+							// zq查询领班查房效率
+							services.selectCheckEfficiencyByLimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ '/checkHouse/getCheckHouseList.do',
+									data : data
+								});
+							};
+							// zq获取查退房效率表
+							services.selectCheckOutEfficiencyByLimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ '/checkOutHome/selectCheckOutEfficiency.do',
+									data : data
+								});
+							};
+							// zq查退房明细表
+							services.selectCheckOutDetailByLimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ '/checkOutHome/selectCheckOutDetailByLimits.do',
+									data : data
+								});
+							};
+							// zq查退房效率分析图
+							services.selectCheckOutAnalyseByLimits = function(
+									data) {
+								return $http({
+									method : 'post',
+									url : baseUrl
+											+ '/checkOutHome/selectCheckOutEffAnalyseByLimits.do',
+									data : data
+								});
+							};
+							return services;
+						} ]);
 app
 		.controller(
 				'CheckOrRobHomeController',
@@ -375,10 +396,13 @@ app
 										$(".overlayer").fadeOut(200);
 										$(".tipLoading").fadeOut(200);
 										checkRob.robEfficiencyList = data.list;
+										checkRob.remark = data.analyseResult;
 										if (data.list.length) {
 											checkRob.listIsShow = false;
+											checkRob.listRemark = true;
 										} else {
 											checkRob.listIsShow = true;
+											checkRob.listRemark = false;
 										}
 									});
 								} else {
@@ -398,10 +422,13 @@ app
 																data.totalPage,
 																1,
 																getRobDetailByLimits);
+														checkRob.remark = data.analyseResult;
 														if (data.list.length) {
 															checkRob.listIsShow = false;
+															checkRob.listRemark = true;
 														} else {
 															checkRob.listIsShow = true;
+															checkRob.listRemark = false;
 														}
 													});
 								}
@@ -448,12 +475,12 @@ app
 													var title = "客房员工 "
 															+ " "
 															+ getSelectedRoomType(checkRob.reaLimit.roomType)
-															+ " " + "抢房效率分析折线图";// 折线图标题显示
+															+ " " + "抢房用时分析折线图";// 折线图标题显示
 													var xAxis = [];// 横坐标显示
-													var yAxis = "抢房效率";// 纵坐标显示
+													var yAxis = "抢房用时";// 纵坐标显示
 													var nowQuarter = checkRob.reaLimit.quarter;// 当前的选择季度
 													var lineName = getSelectedStaff(checkRob.reaLimit.staffId)
-															+ "员工抢房效率";
+															+ "员工抢房用时";
 													var lineData = [];// 最终传入chart1中的data
 													var allAverageData = [];// 全体员工抢房效率的平均Data
 													var averageData = [];// 个人平均抢房效率
@@ -519,10 +546,10 @@ app
 														break;
 													}
 													combine(lineData,
-															"个人平均抢房效率",
+															"个人平均抢房用时",
 															averageData);
 													combine(lineData,
-															"全体平均抢房效率",
+															"全体平均抢房用时",
 															allAverageData);
 													combine(lineData, lineName,
 															userData);
@@ -604,10 +631,14 @@ app
 													$(".tipLoading").fadeOut(
 															200);
 													checkRob.checkEfficiencyList = data.checkHouseList;
+
+													checkRob.remark = data.analyseResult;
 													if (data.checkHouseList.length) {
 														checkRob.listIsShow = false;
+														checkRob.listRemark = true;
 													} else {
 														checkRob.listIsShow = true;
+														checkRob.listRemark = false;
 													}
 												});
 							}
@@ -643,10 +674,13 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														checkRob.checkOutEfficiencyList = data.list;
+														checkRob.remark = data.analyseResult;
 														if (data.list.length) {
 															checkRob.listIsShow = false;
+															checkRob.listRemark = true;
 														} else {
 															checkRob.listIsShow = true;
+															checkRob.listRemark = false;
 														}
 													});
 								} else {
@@ -668,8 +702,10 @@ app
 																getCheckOutDetailByLimits);
 														if (data.list.length) {
 															checkRob.listIsShow = false;
+															checkRob.listRemark = true;
 														} else {
 															checkRob.listIsShow = true;
+															checkRob.listRemark = false;
 														}
 													});
 								}
@@ -723,12 +759,12 @@ app
 															+ " "
 															+ getSelectedRoomType(checkRob.reaLimit.roomType)
 															+ " "
-															+ "查退房效率分析折线图";// 折线图标题显示
+															+ "查退房用时分析折线图";// 折线图标题显示
 													var xAxis = [];// 横坐标显示
-													var yAxis = "查退房效率";// 纵坐标显示
+													var yAxis = "查退房用时";// 纵坐标显示
 													var nowQuarter = checkRob.coaLimit.quarter;// 当前的选择季度
 													var lineName = getSelectedStaff(checkRob.coaLimit.staffId)
-															+ "员工查退房效率";
+															+ "员工查退房用时";
 													var lineData = [];// 最终传入chart1中的data
 													var allAverageData = [];// 全体员工查退房效率的平均Data
 													var averageData = [];// 个人平均查退房效率
@@ -794,10 +830,10 @@ app
 														break;
 													}
 													combine(lineData,
-															"个人平均查退房效率",
+															"个人平均查退房用时",
 															averageData);
 													combine(lineData,
-															"全体平均查退房效率",
+															"全体平均查退房用时",
 															allAverageData);
 													combine(lineData, lineName,
 															userData);

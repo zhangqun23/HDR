@@ -3,12 +3,14 @@ package com.mvc.service.impl;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.mvc.entityReport.WorkHouse;
 import com.mvc.entityReport.WorkReject;
 import com.mvc.repository.DepartmentInfoRepository;
 import com.mvc.service.WorkRejectService;
+import com.utils.CollectionUtil;
 import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
@@ -106,7 +109,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 
 		String staffId = (String) map.get("staffId");
 		Object[] obj = null;
-		String averRejectEff = null;
+		String averRejectEff = "0";
 		Boolean flag = true;
 		Long sumWorkTime = (long) 0;
 		Long sumRejectTime = (long) 0;
@@ -123,9 +126,9 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 				}
 			}
 		}
-		if (averRejectEff != null) {
-			jsonObject.put("averRejectEff", Float.valueOf(averRejectEff));
-		}
+
+		jsonObject.put("averRejectEff", Float.valueOf(averRejectEff));
+
 		String allAverRejectEff = StringUtil.divide(sumRejectTime.toString(), sumWorkTime.toString());
 		jsonObject.put("allAverRejectEff", Float.valueOf(allAverRejectEff));// 全体员工平均做房驳回效率
 		// 获取驳回原因统计扇形图
@@ -154,8 +157,44 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			}
 
 		}
+		int sum_num = reasonArr[0] + reasonArr[1] + reasonArr[2] + reasonArr[3] + reasonArr[4];
 		jsonObject.put("reasonList", reasonArr);// 全体员工平均做房驳回效率
-		jsonObject.put("analyseResult", "分析结果：");
+		Map<String, Integer> linenmap = new HashMap<String, Integer>();
+		linenmap.put("布草问题", reasonArr[0]);
+		linenmap.put("迷你吧问题", reasonArr[1]);
+		linenmap.put("卫生间问题", reasonArr[2]);
+		linenmap.put("毛巾问题", reasonArr[3]);
+		linenmap.put("房间卫生", reasonArr[4]);
+		linenmap = CollectionUtil.sortByValue(linenmap);
+		Set set = linenmap.keySet();
+		Iterator itt = set.iterator();
+		String rejectReasons = "";
+		for (int i = 0; i < 3; i++) {
+			String key = (String) itt.next();
+			Integer value = linenmap.get(key);
+			if (value == 0) {
+				continue;
+			}
+			rejectReasons += key + ",发生了" + value + "次，约占所有原因的"
+					+ StringUtil.strfloatToPer(StringUtil.save2Float(value / (float) sum_num)) + "。";
+		}
+		String result = "分析结果： ";
+		String number = StringUtil.divide(StringUtil.sub(averRejectEff, allAverRejectEff), allAverRejectEff);
+		BigDecimal b1 = new BigDecimal(number);
+		BigDecimal b2 = new BigDecimal(0.03);
+		BigDecimal b3 = new BigDecimal(-0.03);
+
+		if (b1.compareTo(b2) == 1) {
+			result += " 一般！该员工的做房驳回率高出全体员工平均做房驳回率的3%！";
+		} else if (b1.compareTo(b3) == -1) {
+			result += " 优秀！该员工的做房驳回率低于全体员工平均做房驳回率的3%！";
+		} else {
+			result += " 良好！该员工的做房驳回率处于全体员工平均做房驳回率的-3%到3%！之间！      ";
+		}
+		if (!rejectReasons.equals("")) {
+			result += "其中引起驳回的原因中，排在前三的是：   " + rejectReasons;
+		}
+		jsonObject.put("analyseResult", result);
 		return jsonObject.toString();
 	}
 

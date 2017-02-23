@@ -159,15 +159,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		}
 		sortAndWrite1(listGoal, "room_id", true, "orderNum");
 
-		Iterator<LinenExpend> itGoal = listGoal.iterator();
-		int i = 0;
-		linenExpend = null;
-		while (itGoal.hasNext()) {
-			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
-			linenExpend = (LinenExpend) itGoal.next();
-			linenExpend.setOrderNum(String.valueOf(i));
-		}
-
 		return listGoal;
 	}
 	
@@ -177,6 +168,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		LinenCount linenCount = null;
 
 		linenCount = new LinenCount();
+		linenCount.setOrderNum("合计");
 		linenCount.setSum_slba(it.next().toString());
 		linenCount.setSum_duto(it.next().toString());
 		linenCount.setSum_laba(it.next().toString());
@@ -201,6 +193,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		RoomCount roomCount = null;
 
 		roomCount = new RoomCount();
+		roomCount.setOrderNum("合计");
 		roomCount.setSum_coas(it.next().toString());
 		roomCount.setSum_penc(it.next().toString());
 		roomCount.setSum_rule(it.next().toString());
@@ -244,7 +237,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		
 		WashCount washCount = null;
 
-		washCount = new WashCount();	
+		washCount = new WashCount();
+		washCount.setOrderNum("合计");
 		washCount.setSum_toth(it.next().toString());
 		washCount.setSum_ropa(it.next().toString());
 		washCount.setSum_paex(it.next().toString());
@@ -280,7 +274,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			
 		MiniCount miniCount = null;
 
-		miniCount = new MiniCount();	
+		miniCount = new MiniCount();
+		miniCount.setOrderNum("合计");
 		miniCount.setSum_redb(it.next().toString());
 		miniCount.setSum_coco(it.next().toString());
 		miniCount.setSum_pari(it.next().toString());
@@ -1881,6 +1876,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	}
 
 	//员工领取耗品统计
+	@SuppressWarnings("rawtypes")
 	@Override
 	public JSONObject selectStaExpend(Map<String, Object> map) {
 		
@@ -1917,6 +1913,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
 			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
 			linenmap = CollectionUtil.sortByValue(linenmap);
+			
 			Set set = linenmap.keySet();
 			Iterator itt = set.iterator();
 			for (int i=0;i<3;i++) {

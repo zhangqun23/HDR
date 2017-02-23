@@ -74,6 +74,13 @@ public class ReportFormConstants {
 	// 抢房效率折线图
 	public static final String ROBEFFICIENCYANALYSE_PATH = DICTIONARY + "robEfficiencyAnalyse.docx";
 
+	// 查退房效率表
+	public static final String CHECKOUTEFFICIENCY_PATH = DICTIONARY + "checkOutEfficiency.docx";
+	// 查退房明细表
+	public static final String CHECKOUTDETAIL_PATH = DICTIONARY + "checkOutDetail.docx";
+	// 查退房效率折线图
+	public static final String CHECKOUTEFFICIENCYANALYSE_PATH = DICTIONARY + "checkOutEfficiencyAnalyse.docx";
+
 	// 驳回率统计表
 	public static final String RejectEff_PATH = DICTIONARY + "workReject.docx";
 	// 驳回率折线图

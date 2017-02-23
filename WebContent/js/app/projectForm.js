@@ -734,7 +734,7 @@ app
 							function selectProMaterials() {
 								services.selectProMaterials().success(
 										function(data) {
-											reportForm.materials = data.list
+											reportForm.materials = data.list;
 										});
 							}
 							// zq初始化
@@ -762,7 +762,7 @@ app
 										'/proMaintainAnalyse') == 0) {
 									findProRepairTypes();
 								} else if ($location.path().indexOf(
-										'/proMaterialForm')) {
+										'/proMaterialForm') == 0) {
 									selectProMaterials();
 								}
 							}

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
-import com.mvc.entityReport.EngineMaterial;
+import com.mvc.entity.MaterialSort;
 
 /**
  * 工程物料管理业务层接口
@@ -16,7 +16,7 @@ import com.mvc.entityReport.EngineMaterial;
 public interface EngineMaterialService {
 
 	// 查询工程物料
-	List<EngineMaterial> selectEngineMaterial(Map<String, Object> map);
+	String selectEngineMaterial(Map<String, Object> map);
 
 	// 工程物料统计Word
 	ResponseEntity<byte[]> exportEngineMaterial(Map<String, Object> map, String path, String tempPath);
@@ -25,6 +25,6 @@ public interface EngineMaterialService {
 	ResponseEntity<byte[]> exportEngineMaterialExcel(Map<String, Object> map, String path);
 
 	// 获取物料分类
-	List<String> selectMatSortName();
+	List<MaterialSort> selectMatSortName();
 
 }

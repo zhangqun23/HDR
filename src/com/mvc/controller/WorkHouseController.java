@@ -1,7 +1,6 @@
 package com.mvc.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
-import com.mvc.entityReport.WorkEfficiency;
-import com.mvc.entityReport.WorkHouse;
 import com.mvc.service.WorkHouseService;
 import com.utils.CookieUtil;
 import com.utils.StringUtil;
@@ -41,7 +38,7 @@ public class WorkHouseController {
 	}
 
 	/**
-	 * 查询员工做房效率
+	 * 查询员工做房用时
 	 * 
 	 * @param request
 	 * @return
@@ -51,10 +48,8 @@ public class WorkHouseController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<WorkHouse> list = workHouseService.selectWorkHouse(map);
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		String str = workHouseService.selectWorkHouse(map);
+		return str;
 	}
 
 	/**
@@ -286,10 +281,8 @@ public class WorkHouseController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 
 		Map<String, Object> map = JsonObjToMapEff(jsonObject);
-		List<WorkEfficiency> list = workHouseService.selectWorkEffByLimits(map);
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		String str = workHouseService.selectWorkEffByLimits(map);
+		return str;
 	}
 
 	/**

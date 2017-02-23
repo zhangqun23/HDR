@@ -13,9 +13,9 @@ public class WorkEfficiency {
 	private String staff_no;// 员工编号
 	private String work_time;// 当班时间(min)
 	private String house_time;// 做房时间(min)
-	private String house_eff;// 做房效率
+	private Float house_eff;// 做房效率
 	private String house_serv_time;// 做房+客服时间(min)
-	private String house_serv_eff;// 做房+客服效率
+	private Float house_serv_eff;// 做房+客服效率
 
 	public String getOrderNum() {
 		return orderNum;
@@ -57,11 +57,11 @@ public class WorkEfficiency {
 		this.house_time = house_time;
 	}
 
-	public String getHouse_eff() {
+	public Float getHouse_eff() {
 		return house_eff;
 	}
 
-	public void setHouse_eff(String house_eff) {
+	public void setHouse_eff(Float house_eff) {
 		this.house_eff = house_eff;
 	}
 
@@ -73,11 +73,11 @@ public class WorkEfficiency {
 		this.house_serv_time = house_serv_time;
 	}
 
-	public String getHouse_serv_eff() {
+	public Float getHouse_serv_eff() {
 		return house_serv_eff;
 	}
 
-	public void setHouse_serv_eff(String house_serv_eff) {
+	public void setHouse_serv_eff(Float house_serv_eff) {
 		this.house_serv_eff = house_serv_eff;
 	}
 

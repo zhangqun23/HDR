@@ -315,10 +315,13 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.workHouseList = data.list;
+									reportForm.remark = data.analyseResult;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
+										reportForm.listRemark = true;
 									} else {
 										reportForm.listIsShow = true;
+										reportForm.listRemark = false;
 									}
 								});
 							}
@@ -569,10 +572,13 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.workEfficiencyList = data.list;
+									reportForm.remark = data.analyseResult;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
+										reportForm.listRemark = true;
 									} else {
 										reportForm.listIsShow = true;
+										reportForm.listRemark = false;
 									}
 								});
 
@@ -860,10 +866,13 @@ app
 													} else {
 														reportForm.workRoomList = data.workLoadList;
 													}
+													reportForm.remark = data.analyseResult;
 													if (data.workLoadList.length) {
 														reportForm.listIsShow = false;
+														reportForm.listRemark = true;
 													} else {
 														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
 													}
 												});
 							}
@@ -1091,10 +1100,13 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.workRejectList = data.list;
+									reportForm.remark = data.analyseResult;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
+										reportForm.listRemark = true;
 									} else {
 										reportForm.listIsShow = true;
+										reportForm.listRemark = false;
 									}
 								});
 							}

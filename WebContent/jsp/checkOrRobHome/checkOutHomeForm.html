@@ -39,16 +39,18 @@
 						type="button" value="查询" ng-click="selectCheckOutRooms()"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Word"
-						onclick="this.form.action='exportCheckOutRooms.do';this.form.submit();setExportFlagCookie();"></li>
+						onclick="this.form.action='../checkOutHome/exportCheckOutRooms.do';this.form.submit();setExportFlagCookie();"></li>
 					<li><input class="btn layoutStyle" style="width: 80px"
 						type="submit" value="导出Excel"
-						onclick="this.form.action='exportCheckOutRoomsExcel.do';this.form.submit();setExportFlagCookie();"></li>
+						onclick="this.form.action='../checkOutHome/exportCheckOutRoomsExcel.do';this.form.submit();setExportFlagCookie();"></li>
 				</ul>
 
 			</form>
 		</div>
 
 	</div>
+	<label ng-show="listRemark"
+		style="color: red; font-size: medium; marginTop: 20px">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 	<table class="tablelist tablestyle" id="efficiencyTable">
 		<caption align="top" class="tableTitle">客房部员工查退房
 			{{sortName}} 工作效率统计表</caption>

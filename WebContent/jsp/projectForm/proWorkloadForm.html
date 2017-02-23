@@ -36,7 +36,8 @@
 		</div>
 
 	</div>
-
+	<label ng-show="listRemark"
+		style="color: red; font-size: medium; marginTop: 20px">&nbsp;&nbsp;&nbsp;{{remark}}</label>
 	<table class="tablelist tablestyle">
 		<caption align="top" class="tableTitle">
 			<div class="tableTitle">工程部员工工作量统计</div>
@@ -46,8 +47,8 @@
 		<thead>
 			<tr>
 				<th class="width5">序号</th>
-				<th class="width10">员工编号</th>
 				<th class="width10">员工姓名</th>
+				<th class="width10">员工编号</th>
 				<th class="width10">工作量</th>
 				<th class="width10">排名</th>
 

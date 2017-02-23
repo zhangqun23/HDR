@@ -1792,7 +1792,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					linenExpendList = getLinenExpendList(map);
 
 					String[] header = { "序号", "房号", "被罩", "拼尘罩", "洗衣袋", "床单", "面巾", "浴巾", "方巾","中巾" ,"地巾", "浴袍", "枕套", "枕芯", "毛毯", "购物袋" };// 顺序必须和对应实体一致
-					ex.export2007Excel(linentitle, header, (Collection) linenExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(linentitle, header, (Collection) linenExpendList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(linenfileName, path);
@@ -1815,7 +1815,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					String[] header = {"序号","房号","雨伞","咖啡","白糖","伴侣","铅笔","橡皮","即扫牌","面巾纸","环保卡","手提袋","袋泡茶","送餐牌","意见书","立顿红茶","请勿打扰牌","电视节目单","信封(普通)",
 							"便签","杯垫","火柴","地图","尺子","信纸","回形针","圆珠笔","针线包","洗衣单","低卡糖","擦鞋布","防毒面具","立顿绿茶","拖鞋(儿童)","彩色曲别针","信封(航空)"};// 顺序必须和对应实体一致
-					ex.export2007Excel(roomtitle, header, (Collection) roomExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(roomtitle, header, (Collection) roomExpendList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(roomfileName, path);
@@ -1838,7 +1838,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					String[] header = {"序号","房号","牙具","卷纸","	洗发液","沐浴露","护发素","润肤露","护理包","黑垃圾袋","抽纸","卫生袋","浴帽","剃须刨","梳子",
 							"擦鞋布","手皂","指甲锉","干花","浴盐","百洁布","橡皮手套","洗涤灵","洗消净","浴室清洁剂","洁厕灵","擦鞋布","浴缸刷","恭桶刷"};// 顺序必须和对应实体一致
-					ex.export2007Excel(washtitle, header, (Collection)washExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(washtitle, header, (Collection)washExpendList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(washfileName, path);
@@ -1861,7 +1861,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					String[] header = {"序号","房号","红牛","可口可乐","巴黎水","大依云","加多宝","小依云","昆仑山","红葡萄酒","威士忌","伏加特","金酒","青岛",
 							"雪碧","指甲刀","ABC卫生巾","扑克牌","普通安全套"};// 顺序必须和对应实体一致
-					ex.export2007Excel(minititle, header, (Collection)miniExpendList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(minititle, header, (Collection)miniExpendList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(minifileName, path);
@@ -3066,7 +3066,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					staLinenList.add(avg);
 
 					String[] header = { "序号", "员工编号","员工姓名", "被罩", "拼尘罩", "洗衣袋", "床单", "面巾", "浴巾", "方巾","中巾" ,"地巾", "浴袍", "枕套", "枕芯", "毛毯", "购物袋" };// 顺序必须和对应实体一致
-					ex.export2007Excel(linentitle, header, (Collection) staLinenList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(linentitle, header, (Collection) staLinenList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(linenfileName, path);
@@ -3097,7 +3097,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					String[] header = {"序号","员工编号","员工姓名", "雨伞","咖啡","白糖","伴侣","铅笔","橡皮","即扫牌","面巾纸","环保卡","手提袋","袋泡茶","送餐牌","意见书","立顿红茶","请勿打扰牌","电视节目单","信封(普通)",
 							"便签","杯垫","火柴","地图","尺子","信纸","回形针","圆珠笔","针线包","洗衣单","低卡糖","擦鞋布","防毒面具","立顿绿茶","拖鞋(儿童)","彩色曲别针","信封(航空)"};// 顺序必须和对应实体一致
-					ex.export2007Excel(roomtitle, header, (Collection) staRoomList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(roomtitle, header, (Collection) staRoomList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(roomfileName, path);
@@ -3128,7 +3128,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					String[] header = {"序号","员工编号","员工姓名","牙具","卷纸","	洗发液","沐浴露","护发素","润肤露","护理包","黑垃圾袋","抽纸","卫生袋","浴帽","剃须刨","梳子",
 							"擦鞋布","手皂","指甲锉","干花","浴盐","百洁布","橡皮手套","洗涤灵","洗消净","浴室清洁剂","洁厕灵","擦鞋布","浴缸刷","恭桶刷"};// 顺序必须和对应实体一致
-					ex.export2007Excel(washtitle, header, (Collection)staWashList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(washtitle, header, (Collection)staWashList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(washfileName, path);
@@ -3158,7 +3158,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					String[] header = {"序号","员工编号","员工姓名","红牛","可口可乐","巴黎水","大依云","加多宝","小依云","昆仑山","红葡萄酒","威士忌","伏加特","金酒","青岛",
 							"雪碧","指甲刀","ABC卫生巾","扑克牌","普通安全套"};// 顺序必须和对应实体一致
-					ex.export2007Excel(minititle, header, (Collection)staMiniList, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
+					ex.export2007Excel(minititle, header, (Collection)staMiniList, out, "yyyy-MM-dd",-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏实体类
 
 					out.close();
 					byteArr = FileHelper.downloadFile(minifileName, path);

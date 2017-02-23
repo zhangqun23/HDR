@@ -248,7 +248,7 @@ public class StringUtil {
 		return str + " 23:59:59";
 	}
 	/**
-	 * 将Float型字符串转换成%形式,返回字符串格式
+	 * 将Float型字符串转换成%形式
 	 * 
 	 * @param strFloat
 	 * @return

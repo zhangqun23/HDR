@@ -5,14 +5,12 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -399,7 +397,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			WorkReject sum = sumWorkReject(listGoal);
 			listGoal.add(sum);
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
-			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 
 		} catch (Exception ex) {

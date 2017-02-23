@@ -55,7 +55,7 @@ public class WordHelper<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void export2007Word(String path, Map<String, Object> listMap, Map<String, Object> contentMap, Integer rowNum,
-			OutputStream out) {
+			OutputStream out,Integer mergeColumn) {
 		// 读取模板
 		FileInputStream in = null;
 		XWPFDocument doc = null;
@@ -78,6 +78,7 @@ public class WordHelper<T> {
 					Collection<T> list = (Collection<T>) val;
 					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
 					dynamicWord(doc, list, tableOrder, rowNum);
+					
 				}
 			}
 			write2007Out(doc, out);
@@ -98,9 +99,11 @@ public class WordHelper<T> {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum) {
+		List<XWPFTable> tables;
+		XWPFTable table ;
 		try {
-			List<XWPFTable> tables = doc.getTables();
-			XWPFTable table = tables.get(tableOrder);// 变量
+			tables = doc.getTables();
+			table = tables.get(tableOrder);// 变量
 			XWPFTableRow row0 = table.getRow(0);// 表头第一行
 			XWPFTableRow row = table.getRow(rowNum - 1);// 表头最后一行
 			List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
@@ -153,6 +156,10 @@ public class WordHelper<T> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		// 第mergeColumn列相同数据合并单元格
+		if (mergeColumn != -1) {
+			addMergedRegion(table, mergeColumn, 2, table.get.getLastRowNum(), doc);// 就是合并第一列的所有相同单元格
 		}
 	}
 

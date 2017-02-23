@@ -394,14 +394,9 @@ public class CheckOutServiceImpl implements CheckOutService {
 			List<Object> listSource = checkOutDao.selectCheckOutDetail(map);
 			Iterator<Object> it = listSource.iterator();
 			List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
-
-<<<<<<< HEAD
-			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）", "检查人" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
-=======
+	
 			String[] header = { "序号", "房号", "查退房时间（分钟）", "给定时间（分钟）", "效率", "完成员工" };// 顺序必须和对应实体一致
 			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
->>>>>>> 70e9bdc8423657d43c9902c89863fe3631d6d96c
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -430,15 +425,9 @@ public class CheckOutServiceImpl implements CheckOutService {
 			List<Object> listSource = checkOutDao.selectCheckOutEfficiency(map);
 			Iterator<Object> it = listSource.iterator();
 			List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
-
-<<<<<<< HEAD
-			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
-					"返回率" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
-=======
+		
 			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率"};// 顺序必须和对应实体一致
 			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
->>>>>>> 70e9bdc8423657d43c9902c89863fe3631d6d96c
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);

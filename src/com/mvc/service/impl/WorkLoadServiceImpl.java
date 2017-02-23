@@ -153,14 +153,18 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		List<WorkLoad> workLoadList = null;
 		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
 		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		String analyseResult = "";
 
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 
 		// 获取列表和文本信息
 		workLoadList = getWorkLoadSummaryList(startDate, endDate);
+		analyseResult = getLoadAnalyseResult(workLoadList);
+
 		listMap.put("0", workLoadList);// 注意：key存放该list在word中表格的索引，value存放list
 		contentMap.put("${startDate}", startDate);
 		contentMap.put("${endDate}", endDate);
+		contentMap.put("${result}", analyseResult);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
@@ -655,14 +659,18 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		List<WorkRoomNum> workRoomNumList = null;
 		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
 		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
+		String analyseResult = "";
 
 		path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 
 		// 获取列表和文本信息
 		workRoomNumList = getWorkRoomNumInfo(startDate, endDate);
+		analyseResult = getRoomAnalyseResult(workRoomNumList);
+
 		listMap.put("0", workRoomNumList);// 注意：key存放该list在word中表格的索引，value存放list
 		contentMap.put("${startDate}", startDate);
 		contentMap.put("${endDate}", endDate);
+		contentMap.put("${result}", analyseResult);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
@@ -706,6 +714,33 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			e.printStackTrace();
 		}
 		return byteArr;
+	}
+
+	// 获取工作量统计分析结果
+	@Override
+	public String getLoadAnalyseResult(List<WorkLoad> list) {
+		String analyseResult = "";
+		WorkLoad wl = list.get(list.size() - 1);
+
+		if (list.size() > 1) {
+			analyseResult += "所有员工的实际总工作量为:" + wl.getActualLoad() + ", 超出总工作量为:" + wl.getBeyondLoad() + ", 抹尘房总工作量为:"
+					+ wl.getCleanRoom() + ", 离退房总工作量为:" + wl.getCheckoutRoom() + ", 过夜房总工作量为:" + wl.getOvernightRoom()
+					+ "。  员工 (" + list.get(0).getStaffNo() + ")" + list.get(0).getStaffName() + " 实际工作量排名第一，表现最好。";
+		}
+		return analyseResult;
+	}
+
+	// 获取房间数统计分析结果
+	@Override
+	public String getRoomAnalyseResult(List<WorkRoomNum> list) {
+		String analyseResult = "";
+		WorkRoomNum wr = list.get(list.size() - 1);
+		if (list.size() > 1) {
+			analyseResult += "所有员工打扫的总房间数为:" + wr.getTotalNum() + ", 抹尘房总数为:" + wr.getCleanRoom() + ", 离退房总数为:"
+					+ wr.getCheckoutRoom() + ", 过夜房总数为:" + wr.getOvernightRoom() + "。  员工 (" + list.get(0).getStaffNo()
+					+ ")" + list.get(0).getStaffName() + " 打扫房间总数排名第一，表现最好。";
+		}
+		return analyseResult;
 	}
 
 }

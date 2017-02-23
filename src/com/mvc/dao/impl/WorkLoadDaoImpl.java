@@ -149,7 +149,7 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		startTime += " 00:00:00";
 		endTime += " 23:59:59";
 
-		sql.append(" select si.Staff_name staff_name,si.Staff_no staff_no,count(Staff_id)work_load ");
+		sql.append(" select si.Staff_no staff_no,si.Staff_name staff_name,count(Staff_id)work_load ");
 		sql.append(
 				" from engineer_info ei left join alert_reciever_list  ar on ei.case_id=ar.alert_id left join staff_info si on si.Staff_id=receiver_id ");
 		sql.append(" where ei.close_time between '" + startTime + "' and '" + endTime + "'");

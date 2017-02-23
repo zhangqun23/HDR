@@ -65,9 +65,13 @@ public class ProjectWorkLoadController {
 				startDate = limit.getString("startTime");
 				endDate = limit.getString("endTime");
 				List<ProjectWorkLoad> proWorkLoadList = null;
-
+				String analyseResult = "";
+				
 				proWorkLoadList = proWorkLoadService.getProWorkLoadList(startDate, endDate);
+				analyseResult = proWorkLoadService.getAnalyseResult(proWorkLoadList);
+
 				jsonObject.put("list", proWorkLoadList);
+				jsonObject.put("analyseResult", analyseResult);
 			}
 		}
 		return jsonObject.toString();

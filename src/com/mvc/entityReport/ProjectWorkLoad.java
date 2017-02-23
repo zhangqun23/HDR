@@ -9,8 +9,8 @@ package com.mvc.entityReport;
 public class ProjectWorkLoad {
 
 	private String orderNum;// 序号
-	private String staffNo;// 员工编号
 	private String staffName;// 员工姓名
+	private String staffNo;// 员工编号
 	private Integer workLoad;// 工作量
 	private String rank;// 排名
 

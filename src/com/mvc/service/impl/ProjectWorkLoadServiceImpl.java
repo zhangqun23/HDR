@@ -69,7 +69,6 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 			proWorkLoad.setStaffNo(obj[0].toString());
 			proWorkLoad.setStaffName(obj[1].toString());
 			proWorkLoad.setWorkLoad(Integer.valueOf(obj[2].toString()));// 单个员工总工作量
-
 			totalWorkLoad += Integer.valueOf(obj[2].toString());// 所有员工总工作量
 
 			listGoal.add(proWorkLoad);
@@ -120,6 +119,7 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 		String path = (String) map.get("path");
 		String modelPath = (String) map.get("modelPath");
 		String fileName = "工程部员工工作量汇总表.docx";
+		String analyseResult = "";
 
 		WordHelper wh = new WordHelper();
 		ResponseEntity<byte[]> byteArr = null;
@@ -131,9 +131,13 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 
 		// 获取列表和文本信息
 		proWorkLoadList = getProWorkLoadList(startDate, endDate);
+		analyseResult = getAnalyseResult(proWorkLoadList);
+
 		listMap.put("0", proWorkLoadList);// 注意：key存放该list在word中表格的索引，value存放list
 		contentMap.put("${startDate}", startDate);
 		contentMap.put("${endDate}", endDate);
+		contentMap.put("${result}", analyseResult);
+
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
 			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
@@ -222,14 +226,19 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 	}
 
 	private String getAnalyseResult(Float averageData, Float allAverageData) {
-		String analyseResult = "分析结果:  ";
-		Float level = (averageData - allAverageData) / allAverageData;
-		if (Math.abs(level) <= 0.05) {
-			analyseResult += "良好(该员工平均工作量与全体员工平均工作量相差不大)";
-		} else if (level > 0.05) {
-			analyseResult += "优秀(该员工平均工作量高于全体员工平均工作量)";
-		} else if (level < 0.05) {
-			analyseResult += "不合格(该员工平均工作量远低于全体员工平均工作量)";
+		String analyseResult = "分析结果: ";
+		if (allAverageData > 0) {
+			analyseResult += "全体员工的平均工作量为：" + StringUtil.save2Float(allAverageData) + "。 该员工的平均工作量为："
+					+ StringUtil.save2Float(averageData) + "，其整体表现： ";
+
+			Float level = (averageData - allAverageData) / allAverageData;
+			if (Math.abs(level) <= 0.05) {
+				analyseResult += "良好（平均工作量与全体员工平均工作量相差不大）。";
+			} else if (level > 0.05) {
+				analyseResult += "优秀（平均工作量高于全体员工平均工作量）。";
+			} else if (level < 0.05) {
+				analyseResult += "不合格（平均工作量远低于全体员工平均工作量）。";
+			}
 		}
 		return analyseResult;
 	}
@@ -364,6 +373,18 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 		dateMap.put("quarterName", checkYear + quarterName);
 		dateMap.put("startMonth", startMonth);
 		return dateMap;
+	}
+
+	// 获取分析结果
+	@Override
+	public String getAnalyseResult(List<ProjectWorkLoad> list) {
+		String analyseResult = "";
+
+		if (list.size() > 1) {
+			analyseResult += "所有员工的总工作量为" + list.get(list.size() - 1).getWorkLoad() + ",其中员工("
+					+ list.get(0).getStaffNo() + ")" + list.get(0).getStaffName() + "表现最好";
+		}
+		return analyseResult;
 	}
 
 }

@@ -49,4 +49,10 @@ public interface WorkLoadService {
 	// 导出员工打扫的房间数统计信息Excel
 	ResponseEntity<byte[]> exportWorkRoomNumExcel(Map<String, Object> map);
 
+	// 获取工作量统计分析结果
+	String getLoadAnalyseResult(List<WorkLoad> list);
+
+	// 获取房间数统计分析结果
+	String getRoomAnalyseResult(List<WorkRoomNum> list);
+
 }

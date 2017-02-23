@@ -35,7 +35,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("count(1) AS work_count,");
 		sql.append("COALESCE (a.back_num, 0) AS back_num,");
 		sql.append("COALESCE (b.out_time_num, 0) AS out_time_num, ");
-		sql.append(" sum(case_info.given_time/case_info.use_time)/count(1) as rob_effeciency_avg ");
+		sql.append("COALESCE( sum(case_info.given_time/case_info.use_time)/count(1),0) as rob_effeciency_avg ");
 		sql.append("FROM case_info ");
 		sql.append("LEFT JOIN call_info ON case_info.call_id = call_info.call_id ");
 		sql.append("LEFT JOIN staff_info ON staff_info.staff_id = case_info.case_author ");
@@ -70,6 +70,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 
 		sql.append("WHERE ");
 		sql.append(" call_info.service_sort = '抢房处理'");
+		sql.append(" and staff_info.staff_id is not null ");
 		sql.append(sqlLimit);
 		sql.append(" GROUP BY case_info.case_author");
 
@@ -155,6 +156,8 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append(sqlLimit);
 		sql.append(" limit ");
@@ -192,6 +195,8 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append("AND call_info.service_sort = '抢房处理' ");
 		sql.append(sqlLimit);
 
@@ -324,6 +329,9 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("LEFT JOIN staff_info checkAuthor ON checkAuthor.staff_id = check_case.author_id ");
 		sql.append("WHERE ");
 		sql.append("ci.case_states='关闭' ");
+		sql.append("AND call_info.service_sort = '抢房处理' ");
+		sql.append("and room_info.room_no is not null ");
+		sql.append("and staff_info.staff_name is not null ");
 		sql.append(sqlLimit);
 
 		Query query = em.createNativeQuery(sql.toString());

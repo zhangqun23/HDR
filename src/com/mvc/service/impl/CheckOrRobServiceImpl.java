@@ -62,6 +62,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		RobEfficiency robEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
+			if (obj[0] == null) {
+				continue;
+			}
 			robEfficiency = new RobEfficiency();
 			robEfficiency.setAuthorName(obj[1].toString());
 			robEfficiency.setAuthorNo(obj[2].toString());
@@ -71,7 +74,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robEfficiency
 					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
 
-			String UsedTimeAvg = StringUtil.divide(obj[2].toString(), obj[4].toString());
+			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			robEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
 			String backRate = StringUtil.divide(obj[6].toString(), obj[4].toString());
 			robEfficiency.setBackRate(backRate);// 驳回率
@@ -158,6 +161,22 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		jsonObj.put("list", useTime);// 按月平均 公式：当月任务用时总合/任务数量
 		jsonObj.put("averWorkEfficiency", averWorkEfficiency);// 所选员工全年任务用时总合/全年任务数量
 		jsonObj.put("allAverWorkEfficiency", allAverWorkEfficiency);// 所有员工全年任务用时总合/全年任务数量
+		float ff = 0f;
+		ff = (Float.parseFloat(averWorkEfficiency) - Float.parseFloat(allAverWorkEfficiency))
+				/ Float.parseFloat(allAverWorkEfficiency);
+		StringBuilder analyseResult = new StringBuilder();
+		analyseResult.append("分析结果：");
+		if (ff > 0.05f) {
+			analyseResult.append("优秀（该员工平均用时高于全体员工平均用时）");
+		} else if (ff > 0.0000f) {
+			analyseResult.append("良好（该员工平均用时略高于全体员工平均用时）");
+		} else if (ff < -0.05f) {
+			analyseResult.append("较差（该员工平均用时低于全体员工平均用时）");
+		} else if (ff < 0.0000f) {
+			analyseResult.append("一般（该员工平均用时略低于全体员工平均用时）");
+		}
+
+		jsonObj.put("analyseResult", analyseResult);
 		return jsonObj.toString();
 	}
 
@@ -288,7 +307,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			List<RobEfficiency> listGoal = objToRobEfficiency(it);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
-					"返回率" };// 顺序必须和对应实体一致
+					"驳回率" };// 顺序必须和对应实体一致
 			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
@@ -378,7 +397,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工" + sortName + "抢房效率分析.docx";
+			String fileName = "客房部员工（" + sortName + "）抢房用时分析.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 

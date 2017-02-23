@@ -24,4 +24,7 @@ public interface EngineerRepairDao {
 	//获取工程维修父名称(去重)
 	List<String> getProjectRepairListNo(Map<String, Object> map);
 
+	//工程报修图标
+	List<Object> getProjectRepairIcon(Map<String, Object> dateMap);
+
 }

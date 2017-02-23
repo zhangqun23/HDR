@@ -60,6 +60,9 @@ public class CheckOutServiceImpl implements CheckOutService {
 		CheckOutEfficiency checkOutEfficiency = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
+			if (obj[0] == null) {
+				continue;
+			}
 			checkOutEfficiency = new CheckOutEfficiency();
 			checkOutEfficiency.setAuthorName(obj[1].toString());
 			checkOutEfficiency.setAuthorNo(obj[2].toString());
@@ -69,7 +72,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			checkOutEfficiency
 					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
 
-			String UsedTimeAvg = StringUtil.divide(obj[2].toString(), obj[4].toString());
+			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			checkOutEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
 			String timeOutRate = StringUtil.divide(obj[7].toString(), obj[4].toString());
 			checkOutEfficiency.setTimeOutRate(timeOutRate);// 超时率
@@ -98,6 +101,12 @@ public class CheckOutServiceImpl implements CheckOutService {
 		CheckOutDetail checkOutDetail = null;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
+			if (obj[3] == null) {
+				continue;
+			}
+			if (obj[0] == null) {
+				continue;
+			}
 			checkOutDetail = new CheckOutDetail();
 			checkOutDetail.setRoomNo(obj[0].toString());
 			checkOutDetail.setUsedTime(obj[1].toString());
@@ -149,6 +158,23 @@ public class CheckOutServiceImpl implements CheckOutService {
 		jsonObj.put("list", useTime);// 按月平均 公式：当月任务用时总合/任务数量
 		jsonObj.put("averWorkEfficiency", averWorkEfficiency);// 所选员工全年任务用时总合/全年任务数量
 		jsonObj.put("allAverWorkEfficiency", allAverWorkEfficiency);// 所有员工全年任务用时总合/全年任务数量
+		
+		float ff = 0f;
+		ff = (Float.parseFloat(averWorkEfficiency) - Float.parseFloat(allAverWorkEfficiency))
+				/ Float.parseFloat(allAverWorkEfficiency);
+		StringBuilder analyseResult = new StringBuilder();
+		analyseResult.append("分析结果：");
+		if (ff > 0.05f) {
+			analyseResult.append("优秀（该员工平均用时高于全体员工平均用时）");
+		} else if (ff > 0.0000f) {
+			analyseResult.append("良好（该员工平均用时略高于全体员工平均用时）");
+		} else if (ff < -0.05f) {
+			analyseResult.append("较差（该员工平均用时低于全体员工平均用时）");
+		} else if (ff < 0.0000f) {
+			analyseResult.append("一般（该员工平均用时略低于全体员工平均用时）");
+		}
+
+		jsonObj.put("analyseResult", analyseResult);
 		return jsonObj.toString();
 	}
 
@@ -233,7 +259,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工抢房（" + sortName + "）效率统计表.docx";
+			String fileName = "客房部员工查退房（" + sortName + "）效率统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -267,7 +293,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工抢房（" + sortName + "）明细表.docx";
+			String fileName = "客房部员工查退房（" + sortName + "）明细表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -305,7 +331,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
-			String fileName = "客房部员工" + sortName + "抢房效率分析.docx";
+			String fileName = "客房部员工查退房（" + sortName + "）用时分析.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
@@ -357,8 +383,8 @@ public class CheckOutServiceImpl implements CheckOutService {
 		String sortName = (String) map.remove("sortName");
 		String startDate = ((String) map.get("startTime")).substring(0, 7);
 		String endDate = ((String) map.get("endTime")).substring(0, 7);
-		String fileName = "客房部员工抢房（" + sortName + "）明细表.xlsx";
-		String title = "客房部员工抢房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
+		String fileName = "客房部员工查退房（" + sortName + "）明细表.xlsx";
+		String title = "客房部员工查退房（" + sortName + "）明细表(" + startDate + "至" + endDate + ")";
 		try {
 			ExcelHelper<CheckOutDetail> ex = new ExcelHelper<CheckOutDetail>();
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
@@ -369,7 +395,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			Iterator<Object> it = listSource.iterator();
 			List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
 
-			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）", "检查人" };// 顺序必须和对应实体一致
+			String[] header = { "序号", "房号", "查退房时间（分钟）", "给定时间（分钟）", "效率", "完成员工" };// 顺序必须和对应实体一致
 			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
@@ -388,8 +414,8 @@ public class CheckOutServiceImpl implements CheckOutService {
 		String sortName = (String) map.remove("sortName");
 		String startDate = ((String) map.get("startTime")).substring(0, 7);
 		String endDate = ((String) map.get("endTime")).substring(0, 7);
-		String fileName = "客房部员工抢房（" + sortName + "）效率统计表.xlsx";
-		String title = "客房部员工抢房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
+		String fileName = "客房部员工查退房（" + sortName + "）效率统计表.xlsx";
+		String title = "客房部员工查退房（" + sortName + "）效率统计表(" + startDate + "至" + endDate + ")";
 		try {
 			ExcelHelper<CheckOutEfficiency> ex = new ExcelHelper<CheckOutEfficiency>();
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
@@ -400,8 +426,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			Iterator<Object> it = listSource.iterator();
 			List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
 
-			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
-					"返回率" };// 顺序必须和对应实体一致
+			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率"};// 顺序必须和对应实体一致
 			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();

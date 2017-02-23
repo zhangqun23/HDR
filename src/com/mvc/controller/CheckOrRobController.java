@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.service.CheckOrRobService;
+import com.utils.CookieUtil;
 import com.utils.Pager;
 import com.utils.StringUtil;
 
@@ -168,7 +170,7 @@ public class CheckOrRobController {
 	 * @return
 	 */
 	@RequestMapping("/exportRobBylimits.do")
-	public ResponseEntity<byte[]> exportRobBylimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportRobBylimits(HttpServletRequest request, HttpServletResponse response) {
 		String roomType = null;
 		String sortName = null;
 		String startTime = null;
@@ -207,6 +209,7 @@ public class CheckOrRobController {
 			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROBDETAIL_PATH);// 模板路径
 			byteArr = checkOrRobService.exportRobDetail(map, path, tempPath);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 	/**
@@ -215,7 +218,7 @@ public class CheckOrRobController {
 	 * @return
 	 */
 	@RequestMapping("/exportRobExcelBylimits.do")
-	public ResponseEntity<byte[]> exportRobExcelBylimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportRobExcelBylimits(HttpServletRequest request, HttpServletResponse response) {
 		String roomType = null;
 		String sortName = null;
 		String startTime = null;
@@ -252,6 +255,7 @@ public class CheckOrRobController {
 		} else {
 			byteArr = checkOrRobService.exportRobDetailExcel(map,path);
 		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 	
@@ -262,7 +266,7 @@ public class CheckOrRobController {
 	 * @return
 	 */
 	@RequestMapping("/exportRobAnalyseByLimits.do")
-	public ResponseEntity<byte[]> exportRobAnalyseByLimits(HttpServletRequest request) {
+	public ResponseEntity<byte[]> exportRobAnalyseByLimits(HttpServletRequest request, HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
 		String roomType=null;
@@ -301,7 +305,8 @@ public class CheckOrRobController {
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROBEFFICIENCYANALYSE_PATH);// 模板路径
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		ResponseEntity<byte[]> byteArr = checkOrRobService.exportRobAnalyseByLimits(map, path, tempPath, picPath);
-
+		
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
 }

@@ -203,7 +203,7 @@ public class WordHelper<T> {
 		XWPFTableRow row = table.getRow(startRow);
 		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
 		
-		s_will =cells.get(cellLine).getCTTc().get;// 比较的字段 
+		s_will =cells.get(cellLine).getCTTc().toString();// 比较的字段 
 		// 获取单元格宽度
 		cellPr = cells.get(cellLine).getCTTc().getTcPr();
 		BigInteger width = cellPr.getTcW().getW();

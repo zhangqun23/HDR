@@ -21,4 +21,6 @@ public interface CheckHouseService {
 	// 导出领班查房效率列表
 	ResponseEntity<byte[]> exportCheckHouseList(Map<String, Object> map);
 
+	String getAnalyseResult(List<CheckHouse> checkHouseList);
+
 }

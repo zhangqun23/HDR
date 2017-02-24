@@ -45,10 +45,9 @@ public class WorkRejectController {
 	public @ResponseBody String selectWorkRejectByLimits(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<WorkReject> list = workRejectService.selectWorkRejectByLimits(map);
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		String result = null;
+		result = workRejectService.selectWorkRejectByLimits(map);
+		return result;
 	}
 
 	/**
@@ -179,6 +178,7 @@ public class WorkRejectController {
 		String staffName = null;
 		String chartSVGStr = null;
 		String chart1SVGStr = null;
+		String analyseResult = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
 			checkYear = request.getParameter("checkYear");// 年份
 		}
@@ -200,6 +200,9 @@ public class WorkRejectController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))) {
 			chart1SVGStr = request.getParameter("chart1SVGStr");// SVG图片字符串扇形图
 		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult"))) {
+			analyseResult = request.getParameter("analyseResult");// SVG图片字符串扇形图
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("checkYear", checkYear);
 		map.put("quarter", quarter);
@@ -208,6 +211,7 @@ public class WorkRejectController {
 		map.put("cleanType", cleanType);
 		map.put("chartSVGStr", chartSVGStr);
 		map.put("chart1SVGStr", chart1SVGStr);
+		map.put("analyseResult", analyseResult);
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.RejectAnalyse_PATH);
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);

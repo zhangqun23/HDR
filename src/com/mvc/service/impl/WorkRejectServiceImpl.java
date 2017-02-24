@@ -3,6 +3,7 @@ package com.mvc.service.impl;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.WorkRejectDao;
 import com.mvc.entity.DepartmentInfo;
+import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.entityReport.WorkReject;
 import com.mvc.repository.DepartmentInfoRepository;
@@ -45,17 +47,82 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 	@Autowired
 	DepartmentInfoRepository departmentInfoRepository;
 
+	// zq做房驳回的效率统计表查询
 	@Override
-	public List<WorkReject> selectWorkRejectByLimits(Map<String, Object> map) {
+	public String selectWorkRejectByLimits(Map<String, Object> map) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
 		map.put("deptId", departmentInfo.getDepartmentId());
 		List<Object> listSource = workRejectDao.selectWorkRejectByLimits(map);
 		Iterator<Object> it = listSource.iterator();
 		List<WorkReject> listGoal = objToWorkReject(it);
-		return listGoal;
+		WorkReject sum = sumWorkReject(listGoal);
+		listGoal.add(sum);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", listGoal);
+		listGoal.remove(listGoal.size() - 1);
+		String analyseResult = anaWorkEff(map, listGoal);
+		jsonObject.put("analyseResult", "分析结果：" + analyseResult + "");// 报表分析
+		return jsonObject.toString();
 	}
 
-	// zq员工驳回统计
+	/**
+	 * 做房驳回报表分析(驳回率)
+	 * 
+	 * @param map
+	 * @param list
+	 * @return
+	 */
+	private String anaWorkEff(Map<String, Object> map, List<WorkReject> list) {
+		StringBuilder strb = new StringBuilder();
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		strb.append("从" + startTime.substring(0, 10) + "至" + endTime.substring(0, 10));
+		strb.append("客房部员工做房驳回率分析，抹尘房驳回率最高的三位：");
+		strb.append(getEffFirstThree(list, "reject_dust_eff", false) + "；");
+		strb.append("过夜房驳回率最高的三位：");
+		strb.append(getEffFirstThree(list, "reject_night_eff", false) + "；");
+		strb.append("离退房驳回率最高的三位：");
+		strb.append(getEffFirstThree(list, "reject_leave_eff", false) + "；");
+		return strb.toString();
+	}
+
+	/**
+	 * 返回前三条记录组成的字符串(工作效率)
+	 * 
+	 * @param list
+	 * @param filedNamezg
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @return
+	 */
+	private String getEffFirstThree(List<WorkReject> list, String filedName, boolean ascFlag) {
+		CollectionUtil.sort(list, filedName, ascFlag);
+		StringBuilder subStrb = new StringBuilder();
+		String getMethodName = "get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1);
+		Class<WorkReject> tCls = WorkReject.class;
+		Method getMethod;
+		try {
+			getMethod = tCls.getMethod(getMethodName, new Class[] {});
+			int i = 0;
+			for (WorkReject workReject : list) {
+				Object value = getMethod.invoke(workReject, new Object[] {});
+				if (i < 3) {
+					subStrb.append(
+							workReject.getStaff_name() + "(" + StringUtil.strFloatToPer(String.valueOf(value)) + ")，");
+				} else {
+					break;
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return subStrb.substring(0, subStrb.length() - 1);
+	}
+
+	// zq员工驳回统计(从数据库读出来list<object>后放入list<WorkReject>)
 	private List<WorkReject> objToWorkReject(Iterator<Object> it) {
 		List<WorkReject> listGoal = new ArrayList<WorkReject>();
 		Object[] obj = null;
@@ -75,11 +142,11 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			workReject.setNum_leave(obj[6].toString());
 			workReject.setReject_leave(obj[7].toString());
 			String dust_eff = StringUtil.divide(obj[3].toString(), obj[2].toString());
-			workReject.setReject_dust_eff(StringUtil.strFloatToPer(dust_eff));
+			workReject.setReject_dust_eff(Float.parseFloat(dust_eff));
 			String night_eff = StringUtil.divide(obj[5].toString(), obj[4].toString());
-			workReject.setReject_night_eff(StringUtil.strFloatToPer(night_eff));
+			workReject.setReject_night_eff(Float.parseFloat(night_eff));
 			String leave_eff = StringUtil.divide(obj[7].toString(), obj[6].toString());
-			workReject.setReject_leave_eff(StringUtil.strFloatToPer(leave_eff));
+			workReject.setReject_leave_eff(Float.parseFloat(leave_eff));
 			listGoal.add(workReject);
 		}
 		return listGoal;
@@ -231,7 +298,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		return listGoal;
 	}
 
-	// zq导出驳回率统计表
+	// zq导出驳回率统计表word
 	@Override
 	public ResponseEntity<byte[]> exportWorRejectBylimits(Map<String, Object> map, String path, String tempPath) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");
@@ -256,7 +323,10 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
-			wh.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
+			listGoal.remove(listGoal.size() - 1);
+			String analyseResult = anaWorkEff(map, listGoal);
+			contentMap.put("${analyseResult}", analyseResult);
+			wh.export2007Word(tempPath, listMap, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 
@@ -277,13 +347,13 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		Iterator<WorkReject> it = list.iterator();
 		Long sum_dust = (long) 0;// 抹尘房
 		Long sum_reject_dust = (long) 0;// 驳回次数
-		String sum_eff_dust = null;
+		Float sum_eff_dust = null;
 		Long sum_night = (long) 0;// 过夜
 		Long sum_reject_night = (long) 0;// 驳回次数
-		String sum_eff_night = null;
+		Float sum_eff_night = null;
 		Long sum_leave = (long) 0;// 离退房
 		Long sum_reject_leave = (long) 0;// 驳回次数
-		String sum_eff_leave = null;
+		Float sum_eff_leave = null;
 		WorkReject workReject = null;
 		while (it.hasNext()) {
 			workReject = it.next();
@@ -297,18 +367,17 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		sum.setOrderNum("总计");
 		sum.setNum_dust(String.valueOf(sum_dust));// 抹尘
 		sum.setReject_dust(String.valueOf(sum_reject_dust));
-		sum_eff_dust = StringUtil
-				.strFloatToPer(StringUtil.divide(String.valueOf(sum_reject_dust), String.valueOf(sum_dust)));
+		sum_eff_dust = Float.parseFloat(StringUtil.divide(String.valueOf(sum_reject_dust), String.valueOf(sum_dust)));
 		sum.setReject_dust_eff(sum_eff_dust);
 		sum.setNum_night(String.valueOf(sum_night));// 过夜
 		sum.setReject_night(String.valueOf(sum_reject_night));
-		sum_eff_night = StringUtil
-				.strFloatToPer(StringUtil.divide(String.valueOf(sum_reject_night), String.valueOf(sum_night)));
+		sum_eff_night = Float
+				.parseFloat(StringUtil.divide(String.valueOf(sum_reject_night), String.valueOf(sum_night)));
 		sum.setReject_night_eff(sum_eff_night);
 		sum.setNum_leave(String.valueOf(sum_leave));// 离退
 		sum.setReject_leave(String.valueOf(sum_reject_leave));
-		sum_eff_leave = StringUtil
-				.strFloatToPer(StringUtil.divide(String.valueOf(sum_reject_leave), String.valueOf(sum_leave)));
+		sum_eff_leave = Float
+				.parseFloat(StringUtil.divide(String.valueOf(sum_reject_leave), String.valueOf(sum_leave)));
 		sum.setReject_leave_eff(sum_eff_leave);
 		return sum;
 	}
@@ -324,6 +393,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		String quarter = (String) map.get("quarter");
 		String cleanType = (String) map.get("cleanType");
 		String cleanTypeStr = CleanType.intToStr(Integer.valueOf(cleanType));
+		String analyseResult = (String) map.get("analyseResult");
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
@@ -333,6 +403,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			contentMap.put("${staffName}", staffName);
 			contentMap.put("${cleanType}", cleanTypeStr);
+			contentMap.put("${analyseResult}", analyseResult);
 			if (StringUtil.strIsNotEmpty(year) && StringUtil.strIsNotEmpty(quarter)) {
 				String startTime = StringUtil.quarterFirstDay(year, quarter);
 				String endTime = StringUtil.quarterLastDay(year, quarter);
@@ -355,7 +426,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 					picPaths[i] = FileHelper.transPath(picNames[i], picPath);// 解析后的上传路径
 					picMap = new HashMap<String, Object>();
 					picMap.put("width", 960);
-					picMap.put("height", 480);
+					picMap.put("height", 410);
 					picMap.put("type", "png");
 					try {
 						SvgPngConverter.convertToPng(svgs[i], picPaths[i]);// 图片svgCode转化为png格式，并保存到picPath[i]
@@ -366,7 +437,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 					contentMap.put("${pic" + i + "}", picMap);
 				}
 			}
-			wh.export2007Word(tempPath, null, contentMap, 2, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -397,7 +468,7 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			WorkReject sum = sumWorkReject(listGoal);
 			listGoal.add(sum);
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
-			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 
 		} catch (Exception ex) {

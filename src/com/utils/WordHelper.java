@@ -42,6 +42,7 @@ import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
 import com.mvc.entityReport.WorkEfficiency;
+import com.mvc.entityReport.WorkReject;
 
 public class WordHelper<T> {
 
@@ -105,7 +106,7 @@ public class WordHelper<T> {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum,
-			Integer mergeColumn) {	
+			Integer mergeColumn) {
 		List<XWPFTable> tables;
 		XWPFTable table = null;
 		int ww = 0;// 用于合并单元格
@@ -166,7 +167,7 @@ public class WordHelper<T> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Integer mm=table.getNumberOfRows();
+		Integer mm = table.getNumberOfRows();
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {
 			addMergedRegion0(table, mergeColumn, 1, mm);// 就是合并第一列的所有相同单元格
@@ -193,8 +194,8 @@ public class WordHelper<T> {
 	}
 
 	public static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
-		String s_will ;// 比较的字段
-		String s_current ;// 比较的字段
+		String s_will;// 比较的字段
+		String s_current;// 比较的字段
 		XWPFTableCell cell = null;
 		CTTcPr cellPr = null;
 		List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
@@ -202,13 +203,12 @@ public class WordHelper<T> {
 		// 获取第一行的数据,以便后面进行比较
 		XWPFTableRow row = table.getRow(startRow);
 		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
-		
-		s_will =cells.get(cellLine).getCTTc().toString();// 比较的字段 
+
+		s_will = cells.get(cellLine).getCTTc().toString();// 比较的字段
 		// 获取单元格宽度
 		cellPr = cells.get(cellLine).getCTTc().getTcPr();
 		BigInteger width = cellPr.getTcW().getW();
-		widthList.add(width);  
-		
+		widthList.add(width);
 
 		int count = 0;
 		boolean flag = false;
@@ -216,7 +216,7 @@ public class WordHelper<T> {
 		for (int i = startRow + 1; i <= endRow; i++) {
 			XWPFTableRow row0 = table.getRow(i);
 			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头最后一行
-			s_current= cells0.get(cellLine).getText();// 比较的字段
+			s_current = cells0.get(cellLine).getText();// 比较的字段
 			System.out.println(s_current);
 			if (s_will.equals(s_current)) {
 				flag = true;
@@ -245,6 +245,7 @@ public class WordHelper<T> {
 		}
 
 	}
+
 	private static String getTableCellContent(XWPFTableCell cell) {
 		StringBuffer sb = new StringBuffer();
 		List<XWPFParagraph> cellPList = cell.getParagraphs();
@@ -446,8 +447,13 @@ public class WordHelper<T> {
 	private Boolean tranFieldToPer(T t) {
 		Boolean flag = false;
 		Class<? extends Object> cla = t.getClass();
-		if (cla == HoCustomerService.class || cla == HouseCustomerServiceLoad.class
-				|| cla == HouseCustomerServiceType.class || cla == WorkEfficiency.class) {
+		List<Object> list = new ArrayList<Object>();
+		list.add(HoCustomerService.class);
+		list.add(HouseCustomerServiceLoad.class);
+		list.add(HouseCustomerServiceType.class);
+		list.add(WorkEfficiency.class);
+		list.add(WorkReject.class);
+		if (list.contains(cla)) {
 			flag = true;
 		}
 		return flag;
@@ -461,7 +467,14 @@ public class WordHelper<T> {
 	 */
 	private Boolean judgeField(String fieldName) {
 		Boolean flag = false;
-		if (fieldName.equals("timeOutRate") || fieldName.equals("house_eff") || fieldName.equals("house_serv_eff")) {
+		List<String> list = new ArrayList<String>();
+		list.add("timeOutRate");
+		list.add("house_eff");
+		list.add("house_serv_eff");
+		list.add("reject_dust_eff");
+		list.add("reject_night_eff");
+		list.add("reject_leave_eff");
+		if (list.contains(fieldName)) {
 			flag = true;
 		}
 		return flag;

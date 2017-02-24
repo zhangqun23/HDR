@@ -25,6 +25,7 @@ import com.mvc.dao.CheckOutDao;
 import com.mvc.entityReport.CheckOutDetail;
 import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.WorkHouse;
+import com.mvc.entityReport.WorkLoad;
 import com.mvc.service.CheckOutService;
 import com.utils.CollectionUtil;
 import com.utils.ExcelHelper;
@@ -70,7 +71,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			checkOutEfficiency.setSumTime(obj[3].toString());
 			checkOutEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
 			checkOutEfficiency.setWorkCount(obj[5].toString());
-			checkOutEfficiency.setWorkEffeciencyAvg(Float.parseFloat(obj[8].toString()));
+			checkOutEfficiency.setWorkEffeciencyAvg(((int) (100 * Float.parseFloat(obj[8].toString())) / 100.0f));
 
 			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			checkOutEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
@@ -275,7 +276,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
-			String analyseResult = getAnalyseResult(listGoal);
+			String analyseResult = getAnalyseResult(listGoal, "orderNum");
 			contentMap.put("${analyseResult}", analyseResult);
 
 			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
@@ -447,9 +448,11 @@ public class CheckOutServiceImpl implements CheckOutService {
 	}
 
 	@Override
-	public String getAnalyseResult(List<CheckOutEfficiency> list) {
+	public String getAnalyseResult(List<CheckOutEfficiency> list, String writeField) {
 		boolean ascFlag = false;
 		CollectionUtil.sort(list, "workEffeciencyAvg", ascFlag);//
+		CollectionUtil<CheckOutEfficiency> collectionUtil = new CollectionUtil<CheckOutEfficiency>();
+		collectionUtil.writeSort(list, writeField);
 		StringBuilder analyseResult = new StringBuilder();
 		if (list.size() > 3) {
 			analyseResult.append("查退房效率最高的三名员工为：");

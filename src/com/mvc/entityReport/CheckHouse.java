@@ -16,7 +16,7 @@ public class CheckHouse {
 
 	private String checkTime;// 查房总用时
 	private String totalTime;// 当班总用时
-	private String efficiency;// 效率
+	private float efficiency;// 效率
 
 	public String getOrderNum() {
 		return orderNum;
@@ -58,11 +58,11 @@ public class CheckHouse {
 		this.totalTime = totalTime;
 	}
 
-	public String getEfficiency() {
+	public float getEfficiency() {
 		return efficiency;
 	}
 
-	public void setEfficiency(String efficiency) {
+	public void setEfficiency(float efficiency) {
 		this.efficiency = efficiency;
 	}
 

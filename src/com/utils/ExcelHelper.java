@@ -31,6 +31,12 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.mvc.entityReport.HoCustomerService;
+import com.mvc.entityReport.HouseCustomerServiceLoad;
+import com.mvc.entityReport.HouseCustomerServiceType;
+import com.mvc.entityReport.WorkEfficiency;
+import com.mvc.entityReport.WorkReject;
+
 /**
  * Excel操作类
  * 
@@ -60,9 +66,10 @@ public class ExcelHelper<T> {
 	 *            表头行数，null或0代表没有表头
 	 */
 	public void export2007Excel(String title, String[] headers, Collection<T> list, OutputStream out, String pattern,
-			Integer mergeColumn, Integer MergeColumn,Integer MergeColumn0, Integer hideColumn, Integer titleRow) {
+			Integer mergeColumn, Integer MergeColumn, Integer MergeColumn0, Integer hideColumn, Integer titleRow) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		export2007Excel(workbook, title, headers, list, pattern, mergeColumn, MergeColumn,MergeColumn0, hideColumn, titleRow);
+		export2007Excel(workbook, title, headers, list, pattern, mergeColumn, MergeColumn, MergeColumn0, hideColumn,
+				titleRow);
 		write2007Out(workbook, out);
 	}
 
@@ -81,14 +88,15 @@ public class ExcelHelper<T> {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void export2007MutiExcel(Map<Integer, String> titlesMap, Map<Integer, String[]> headerMap,
-			Map<Integer, List> map, OutputStream out, String pattern, Integer mergeColumn, Integer MergeColumn,Integer MergeColumn0,
-			Integer hideColumn, Integer titleRow) {
+			Map<Integer, List> map, OutputStream out, String pattern, Integer mergeColumn, Integer MergeColumn,
+			Integer MergeColumn0, Integer hideColumn, Integer titleRow) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		for (int i = 0; i < map.size(); i++) {
 			Collection<T> list = map.get(i);
 			String[] headers = headerMap.get(i);
 			String title = titlesMap.get(i);
-			export2007Excel(workbook, title, headers, list, pattern, mergeColumn, MergeColumn,MergeColumn0, hideColumn, titleRow);
+			export2007Excel(workbook, title, headers, list, pattern, mergeColumn, MergeColumn, MergeColumn0, hideColumn,
+					titleRow);
 		}
 		write2007Out(workbook, out);
 	}
@@ -114,7 +122,8 @@ public class ExcelHelper<T> {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
-			String pattern, Integer mergeColumn, Integer MergeColumn,Integer MergeColumn0, Integer hideColumn, Integer titleRow) {
+			String pattern, Integer mergeColumn, Integer MergeColumn, Integer MergeColumn0, Integer hideColumn,
+			Integer titleRow) {
 		XSSFSheet sheet = workbook.createSheet(title);
 		if (titleRow == null) {
 			titleRow = 0;
@@ -131,6 +140,7 @@ public class ExcelHelper<T> {
 			row = sheet.createRow(index);
 			row.setHeight((short) 400);// 行高设置成25px
 			T t = (T) it.next();
+			Boolean flag = tranFieldToPer(t);// 需要处理%列
 			// 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
 			Field[] fieldSource = t.getClass().getDeclaredFields();
 			Field[] fields = null;
@@ -151,8 +161,13 @@ public class ExcelHelper<T> {
 						int intValue = (Integer) value;
 						cell.setCellValue(intValue);
 					} else if (value instanceof Float) {
-						float fValue = (Float) value;
-						cell.setCellValue(String.format("%.2f", fValue));
+						if (flag && judgeField(fieldName)) {
+							cell.setCellValue(StringUtil.strFloatToPer(String.valueOf(value)));// 转换成%
+						} else {
+							float fValue = (Float) value;
+							cell.setCellValue(String.format("%.2f", fValue));
+						}
+
 					} else if (value instanceof Double) {
 						double dValue = (Double) value;
 						cell.setCellValue(dValue);
@@ -497,6 +512,48 @@ public class ExcelHelper<T> {
 				sheet.addMergedRegion(new CellRangeAddress(1, 1, Integer.parseInt(arr[0]), Integer.parseInt(arr[1])));// 起始行，结束行，起始列，结束列
 			}
 		}
+	}
+
+	/**
+	 * 需要转化%列的类
+	 * 
+	 * @param t
+	 * @return
+	 */
+	private Boolean tranFieldToPer(T t) {
+		Boolean flag = false;
+		Class<? extends Object> cla = t.getClass();
+		List<Object> list = new ArrayList<Object>();
+		list.add(HoCustomerService.class);
+		list.add(HouseCustomerServiceLoad.class);
+		list.add(HouseCustomerServiceType.class);
+		list.add(WorkEfficiency.class);
+		list.add(WorkReject.class);
+		if (list.contains(cla)) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * 判断需要转换的字段属性
+	 * 
+	 * @param fieldName
+	 * @return
+	 */
+	private Boolean judgeField(String fieldName) {
+		Boolean flag = false;
+		List<String> list = new ArrayList<String>();
+		list.add("timeOutRate");
+		list.add("house_eff");
+		list.add("house_serv_eff");
+		list.add("reject_dust_eff");
+		list.add("reject_night_eff");
+		list.add("reject_leave_eff");
+		if (list.contains(fieldName)) {
+			flag = true;
+		}
+		return flag;
 	}
 
 }

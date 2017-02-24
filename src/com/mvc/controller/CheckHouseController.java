@@ -1,6 +1,7 @@
 package com.mvc.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.CheckHouse;
 import com.mvc.service.CheckHouseService;
+import com.utils.CollectionUtil;
 import com.utils.CookieUtil;
 import com.utils.StringUtil;
 
@@ -54,6 +56,9 @@ public class CheckHouseController {
 			checkHouseList = checkHouseService.getCheckHouseList(startTime, endTime);
 		}
 		jsonObject.put("checkHouseList", checkHouseList);
+		String analyseResult = checkHouseService.getAnalyseResult(checkHouseList);
+
+		jsonObject.put("analyseResult", analyseResult);
 		return jsonObject.toString();
 	}
 

@@ -15,7 +15,7 @@ public class CheckOutEfficiency {
 	private String givenTime;// 平均给定时间（分钟）
 	private String usedTimeAvg;// 平均抢房用时（分钟）
 	private String workCount;// 抢房总数
-	private String workEffeciencyAvg;// 平均抢房效率
+	private float workEffeciencyAvg;// 平均抢房效率
 	private String timeOutRate;// 超时率
 
 	public String getOrderNum() {
@@ -66,11 +66,11 @@ public class CheckOutEfficiency {
 		this.workCount = workCount;
 	}
 
-	public String getWorkEffeciencyAvg() {
+	public float getWorkEffeciencyAvg() {
 		return workEffeciencyAvg;
 	}
 
-	public void setWorkEffeciencyAvg(String workEffeciencyAvg) {
+	public void setWorkEffeciencyAvg(float workEffeciencyAvg) {
 		this.workEffeciencyAvg = workEffeciencyAvg;
 	}
 

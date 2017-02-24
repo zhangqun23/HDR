@@ -1,6 +1,7 @@
 package com.mvc.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.base.constants.ReportFormConstants;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.service.CheckOrRobService;
+import com.utils.CollectionUtil;
 import com.utils.CookieUtil;
 import com.utils.Pager;
 import com.utils.StringUtil;
@@ -53,6 +55,10 @@ public class CheckOrRobController {
 		List<RobEfficiency> list = checkOrRobService.selectRobEfficiency(map);
 		jsonObject = new JSONObject();
 		jsonObject.put("list", list);
+
+		String analyseResult = checkOrRobService.getAnalyseResult(list);
+
+		jsonObject.put("analyseResult", analyseResult);
 		return jsonObject.toString();
 	}
 
@@ -166,6 +172,7 @@ public class CheckOrRobController {
 
 	/**
 	 * word导出
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -212,8 +219,10 @@ public class CheckOrRobController {
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
+
 	/**
 	 * excel导出
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -251,14 +260,14 @@ public class CheckOrRobController {
 
 		ResponseEntity<byte[]> byteArr = null;
 		if (tableType.equals("0")) {
-			byteArr = checkOrRobService.exportRobEfficiencyExcel(map,path);
+			byteArr = checkOrRobService.exportRobEfficiencyExcel(map, path);
 		} else {
-			byteArr = checkOrRobService.exportRobDetailExcel(map,path);
+			byteArr = checkOrRobService.exportRobDetailExcel(map, path);
 		}
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
-	
+
 	/**
 	 * 做房用时分析导出
 	 * 
@@ -269,10 +278,11 @@ public class CheckOrRobController {
 	public ResponseEntity<byte[]> exportRobAnalyseByLimits(HttpServletRequest request, HttpServletResponse response) {
 		String checkYear = null;
 		String quarter = null;
-		String roomType=null;
+		String roomType = null;
 		String sortName = null;
 		String staffName = null;
 		String chart1SVGStr = null;
+		String analyseResult = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
 			checkYear = request.getParameter("checkYear");// 年份
@@ -292,7 +302,9 @@ public class CheckOrRobController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))) {
 			chart1SVGStr = request.getParameter("chart1SVGStr");// SVG图片字符串
 		}
-
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult"))) {
+			analyseResult = request.getParameter("analyseResult");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("checkYear", checkYear);
 		map.put("quarter", quarter);
@@ -300,12 +312,14 @@ public class CheckOrRobController {
 		map.put("roomType", roomType);
 		map.put("staffName", staffName);
 		map.put("chart1SVGStr", chart1SVGStr);
+		map.put("analyseResult", analyseResult);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
-		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROBEFFICIENCYANALYSE_PATH);// 模板路径
+		String tempPath = request.getSession().getServletContext()
+				.getRealPath(ReportFormConstants.ROBEFFICIENCYANALYSE_PATH);// 模板路径
 		String picPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		ResponseEntity<byte[]> byteArr = checkOrRobService.exportRobAnalyseByLimits(map, path, tempPath, picPath);
-		
+
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}

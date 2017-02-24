@@ -54,10 +54,9 @@ public class CheckOrRobController {
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<RobEfficiency> list = checkOrRobService.selectRobEfficiency(map);
 		jsonObject = new JSONObject();
+
+		String analyseResult = checkOrRobService.getAnalyseResult(list, "orderNum");
 		jsonObject.put("list", list);
-
-		String analyseResult = checkOrRobService.getAnalyseResult(list);
-
 		jsonObject.put("analyseResult", analyseResult);
 		return jsonObject.toString();
 	}

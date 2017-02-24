@@ -37,5 +37,5 @@ public interface CheckOutService {
 
 	ResponseEntity<byte[]> exportCheckOutEfficiencyExcel(Map<String, Object> map, String path);
 
-	String getAnalyseResult(List<CheckOutEfficiency> list);
+	String getAnalyseResult(List<CheckOutEfficiency> list, String writeField);
 }

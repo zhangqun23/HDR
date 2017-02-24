@@ -167,7 +167,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		contentMap.put("${result}", analyseResult);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -198,7 +198,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			workLoadList = getWorkLoadSummaryList(startDate, endDate);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房", "过夜房", "离退房", "实际工作量", "超出工作量", "排名" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<WorkLoad>) workLoadList, out, "yyyy-MM-dd", -1, 2, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			ex.export2007Excel(title, header, (Collection<WorkLoad>) workLoadList, out, "yyyy-MM-dd",-1,-1,-1, 2, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -280,7 +280,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -358,7 +358,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			List<WorkLoadLevel> workLoadLevelList = toWorkLoadLevelList(workLoadList);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "实际工作天数", "额定工作量", "实际工作量", "超出工作量", "超出幅度" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<WorkLoadLevel>) workLoadLevelList, out, "yyyy-MM-dd", -1, 1,
+			ex.export2007Excel(title, header, (Collection<WorkLoadLevel>) workLoadLevelList, out, "yyyy-MM-dd",-1,-1,-1, 1,
 					1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容,1表示一行表头
 
 			out.close();
@@ -549,7 +549,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, 1, out);
+			wh.export2007Word(modelPath, null, contentMap, 1, out,-1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -673,7 +673,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 		contentMap.put("${result}", analyseResult);
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -704,7 +704,7 @@ public class WorkLoadServiceImpl implements WorkLoadService {
 			workRoomNumist = getWorkRoomNumInfo(startDate, endDate);
 
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房数量", "过夜房数量", "离退房数量", "总数量", "排名" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<WorkRoomNum>) workRoomNumist, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格,0:没有隐藏字段,1表示一行表头
+			ex.export2007Excel(title, header, (Collection<WorkRoomNum>) workRoomNumist, out, "yyyy-MM-dd",-1,-1,-1, 0, 1);// -1表示没有合并单元格,0:没有隐藏字段,1表示一行表头
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);

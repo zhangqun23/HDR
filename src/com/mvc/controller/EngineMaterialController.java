@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.constants.ReportFormConstants;
-import com.mvc.entityReport.EngineMaterial;
+import com.mvc.entity.MaterialSort;
 import com.mvc.service.EngineMaterialService;
 import com.utils.CookieUtil;
 import com.utils.StringUtil;
@@ -45,10 +45,8 @@ public class EngineMaterialController {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 
 		Map<String, Object> map = JsonObjToMap(jsonObject);
-		List<EngineMaterial> list = engineMaterialService.selectEngineMaterial(map);
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-		return jsonObject.toString();
+		String str = engineMaterialService.selectEngineMaterial(map);
+		return str;
 	}
 
 	/**
@@ -60,6 +58,7 @@ public class EngineMaterialController {
 	private Map<String, Object> JsonObjToMap(JSONObject jsonObject) {
 		String startTime = null;
 		String endTime = null;
+		Integer sortId = null;
 		if (jsonObject.containsKey("startTime")) {
 			if (StringUtil.strIsNotEmpty(jsonObject.getString("startTime"))) {
 				startTime = StringUtil.monthFirstDay(jsonObject.getString("startTime"));// 开始时间
@@ -70,9 +69,15 @@ public class EngineMaterialController {
 				endTime = StringUtil.monthLastDay(jsonObject.getString("endTime"));// 结束时间
 			}
 		}
+		if (jsonObject.containsKey("materialType")) {
+			if (StringUtil.strIsNotEmpty(jsonObject.getString("materialType"))) {
+				sortId = Integer.valueOf(jsonObject.getString("materialType"));// 材料类型ID
+			}
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
+		map.put("sortId", sortId);
 
 		return map;
 	}
@@ -135,10 +140,15 @@ public class EngineMaterialController {
 		return map;
 	}
 
+	/**
+	 * 查询材料父类型列表
+	 * 
+	 * @return
+	 */
 	@RequestMapping("/selectProMaterials.do")
 	public @ResponseBody String selectMatSortName() {
 		JSONObject jsonObject = new JSONObject();
-		List<String> list = engineMaterialService.selectMatSortName();
+		List<MaterialSort> list = engineMaterialService.selectMatSortName();
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}

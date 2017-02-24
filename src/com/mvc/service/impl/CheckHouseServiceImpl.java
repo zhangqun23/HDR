@@ -98,7 +98,7 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

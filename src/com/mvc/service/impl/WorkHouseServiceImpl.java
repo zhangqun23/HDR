@@ -17,9 +17,11 @@ import org.springframework.stereotype.Service;
 import com.base.enums.CleanType;
 import com.mvc.dao.WorkHouseDao;
 import com.mvc.entity.DepartmentInfo;
+import com.mvc.entity.RoomSort;
 import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.repository.DepartmentInfoRepository;
+import com.mvc.repository.RoomSortRepository;
 import com.mvc.service.WorkHouseService;
 import com.utils.CollectionUtil;
 import com.utils.ExcelHelper;
@@ -43,10 +45,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	WorkHouseDao workHouseDao;
 	@Autowired
 	DepartmentInfoRepository departmentInfoRepository;
+	@Autowired
+	RoomSortRepository roomSortRepository;
 
-	// 查询员工做房
+	// 查询员工做房(两次排序，效率低，注意后期优化！)
 	@Override
-	public List<WorkHouse> selectWorkHouse(Map<String, Object> map) {
+	public String selectWorkHouse(Map<String, Object> map) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
 		map.put("deptId", departmentInfo.getDepartmentId());
 
@@ -57,7 +61,13 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		WorkHouse sum = sumWorkHouse(listGoal);// 合计
 		listGoal.add(sum);
 
-		return listGoal;
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", listGoal);
+
+		listGoal.remove(listGoal.size() - 1);
+		String analyseResult = anaWorkHouse(map, listGoal);
+		jsonObject.put("analyseResult", analyseResult);// 报表分析
+		return jsonObject.toString();
 	}
 
 	// 部门员工做房用时统计Word
@@ -90,7 +100,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -127,7 +137,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 					+ ")";
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,总用时,平均用时,排名]", "过夜房[数量,总用时,平均用时,排名]",
 					"离退房[数量,总用时,平均用时,排名]" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 2);
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 2);
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -167,9 +177,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			listGoal.add(workHouse);
 		}
 		// 分别对抹尘房、过夜房、离退房排序并编号
-		sortAndWrite(listGoal, "avg_time_dust", false, "rank_dust");
-		sortAndWrite(listGoal, "avg_time_night", false, "rank_night");
-		sortAndWrite(listGoal, "avg_time_leave", false, "rank_leave");
+		sortAndWrite(listGoal, "avg_time_dust", true, "rank_dust");
+		sortAndWrite(listGoal, "avg_time_night", true, "rank_night");
+		sortAndWrite(listGoal, "avg_time_leave", true, "rank_leave");
 
 		Iterator<WorkHouse> itGoal = listGoal.iterator();
 		int i = 0;
@@ -181,6 +191,65 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		}
 
 		return listGoal;
+	}
+
+	/**
+	 * 做房用时报表分析
+	 * 
+	 * @param map
+	 * @param list
+	 * @return
+	 */
+	private String anaWorkHouse(Map<String, Object> map, List<WorkHouse> list) {
+		StringBuilder strb = new StringBuilder();
+
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String sortNo = (String) map.get("roomType");
+		strb.append("从" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7));
+		RoomSort roomSort = roomSortRepository.selectNameBySortNo(sortNo);
+		strb.append(roomSort.getSortName() + "房型，员工做房平均用时排名前三：");
+
+		StringBuilder strbLeave = new StringBuilder();
+		int i = 0;
+		for (WorkHouse workHouse : list) {// list中离退房已经有序
+			if (i < 3) {
+				strbLeave.append(workHouse.getStaff_name() + "(" + workHouse.getAvg_time_leave() + ")，");
+			} else {
+				break;
+			}
+			i++;
+		}
+
+		strb.append("抹尘房：" + getFirstThree(list, "avg_time_dust", true) + "；");
+		strb.append("过夜房：" + getFirstThree(list, "avg_time_night", true) + "；");
+		strb.append("离退房：" + strbLeave.substring(0, strbLeave.length() - 1) + "；");
+		return strb.toString();
+	}
+
+	/**
+	 * 返回前三条记录组成的字符串
+	 * 
+	 * @param list
+	 * @param filedNamezg
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @return
+	 */
+	private String getFirstThree(List<WorkHouse> list, String filedName, boolean ascFlag) {
+		CollectionUtil.sort(list, filedName, ascFlag);
+		StringBuilder subStrb = new StringBuilder();
+		int i = 0;
+		for (WorkHouse workHouse : list) {
+			if (i < 3) {
+				subStrb.append(workHouse.getStaff_name() + "(" + workHouse.getAvg_time_leave() + ")，");
+			} else {
+				break;
+			}
+			i++;
+		}
+		return subStrb.substring(0, subStrb.length() - 1);
 	}
 
 	/**
@@ -395,7 +464,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			Map<String, Object> picMap = PictureUtil.getPicMap(picPath, svg1);
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 1, out);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 1, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -407,9 +476,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 	/**** 员工工作效率报表 ****/
 
-	// 查询员工工作效率
+	// 查询员工工作效率(两次排序，效率低，注意后期优化！)
 	@Override
-	public List<WorkEfficiency> selectWorkEffByLimits(Map<String, Object> map) {
+	public String selectWorkEffByLimits(Map<String, Object> map) {
 		DepartmentInfo departmentInfo = departmentInfoRepository.selectByDeptName("客房部");// 先查询部门id
 		map.put("deptId", departmentInfo.getDepartmentId());
 
@@ -417,7 +486,62 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Iterator<Object> it = listSource.iterator();
 		List<WorkEfficiency> listGoal = objToWorkEff(it);
 
-		return listGoal;
+		WorkEfficiency workEfficiency = sumWorkEff(listGoal);
+		listGoal.add(workEfficiency);// 合计
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", listGoal);
+
+		listGoal.remove(listGoal.size() - 1);
+		String analyseResult = anaWorkEff(map, listGoal);
+		jsonObject.put("analyseResult", analyseResult);// 报表分析
+		return jsonObject.toString();
+	}
+
+	/**
+	 * 做房用时报表分析(工作效率)
+	 * 
+	 * @param map
+	 * @param list
+	 * @return
+	 */
+	private String anaWorkEff(Map<String, Object> map, List<WorkEfficiency> list) {
+		StringBuilder strb = new StringBuilder();
+
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		strb.append("从" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7));
+		strb.append("客房部员工做房效率排名前三：");
+		strb.append(getEffFirstThree(list, "house_eff", false) + "；");
+		strb.append("工作效率排名前三：");
+		strb.append(getEffFirstThree(list, "house_serv_eff", false) + "；");
+		return strb.toString();
+	}
+
+	/**
+	 * 返回前三条记录组成的字符串(工作效率)
+	 * 
+	 * @param list
+	 * @param filedNamezg
+	 *            按指定字段排序
+	 * @param ascFlag
+	 *            true升序,false降序
+	 * @return
+	 */
+	private String getEffFirstThree(List<WorkEfficiency> list, String filedName, boolean ascFlag) {
+		CollectionUtil.sort(list, filedName, ascFlag);
+		StringBuilder subStrb = new StringBuilder();
+		int i = 0;
+		for (WorkEfficiency workEfficiency : list) {
+			if (i < 3) {
+				subStrb.append(workEfficiency.getStaff_name() + "("
+						+ StringUtil.strfloatToPer(workEfficiency.getHouse_eff()) + ")，");
+			} else {
+				break;
+			}
+			i++;
+		}
+		return subStrb.substring(0, subStrb.length() - 1);
 	}
 
 	// 工作效率计算
@@ -438,9 +562,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			workEff.setHouse_serv_time(obj[4].toString());// 做房+客服时间
 
 			String house_eff = StringUtil.divide(obj[3].toString(), obj[2].toString());
-			workEff.setHouse_eff(StringUtil.strFloatToPer(house_eff));// 做房效率(%)
+			workEff.setHouse_eff(Float.valueOf(house_eff));// 做房效率(%)
 			String house_serv_eff = StringUtil.divide(obj[4].toString(), obj[2].toString());
-			workEff.setHouse_serv_eff(StringUtil.strFloatToPer(house_serv_eff));// 工作(做房+客服)效率(%)
+			workEff.setHouse_serv_eff(Float.valueOf(house_serv_eff));// 工作(做房+客服)效率(%)
 
 			listGoal.add(workEff);
 		}
@@ -619,7 +743,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -653,7 +777,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String endTime = (String) map.get("endTime");
 			String title = "客房部员工工作效率统计表(" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7) + ")";
 			String[] header = { "序号", "员工姓名", "员工编号", "当班时间(分钟)", "做房时间(分钟)", "做房效率", "工作时间(分钟)", "工作效率" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, 0, 1);
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 1);
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (FileNotFoundException e) {
@@ -734,7 +858,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {

@@ -5,6 +5,7 @@
 (function($){
 	var ms = {
 		init:function(obj,args){
+			obj.off("click");
 			return (function(){
 				ms.fillHtml(obj,args);
 				ms.bindEvent(obj,args);

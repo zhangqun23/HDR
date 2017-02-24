@@ -55,9 +55,9 @@ public class CheckHouseController {
 			endTime = request.getParameter("endTime");
 			checkHouseList = checkHouseService.getCheckHouseList(startTime, endTime);
 		}
-		jsonObject.put("checkHouseList", checkHouseList);
-		String analyseResult = checkHouseService.getAnalyseResult(checkHouseList);
 
+		String analyseResult = checkHouseService.getAnalyseResult(checkHouseList, "orderNum");
+		jsonObject.put("checkHouseList", checkHouseList);
 		jsonObject.put("analyseResult", analyseResult);
 		return jsonObject.toString();
 	}

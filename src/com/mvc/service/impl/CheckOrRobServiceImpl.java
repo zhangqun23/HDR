@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.base.enums.CleanType;
 import com.mvc.dao.CheckOrRobDao;
 import com.mvc.entity.DepartmentInfo;
+import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.entityReport.WorkHouse;
@@ -72,7 +73,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robEfficiency.setSumTime(obj[3].toString());
 			robEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
 			robEfficiency.setWorkCount(obj[5].toString());
-			robEfficiency.setWorkEffeciencyAvg(Float.parseFloat(obj[8].toString()));
+			robEfficiency.setWorkEffeciencyAvg(((int) (Float.parseFloat(obj[8].toString()) * 100)) / 100.0f);
 
 			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			robEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
@@ -278,7 +279,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			String analyseResult = getAnalyseResult(listGoal);
+			String analyseResult = getAnalyseResult(listGoal, "orderNum");
 			contentMap.put("${analyseResult}", analyseResult);
 			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
@@ -451,10 +452,12 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 	}
 
 	@Override
-	public String getAnalyseResult(List<RobEfficiency> list) {
+	public String getAnalyseResult(List<RobEfficiency> list, String writeField) {
 
 		boolean ascFlag = false;
 		CollectionUtil.sort(list, "workEffeciencyAvg", ascFlag);// 排序有问题，需要将实体中的排序字段改为float。
+		CollectionUtil<RobEfficiency> collectionUtil = new CollectionUtil<RobEfficiency>();
+		collectionUtil.writeSort(list, writeField);
 		StringBuilder analyseResult = new StringBuilder();
 		if (list.size() > 3) {
 			analyseResult.append("抢房效率最高的三名员工为：");

@@ -24,7 +24,6 @@ public interface CheckOrRobService {
 	List<RobDetail> selectRobDetailByLimits(Map<String, Object> map, Pager pager);
 
 	int getTotalRowCountRobDetail(Map<String, Object> map);
-	
 
 	String selectRobEffAnalyseByLimits(Map<String, String> map);
 
@@ -39,6 +38,6 @@ public interface CheckOrRobService {
 
 	ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map, String path);
 
-	String getAnalyseResult(List<RobEfficiency> list);
+	String getAnalyseResult(List<RobEfficiency> list, String writeField);
 
 }

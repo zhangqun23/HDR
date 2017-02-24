@@ -183,7 +183,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -216,7 +216,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			String title = "酒店对客服务信息excel统计表(统计时间：" + starttime + "至" + endtime + ")";
 			
 			String[] header = { "序号", "部门", "服务数量", "超时服务", "超时率", "总用时", "平均用时", "总量排名", "超时率排名"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,-1,-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
 		}catch (FileNotFoundException e) {
@@ -346,7 +346,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -385,7 +385,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			String title = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
 			
 			String[] header = { "序号", "员工姓名", "员工编号", "服务数量", "超时服务", "总用时", "平均用时", "超时率", "总量排名","超时率排名"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,-1,-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
 		}catch (FileNotFoundException e) {
@@ -447,7 +447,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		while (itGoal.hasNext()) {
 			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
 			houseCustomerServiceType = itGoal.next();
-			houseCustomerServiceType.getServiceType();
+			houseCustomerServiceType.setOrderNum(String.valueOf(i));
 		}
 
 		houseCustomerServiceType = new HouseCustomerServiceType();
@@ -588,7 +588,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -628,7 +628,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			String title = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
 			
 			String[] header = { "序号", "服务类型", "服务数量", "给定时间", "平均用时", "超时服务","超时率", "总量排名","超时率排名"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,-1,-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
 		}catch (FileNotFoundException e) {

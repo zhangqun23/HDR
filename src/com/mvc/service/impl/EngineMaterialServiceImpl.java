@@ -163,7 +163,7 @@ public class EngineMaterialServiceImpl implements EngineMaterialService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -191,7 +191,7 @@ public class EngineMaterialServiceImpl implements EngineMaterialService {
 			String endTime = (String) map.get("endTime");
 			String title = "工程物料管理统计表(" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7) + ")";
 			String[] header = { "序号", "材料类型", "材料名称", "材料型号", "用量", "材料单位", "任务数", "平均用量" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1, 0, 1);
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 1);
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载

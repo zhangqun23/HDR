@@ -276,7 +276,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -310,7 +310,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -367,7 +367,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			}
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -396,7 +396,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
 	
 			String[] header = { "序号", "房号", "查退房时间（分钟）", "给定时间（分钟）", "效率", "完成员工" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -427,7 +427,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
 		
 			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率"};// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);

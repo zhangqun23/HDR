@@ -193,7 +193,8 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			}
 		} else {
 			analyseResult0 = "排名前十的维修项包括：";
-			while (itGoalRange.hasNext() && w < 10) {
+			
+			while (itGoalRange.hasNext() && w <= 8) {	
 				w++;
 				projectRepair = itGoalRange.next();
 				analyseResult0 += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")，";
@@ -208,7 +209,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		String analyseResult = "从" + starttime + "至" + endtime + "共产生报修项" + amount + "项。其中：";
 		List<String> list1 = engineerRepairDao.getProjectRepairListNo(mAp);// 父名称可能是(去重复)
 		for (int j = 0; j < list1.size(); j++) {
-			analyseResult += list1.get(j) + "(" + map.get(list1.get(j) + "项" + ")");
+			analyseResult += list1.get(j) + "(" + map.get(list1.get(j)) + "项)。";
 		}
 		analyseResult += analyseResult0;
 		return analyseResult;
@@ -262,7 +263,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out,1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -562,7 +563,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 		try {
 			OutputStream out = new FileOutputStream(path0);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, 1, out);
+			wh.export2007Word(modelPath, null, contentMap, 1, out,-1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

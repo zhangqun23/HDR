@@ -53,16 +53,16 @@ public class ExcelHelper<T> {
 	 *            输出流
 	 * @param pattern
 	 * @param mergeColumn
-	 *            合并单元格列数，-1表示没有合并单元格
+	 *            合并单元格列数，-1表示没有合并单元格,从0开始
 	 * @param hideColumn
 	 *            隐藏表格内容的最后几列，0表示没有隐藏
 	 * @param titleRow
 	 *            表头行数，null或0代表没有表头
 	 */
 	public void export2007Excel(String title, String[] headers, Collection<T> list, OutputStream out, String pattern,
-			Integer mergeColumn, Integer hideColumn, Integer titleRow) {
+			Integer mergeColumn, Integer MergeColumn,Integer MergeColumn0, Integer hideColumn, Integer titleRow) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		export2007Excel(workbook, title, headers, list, pattern, mergeColumn, hideColumn, titleRow);
+		export2007Excel(workbook, title, headers, list, pattern, mergeColumn, MergeColumn,MergeColumn0, hideColumn, titleRow);
 		write2007Out(workbook, out);
 	}
 
@@ -81,14 +81,14 @@ public class ExcelHelper<T> {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void export2007MutiExcel(Map<Integer, String> titlesMap, Map<Integer, String[]> headerMap,
-			Map<Integer, List> map, OutputStream out, String pattern, Integer mergeColumn, Integer hideColumn,
-			Integer titleRow) {
+			Map<Integer, List> map, OutputStream out, String pattern, Integer mergeColumn, Integer MergeColumn,Integer MergeColumn0,
+			Integer hideColumn, Integer titleRow) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		for (int i = 0; i < map.size(); i++) {
 			Collection<T> list = map.get(i);
 			String[] headers = headerMap.get(i);
 			String title = titlesMap.get(i);
-			export2007Excel(workbook, title, headers, list, pattern, mergeColumn, hideColumn, titleRow);
+			export2007Excel(workbook, title, headers, list, pattern, mergeColumn, MergeColumn,MergeColumn0, hideColumn, titleRow);
 		}
 		write2007Out(workbook, out);
 	}
@@ -114,7 +114,7 @@ public class ExcelHelper<T> {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void export2007Excel(XSSFWorkbook workbook, String title, String[] headerSource, Collection<T> list,
-			String pattern, Integer mergeColumn, Integer hideColumn, Integer titleRow) {
+			String pattern, Integer mergeColumn, Integer MergeColumn,Integer MergeColumn0, Integer hideColumn, Integer titleRow) {
 		XSSFSheet sheet = workbook.createSheet(title);
 		if (titleRow == null) {
 			titleRow = 0;
@@ -199,6 +199,14 @@ public class ExcelHelper<T> {
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {
 			addMergedRegion(sheet, mergeColumn, 4, sheet.getLastRowNum(), workbook);// 就是合并第一列的所有相同单元格
+		}
+		// 添加这个就是为了合并多列单元格
+		if (MergeColumn != -1) {
+			addMergedRegion(sheet, MergeColumn, 2, sheet.getLastRowNum(), workbook);// 就是合并第一列的所有相同单元格
+		}
+		// 添加这个就是为了合并多列单元格
+		if (MergeColumn0 != -1) {
+			addMergedRegion(sheet, MergeColumn0, 2, sheet.getLastRowNum(), workbook);// 就是合并第一列的所有相同单元格
 		}
 	}
 

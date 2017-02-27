@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 
@@ -171,7 +171,7 @@ public class WordHelper<T> {
 		Integer mm = table.getNumberOfRows();
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {
-			addMergedRegion0(table, mergeColumn, 1, mm);// 就是合并第一列的所有相同单元格
+			addMergedRegion0(table, mergeColumn, rowNum, mm, list);// 就是合并第一列的所有相同单元格
 		}
 
 	}
@@ -179,6 +179,7 @@ public class WordHelper<T> {
 	// 纵向合并单元格
 	private static void merge(XWPFTable table, int col, int fromRow, int toRow) {
 		for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+
 			XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
 			if (rowIndex == fromRow) {
 				getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.RESTART);
@@ -194,60 +195,47 @@ public class WordHelper<T> {
 		return tcPr;
 	}
 
-	public static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
-		String s_will = null;// 比较的字段
-		String s_current;// 比较的字段
+	public void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow, Collection<T> list) {
 
-		XWPFTableCell cell = null;
-		CTTcPr cellPr = null;
-
-		List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
-
-		// 获取第一行的数据,以便后面进行比较
-		XWPFTableRow row = table.getRow(startRow);
-		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
-
-		s_will = cells.get(cellLine).getText();
-
-		// 获取单元格宽度
-		cellPr = cells.get(cellLine).getCTTc().getTcPr();
-		BigInteger width = cellPr.getTcW().getW();
-		widthList.add(width);
-
+		Iterator<T> it = list.iterator();
+		String preContent = null;
+		int j = 0;
 		int count = 0;
-		boolean flag = false;
 		int merge_start_row = startRow;
-		for (int i = startRow + 1; i <= endRow; i++) {
-			XWPFTableRow row0 = table.getRow(i);
-			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头最后一行
-			s_current = cells0.get(cellLine).getText();// 比较的字段
-			System.out.println(s_current);
-			if (s_will.equals(s_current)) {
-				flag = true;
-				count++;
-			} else {
-				if (flag) {
-					/*
-					 * cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
-					 * cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
-					 * cellPr.addNewVAlign().setVal(STVerticalJc.CENTER);//
-					 * 表格内容垂直居中
-					 */
-					merge(table, cellLine, merge_start_row, merge_start_row + count);
+		while (it.hasNext()) {
+			T t = (T) it.next();
+			String fieldName = "RepairParentType";
+			String getMethodName = "get" + fieldName;
+			Class tCls = t.getClass();
+			Method getMethod;
+
+			try {
+				getMethod = tCls.getMethod(getMethodName, new Class[] {});
+				Object value;
+				value = getMethod.invoke(t, new Object[] {});
+				String nowContent = String.valueOf(value);
+				if (nowContent.equals(preContent)) {
+					count++;
+
+				} else {
+					if (j != startRow) {
+						merge(table, cellLine, merge_start_row, j);
+						merge_start_row = j + 1;
+						count = 0;
+					}
 
 				}
-				flag = false;
-				count = 0;
-				merge_start_row = i;
-			}
-			s_will = s_current;
+				preContent = nowContent;
+				j++;
+				if (j == endRow - 1) {
+					merge(table, cellLine, merge_start_row, j);
+				}
 
-			// 由于上面循环中合并的单元放在有下一次相同单元格的时候做的，所以最后如果几行有相同单元格则要运行下面的合并单元格。
-			if (i == endRow && count > 0) {
-				merge(table, cellLine, merge_start_row, merge_start_row + count);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		}
-
 	}
 
 	private static String getTableCellContent(XWPFTableCell cell) {

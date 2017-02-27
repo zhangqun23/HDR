@@ -93,7 +93,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		}
 
 		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
-		Object[] objects;              
+		Object[] objects;
 		ProjectRepair projectRepair;
 		while (it.hasNext()) {
 			objects = (Object[]) it.next();
@@ -193,8 +193,8 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			}
 		} else {
 			analyseResult0 = "排名前十的维修项包括：";
-			
-			while (itGoalRange.hasNext() && w <= 8) {	
+
+			while (itGoalRange.hasNext() && w <= 8) {
 				w++;
 				projectRepair = itGoalRange.next();
 				analyseResult0 += projectRepair.getRepairType() + "(" + projectRepair.getServiceLoad() + ")，";
@@ -263,7 +263,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out, 1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -283,32 +283,31 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 	@Override
 	public ResponseEntity<byte[]> exportProRepairExcel(Map<String, Object> map, String path) {
 		ResponseEntity<byte[]> byteww = null;
-		try{
+		try {
 			ExcelHelper<ProjectRepair> ex = new ExcelHelper<ProjectRepair>();
 			String starttime = (String) map.get("start_time");// 开始时间
 			String endtime = (String) map.get("end_time");// 结束时间
 			String fileName = starttime + "至" + endtime + "工程部维修项统计.xlsx";
-			
+
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-			OutputStream out = new FileOutputStream(path);	
-			
+			OutputStream out = new FileOutputStream(path);
+
 			List<Object> listSource = engineerRepairDao.findProjectRepairList(map);
 			List<String> list = engineerRepairDao.getProjectRepairList(map);// 父名称可能是重复的
 			List<ProjectRepair> listGoal = listsourceToListGoal(listSource, list);
-			
-			
-			String title = "工程部维修项统计("+ starttime + "至" + endtime +")";
-			
-			String[] header = { "序号", "大区域", "小区域", "数量", "总计"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1,1,4,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+
+			String title = "工程部维修项统计(" + starttime + "至" + endtime + ")";
+
+			String[] header = { "序号", "大区域", "小区域", "数量", "总计" };
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, 1, 4, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
-		}catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return byteww;
 	}
 
@@ -357,7 +356,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 		}
 
-		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名		
+		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名
 
 		Iterator<ProjectRepair> itGoalRange = listGoal.iterator();
 		projectRepair = null;
@@ -563,7 +562,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 		try {
 			OutputStream out = new FileOutputStream(path0);// 保存路径
-			wh.export2007Word(modelPath, null, contentMap, 1, out,-1);
+			wh.export2007Word(modelPath, null, contentMap, 1, out, -1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

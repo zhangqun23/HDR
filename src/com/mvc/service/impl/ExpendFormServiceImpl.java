@@ -1883,6 +1883,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String tableType = (String) map.get("tableType");
 		JSONObject jsonObject = new JSONObject();
 		String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+		Float sum_num = (float) 0.0;//物品使用总数
 		switch(tableType){
 		case "0":
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
@@ -1913,7 +1914,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
 			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
 			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
-			Float sum_num = Float.parseFloat(sum.getSlba_num())+Float.parseFloat(sum.getDuto_num())+Float.parseFloat(sum.getLaba_num())+
+			sum_num = Float.parseFloat(sum.getSlba_num())+Float.parseFloat(sum.getDuto_num())+Float.parseFloat(sum.getLaba_num())+
 					Float.parseFloat(sum.getBesh_num())+Float.parseFloat(sum.getFacl_num())+Float.parseFloat(sum.getBato_num())+
 					Float.parseFloat(sum.getHato_num())+Float.parseFloat(sum.getMedo_num())+Float.parseFloat(sum.getFlto_num())+
 					Float.parseFloat(sum.getBaro_num())+Float.parseFloat(sum.getPill_num())+Float.parseFloat(sum.getPiin_num())+
@@ -1925,10 +1926,10 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			for (int i=0;i<3;i++) {
 				String key = (String) itt.next();
 				Integer value = linenmap.get(key);
-				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"，";
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num));
 				boolean ascFlag = false;
 				CollectionUtil.sort(listGoal, key, ascFlag);
-				analyseResult += "领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
 			}
 			jsonObject.put("analyseResult", analyseResult);
 			break;
@@ -1945,6 +1946,72 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			roomCount.add(avg1);
 			jsonObject.put("list", listGoal1);
 			jsonObject.put("count", roomCount);
+			
+			Map<String, Integer> roommap = new HashMap<String, Integer>();
+			roommap.put("umbr_num", Integer.parseInt(sum1.getUmbr_num()));
+			roommap.put("coff_num", Integer.parseInt(sum1.getCoff_num()));
+			roommap.put("suge_num", Integer.parseInt(sum1.getSuge_num()));
+			roommap.put("coup_num", Integer.parseInt(sum1.getCoup_num()));
+			roommap.put("penc_num", Integer.parseInt(sum1.getPenc_num()));
+			roommap.put("erse_num", Integer.parseInt(sum1.getErse_num()));
+			roommap.put("clca_num", Integer.parseInt(sum1.getClca_num()));
+			roommap.put("fati_num", Integer.parseInt(sum1.getFati_num()));
+			roommap.put("enca_num", Integer.parseInt(sum1.getEnca_num()));
+			roommap.put("bage_num", Integer.parseInt(sum1.getBage_num()));
+			roommap.put("teab_num", Integer.parseInt(sum1.getTeab_num()));
+			roommap.put("meca_num", Integer.parseInt(sum1.getMeca_num()));
+			roommap.put("opbo_num", Integer.parseInt(sum1.getOpbo_num()));
+			roommap.put("blte_num", Integer.parseInt(sum1.getBlte_num()));
+			roommap.put("dnds_num", Integer.parseInt(sum1.getDnds_num()));
+			roommap.put("tvca_num", Integer.parseInt(sum1.getTvca_num()));
+			roommap.put("orel_num", Integer.parseInt(sum1.getOrel_num()));
+			roommap.put("memo_num", Integer.parseInt(sum1.getMemo_num()));
+			roommap.put("coas_num", Integer.parseInt(sum1.getCoas_num()));
+			roommap.put("matc_num", Integer.parseInt(sum1.getMatc_num()));
+			roommap.put("mapp_num", Integer.parseInt(sum1.getMapp_num()));
+			roommap.put("rule_num", Integer.parseInt(sum1.getRule_num()));
+			roommap.put("stat_num", Integer.parseInt(sum1.getStat_num()));
+			roommap.put("clip_num", Integer.parseInt(sum1.getClip_num()));
+			roommap.put("bape_num", Integer.parseInt(sum1.getBape_num()));
+			roommap.put("comp_num", Integer.parseInt(sum1.getComp_num()));
+			roommap.put("lali_num", Integer.parseInt(sum1.getLali_num()));
+			roommap.put("losu_num", Integer.parseInt(sum1.getLosu_num()));
+			roommap.put("shpa_num", Integer.parseInt(sum1.getShpa_num()));
+			roommap.put("anma_num", Integer.parseInt(sum1.getAnma_num()));
+			roommap.put("grte_num", Integer.parseInt(sum1.getGrte_num()));
+			roommap.put("chsl_num", Integer.parseInt(sum1.getChsl_num()));
+			roommap.put("cocl_num", Integer.parseInt(sum1.getCocl_num()));
+			roommap.put("arel_num", Integer.parseInt(sum1.getArel_num()));
+			sum_num = Float.parseFloat(sum1.getAnma_num())+Float.parseFloat(sum1.getArel_num())+Float.parseFloat(sum1.getBage_num())+
+					Float.parseFloat(sum1.getBape_num())+Float.parseFloat(sum1.getBlte_num())+Float.parseFloat(sum1.getChsl_num())+
+					Float.parseFloat(sum1.getClca_num())+Float.parseFloat(sum1.getClip_num())+Float.parseFloat(sum1.getCoas_num())+
+					Float.parseFloat(sum1.getCocl_num())+Float.parseFloat(sum1.getCoff_num())+Float.parseFloat(sum1.getComp_num())+
+					Float.parseFloat(sum1.getCoup_num())+Float.parseFloat(sum1.getDnds_num())+Float.parseFloat(sum1.getEnca_num())+
+					Float.parseFloat(sum1.getErse_num())+Float.parseFloat(sum1.getErse_num())+Float.parseFloat(sum1.getFati_num())+
+					Float.parseFloat(sum1.getGrte_num())+Float.parseFloat(sum1.getLali_num())+Float.parseFloat(sum1.getLosu_num())+
+					Float.parseFloat(sum1.getMapp_num())+Float.parseFloat(sum1.getMatc_num())+Float.parseFloat(sum1.getMeca_num())+
+					Float.parseFloat(sum1.getMemo_num())+Float.parseFloat(sum1.getOpbo_num())+Float.parseFloat(sum1.getOrel_num())+
+					Float.parseFloat(sum1.getPenc_num())+Float.parseFloat(sum1.getRule_num())+Float.parseFloat(sum1.getShpa_num())+
+					Float.parseFloat(sum1.getStat_num())+Float.parseFloat(sum1.getSuge_num())+Float.parseFloat(sum1.getTeab_num())+
+					Float.parseFloat(sum1.getTvca_num())+Float.parseFloat(sum1.getUmbr_num());//算出耗品总数
+			
+			roommap = CollectionUtil.sortByValue(roommap);
+			
+			Set set1 = roommap.keySet();
+			Iterator itt1 = set1.iterator();
+			/*for(int i=0;i<roommap.size();i++) {
+	            String key = (String) itt1.next();
+	            String value = (String) map.get(key);
+	            float sum_num1 = Float.parseFloat(value);
+	        }*/
+			for (int i=0;i<3;i++) {
+				String key = (String) itt1.next();
+				Integer value = roommap.get(key);
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num));
+				boolean ascFlag = false;
+				CollectionUtil.sort(listGoal1, key, ascFlag);
+				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			}
 			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "2":

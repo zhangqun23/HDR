@@ -52,11 +52,10 @@ public class CheckOutController {
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<CheckOutEfficiency> list = checkOutService.selectCheckOutEfficiency(map);
 		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
 
-		String analyseResult = checkOutService.getAnalyseResult(list);
+		String analyseResult = checkOutService.getAnalyseResult(list, "orderNum");
 		jsonObject.put("analyseResult", analyseResult);
-
+		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}
 

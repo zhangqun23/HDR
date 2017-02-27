@@ -403,6 +403,7 @@ app
 										} else {
 											checkRob.listIsShow = true;
 											checkRob.listRemark = false;
+											reportForm.remark = "";
 										}
 									});
 								} else {
@@ -429,6 +430,7 @@ app
 														} else {
 															checkRob.listIsShow = true;
 															checkRob.listRemark = false;
+															reportForm.remark = "";
 														}
 													});
 								}
@@ -639,6 +641,7 @@ app
 													} else {
 														checkRob.listIsShow = true;
 														checkRob.listRemark = false;
+														reportForm.remark = "";
 													}
 												});
 							}
@@ -681,6 +684,7 @@ app
 														} else {
 															checkRob.listIsShow = true;
 															checkRob.listRemark = false;
+															reportForm.remark = "";
 														}
 													});
 								} else {
@@ -706,6 +710,7 @@ app
 														} else {
 															checkRob.listIsShow = true;
 															checkRob.listRemark = false;
+															reportForm.remark = "";
 														}
 													});
 								}

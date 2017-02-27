@@ -322,6 +322,7 @@ app
 									} else {
 										reportForm.listIsShow = true;
 										reportForm.listRemark = false;
+										reportForm.remark = "";
 									}
 								});
 							}
@@ -579,6 +580,7 @@ app
 									} else {
 										reportForm.listIsShow = true;
 										reportForm.listRemark = false;
+										reportForm.remark = "";
 									}
 								});
 
@@ -873,6 +875,7 @@ app
 													} else {
 														reportForm.listIsShow = true;
 														reportForm.listRemark = false;
+														reportForm.remark = "";
 													}
 												});
 							}
@@ -1076,6 +1079,7 @@ app
 													} else {
 														reportForm.listIsShow = true;
 														reportForm.listRemark = false;
+														reportForm.remark = "";
 													}
 												});
 							}
@@ -1107,6 +1111,7 @@ app
 									} else {
 										reportForm.listIsShow = true;
 										reportForm.listRemark = false;
+										reportForm.remark = "";
 									}
 								});
 							}

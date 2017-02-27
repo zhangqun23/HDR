@@ -224,7 +224,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 		strb.append("抹尘房：" + getFirstThree(list, "avg_time_dust", true) + "；");
 		strb.append("过夜房：" + getFirstThree(list, "avg_time_night", true) + "；");
-		strb.append("离退房：" + strbLeave.substring(0, strbLeave.length() - 1) + "；");
+		if (strbLeave.length() > 0) {
+			strb.append("离退房：" + strbLeave.substring(0, strbLeave.length() - 1) + "；");
+		} else {
+			strb.append("离退房：无；");
+		}
+
 		return strb.toString();
 	}
 
@@ -260,7 +265,11 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return subStrb.substring(0, subStrb.length() - 1);
+		if (subStrb.length() <= 0) {
+			return "无";
+		} else {
+			return subStrb.substring(0, subStrb.length() - 1);
+		}
 	}
 
 	/**
@@ -343,6 +352,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	 */
 	private String getWorkHouseAnaRe(String averWorkTime, String allAverWorkTime) {
 		String analyseResult = "分析结果:  ";
+		if (averWorkTime == null || averWorkTime.equals("")) {
+			averWorkTime = "0";
+		}
+		if (allAverWorkTime == null || allAverWorkTime.equals("")) {
+			allAverWorkTime = "0";
+		}
 		Float dValue = Float.valueOf(allAverWorkTime) - Float.valueOf(averWorkTime);
 		Float level = Float.valueOf(StringUtil.divide(dValue.toString(), allAverWorkTime));
 		if (Math.abs(level) <= 0.05) {
@@ -562,7 +577,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			e.printStackTrace();
 		}
 
-		return subStrb.substring(0, subStrb.length() - 1);
+		if (subStrb.length() <= 0) {
+			return "无";
+		} else {
+			return subStrb.substring(0, subStrb.length() - 1);
+		}
+
 	}
 
 	// 工作效率计算
@@ -689,6 +709,12 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	 */
 	private String getWorkEffAnaRe(String averEff, String allAverEff, String content) {
 		String analyseResult = "分析结果:  ";
+		if (allAverEff == null || allAverEff.equals("")) {
+			allAverEff = "0";
+		}
+		if (averEff == null || averEff.equals("")) {
+			averEff = "0";
+		}
 		Float dValue = Float.valueOf(allAverEff) - Float.valueOf(averEff);
 		Float level = Float.valueOf(StringUtil.divide(dValue.toString(), allAverEff));
 		if (Math.abs(level) <= 0.05) {

@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import javax.swing.text.TableView.TableRow;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -38,9 +38,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 
+import com.mvc.entityReport.CheckHouse;
+import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
+import com.mvc.entityReport.RobEfficiency;
 import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkReject;
 
@@ -109,7 +112,6 @@ public class WordHelper<T> {
 			Integer mergeColumn) {
 		List<XWPFTable> tables;
 		XWPFTable table = null;
-		int ww = 0;// 用于合并单元格
 		try {
 			tables = doc.getTables();
 			table = tables.get(tableOrder);// 变量
@@ -140,7 +142,6 @@ public class WordHelper<T> {
 					}
 				}
 				T t = (T) it.next();
-				ww++;
 				Boolean flag = tranFieldToPer(t);// 需要处理%列
 				Field[] fields = t.getClass().getDeclaredFields();
 				cells = row.getTableCells();
@@ -194,17 +195,20 @@ public class WordHelper<T> {
 	}
 
 	public static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
-		String s_will;// 比较的字段
+		String s_will = null;// 比较的字段
 		String s_current;// 比较的字段
+
 		XWPFTableCell cell = null;
 		CTTcPr cellPr = null;
+
 		List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
 
 		// 获取第一行的数据,以便后面进行比较
 		XWPFTableRow row = table.getRow(startRow);
 		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
 
-		s_will = cells.get(cellLine).getCTTc().toString();// 比较的字段
+		s_will = cells.get(cellLine).getText();
+
 		// 获取单元格宽度
 		cellPr = cells.get(cellLine).getCTTc().getTcPr();
 		BigInteger width = cellPr.getTcW().getW();
@@ -453,6 +457,9 @@ public class WordHelper<T> {
 		list.add(HouseCustomerServiceType.class);
 		list.add(WorkEfficiency.class);
 		list.add(WorkReject.class);
+		list.add(RobEfficiency.class);
+		list.add(CheckOutEfficiency.class);
+		list.add(CheckHouse.class);
 		if (list.contains(cla)) {
 			flag = true;
 		}
@@ -474,6 +481,9 @@ public class WordHelper<T> {
 		list.add("reject_dust_eff");
 		list.add("reject_night_eff");
 		list.add("reject_leave_eff");
+		list.add("workEffeciencyAvg");
+		list.add("efficiency");
+
 		if (list.contains(fieldName)) {
 			flag = true;
 		}

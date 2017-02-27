@@ -263,7 +263,10 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out, 1);
+				List<Integer> list = new ArrayList<Integer>();
+				list.add(1);
+				list.add(4);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out, list, "RepairParentType");
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

@@ -164,8 +164,9 @@ public class EngineMaterialServiceImpl implements EngineMaterialService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
-
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
+			List<Integer> list = new ArrayList<Integer>();
+			list.add(1);
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out, list,"material_sort");// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {

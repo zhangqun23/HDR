@@ -38,9 +38,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 
+import com.mvc.entityReport.CheckHouse;
+import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
+import com.mvc.entityReport.RobEfficiency;
 import com.mvc.entityReport.WorkEfficiency;
 import com.mvc.entityReport.WorkReject;
 
@@ -453,6 +456,9 @@ public class WordHelper<T> {
 		list.add(HouseCustomerServiceType.class);
 		list.add(WorkEfficiency.class);
 		list.add(WorkReject.class);
+		list.add(RobEfficiency.class);
+		list.add(CheckOutEfficiency.class);
+		list.add(CheckHouse.class);
 		if (list.contains(cla)) {
 			flag = true;
 		}
@@ -474,6 +480,9 @@ public class WordHelper<T> {
 		list.add("reject_dust_eff");
 		list.add("reject_night_eff");
 		list.add("reject_leave_eff");
+		list.add("workEffeciencyAvg");
+		list.add("efficiency");
+
 		if (list.contains(fieldName)) {
 			flag = true;
 		}

@@ -222,8 +222,7 @@ app
 								});
 							};
 							// wq迷你吧用量分析
-							services.selectStaExpendByLimits = function(
-									data) {
+							services.selectStaExpendByLimits = function(data) {
 								return $http({
 									method : 'post',
 									url : baseUrl
@@ -388,60 +387,63 @@ app
 								$(".tipLoading").fadeIn(200);
 								expendFormLimit = JSON
 										.stringify(reportForm.sLimit);
-									services
-											.selectStaExpendByLimits({
-												sLimit : expendFormLimit
-											})
-											.success(
-													function(data) {
-														$(".overlayer")
-																.fadeOut(200);
-														$(".tipLoading")
-																.fadeOut(200);
-														reportForm.expendFormList = data.list;
-														reportForm.expendCount = data.count;
-														reportForm.analyseResult = data.analyseResult;
-														if (data.list) {
-															reportForm.listIsShow = false;
-														} else {
-															reportForm.listIsShow = true;
+								services
+										.selectStaExpendByLimits({
+											sLimit : expendFormLimit
+										})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													reportForm.expendFormList = data.list;
+													reportForm.expendCount = data.count;
+													reportForm.analyseResult = data.analyseResult;
+													if (data.list) {
+														reportForm.listIsShow = false;
+													} else {
+														reportForm.listIsShow = true;
+													}
+													if (reportForm.analyseResult) {
+														switch (reportForm.sLimit.tableType) {
+														case '0':
+															reportForm.listRemark1 = true;
+															reportForm.listRemark2 = false;
+															reportForm.listRemark3 = false;
+															reportForm.listRemark4 = false;
+															break;
+														case '1':
+															reportForm.listRemark1 = false;
+															reportForm.listRemark2 = true;
+															reportForm.listRemark3 = false;
+															reportForm.listRemark4 = false;
+															break;
+														case '2':
+															reportForm.listRemark1 = false;
+															reportForm.listRemark2 = false;
+															reportForm.listRemark3 = true;
+															reportForm.listRemark4 = false;
+															break;
+														case '3':
+															reportForm.listRemark1 = false;
+															reportForm.listRemark2 = false;
+															reportForm.listRemark3 = false;
+															reportForm.listRemark4 = true;
+															break;
 														}
-														if (reportForm.analyseResult) {
-															switch (reportForm.sLimit.tableType) {
-															case '0':
-																reportForm.listRemark1 = true;
-																reportForm.listRemark2 = false;
-																reportForm.listRemark3 = false;
-																reportForm.listRemark4 = false;
-																break;
-															case '1':
-																reportForm.listRemark1 = false;
-																reportForm.listRemark2 = true;
-																reportForm.listRemark3 = false;
-																reportForm.listRemark4 = false;
-																break;
-															case '2':
-																reportForm.listRemark1 = false;
-																reportForm.listRemark2 = false;
-																reportForm.listRemark3 = true;
-																reportForm.listRemark4 = false;
-																break;
-															case '3':
-																reportForm.listRemark1 = false;
-																reportForm.listRemark2 = false;
-																reportForm.listRemark3 = false;
-																reportForm.listRemark4 = true;
-																break;
-																}
-															reportForm.remark = data.analyseResult;
-															$("#analyseResult").val(data.analyseResult);
-														} else {
-															reportForm.listRemark = false;
-															reportForm.remark = "";
-															$("#analyseResult").val("");
-														}
-													});
-								
+														reportForm.remark = data.analyseResult;
+														$("#analyseResult")
+																.val(
+																		data.analyseResult);
+													} else {
+														reportForm.listRemark = false;
+														reportForm.remark = "";
+														$("#analyseResult")
+																.val("");
+													}
+												});
+
 							}
 							// wq查询耗品用量统计
 							reportForm.selectFormByLimits = function() {
@@ -490,11 +492,14 @@ app
 															reportForm.listRemark2 = false;
 															reportForm.listRemark3 = false;
 															reportForm.listRemark4 = false;
-															$("#analyseResult").val(data.analyseResult);
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
 														} else {
 															reportForm.listRemark = false;
 															reportForm.remark = "";
-															$("#analyseResult").val("");
+															$("#analyseResult")
+																	.val("");
 														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
@@ -528,11 +533,14 @@ app
 															reportForm.listRemark2 = true;
 															reportForm.listRemark3 = false;
 															reportForm.listRemark4 = false;
-															$("#analyseResult").val(data.analyseResult);
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
 														} else {
 															reportForm.listRemark = false;
 															reportForm.remark = "";
-															$("#analyseResult").val("");
+															$("#analyseResult")
+																	.val("");
 														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
@@ -567,11 +575,14 @@ app
 															reportForm.listRemark2 = false;
 															reportForm.listRemark3 = true;
 															reportForm.listRemark4 = false;
-															$("#analyseResult").val(data.analyseResult);
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
 														} else {
 															reportForm.listRemark = false;
 															reportForm.remark = "";
-															$("#analyseResult").val("");
+															$("#analyseResult")
+																	.val("");
 														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
@@ -606,11 +617,14 @@ app
 															reportForm.listRemark2 = false;
 															reportForm.listRemark3 = false;
 															reportForm.listRemark4 = true;
-															$("#analyseResult").val(data.analyseResult);
+															$("#analyseResult")
+																	.val(
+																			data.analyseResult);
 														} else {
 															reportForm.listRemark = false;
 															reportForm.remark = "";
-															$("#analyseResult").val("");
+															$("#analyseResult")
+																	.val("");
 														}
 														if (data.list.length) {
 															reportForm.listIsShow = false;
@@ -682,359 +696,420 @@ app
 								expendAnalyseLimit = JSON
 										.stringify(reportForm.areLimit);
 								switch (reportForm.areLimit.tableType) {
-									case '0':
-										services
-										.selectLinenExpendAnalyseByLlimits({
-											allimit : expendAnalyseLimit
-										})
-										.success(
-												function(data) {
-													$(".overlayer")
-															.fadeOut(200);
-													$(".tipLoading").fadeOut(
-															200);
-													$('#linenbar-svg').empty();
-													$('#linenpie-svg').empty();
-													$('#linenpieChart').empty();
-													$('#linenbar1').empty();
-													reportForm.remark1="";
-													if (data.list) {
-													
-														reportForm.listIsShow = false;
-														if (data.list.length < 15) {
-															reportForm.barSize = data.list.length * 80;
-														} else {
-															reportForm.barSize = 1200;
-														}
-														$("#bar1")
-																.css(
-																		'height',
-																		reportForm.barSize
-																				+ 'px');
-														var title = "客房部布草使用量条形图分析";// 条形图标题显示
-														var xAxis = [];// 横坐标显示
-														var yAxis = "单位:数量";// 纵坐标显示
-														var barData = [];// 最终传入bar1中的data
-														var linenNum = [];
-														var pieData = [];// 饼状图传入数据
-														for ( var item in data.list) {
-															if (data.list[item].good_name != '') {
-																xAxis
-																		.push(data.list[item].goods_name);
-																linenNum
-																		.push(parseInt(data.list[item].goods_num));
-																combinePie(
-																		pieData,
-																		data.list[item].goods_name,
-																		parseInt(data.list[item].goods_num));
-															}
-														}
-														pieChartForm(
-																"#linenpieChart",
-																"客房部布草使用量饼状图分析",
-																"布草使用占比",
-																pieData);
-														$('#linenpie-svg')
-																.val(
-																		$(
-																				"#linenpieChart")
-																				.highcharts()
-																				.getSVG());
-
-														combine(barData,
-																'布草使用数量',
-																linenNum);
-														barForm(barData,
-																"#linenbar1", title,
-																xAxis, yAxis);
+								case '0':
+									services
+											.selectLinenExpendAnalyseByLlimits(
+													{
+														allimit : expendAnalyseLimit
+													})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
 														$('#linenbar-svg')
-																.val(
-																		$(
-																				"#linenbar1")
-																				.highcharts()
-																				.getSVG());
-														$('#roombar-svg').val("");
-														$('#washbar-svg').val("");
-														$('#minibar-svg').val("");
-														$('#minipieChart').val("");
+																.empty();
+														$('#linenpie-svg')
+																.empty();
+														$('#linenpieChart')
+																.empty();
+														$('#linenbar1').empty();
+														reportForm.remark1 = "";
+														if (data.list) {
 
-														reportForm.remark1 = '';
-														reportForm.remark2 = '';
-														reportForm.remark3 = '';
-														reportForm.remark4 = '';
-														if (data.analyseResult) {
-															reportForm.listRemark = true;
-															reportForm.remark1 = data.analyseResult;
-															$("#analyseResult").val(data.analyseResult);
+															reportForm.listIsShow = false;
+															if (data.list.length < 15) {
+																reportForm.barSize = data.list.length * 80;
+															} else {
+																reportForm.barSize = 1200;
+															}
+															$("#bar1")
+																	.css(
+																			'height',
+																			reportForm.barSize
+																					+ 'px');
+															var title = "客房部布草使用量条形图分析";// 条形图标题显示
+															var xAxis = [];// 横坐标显示
+															var yAxis = "单位:数量";// 纵坐标显示
+															var barData = [];// 最终传入bar1中的data
+															var linenNum = [];
+															var pieData = [];// 饼状图传入数据
+															for ( var item in data.list) {
+																if (data.list[item].good_name != '') {
+																	xAxis
+																			.push(data.list[item].goods_name);
+																	linenNum
+																			.push(parseInt(data.list[item].goods_num));
+																	combinePie(
+																			pieData,
+																			data.list[item].goods_name,
+																			parseInt(data.list[item].goods_num));
+																}
+															}
+															pieChartForm(
+																	"#linenpieChart",
+																	"客房部布草使用量饼状图分析",
+																	"布草使用占比",
+																	pieData);
+															$('#linenpie-svg')
+																	.val(
+																			$(
+																					"#linenpieChart")
+																					.highcharts()
+																					.getSVG());
+
+															combine(barData,
+																	'布草使用数量',
+																	linenNum);
+															barForm(
+																	barData,
+																	"#linenbar1",
+																	title,
+																	xAxis,
+																	yAxis);
+															$('#linenbar-svg')
+																	.val(
+																			$(
+																					"#linenbar1")
+																					.highcharts()
+																					.getSVG());
+															$('#roombar-svg')
+																	.val("");
+															$('#washbar-svg')
+																	.val("");
+															$('#minibar-svg')
+																	.val("");
+															$('#minipieChart')
+																	.val("");
+
+															reportForm.remark1 = '';
 															reportForm.remark2 = '';
 															reportForm.remark3 = '';
 															reportForm.remark4 = '';
-														} else {
-															reportForm.listRemark = false;
-															reportForm.remark1 = "";
-															$("#analyseResult").val("");
-														}
-													} else {
-														reportForm.listIsShow = true;
-													}
-												});
-										break;
-									case '1':
-										services
-										.selectRoomExpendAnalyseByRlimits({
-											arlimit : expendAnalyseLimit
-										})
-										.success(
-												function(data) {
-													$(".overlayer")
-															.fadeOut(200);
-													$(".tipLoading").fadeOut(
-															200);
-													$('#roombar-svg').empty();
-													$('#roombar1').empty();
-													reportForm.remark2="";
-													if (data.list) {
-														reportForm.listIsShow = false;
-
-														if (data.list.length < 15) {
-															reportForm.barSize = data.list.length * 80;
-														} else {
-															reportForm.barSize = 1200;
-														}
-														$("#bar1")
-																.css(
-																		'height',
-																		reportForm.barSize
-																				+ 'px');
-														var title = "客房部房间耗品使用量条形图分析";// 条形图标题显示
-														var xAxis = [];// 横坐标显示
-														var yAxis = "单位:数量";// 纵坐标显示
-														var barData = [];// 最终传入bar1中的data
-														var linenNum = [];
-														for ( var item in data.list) {
-															if (data.list[item].good_name != '') {
-																xAxis
-																		.push(data.list[item].goods_name);
-																linenNum
-																		.push(parseInt(data.list[item].goods_num));
+															if (data.analyseResult) {
+																reportForm.listRemark = true;
+																reportForm.remark1 = data.analyseResult;
+																$(
+																		"#analyseResult")
+																		.val(
+																				data.analyseResult);
+																reportForm.remark2 = '';
+																reportForm.remark3 = '';
+																reportForm.remark4 = '';
+															} else {
+																reportForm.listRemark = false;
+																reportForm.remark1 = "";
+																$(
+																		"#analyseResult")
+																		.val("");
 															}
+														} else {
+															reportForm.listIsShow = true;
 														}
-														combine(barData,
-																'房间耗品使用数量',
-																linenNum);
-														barForm(barData,
-																"#roombar1", title,
-																xAxis, yAxis);
+													});
+									break;
+								case '1':
+									services
+											.selectRoomExpendAnalyseByRlimits({
+												arlimit : expendAnalyseLimit
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
 														$('#roombar-svg')
-																.val(
-																		$(
-																				"#roombar1")
-																				.highcharts()
-																				.getSVG());
-														$('#linenbar-svg').val("");
-														$('#linenpieChart').val("");
-														$('#washbar-svg').val("");
-														$('#minibar-svg').val("");
-														$('#minipieChart').val("");
-														reportForm.remark1 = '';
-														reportForm.remark2 = '';
-														reportForm.remark3 = '';
-														reportForm.remark4 = '123455';
-														if (data.analyseResult) {
-															reportForm.listRemark = true;
-															reportForm.remark2 = data.analyseResult;
-															$("#analyseResult").val(data.analyseResult);
-															reportForm.remark1 = '';
-															reportForm.remark3 = '';
-															reportForm.remark4 = '';
-														} else {
-															reportForm.listRemark = false;
-															reportForm.remark2 = "";
-															$("#analyseResult").val("");
-														}
-													} else {
-														reportForm.listIsShow = true;
-													}
+																.empty();
+														$('#roombar1').empty();
+														reportForm.remark2 = "";
+														if (data.list) {
+															reportForm.listIsShow = false;
 
-												});
-										break;
-									case '2':
-										services
-										.selectWashExpendAnalyseByWlimits({
-											wrlimit : expendAnalyseLimit
-										})
-										.success(
-												function(data) {
-													$(".overlayer")
-															.fadeOut(200);
-													$(".tipLoading").fadeOut(
-															200);
-													$('#washbar-svg').empty();;
-													$('#washbar').empty();
-													reportForm.remark3="";
-													if (data.list) {
-														reportForm.listIsShow = false;
-
-														if (data.list.length < 15) {
-															reportForm.barSize = data.list.length * 80;
-														} else {
-															reportForm.barSize = 1200;
-														}
-														$("#bar1")
-																.css(
-																		'height',
-																		reportForm.barSize
-																				+ 'px');
-														var title = "客房部卫生间耗品使用量条形图分析";// 条形图标题显示
-														var xAxis = [];// 横坐标显示
-														var yAxis = "单位:数量";// 纵坐标显示
-														var barData = [];// 最终传入bar1中的data
-														var linenNum = [];
-														for ( var item in data.list) {
-															if (data.list[item].goods_name != '') {
-																xAxis
-																		.push(data.list[item].goods_name);
-																linenNum
-																		.push(parseInt(data.list[item].goods_num));
+															if (data.list.length < 15) {
+																reportForm.barSize = data.list.length * 80;
+															} else {
+																reportForm.barSize = 1200;
 															}
+															$("#bar1")
+																	.css(
+																			'height',
+																			reportForm.barSize
+																					+ 'px');
+															var title = "客房部房间耗品使用量条形图分析";// 条形图标题显示
+															var xAxis = [];// 横坐标显示
+															var yAxis = "单位:数量";// 纵坐标显示
+															var barData = [];// 最终传入bar1中的data
+															var linenNum = [];
+															for ( var item in data.list) {
+																if (data.list[item].good_name != '') {
+																	xAxis
+																			.push(data.list[item].goods_name);
+																	linenNum
+																			.push(parseInt(data.list[item].goods_num));
+																}
+															}
+															combine(barData,
+																	'房间耗品使用数量',
+																	linenNum);
+															barForm(
+																	barData,
+																	"#roombar1",
+																	title,
+																	xAxis,
+																	yAxis);
+															$('#roombar-svg')
+																	.val(
+																			$(
+																					"#roombar1")
+																					.highcharts()
+																					.getSVG());
+															$('#linenbar-svg')
+																	.val("");
+															$('#linenpieChart')
+																	.val("");
+															$('#washbar-svg')
+																	.val("");
+															$('#minibar-svg')
+																	.val("");
+															$('#minipieChart')
+																	.val("");
+															reportForm.remark1 = '';
+															reportForm.remark2 = '';
+															reportForm.remark3 = '';
+															reportForm.remark4 = '123455';
+															if (data.analyseResult) {
+																reportForm.listRemark = true;
+																reportForm.remark2 = data.analyseResult;
+																$(
+																		"#analyseResult")
+																		.val(
+																				data.analyseResult);
+																reportForm.remark1 = '';
+																reportForm.remark3 = '';
+																reportForm.remark4 = '';
+															} else {
+																reportForm.listRemark = false;
+																reportForm.remark2 = "";
+																$(
+																		"#analyseResult")
+																		.val("");
+															}
+														} else {
+															reportForm.listIsShow = true;
 														}
-														combine(barData,
-																'卫生间耗品使用数量',
-																linenNum);
-														barForm(barData,
-																"#washbar1", title,
-																xAxis, yAxis);
+
+													});
+									break;
+								case '2':
+									services
+											.selectWashExpendAnalyseByWlimits({
+												wrlimit : expendAnalyseLimit
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
 														$('#washbar-svg')
-																.val(
-																		$(
-																				"#washbar1")
-																				.highcharts()
-																				.getSVG());
-														$('#linenbar-svg').val("");
-														$('#linenpieChart').val("");
-														$('#roombar-svg').val("");
-														$('#minibar-svg').val("");
-														$('#minipieChart').val("");
-														reportForm.remark1 = '';
-														reportForm.remark2 = '';
-														reportForm.remark3 = '';
-														reportForm.remark4 = '';
-														if (data.analyseResult) {
-															reportForm.listRemark = true;
-															reportForm.remark3 = data.analyseResult;
-															$("#analyseResult").val(data.analyseResult);
-															reportForm.remark1 = '';
-															reportForm.remark2 = '';
-															reportForm.remark4 = '';
-														} else {
-															reportForm.listRemark = false;
-															reportForm.remark3 = "";
-															$("#analyseResult").val("");
-														}
-													} else {
-														reportForm.listIsShow = true;
-													}
+																.empty();
+														;
+														$('#washbar').empty();
+														reportForm.remark3 = "";
+														if (data.list) {
+															reportForm.listIsShow = false;
 
-												});
-										break;
-									case '3':
-										services
-										.selectMiniExpendAnalyseByMlimits({
-											amlimit : expendAnalyseLimit
-										})
-										.success(
-												function(data) {
-													$(".overlayer")
-															.fadeOut(200);
-													$(".tipLoading").fadeOut(
-															200);
-													reportForm.typeList = data.list;
-													$('#minibar-svg').empty();
-													$('#minipie-svg').empty();
-													$('#minipieChart').empty();
-													$('#minibar1').empty();
-													reportForm.remark4="";
-													if (data.list) {
-														reportForm.listIsShow = false;
-
-														if (data.list.length < 15) {
-															reportForm.barSize = data.list.length * 80;
-														} else {
-															reportForm.barSize = 1200;
-														}
-														$("#bar1")
-																.css(
-																		'height',
-																		reportForm.barSize
-																				+ 'px');
-														var title = "客房部迷你吧使用量条形图分析";// 条形图标题显示
-														var xAxis = [];// 横坐标显示
-														var yAxis = "单位:数量";// 纵坐标显示
-														var barData = [];// 最终传入bar1中的data
-														var miniNum = [];
-														var pieData = [];// 饼状图传入数据
-														for ( var item in data.list) {
-															if (data.list[item].good_name != '') {
-																xAxis
-																		.push(data.list[item].goods_name);
-																miniNum
-																		.push(parseInt(data.list[item].goods_num));
-																combinePie(
-																		pieData,
-																		data.list[item].goods_name,
-																		parseInt(data.list[item].goods_num));
+															if (data.list.length < 15) {
+																reportForm.barSize = data.list.length * 80;
+															} else {
+																reportForm.barSize = 1200;
 															}
-														}
-														pieChartForm(
-																"#minipieChart",
-																"客房部迷你吧使用量饼状图分析",
-																"迷你吧使用占比",
-																pieData);
-														$('#minipie-svg')
-																.val(
-																		$(
-																				"#minipieChart")
-																				.highcharts()
-																				.getSVG());
-
-														combine(barData,
-																'迷你吧使用数量',
-																miniNum);
-														barForm(barData,
-																"#minibar1", title,
-																xAxis, yAxis);
-														$('#minibar-svg')
-																.val(
-																		$(
-																				"#minibar1")
-																				.highcharts()
-																				.getSVG());
-														$('#linenbar-svg').val("");
-														$('#linenpieChart').val("");
-														$('#roombar-svg').val("");
-														$('#washbar-svg').val("");
-														reportForm.remark1 = '';
-														reportForm.remark2 = '';
-														reportForm.remark3 = '';
-														reportForm.remark4 = '';
-														if (data.analyseResult) {
-															reportForm.listRemark = true;
-															reportForm.remark4 = data.analyseResult;
-															$("#analyseResult").val(data.analyseResult);
-														} else {
-															reportForm.listRemark = false;
-															reportForm.remark4 = "";
-															$("#analyseResult").val("");
+															$("#bar1")
+																	.css(
+																			'height',
+																			reportForm.barSize
+																					+ 'px');
+															var title = "客房部卫生间耗品使用量条形图分析";// 条形图标题显示
+															var xAxis = [];// 横坐标显示
+															var yAxis = "单位:数量";// 纵坐标显示
+															var barData = [];// 最终传入bar1中的data
+															var linenNum = [];
+															for ( var item in data.list) {
+																if (data.list[item].goods_name != '') {
+																	xAxis
+																			.push(data.list[item].goods_name);
+																	linenNum
+																			.push(parseInt(data.list[item].goods_num));
+																}
+															}
+															combine(
+																	barData,
+																	'卫生间耗品使用数量',
+																	linenNum);
+															barForm(
+																	barData,
+																	"#washbar1",
+																	title,
+																	xAxis,
+																	yAxis);
+															$('#washbar-svg')
+																	.val(
+																			$(
+																					"#washbar1")
+																					.highcharts()
+																					.getSVG());
+															$('#linenbar-svg')
+																	.val("");
+															$('#linenpieChart')
+																	.val("");
+															$('#roombar-svg')
+																	.val("");
+															$('#minibar-svg')
+																	.val("");
+															$('#minipieChart')
+																	.val("");
+															reportForm.remark1 = '';
 															reportForm.remark2 = '';
 															reportForm.remark3 = '';
-															reportForm.remark1 = '';
+															reportForm.remark4 = '';
+															if (data.analyseResult) {
+																reportForm.listRemark = true;
+																reportForm.remark3 = data.analyseResult;
+																$(
+																		"#analyseResult")
+																		.val(
+																				data.analyseResult);
+																reportForm.remark1 = '';
+																reportForm.remark2 = '';
+																reportForm.remark4 = '';
+															} else {
+																reportForm.listRemark = false;
+																reportForm.remark3 = "";
+																$(
+																		"#analyseResult")
+																		.val("");
+															}
+														} else {
+															reportForm.listIsShow = true;
 														}
-													} else {
-														reportForm.listIsShow = true;
-													}
 
-												});
-										break;
+													});
+									break;
+								case '3':
+									services
+											.selectMiniExpendAnalyseByMlimits({
+												amlimit : expendAnalyseLimit
+											})
+											.success(
+													function(data) {
+														$(".overlayer")
+																.fadeOut(200);
+														$(".tipLoading")
+																.fadeOut(200);
+														reportForm.typeList = data.list;
+														$('#minibar-svg')
+																.empty();
+														$('#minipie-svg')
+																.empty();
+														$('#minipieChart')
+																.empty();
+														$('#minibar1').empty();
+														reportForm.remark4 = "";
+														if (data.list) {
+															reportForm.listIsShow = false;
+
+															if (data.list.length < 15) {
+																reportForm.barSize = data.list.length * 80;
+															} else {
+																reportForm.barSize = 1200;
+															}
+															$("#bar1")
+																	.css(
+																			'height',
+																			reportForm.barSize
+																					+ 'px');
+															var title = "客房部迷你吧使用量条形图分析";// 条形图标题显示
+															var xAxis = [];// 横坐标显示
+															var yAxis = "单位:数量";// 纵坐标显示
+															var barData = [];// 最终传入bar1中的data
+															var miniNum = [];
+															var pieData = [];// 饼状图传入数据
+															for ( var item in data.list) {
+																if (data.list[item].good_name != '') {
+																	xAxis
+																			.push(data.list[item].goods_name);
+																	miniNum
+																			.push(parseInt(data.list[item].goods_num));
+																	combinePie(
+																			pieData,
+																			data.list[item].goods_name,
+																			parseInt(data.list[item].goods_num));
+																}
+															}
+															pieChartForm(
+																	"#minipieChart",
+																	"客房部迷你吧使用量饼状图分析",
+																	"迷你吧使用占比",
+																	pieData);
+															$('#minipie-svg')
+																	.val(
+																			$(
+																					"#minipieChart")
+																					.highcharts()
+																					.getSVG());
+
+															combine(barData,
+																	'迷你吧使用数量',
+																	miniNum);
+															barForm(
+																	barData,
+																	"#minibar1",
+																	title,
+																	xAxis,
+																	yAxis);
+															$('#minibar-svg')
+																	.val(
+																			$(
+																					"#minibar1")
+																					.highcharts()
+																					.getSVG());
+															$('#linenbar-svg')
+																	.val("");
+															$('#linenpieChart')
+																	.val("");
+															$('#roombar-svg')
+																	.val("");
+															$('#washbar-svg')
+																	.val("");
+															reportForm.remark1 = '';
+															reportForm.remark2 = '';
+															reportForm.remark3 = '';
+															reportForm.remark4 = '';
+															if (data.analyseResult) {
+																reportForm.listRemark = true;
+																reportForm.remark4 = data.analyseResult;
+																$(
+																		"#analyseResult")
+																		.val(
+																				data.analyseResult);
+															} else {
+																reportForm.listRemark = false;
+																reportForm.remark4 = "";
+																$(
+																		"#analyseResult")
+																		.val("");
+																reportForm.remark2 = '';
+																reportForm.remark3 = '';
+																reportForm.remark1 = '';
+															}
+														} else {
+															reportForm.listIsShow = true;
+														}
+
+													});
+									break;
 								}
 							}
 							reportForm.linenPic = true;
@@ -1206,8 +1281,11 @@ app
 									reportForm.depWorkloadList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
+										reportForm.listRemark = true;
 									} else {
 										reportForm.listIsShow = true;
+										reportForm.listRemark = false;
+										reportForm.remark = "";
 									}
 								});
 							}
@@ -1244,8 +1322,12 @@ app
 									reportForm.staffWorkloadList = data.list;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
+										reportForm.listRemark = true;
 									} else {
 										reportForm.listIsShow = true;
+										reportForm.listRemark = false;
+										reportForm.remark = "";
+
 									}
 								});
 							}
@@ -1288,11 +1370,14 @@ app
 													if (data.list.length == 1) {
 														reportForm.typeList = '';
 														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
 														reportForm.barIsShow = false;
 													} else {
 														reportForm.barIsShow = true;
 														reportForm.typeList = data.list;
 														reportForm.listIsShow = false;
+														reportForm.listRemark = true;
+														reportForm.remark = "";
 														if (data.list.length < 15) {
 															reportForm.barSize = data.list.length * 80;
 														} else {

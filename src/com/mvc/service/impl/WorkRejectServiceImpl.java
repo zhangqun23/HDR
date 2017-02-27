@@ -118,8 +118,12 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (subStrb.length() <= 0) {
+			return "无";
+		} else {
+			return subStrb.substring(0, subStrb.length() - 1);
+		}
 
-		return subStrb.substring(0, subStrb.length() - 1);
 	}
 
 	// zq员工驳回统计(从数据库读出来list<object>后放入list<WorkReject>)

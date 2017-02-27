@@ -93,7 +93,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		}
 
 		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
-		Object[] objects;
+		Object[] objects;              
 		ProjectRepair projectRepair;
 		while (it.hasNext()) {
 			objects = (Object[]) it.next();
@@ -263,7 +263,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out,1);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

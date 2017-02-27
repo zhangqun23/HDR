@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import javax.swing.text.TableView.TableRow;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -105,7 +105,7 @@ public class WordHelper<T> {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum,
-			Integer mergeColumn) {	
+			Integer mergeColumn) {
 		List<XWPFTable> tables;
 		XWPFTable table = null;
 		int ww = 0;// 用于合并单元格
@@ -166,7 +166,8 @@ public class WordHelper<T> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Integer mm=table.getNumberOfRows();
+		Integer mm = table.getNumberOfRows();
+		System.out.println(table.getRow(1).getCell(1).getTextRecursively());
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {
 			addMergedRegion0(table, mergeColumn, 1, mm);// 就是合并第一列的所有相同单元格
@@ -193,22 +194,24 @@ public class WordHelper<T> {
 	}
 
 	public static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
-		String s_will ;// 比较的字段
-		String s_current ;// 比较的字段
+		String s_will = null;// 比较的字段
+		String s_current;// 比较的字段
+
 		XWPFTableCell cell = null;
 		CTTcPr cellPr = null;
+
 		List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
 
 		// 获取第一行的数据,以便后面进行比较
 		XWPFTableRow row = table.getRow(startRow);
 		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
-		
-		s_will =cells.get(cellLine).getCTTc().toString();// 比较的字段 
+
+		s_will = cells.get(cellLine).getText();
+
 		// 获取单元格宽度
 		cellPr = cells.get(cellLine).getCTTc().getTcPr();
 		BigInteger width = cellPr.getTcW().getW();
-		widthList.add(width);  
-		
+		widthList.add(width);
 
 		int count = 0;
 		boolean flag = false;
@@ -216,7 +219,7 @@ public class WordHelper<T> {
 		for (int i = startRow + 1; i <= endRow; i++) {
 			XWPFTableRow row0 = table.getRow(i);
 			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头最后一行
-			s_current= cells0.get(cellLine).getText();// 比较的字段
+			s_current = cells0.get(cellLine).getText();// 比较的字段
 			System.out.println(s_current);
 			if (s_will.equals(s_current)) {
 				flag = true;
@@ -244,21 +247,6 @@ public class WordHelper<T> {
 			}
 		}
 
-	}
-	private static String getTableCellContent(XWPFTableCell cell) {
-		StringBuffer sb = new StringBuffer();
-		List<XWPFParagraph> cellPList = cell.getParagraphs();
-		if (cellPList != null && cellPList.size() > 0) {
-			for (XWPFParagraph xwpfPr : cellPList) {
-				List<XWPFRun> runs = xwpfPr.getRuns();
-				if (runs != null && runs.size() > 0) {
-					for (XWPFRun xwpfRun : runs) {
-						sb.append(xwpfRun.getText(0));
-					}
-				}
-			}
-		}
-		return sb.toString();
 	}
 
 	/**

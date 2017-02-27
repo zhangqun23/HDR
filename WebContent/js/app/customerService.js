@@ -485,6 +485,7 @@ app
 																reportForm.totalPage,
 																1,
 																getLinenExpendFormByLlimits);
+														reportForm.pageShow = true;
 														reportForm.linenCount = data.linenCount;
 														if (reportForm.analyseResult) {
 															reportForm.remark = data.analyseResult;
@@ -525,6 +526,7 @@ app
 																data.totalPage,
 																1,
 																getRoomExpendFormByRlimits);
+														reportForm.pageShow = true;
 														reportForm.roomCount = data.roomCount;
 														reportForm.analyseResult = data.analyseResult;
 														if (reportForm.analyseResult) {
@@ -567,6 +569,7 @@ app
 																reportForm.totalPage,
 																1,
 																getWashExpendFormByWlimits);
+														reportForm.pageShow = true;
 														reportForm.washCount = data.washCount;
 														reportForm.analyseResult = data.analyseResult;
 														if (reportForm.analyseResult) {
@@ -609,6 +612,7 @@ app
 																reportForm.totalPage,
 																1,
 																getMiniExpendFormByMlimits);
+														reportForm.pageShow = true;
 														reportForm.miniCount = data.miniCount;
 														reportForm.analyseResult = data.analyseResult;
 														if (reportForm.analyseResult) {
@@ -641,6 +645,7 @@ app
 							reportForm.miniTable = false;
 							// wq根据选择的耗品类型显示不同的报表
 							reportForm.changeTable = function() {
+								reportForm.pageShow = false;
 								reportForm.expendFormList = "";
 								reportForm.expendCount = "";
 								reportForm.listRemark1 = false;

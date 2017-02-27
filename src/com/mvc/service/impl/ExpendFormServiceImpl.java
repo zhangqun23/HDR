@@ -1312,7 +1312,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<Object> listSource = expendFormDao.selectWashExpendAnalyse(map);
 		JSONObject jsonObject = new JSONObject();
 		if(listSource == null || listSource.size() == 0){
-			analyseResult += "没有使用房间耗品。";
+			analyseResult += "没有使用卫生间耗品。";
 			jsonObject.put("analyseResult", analyseResult);
 		}
 		else{
@@ -1334,7 +1334,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<Object> listSource = expendFormDao.selectMiniExpendAnalyse(map);
 		JSONObject jsonObject = new JSONObject();
 		if(listSource == null || listSource.size() == 0){
-			analyseResult += "没有使用房间耗品。";
+			analyseResult += "没有使用迷你吧。";
 			jsonObject.put("analyseResult", analyseResult);
 		}
 		else{
@@ -1895,7 +1895,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
 			linenCount.add(sum);
 			linenCount.add(avg);
-			Float sum_num = Float.parseFloat(sum.getStaff_id());//算出耗品总数
+			jsonObject.put("list", listGoal);
+			jsonObject.put("count", linenCount);
 			
 			Map<String, Integer> linenmap = new HashMap<String, Integer>();
 			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
@@ -1912,18 +1913,23 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
 			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
 			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
+			Float sum_num = Float.parseFloat(sum.getSlba_num())+Float.parseFloat(sum.getDuto_num())+Float.parseFloat(sum.getLaba_num())+
+					Float.parseFloat(sum.getBesh_num())+Float.parseFloat(sum.getFacl_num())+Float.parseFloat(sum.getBato_num())+
+					Float.parseFloat(sum.getHato_num())+Float.parseFloat(sum.getMedo_num())+Float.parseFloat(sum.getFlto_num())+
+					Float.parseFloat(sum.getBaro_num())+Float.parseFloat(sum.getPill_num())+Float.parseFloat(sum.getPiin_num())+
+					Float.parseFloat(sum.getBlan_num())+Float.parseFloat(sum.getShop_num());//算出耗品总数
 			linenmap = CollectionUtil.sortByValue(linenmap);
 			
 			Set set = linenmap.keySet();
 			Iterator itt = set.iterator();
 			for (int i=0;i<3;i++) {
-			String key = (String) itt.next();
-			Integer value = linenmap.get(key);
-			analyseResult += key+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"，";
+				String key = (String) itt.next();
+				Integer value = linenmap.get(key);
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"，";
+				boolean ascFlag = false;
+				CollectionUtil.sort(listGoal, key, ascFlag);
+				analyseResult += "领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
 			}
-			
-			jsonObject.put("list", listGoal);
-			jsonObject.put("count", linenCount);
 			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "1":
@@ -2213,7 +2219,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		Long sum_laba_num = (long) 0;
 		Long sum_piin_num = (long) 0;
 		Long sum_blan_num = (long) 0;
-		Long sum_num = (long) 0;
 		
 		StaLinen staLinen = null;
 		while (it.hasNext()) {
@@ -2233,11 +2238,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_piin_num += Integer.valueOf(staLinen.getPiin_num());
 			sum_blan_num += Integer.valueOf(staLinen.getBlan_num());
 		}
-		sum_num = sum_bato_num+sum_facl_num+sum_besh_num+sum_hato_num+sum_medo_num+sum_medo_num
-				+sum_flto_num+sum_baro_num+sum_slba_num+sum_duto_num+sum_pill_num+sum_shop_num
-				+sum_piin_num+sum_shop_num+sum_laba_num+sum_piin_num+sum_blan_num;
+
 		sum.setOrderNum("合计");
-		sum.setStaff_id(String.valueOf(sum_num));
 		sum.setBato_num(String.valueOf(sum_bato_num));
 		sum.setFacl_num(String.valueOf(sum_facl_num));
 		sum.setBesh_num(String.valueOf(sum_besh_num));
@@ -3170,5 +3172,103 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				break;
 		}
 		return byteArr;
+	}
+	
+	//获取物品中文名称
+	public String findname(String ary){
+		String name = "";
+		switch(ary){
+		case "slba_num": name="被罩"; break;
+		case "duto_num": name="拼尘罩"; break;
+		case "laba_num": name="洗衣袋"; break;
+		case "besh_num": name="床单"; break;
+		case "facl_num": name="面巾"; break;
+		case "bato_num": name="浴巾"; break;
+		case "hato_num": name="方巾"; break;
+		case "medo_num": name="中巾"; break;
+		case "flto_num": name="地巾"; break;
+		case "baro_num": name="浴袍"; break;
+		case "pill_num": name="枕套"; break;
+		case "piin_num": name="枕芯"; break;
+		case "blan_num": name="毛毯"; break;
+		case "shop_num": name="购物袋"; break;
+		case "umbr_num": name="雨伞"; break;
+		case "coff_num": name="咖啡"; break;
+		case "suge_num": name="白糖"; break;
+		case "coup_num": name="伴侣"; break;
+		case "penc_num": name="铅笔"; break;
+		case "erse_num": name="橡皮"; break;
+		case "clca_num": name="即扫牌"; break;
+		case "fati_num": name="面巾纸"; break;
+		case "enca_num": name="环保卡"; break;
+		case "bage_num": name="手提袋"; break;
+		case "teab_num": name="袋泡茶"; break;
+		case "meca_num": name="送餐牌"; break;
+		case "opbo_num": name="意见书"; break;
+		case "blte_num": name="立顿红茶"; break;
+		case "dnds_num": name="请勿打扰牌"; break;
+		case "tvca_num": name="电视节目单"; break;
+		case "orel_num": name="信封(普通)"; break;
+		case "memo_num": name="便签"; break;
+		case "coas_num": name="杯垫"; break;
+		case "matc_num": name="火柴"; break;
+		case "mapp_num": name="地图"; break;
+		case "rule_num": name="尺子"; break;
+		case "stat_num": name="信纸"; break;
+		case "clip_num": name="回形针"; break;
+		case "bape_num": name="圆珠笔"; break;
+		case "comp_num": name="针线包"; break;
+		case "lali_num": name="洗衣单"; break;
+		case "losu_num": name="低卡糖"; break;
+		case "shpa_num": name="擦鞋布"; break;
+		case "anma_num": name="防毒面具"; break;
+		case "grte_num": name="立顿绿茶"; break;
+		case "chsl_num": name="拖鞋(儿童)"; break;
+		case "cocl_num": name="彩色曲别针"; break;
+		case "arel_num": name="信封(航空)"; break;
+		case "toth_num": name="牙具"; break;
+		case "ropa_num": name="卷纸"; break;
+		case "rins_num": name="洗发液"; break;
+		case "bafo_num": name="沐浴液"; break;
+		case "haco_num": name="护发素"; break;
+		case "shge_num": name="润肤露"; break;
+		case "capa_num": name="护理包"; break;
+		case "garb_num": name="黑垃圾袋"; break;
+		case "paex_num": name="抽纸"; break;
+		case "peep_num": name="卫生袋"; break;
+		case "shca_num": name="浴帽"; break;
+		case "shav_num": name="剃须刨"; break;
+		case "comb_num": name="梳子"; break;
+		case "shcl_num": name="擦鞋布"; break;
+		case "soap_num": name="手皂"; break;
+		case "nacl_num": name="指甲锉"; break;
+		case "flow_num": name="干花"; break;
+		case "basa_num": name="浴盐"; break;
+		case "scpa_num": name="百洁布"; break;
+		case "rugl_num": name="橡皮手套"; break;
+		case "dete_num": name="洗涤灵"; break;
+		case "thim_num": name="洗消净"; break;
+		case "bacl_num": name="浴室清洁剂"; break;
+		case "tocl_num": name="洁厕灵"; break;
+		case "babr_num": name="浴缸刷"; break;
+		case "clbr_num": name="恭桶刷"; break;
+		case "coco_num": name="可口可乐"; break;
+		case "pari_num": name="法国巴黎水"; break;
+		case "bige_num": name="大依云"; break;
+		case "jdba_num": name="加多宝"; break;
+		case "tine_num": name="小依云"; break;
+		case "kunl_num": name="昆仑山矿泉水"; break;
+		case "wine_num": name="红葡萄酒"; break;
+		case "bree_num": name="威士忌"; break;
+		case "vodk_num": name="伏加特"; break;
+		case "auru_num": name="金酒"; break;
+		case "qing_num": name="青岛听装"; break;
+		case "spri_num": name="雪碧听装"; break;
+		case "nail_num": name="指甲刀"; break;
+		case "abcs_num": name="ABC卫生巾"; break;
+		case "card_num": name="扑克牌"; break;
+		case "como_num": name="普通安全套"; break;
+		}
+		return name;
 	}
 }

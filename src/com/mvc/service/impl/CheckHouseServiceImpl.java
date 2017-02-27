@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.CheckHouseDao;
 import com.mvc.entityReport.CheckHouse;
+import com.mvc.entityReport.RobEfficiency;
 import com.mvc.service.CheckHouseService;
+import com.utils.CollectionUtil;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
 import com.utils.WordHelper;
@@ -64,7 +66,7 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 			efficiency = StringUtil.divide(checkTime, totalTime);
 			checkHouse.setCheckTime(checkTime);// 查房总用时
 			checkHouse.setTotalTime(totalTime);// 当班总用时
-			checkHouse.setEfficiency(StringUtil.strFloatToPer(efficiency));// 查房效率
+			checkHouse.setEfficiency(((int) (Float.parseFloat(efficiency) * 100)) / 100.0f);// 查房效率
 
 			listGoal.add(checkHouse);
 		}
@@ -96,9 +98,12 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 		contentMap.put("${startDate}", startTime);
 		contentMap.put("${endDate}", endTime);
 
+		String analyseResult = getAnalyseResult(checkHouseList, "orderNum");
+		contentMap.put("${analyseResult}", analyseResult);
+
 		try {
 			OutputStream out = new FileOutputStream(path);// 保存路径
-			wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
+			wh.export2007Word(modelPath, listMap, contentMap, 1, out, -1);
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -107,6 +112,33 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 		}
 		byteArr = FileHelper.downloadFile(fileName, path);
 		return byteArr;
+	}
+
+	@Override
+	public String getAnalyseResult(List<CheckHouse> checkHouseList, String writeField) {
+		boolean ascFlag = false;
+		StringBuilder analyseResult = new StringBuilder();
+		CollectionUtil.sort(checkHouseList, "workEffeciencyAvg", ascFlag);
+		CollectionUtil<CheckHouse> collectionUtil = new CollectionUtil<CheckHouse>();
+		collectionUtil.writeSort(checkHouseList, writeField);
+		if (checkHouseList.size() > 3) {
+			analyseResult.append("查房效率最高的三名员工为：");
+			analyseResult.append(checkHouseList.get(0).getStaffName());
+			analyseResult.append("("
+					+ StringUtil.strfloatToPer(((int) (checkHouseList.get(0).getEfficiency() * 100)) / 100f) + ")、");
+			analyseResult.append(checkHouseList.get(1).getStaffName());
+			analyseResult.append("("
+					+ StringUtil.strfloatToPer(((int) (checkHouseList.get(1).getEfficiency() * 100)) / 100f) + ")、");
+			analyseResult.append(checkHouseList.get(2).getStaffName());
+			analyseResult.append("("
+					+ StringUtil.strfloatToPer(((int) (checkHouseList.get(2).getEfficiency() * 100)) / 100f) + ")、");
+		} else if (checkHouseList.size() == 1) {
+			analyseResult.append("抢房效率最高的员工为：");
+			analyseResult.append(checkHouseList.get(0).getStaffName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (checkHouseList.get(0).getEfficiency() * 100)) / 100f) + ")");
+		}
+		return analyseResult.toString();
 	}
 
 }

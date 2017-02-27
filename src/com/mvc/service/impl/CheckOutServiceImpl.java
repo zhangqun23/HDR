@@ -25,7 +25,9 @@ import com.mvc.dao.CheckOutDao;
 import com.mvc.entityReport.CheckOutDetail;
 import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.WorkHouse;
+import com.mvc.entityReport.WorkLoad;
 import com.mvc.service.CheckOutService;
+import com.utils.CollectionUtil;
 import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.Pager;
@@ -69,8 +71,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			checkOutEfficiency.setSumTime(obj[3].toString());
 			checkOutEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
 			checkOutEfficiency.setWorkCount(obj[5].toString());
-			checkOutEfficiency
-					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
+			checkOutEfficiency.setWorkEffeciencyAvg(((int) (100 * Float.parseFloat(obj[8].toString())) / 100.0f));
 
 			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			checkOutEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
@@ -158,20 +159,20 @@ public class CheckOutServiceImpl implements CheckOutService {
 		jsonObj.put("list", useTime);// 按月平均 公式：当月任务用时总合/任务数量
 		jsonObj.put("averWorkEfficiency", averWorkEfficiency);// 所选员工全年任务用时总合/全年任务数量
 		jsonObj.put("allAverWorkEfficiency", allAverWorkEfficiency);// 所有员工全年任务用时总合/全年任务数量
-		
+
 		float ff = 0f;
 		ff = (Float.parseFloat(averWorkEfficiency) - Float.parseFloat(allAverWorkEfficiency))
 				/ Float.parseFloat(allAverWorkEfficiency);
 		StringBuilder analyseResult = new StringBuilder();
 		analyseResult.append("分析结果：");
 		if (ff > 0.05f) {
-			analyseResult.append("优秀（该员工平均用时高于全体员工平均用时）");
-		} else if (ff > 0.0000f) {
-			analyseResult.append("良好（该员工平均用时略高于全体员工平均用时）");
+			analyseResult.append("较差（该员工平均用时高于全体员工平均用时）");
+		} else if (ff >= 0.0000f) {
+			analyseResult.append("一般（该员工平均用时略高于全体员工平均用时）");
 		} else if (ff < -0.05f) {
-			analyseResult.append("较差（该员工平均用时低于全体员工平均用时）");
+			analyseResult.append("优秀（该员工平均用时低于全体员工平均用时）");
 		} else if (ff < 0.0000f) {
-			analyseResult.append("一般（该员工平均用时略低于全体员工平均用时）");
+			analyseResult.append("良好（该员工平均用时略低于全体员工平均用时）");
 		}
 
 		jsonObj.put("analyseResult", analyseResult);
@@ -275,8 +276,10 @@ public class CheckOutServiceImpl implements CheckOutService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
+			String analyseResult = getAnalyseResult(listGoal, "orderNum");
+			contentMap.put("${analyseResult}", analyseResult);
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -310,7 +313,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -327,6 +330,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 		String sortName = (String) map.get("sortName");
 		String year = (String) map.get("checkYear");
 		String quarter = (String) map.get("quarter");
+		String analyseResult = (String) map.get("analyseResult");
 
 		ResponseEntity<byte[]> byteArr = null;
 		try {
@@ -346,7 +350,9 @@ public class CheckOutServiceImpl implements CheckOutService {
 				contentMap.put("${startTime}", startTime);
 				contentMap.put("${endTime}", endTime);
 			}
-
+			if (StringUtil.strIsNotEmpty(analyseResult)) {
+				contentMap.put("${analyseResult}", analyseResult);
+			}
 			// 图片相关
 			String svg1 = (String) map.get("chart1SVGStr");
 			String picName1 = null;
@@ -367,7 +373,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			}
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -394,9 +400,10 @@ public class CheckOutServiceImpl implements CheckOutService {
 			List<Object> listSource = checkOutDao.selectCheckOutDetail(map);
 			Iterator<Object> it = listSource.iterator();
 			List<CheckOutDetail> listGoal = objToCheckOutDetail(it);
-	
+
 			String[] header = { "序号", "房号", "查退房时间（分钟）", "给定时间（分钟）", "效率", "完成员工" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			ex.export2007Excel(title, header, (Collection<CheckOutDetail>) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0,
+					1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -425,9 +432,10 @@ public class CheckOutServiceImpl implements CheckOutService {
 			List<Object> listSource = checkOutDao.selectCheckOutEfficiency(map);
 			Iterator<Object> it = listSource.iterator();
 			List<CheckOutEfficiency> listGoal = objToCheckOutEfficiency(it);
-		
-			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率"};// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+
+			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率" };// 顺序必须和对应实体一致
+			ex.export2007Excel(title, header, (Collection<CheckOutEfficiency>) listGoal, out, "yyyy-MM-dd", -1, -1, -1,
+					0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -437,6 +445,33 @@ public class CheckOutServiceImpl implements CheckOutService {
 			e.printStackTrace();
 		}
 		return byteArr;
+	}
+
+	@Override
+	public String getAnalyseResult(List<CheckOutEfficiency> list, String writeField) {
+		boolean ascFlag = false;
+		CollectionUtil.sort(list, "workEffeciencyAvg", ascFlag);//
+		CollectionUtil<CheckOutEfficiency> collectionUtil = new CollectionUtil<CheckOutEfficiency>();
+		collectionUtil.writeSort(list, writeField);
+		StringBuilder analyseResult = new StringBuilder();
+		if (list.size() > 3) {
+			analyseResult.append("查退房效率最高的三名员工为：");
+			analyseResult.append(list.get(0).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(0).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")、");
+			analyseResult.append(list.get(1).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(1).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")、");
+			analyseResult.append(list.get(2).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(2).getWorkEffeciencyAvg() * 100)) / 100.0f) + ");");
+		} else if (list.size() == 1) {
+			analyseResult.append("查退房效率最高的员工为：");
+			analyseResult.append(list.get(0).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(0).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")");
+		}
+		return analyseResult.toString();
 	}
 
 }

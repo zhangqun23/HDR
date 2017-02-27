@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -100,7 +101,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -137,7 +138,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 					+ ")";
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,总用时,平均用时,排名]", "过夜房[数量,总用时,平均用时,排名]",
 					"离退房[数量,总用时,平均用时,排名]" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 2);
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 2);
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -240,14 +241,24 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	private String getFirstThree(List<WorkHouse> list, String filedName, boolean ascFlag) {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		StringBuilder subStrb = new StringBuilder();
-		int i = 0;
-		for (WorkHouse workHouse : list) {
-			if (i < 3) {
-				subStrb.append(workHouse.getStaff_name() + "(" + workHouse.getAvg_time_leave() + ")，");
-			} else {
-				break;
+		String getMethodName = "get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1);
+		Class<WorkHouse> tCls = WorkHouse.class;
+		Method getMethod;
+		try {
+			getMethod = tCls.getMethod(getMethodName, new Class[] {});
+			int i = 0;
+			for (WorkHouse workHouse : list) {
+				Object value = getMethod.invoke(workHouse, new Object[] {});
+				if (i < 3) {
+					subStrb.append(workHouse.getStaff_name() + "("
+							+ StringUtil.save2Float(Float.valueOf(String.valueOf(value))) + ")，");
+				} else {
+					break;
+				}
+				i++;
 			}
-			i++;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return subStrb.substring(0, subStrb.length() - 1);
 	}
@@ -464,7 +475,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			Map<String, Object> picMap = PictureUtil.getPicMap(picPath, svg1);
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 1, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -531,16 +542,26 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	private String getEffFirstThree(List<WorkEfficiency> list, String filedName, boolean ascFlag) {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		StringBuilder subStrb = new StringBuilder();
-		int i = 0;
-		for (WorkEfficiency workEfficiency : list) {
-			if (i < 3) {
-				subStrb.append(workEfficiency.getStaff_name() + "("
-						+ StringUtil.strfloatToPer(workEfficiency.getHouse_eff()) + ")，");
-			} else {
-				break;
+		String getMethodName = "get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1);
+		Class<WorkEfficiency> tCls = WorkEfficiency.class;
+		Method getMethod;
+		try {
+			getMethod = tCls.getMethod(getMethodName, new Class[] {});
+			int i = 0;
+			for (WorkEfficiency workEfficiency : list) {
+				Object value = getMethod.invoke(workEfficiency, new Object[] {});
+				if (i < 3) {
+					subStrb.append(workEfficiency.getStaff_name() + "("
+							+ StringUtil.strFloatToPer(String.valueOf(value)) + ")，");
+				} else {
+					break;
+				}
+				i++;
 			}
-			i++;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		return subStrb.substring(0, subStrb.length() - 1);
 	}
 
@@ -743,7 +764,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -777,7 +798,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String endTime = (String) map.get("endTime");
 			String title = "客房部员工工作效率统计表(" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7) + ")";
 			String[] header = { "序号", "员工姓名", "员工编号", "当班时间(分钟)", "做房时间(分钟)", "做房效率", "工作时间(分钟)", "工作效率" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 1);
+			ex.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (FileNotFoundException e) {
@@ -858,7 +879,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				}
 			}
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {

@@ -42,6 +42,7 @@ import com.mvc.entityReport.HoCustomerService;
 import com.mvc.entityReport.HouseCustomerServiceLoad;
 import com.mvc.entityReport.HouseCustomerServiceType;
 import com.mvc.entityReport.WorkEfficiency;
+import com.mvc.entityReport.WorkReject;
 
 public class WordHelper<T> {
 
@@ -108,7 +109,6 @@ public class WordHelper<T> {
 			Integer mergeColumn) {
 		List<XWPFTable> tables;
 		XWPFTable table = null;
-		int ww = 0;// 用于合并单元格
 		try {
 			tables = doc.getTables();
 			table = tables.get(tableOrder);// 变量
@@ -139,7 +139,6 @@ public class WordHelper<T> {
 					}
 				}
 				T t = (T) it.next();
-				ww++;
 				Boolean flag = tranFieldToPer(t);// 需要处理%列
 				Field[] fields = t.getClass().getDeclaredFields();
 				cells = row.getTableCells();
@@ -167,7 +166,6 @@ public class WordHelper<T> {
 			e.printStackTrace();
 		}
 		Integer mm = table.getNumberOfRows();
-		System.out.println(table.getRow(1).getCell(1).getTextRecursively());
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {
 			addMergedRegion0(table, mergeColumn, 1, mm);// 就是合并第一列的所有相同单元格
@@ -247,6 +245,22 @@ public class WordHelper<T> {
 			}
 		}
 
+	}
+
+	private static String getTableCellContent(XWPFTableCell cell) {
+		StringBuffer sb = new StringBuffer();
+		List<XWPFParagraph> cellPList = cell.getParagraphs();
+		if (cellPList != null && cellPList.size() > 0) {
+			for (XWPFParagraph xwpfPr : cellPList) {
+				List<XWPFRun> runs = xwpfPr.getRuns();
+				if (runs != null && runs.size() > 0) {
+					for (XWPFRun xwpfRun : runs) {
+						sb.append(xwpfRun.getText(0));
+					}
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -434,8 +448,13 @@ public class WordHelper<T> {
 	private Boolean tranFieldToPer(T t) {
 		Boolean flag = false;
 		Class<? extends Object> cla = t.getClass();
-		if (cla == HoCustomerService.class || cla == HouseCustomerServiceLoad.class
-				|| cla == HouseCustomerServiceType.class || cla == WorkEfficiency.class) {
+		List<Object> list = new ArrayList<Object>();
+		list.add(HoCustomerService.class);
+		list.add(HouseCustomerServiceLoad.class);
+		list.add(HouseCustomerServiceType.class);
+		list.add(WorkEfficiency.class);
+		list.add(WorkReject.class);
+		if (list.contains(cla)) {
 			flag = true;
 		}
 		return flag;
@@ -449,7 +468,14 @@ public class WordHelper<T> {
 	 */
 	private Boolean judgeField(String fieldName) {
 		Boolean flag = false;
-		if (fieldName.equals("timeOutRate") || fieldName.equals("house_eff") || fieldName.equals("house_serv_eff")) {
+		List<String> list = new ArrayList<String>();
+		list.add("timeOutRate");
+		list.add("house_eff");
+		list.add("house_serv_eff");
+		list.add("reject_dust_eff");
+		list.add("reject_night_eff");
+		list.add("reject_leave_eff");
+		if (list.contains(fieldName)) {
 			flag = true;
 		}
 		return flag;

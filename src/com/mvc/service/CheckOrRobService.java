@@ -38,4 +38,6 @@ public interface CheckOrRobService {
 
 	ResponseEntity<byte[]> exportRobEfficiencyExcel(Map<String, Object> map, String path);
 
+	String getAnalyseResult(List<RobEfficiency> list, String writeField);
+
 }

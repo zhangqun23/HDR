@@ -96,7 +96,7 @@ public class CollectionUtil<T> {
 	}
 
 	/**
-	 * wq将map进行排序
+	 * wq将map进行排序降序
 	 * 
 	 * @para map
 	 * @return

@@ -22,6 +22,7 @@ import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.service.CheckOutService;
+import com.utils.CollectionUtil;
 import com.utils.CookieUtil;
 import com.utils.Pager;
 import com.utils.StringUtil;
@@ -51,6 +52,9 @@ public class CheckOutController {
 		Map<String, Object> map = JsonObjToMap(jsonObject);
 		List<CheckOutEfficiency> list = checkOutService.selectCheckOutEfficiency(map);
 		jsonObject = new JSONObject();
+
+		String analyseResult = checkOutService.getAnalyseResult(list, "orderNum");
+		jsonObject.put("analyseResult", analyseResult);
 		jsonObject.put("list", list);
 		return jsonObject.toString();
 	}
@@ -203,7 +207,8 @@ public class CheckOutController {
 
 		ResponseEntity<byte[]> byteArr = null;
 		if (tableType.equals("0")) {
-			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.CHECKOUTEFFICIENCY_PATH);// 模板路径
+			tempPath = request.getSession().getServletContext()
+					.getRealPath(ReportFormConstants.CHECKOUTEFFICIENCY_PATH);// 模板路径
 			byteArr = checkOutService.exportCheckOutEfficiency(map, path, tempPath);
 		} else {
 			tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.CHECKOUTDETAIL_PATH);// 模板路径
@@ -274,6 +279,7 @@ public class CheckOutController {
 		String sortName = null;
 		String staffName = null;
 		String chart1SVGStr = null;
+		String analyseResult = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
 			checkYear = request.getParameter("checkYear");// 年份
@@ -293,7 +299,9 @@ public class CheckOutController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))) {
 			chart1SVGStr = request.getParameter("chart1SVGStr");// SVG图片字符串
 		}
-
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult"))) {
+			analyseResult = request.getParameter("analyseResult");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("checkYear", checkYear);
 		map.put("quarter", quarter);
@@ -301,6 +309,7 @@ public class CheckOutController {
 		map.put("roomType", roomType);
 		map.put("staffName", staffName);
 		map.put("chart1SVGStr", chart1SVGStr);
+		map.put("analyseResult", analyseResult);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String tempPath = request.getSession().getServletContext()

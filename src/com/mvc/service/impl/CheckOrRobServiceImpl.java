@@ -21,12 +21,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.base.enums.CleanType;
 import com.mvc.dao.CheckOrRobDao;
 import com.mvc.entity.DepartmentInfo;
+import com.mvc.entityReport.CheckOutEfficiency;
 import com.mvc.entityReport.RobDetail;
 import com.mvc.entityReport.RobEfficiency;
 import com.mvc.entityReport.WorkHouse;
 import com.mvc.entityReport.WorkLoad;
 import com.mvc.entityReport.WorkLoadLevel;
 import com.mvc.service.CheckOrRobService;
+import com.utils.CollectionUtil;
 import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.Pager;
@@ -71,8 +73,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			robEfficiency.setSumTime(obj[3].toString());
 			robEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
 			robEfficiency.setWorkCount(obj[5].toString());
-			robEfficiency
-					.setWorkEffeciencyAvg(StringUtil.strFloatToPer(fnum.format(Float.parseFloat(obj[8].toString()))));
+			robEfficiency.setWorkEffeciencyAvg(((int) (Float.parseFloat(obj[8].toString()) * 100)) / 100.0f);
 
 			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			robEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
@@ -167,13 +168,13 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		StringBuilder analyseResult = new StringBuilder();
 		analyseResult.append("分析结果：");
 		if (ff > 0.05f) {
-			analyseResult.append("优秀（该员工平均用时高于全体员工平均用时）");
-		} else if (ff > 0.0000f) {
-			analyseResult.append("良好（该员工平均用时略高于全体员工平均用时）");
+			analyseResult.append("较差（该员工平均用时高于全体员工平均用时）");
+		} else if (ff >= 0.0000f) {
+			analyseResult.append("一般（该员工平均用时略高于全体员工平均用时）");
 		} else if (ff < -0.05f) {
-			analyseResult.append("较差（该员工平均用时低于全体员工平均用时）");
+			analyseResult.append("优秀（该员工平均用时低于全体员工平均用时）");
 		} else if (ff < 0.0000f) {
-			analyseResult.append("一般（该员工平均用时略低于全体员工平均用时）");
+			analyseResult.append("良好（该员工平均用时略低于全体员工平均用时）");
 		}
 
 		jsonObj.put("analyseResult", analyseResult);
@@ -278,7 +279,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
+			String analyseResult = getAnalyseResult(listGoal, "orderNum");
+			contentMap.put("${analyseResult}", analyseResult);
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -309,8 +312,8 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			String[] header = { "序号", "员工姓名", "员工编号", "总用时（分钟）", "平均给定时间（分钟）", "平均抢房时间（分钟）", "抢房总数", "平均抢房效率", "超时率",
 
 					"驳回率" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
-
+			ex.export2007Excel(title, header, (Collection<RobEfficiency>) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0,
+					1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -346,7 +349,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 
-			wh.export2007Word(tempPath, listMap, contentMap, 1, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -375,7 +378,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			List<RobDetail> listGoal = objToRobDetail(it);
 
 			String[] header = { "序号", "房号", "做房时间（分钟）", "给定时间（分钟）", "效率", "完成员工", "驳回次数", "检查用时（分钟）", "检查人" };// 顺序必须和对应实体一致
-			ex.export2007Excel(title, header, (Collection<RobDetail>) listGoal, out, "yyyy-MM-dd",-1,-1,-1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
+			ex.export2007Excel(title, header, (Collection<RobDetail>) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格，1:隐藏了实体类最后一个字段内容
 
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);
@@ -395,6 +398,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		String sortName = (String) map.get("sortName");
 		String year = (String) map.get("checkYear");
 		String quarter = (String) map.get("quarter");
+		String analyseResult = (String) map.get("analyseResult");
 
 		ResponseEntity<byte[]> byteArr = null;
 		try {
@@ -414,7 +418,9 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 				contentMap.put("${startTime}", startTime);
 				contentMap.put("${endTime}", endTime);
 			}
-
+			if (StringUtil.strIsNotEmpty(analyseResult)) {
+				contentMap.put("${analyseResult}", analyseResult);
+			}
 			// 图片相关
 			String svg1 = (String) map.get("chart1SVGStr");
 			String picName1 = null;
@@ -435,7 +441,7 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 			}
 			contentMap.put("${pic1}", picMap);
 
-			wh.export2007Word(tempPath, null, contentMap, 2, out,-1);// 用模板生成word
+			wh.export2007Word(tempPath, null, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 		} catch (Exception ex) {
@@ -443,6 +449,34 @@ public class CheckOrRobServiceImpl implements CheckOrRobService {
 		}
 
 		return byteArr;
+	}
+
+	@Override
+	public String getAnalyseResult(List<RobEfficiency> list, String writeField) {
+
+		boolean ascFlag = false;
+		CollectionUtil.sort(list, "workEffeciencyAvg", ascFlag);// 排序有问题，需要将实体中的排序字段改为float。
+		CollectionUtil<RobEfficiency> collectionUtil = new CollectionUtil<RobEfficiency>();
+		collectionUtil.writeSort(list, writeField);
+		StringBuilder analyseResult = new StringBuilder();
+		if (list.size() > 3) {
+			analyseResult.append("抢房效率最高的三名员工为：");
+			analyseResult.append(list.get(0).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(0).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")、");
+			analyseResult.append(list.get(1).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(1).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")、");
+			analyseResult.append(list.get(2).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(2).getWorkEffeciencyAvg() * 100)) / 100.0f) + ");");
+		} else if (list.size() == 1) {
+			analyseResult.append("抢房效率最高的员工为：");
+			analyseResult.append(list.get(0).getAuthorName());
+			analyseResult.append(
+					"(" + StringUtil.strfloatToPer(((int) (list.get(2).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")");
+		}
+		return analyseResult.toString();
 	}
 
 }

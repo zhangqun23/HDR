@@ -329,13 +329,13 @@ public class WordHelper<T> {
 	 * table:要合并的表格 cellLine：要合并的列的集合（整型） startRow：起始合并行 endRow：表格总行数
 	 * list：要处理的数据集合 baseContent：根据那个字段进行合并单元格操作
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addMergedRegion0(XWPFTable table, List<Integer> cellLine, int startRow, int endRow, Collection<T> list,
 			String baseContent) {
 
 		Iterator<T> it = list.iterator();
 		String preContent = null;
 		int j = 0;
-		int count = 0;
 		int merge_start_row = startRow;
 		while (it.hasNext()) {
 			T t = (T) it.next();
@@ -348,14 +348,10 @@ public class WordHelper<T> {
 				Object value;
 				value = getMethod.invoke(t, new Object[] {});
 				String nowContent = String.valueOf(value);
-				if (nowContent.equals(preContent)) {
-					count++;
-
-				} else {
+				if (!nowContent.equals(preContent)) {
 					if (j != startRow) {
 						merge(table, cellLine, merge_start_row, j);
 						merge_start_row = j + 1;
-						count = 0;
 					}
 
 				}
@@ -372,6 +368,7 @@ public class WordHelper<T> {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static String getTableCellContent(XWPFTableCell cell) {
 		StringBuffer sb = new StringBuffer();
 		List<XWPFParagraph> cellPList = cell.getParagraphs();

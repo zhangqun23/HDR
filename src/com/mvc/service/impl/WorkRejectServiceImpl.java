@@ -183,8 +183,6 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		Long sumWorkTime = (long) 0;
 		Long sumRejectTime = (long) 0;
 		List<Object> averList = workRejectDao.selectAllAverRejectEff(map);// 获取全体员工平均做房驳回效率
-		List<String> allmonthListStr = perMonthEff(averList, startMonth, endMonth);
-		jsonObject.put("list", allmonthListStr);
 		Iterator<Object> it = averList.iterator();
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();

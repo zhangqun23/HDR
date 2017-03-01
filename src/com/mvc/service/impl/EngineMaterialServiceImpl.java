@@ -166,6 +166,8 @@ public class EngineMaterialServiceImpl implements EngineMaterialService {
 			contentMap.put("${endTime}", endTime.substring(0, 7));
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(1);
+			String analyseResult = anaMat(map);
+			contentMap.put("${analyseResult}", analyseResult);
 			wh.export2007Word(tempPath, listMap, contentMap, 1, out, list,"material_sort");// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载

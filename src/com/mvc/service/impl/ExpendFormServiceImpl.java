@@ -70,7 +70,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
 		float sum_num = (float) 0.0;
-		analyseResult += "分析结果：物品领取量排名前三位：";
 		Map<String, Integer> linenmap = new HashMap<String, Integer>();
 		linenmap.put("slba_num", Integer.parseInt(listGoalCon.getSum_slba()));
 		linenmap.put("duto_num", Integer.parseInt(listGoalCon.getSum_duto()));
@@ -96,11 +95,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
             Integer value = linenmap.get(key);
             sum_num += value;
         }
-		ittt = set.iterator();
-		for (int i=0;i<3;i++) {
-			String key = (String) ittt.next();
-			Integer value = linenmap.get(key);
-			analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		if(sum_num != 0){
+			analyseResult += "物品领取量排名前三位：";
+			ittt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) ittt.next();
+				Integer value = linenmap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
+		}
+		else{
+			analyseResult += "没有数据";
 		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("linenCount", listGoal);
@@ -127,7 +132,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		listGoal.add(listGoalAvg);
 		
 		float sum_num = (float) 0.0;
-		analyseResult += "分析结果：物品领取量排名前三位：";// 分析结果
 		Map<String, Integer> roommap = new HashMap<String, Integer>();
 		roommap.put("umbr_num", Integer.parseInt(listGoalCon.getSum_umbr()));
 		roommap.put("coff_num", Integer.parseInt(listGoalCon.getSum_coff()));
@@ -173,11 +177,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
             Integer value = roommap.get(key);
             sum_num += value;
         }
-		ittt= set.iterator();
-		for (int i=0;i<3;i++) {
-			String key = (String) ittt.next();
-			Integer value = roommap.get(key);
-			analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		if(sum_num != 0){
+			analyseResult += "物品领取量排名前三位：";// 分析结果
+			ittt= set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) ittt.next();
+				Integer value = roommap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
+		}
+		else{
+			analyseResult += "没有数据";
 		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("roomCount",listGoal);
@@ -203,7 +213,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
 		float sum_num = (float) 0.0;
-		analyseResult += "分析结果：物品领取量排名前三位：";// 分析结果
 		Map<String, Integer> washmap = new HashMap<String, Integer>();
 		washmap.put("toth_num", Integer.parseInt(listGoalCon.getSum_toth()));
 		washmap.put("ropa_num", Integer.parseInt(listGoalCon.getSum_ropa()));
@@ -241,11 +250,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
             Integer value = washmap.get(key);
             sum_num += value;
         }
-		ittt = set.iterator();
-		for (int i=0;i<3;i++) {
-			String key = (String) ittt.next();
-			Integer value = washmap.get(key);
-			analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		if(sum_num != 0){
+			analyseResult += "物品领取量排名前三位：";// 分析结果
+			ittt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) ittt.next();
+				Integer value = washmap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
+		}
+		else{
+			analyseResult += "没有数据";
 		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("washCount",listGoal);
@@ -270,7 +285,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
 		float sum_num = (float) 0.0;
-		analyseResult += "分析结果：物品领取量排名前三位：";
 		Map<String, Integer> minimap = new HashMap<String, Integer>();
 		minimap.put("redb_num", Integer.parseInt(listGoalCon.getSum_redb()));
 		minimap.put("coco_num", Integer.parseInt(listGoalCon.getSum_coco()));
@@ -299,11 +313,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
             Integer value = minimap.get(key);
             sum_num += value;
         }
-		ittt = set.iterator();
-		for (int i=0;i<3;i++) {
-			String key = (String) ittt.next();
-			Integer value = minimap.get(key);
-			analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		if(sum_num != 0){
+			analyseResult += "物品领取量排名前三位：";// 分析结果
+			ittt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) ittt.next();
+				Integer value = minimap.get(key);
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
+		}
+		else{
+			analyseResult += "没有数据";
 		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("miniCount",listGoal);
@@ -652,6 +672,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String fileName = "客房部" + formName + "布草使用量统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
+			String analyseResult = "分析结果：";
 
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
 			List<Object> listSource = expendFormDao.selectlinenExpend(map, listCondition);
@@ -664,7 +685,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
 			Map<String, Integer> linenmap = new HashMap<String, Integer>();
 			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
 			linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
@@ -690,11 +710,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = linenmap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = linenmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = linenmap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
+			}
+			else{
+				analyseResult += "没有数据";
 			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -1022,6 +1048,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String fileName = "客房部" + formName + "房间耗品使用量统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
+			String analyseResult = "分析结果：";
 
 			List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
 			List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
@@ -1034,7 +1061,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
 			Map<String, Integer> roommap = new HashMap<String, Integer>();
 			roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
 			roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
@@ -1080,11 +1106,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = roommap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = roommap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = roommap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
+			}
+			else{
+				analyseResult += "没有数据";
 			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -1447,6 +1479,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String fileName = "客房部" + formName + "卫生间耗品使用量统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
+			String analyseResult = "分析结果：";
 
 			List<Integer> listCondition = expendFormDao.selectCondition("卫生间易耗品");
 			List<Object> listSource = expendFormDao.selectwashExpend(map,listCondition);
@@ -1459,7 +1492,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
 			Map<String, Integer> washmap = new HashMap<String, Integer>();
 			washmap.put("toth_num", Integer.parseInt(sum.getToth_num()));
 			washmap.put("ropa_num", Integer.parseInt(sum.getRopa_num()));
@@ -1497,12 +1529,19 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = washmap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = washmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = washmap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -2065,6 +2104,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String fileName = "客房部" + formName + "布草使用量统计表.docx";
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
+			String analyseResult = "分析结果：";
 
 			List<Object> listSource = expendFormDao.selectminiExpend(map);
 			Iterator<Object> it = listSource.iterator();
@@ -2076,7 +2116,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 			
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
 			Map<String, Integer> minimap = new HashMap<String, Integer>();
 			minimap.put("redb_num", Integer.parseInt(sum.getRedb_num()));
 			minimap.put("coco_num", Integer.parseInt(sum.getCoco_num()));
@@ -2105,11 +2144,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = minimap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = minimap.get(key);
-				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = minimap.get(key);
+					analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
+			}
+			else{
+				analyseResult += "没有数据";
 			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -2392,7 +2437,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		
 		String tableType = (String) map.get("tableType");
 		JSONObject jsonObject = new JSONObject();
-		String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+		String analyseResult = "分析结果：";// 分析结果
 		Float sum_num = (float) 0.0;//物品使用总数
 		switch(tableType){
 		case "0":
@@ -2434,14 +2479,17 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = linenmap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = linenmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				//boolean ascFlag = false;
-				//CollectionUtil.sort(listGoal, key, ascFlag);
-				//analyseResult += "，领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+"；";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = linenmap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
+			}
+			else{
+				analyseResult += "没有数据";
 			}
 			jsonObject.put("analyseResult", analyseResult);
 			break;
@@ -2504,15 +2552,19 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = roommap.get(key);
 	            sum_num += value;
 	        }
-			itt1 = set1.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt1.next();
-				Integer value = roommap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				boolean ascFlag = false;
-				CollectionUtil.sort(listGoal1, key, ascFlag);
-				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt1 = set1.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt1.next();
+					Integer value = roommap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "2":
@@ -2566,14 +2618,20 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = washmap.get(key);
 	            sum_num += value;
 	        }
-			itt2 = set2.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt2.next();
-				Integer value = washmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				boolean ascFlag = false;
-				CollectionUtil.sort(listGoal2, key, ascFlag);
-				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt2 = set2.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt2.next();
+					Integer value = washmap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+					boolean ascFlag = false;
+					CollectionUtil.sort(listGoal2, key, ascFlag);
+					//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+				}
+			}
+			else{
+				analyseResult += "没有数据";
 			}
 			jsonObject.put("analyseResult", analyseResult);
 			break;
@@ -2618,15 +2676,19 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = minimap.get(key);
 	            sum_num += value;
 	        }
-			itt3 = set3.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt3.next();
-				Integer value = minimap.get(key);
-				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				boolean ascFlag = false;
-				CollectionUtil.sort(listGoal3, key, ascFlag);
-				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt3 = set3.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt3.next();
+					Integer value = minimap.get(key);
+					analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			jsonObject.put("analyseResult", analyseResult);
 			break;
 		}
@@ -2831,7 +2893,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(sum);
 			listGoal.add(avg);
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			String analyseResult = "分析结果：";// 分析结果
 			Map<String, Integer> linenmap = new HashMap<String, Integer>();
 			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
 			linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
@@ -2857,12 +2919,19 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = linenmap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = linenmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = linenmap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -3029,7 +3098,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 			
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			String analyseResult = "分析结果：";// 分析结果
 			Map<String, Integer> roommap = new HashMap<String, Integer>();
 			roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
 			roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
@@ -3075,15 +3144,19 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = roommap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = roommap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				boolean ascFlag = false;
-				CollectionUtil.sort(listGoal, key, ascFlag);
-				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = roommap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -3371,7 +3444,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 			
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			String analyseResult = "分析结果：";// 分析结果
 			Map<String, Integer> washmap = new HashMap<String, Integer>();
 			washmap.put("toth_num", Integer.parseInt(sum.getToth_num()));
 			washmap.put("ropa_num", Integer.parseInt(sum.getRopa_num()));
@@ -3409,15 +3482,22 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = washmap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = washmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				//boolean ascFlag = false;
-				//CollectionUtil.sort(listGoal, key, ascFlag);
-				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = washmap.get(key);
+					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+					//boolean ascFlag = false;
+					//CollectionUtil.sort(listGoal, key, ascFlag);
+					//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -3655,7 +3735,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(avg);
 
 			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			String analyseResult = "分析结果：";// 分析结果
 			Map<String, Integer> minimap = new HashMap<String, Integer>();
 			minimap.put("redb_num", Integer.parseInt(sum.getRedb_num()));
 			minimap.put("coco_num", Integer.parseInt(sum.getCoco_num()));
@@ -3684,15 +3764,22 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	            Integer value = minimap.get(key);
 	            sum_num += value;
 	        }
-			itt = set.iterator();
-			for (int i=0;i<3;i++) {
-				String key = (String) itt.next();
-				Integer value = minimap.get(key);
-				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
-				//boolean ascFlag = false;
-				//CollectionUtil.sort(listGoal, key, ascFlag);
-				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			if(sum_num != 0){
+				analyseResult += "物品领取量排名前三位：";// 分析结果
+				itt = set.iterator();
+				for (int i=0;i<3;i++) {
+					String key = (String) itt.next();
+					Integer value = minimap.get(key);
+					analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+					//boolean ascFlag = false;
+					//CollectionUtil.sort(listGoal, key, ascFlag);
+					//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+				}
 			}
+			else{
+				analyseResult += "没有数据";
+			}
+
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();

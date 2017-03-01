@@ -47,7 +47,7 @@ import net.sf.json.JSONObject;
  * @author wq
  * @date 2017年1月13日
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings(value={"unchecked", "rawtypes"})
 @Service("expendFormServiceImpl")
 public class ExpendFormServiceImpl implements ExpendFormService {
 
@@ -69,6 +69,39 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		LinenCount listGoalAvg = objToLinenAvg(itt, totalRow);
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
+		float sum_num = (float) 0.0;
+		analyseResult += "分析结果：物品领取量排名前三位：";
+		Map<String, Integer> linenmap = new HashMap<String, Integer>();
+		linenmap.put("slba_num", Integer.parseInt(listGoalCon.getSum_slba()));
+		linenmap.put("duto_num", Integer.parseInt(listGoalCon.getSum_duto()));
+		linenmap.put("laba_num", Integer.parseInt(listGoalCon.getSum_laba()));
+		linenmap.put("besh_num", Integer.parseInt(listGoalCon.getSum_besh()));
+		linenmap.put("facl_num", Integer.parseInt(listGoalCon.getSum_facl()));
+		linenmap.put("bato_num", Integer.parseInt(listGoalCon.getSum_bato()));
+		linenmap.put("hato_num", Integer.parseInt(listGoalCon.getSum_hato()));
+		linenmap.put("medo_num", Integer.parseInt(listGoalCon.getSum_medo()));
+		linenmap.put("flto_num", Integer.parseInt(listGoalCon.getSum_flto()));
+		linenmap.put("baro_num", Integer.parseInt(listGoalCon.getSum_baro()));
+		linenmap.put("pill_num", Integer.parseInt(listGoalCon.getSum_pill()));
+		linenmap.put("piin_num", Integer.parseInt(listGoalCon.getSum_piin()));
+		linenmap.put("blan_num", Integer.parseInt(listGoalCon.getSum_blan()));
+		linenmap.put("shop_num", Integer.parseInt(listGoalCon.getSum_shop()));
+		
+		linenmap = CollectionUtil.sortByValue(linenmap);
+		
+		Set set = linenmap.keySet();
+		Iterator ittt = set.iterator();
+		for(int i=0;i<linenmap.size();i++) {
+            String key = (String) ittt.next();
+            Integer value = linenmap.get(key);
+            sum_num += value;
+        }
+		ittt = set.iterator();
+		for (int i=0;i<3;i++) {
+			String key = (String) ittt.next();
+			Integer value = linenmap.get(key);
+			analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("linenCount", listGoal);
 		jsonObject.put("analyseResult", analyseResult);
@@ -92,6 +125,60 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		RoomCount listGoalAvg = objToRoomAvg(itt, totalRow);
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
+		
+		float sum_num = (float) 0.0;
+		analyseResult += "分析结果：物品领取量排名前三位：";// 分析结果
+		Map<String, Integer> roommap = new HashMap<String, Integer>();
+		roommap.put("umbr_num", Integer.parseInt(listGoalCon.getSum_umbr()));
+		roommap.put("coff_num", Integer.parseInt(listGoalCon.getSum_coff()));
+		roommap.put("suge_num", Integer.parseInt(listGoalCon.getSum_suge()));
+		roommap.put("coup_num", Integer.parseInt(listGoalCon.getSum_coup()));
+		roommap.put("penc_num", Integer.parseInt(listGoalCon.getSum_penc()));
+		roommap.put("erse_num", Integer.parseInt(listGoalCon.getSum_erse()));
+		roommap.put("clca_num", Integer.parseInt(listGoalCon.getSum_clca()));
+		roommap.put("fati_num", Integer.parseInt(listGoalCon.getSum_fati()));
+		roommap.put("enca_num", Integer.parseInt(listGoalCon.getSum_enca()));
+		roommap.put("bage_num", Integer.parseInt(listGoalCon.getSum_bage()));
+		roommap.put("teab_num", Integer.parseInt(listGoalCon.getSum_teab()));
+		roommap.put("meca_num", Integer.parseInt(listGoalCon.getSum_meca()));
+		roommap.put("opbo_num", Integer.parseInt(listGoalCon.getSum_opbo()));
+		roommap.put("blte_num", Integer.parseInt(listGoalCon.getSum_blte()));
+		roommap.put("dnds_num", Integer.parseInt(listGoalCon.getSum_dnds()));
+		roommap.put("tvca_num", Integer.parseInt(listGoalCon.getSum_tvca()));
+		roommap.put("orel_num", Integer.parseInt(listGoalCon.getSum_orel()));
+		roommap.put("memo_num", Integer.parseInt(listGoalCon.getSum_memo()));
+		roommap.put("coas_num", Integer.parseInt(listGoalCon.getSum_coas()));
+		roommap.put("matc_num", Integer.parseInt(listGoalCon.getSum_matc()));
+		roommap.put("mapp_num", Integer.parseInt(listGoalCon.getSum_mapp()));
+		roommap.put("rule_num", Integer.parseInt(listGoalCon.getSum_rule()));
+		roommap.put("stat_num", Integer.parseInt(listGoalCon.getSum_stat()));
+		roommap.put("clip_num", Integer.parseInt(listGoalCon.getSum_clip()));
+		roommap.put("bape_num", Integer.parseInt(listGoalCon.getSum_bape()));
+		roommap.put("comp_num", Integer.parseInt(listGoalCon.getSum_comp()));
+		roommap.put("lali_num", Integer.parseInt(listGoalCon.getSum_lali()));
+		roommap.put("losu_num", Integer.parseInt(listGoalCon.getSum_losu()));
+		roommap.put("shpa_num", Integer.parseInt(listGoalCon.getSum_shpa()));
+		roommap.put("anma_num", Integer.parseInt(listGoalCon.getSum_anma()));
+		roommap.put("grte_num", Integer.parseInt(listGoalCon.getSum_grte()));
+		roommap.put("chsl_num", Integer.parseInt(listGoalCon.getSum_chsl()));
+		roommap.put("cocl_num", Integer.parseInt(listGoalCon.getSum_cocl()));
+		roommap.put("arel_num", Integer.parseInt(listGoalCon.getSum_arel()));
+		
+		roommap = CollectionUtil.sortByValue(roommap);
+		
+		Set set = roommap.keySet();
+		Iterator ittt = set.iterator();
+		for(int i=0;i<roommap.size();i++) {
+            String key = (String) ittt.next();
+            Integer value = roommap.get(key);
+            sum_num += value;
+        }
+		ittt= set.iterator();
+		for (int i=0;i<3;i++) {
+			String key = (String) ittt.next();
+			Integer value = roommap.get(key);
+			analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("roomCount",listGoal);
 		jsonObject.put("analyseResult", analyseResult);
@@ -115,6 +202,51 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		WashCount listGoalAvg = objToWashAvg(itt, totalRow);
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
+		float sum_num = (float) 0.0;
+		analyseResult += "分析结果：物品领取量排名前三位：";// 分析结果
+		Map<String, Integer> washmap = new HashMap<String, Integer>();
+		washmap.put("toth_num", Integer.parseInt(listGoalCon.getSum_toth()));
+		washmap.put("ropa_num", Integer.parseInt(listGoalCon.getSum_ropa()));
+		washmap.put("rins_num", Integer.parseInt(listGoalCon.getSum_rins()));
+		washmap.put("bafo_num", Integer.parseInt(listGoalCon.getSum_bafo()));
+		washmap.put("haco_num", Integer.parseInt(listGoalCon.getSum_haco()));
+		washmap.put("shge_num", Integer.parseInt(listGoalCon.getSum_shge()));
+		washmap.put("capa_num", Integer.parseInt(listGoalCon.getSum_capa()));
+		washmap.put("garb_num", Integer.parseInt(listGoalCon.getSum_garb()));
+		washmap.put("paex_num", Integer.parseInt(listGoalCon.getSum_paex()));
+		washmap.put("peep_num", Integer.parseInt(listGoalCon.getSum_peep()));
+		washmap.put("shca_num", Integer.parseInt(listGoalCon.getSum_shca()));
+		washmap.put("shav_num", Integer.parseInt(listGoalCon.getSum_shav()));
+		washmap.put("comb_num", Integer.parseInt(listGoalCon.getSum_comb()));
+		washmap.put("shcl_num", Integer.parseInt(listGoalCon.getSum_shcl()));
+		washmap.put("soap_num", Integer.parseInt(listGoalCon.getSum_soap()));
+		washmap.put("nacl_num", Integer.parseInt(listGoalCon.getSum_nacl()));
+		washmap.put("flow_num", Integer.parseInt(listGoalCon.getSum_flow()));
+		washmap.put("basa_num", Integer.parseInt(listGoalCon.getSum_basa()));
+		washmap.put("scpa_num", Integer.parseInt(listGoalCon.getSum_scpa()));
+		washmap.put("rugl_num", Integer.parseInt(listGoalCon.getSum_rugl()));
+		washmap.put("dete_num", Integer.parseInt(listGoalCon.getSum_dete()));
+		washmap.put("thim_num", Integer.parseInt(listGoalCon.getSum_thim()));
+		washmap.put("bacl_num", Integer.parseInt(listGoalCon.getSum_bacl()));
+		washmap.put("tocl_num", Integer.parseInt(listGoalCon.getSum_tocl()));
+		washmap.put("babr_num", Integer.parseInt(listGoalCon.getSum_babr()));
+		washmap.put("clbr_num", Integer.parseInt(listGoalCon.getSum_clbr()));
+		
+		washmap = CollectionUtil.sortByValue(washmap);
+		
+		Set set = washmap.keySet();
+		Iterator ittt = set.iterator();
+		for(int i=0;i<washmap.size();i++) {
+            String key = (String) ittt.next();
+            Integer value = washmap.get(key);
+            sum_num += value;
+        }
+		ittt = set.iterator();
+		for (int i=0;i<3;i++) {
+			String key = (String) ittt.next();
+			Integer value = washmap.get(key);
+			analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("washCount",listGoal);
 		jsonObject.put("analyseResult", analyseResult);
@@ -137,6 +269,42 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		MiniCount listGoalAvg = objToMiniAvg(itt, totalRow);
 		listGoal.add(listGoalCon);
 		listGoal.add(listGoalAvg);
+		float sum_num = (float) 0.0;
+		analyseResult += "分析结果：物品领取量排名前三位：";
+		Map<String, Integer> minimap = new HashMap<String, Integer>();
+		minimap.put("redb_num", Integer.parseInt(listGoalCon.getSum_redb()));
+		minimap.put("coco_num", Integer.parseInt(listGoalCon.getSum_coco()));
+		minimap.put("pari_num", Integer.parseInt(listGoalCon.getSum_pari()));
+		minimap.put("bige_num", Integer.parseInt(listGoalCon.getSum_bige()));
+		minimap.put("jdba_num", Integer.parseInt(listGoalCon.getSum_jdba()));
+		minimap.put("tine_num", Integer.parseInt(listGoalCon.getSum_tine()));
+		minimap.put("kunl_num", Integer.parseInt(listGoalCon.getSum_kunl()));
+		minimap.put("wine_num", Integer.parseInt(listGoalCon.getSum_wine()));
+		minimap.put("bree_num", Integer.parseInt(listGoalCon.getSum_bree()));
+		minimap.put("vodk_num", Integer.parseInt(listGoalCon.getSum_vodk()));
+		minimap.put("auru_num", Integer.parseInt(listGoalCon.getSum_auru()));
+		minimap.put("qing_num", Integer.parseInt(listGoalCon.getSum_qing()));
+		minimap.put("spri_num", Integer.parseInt(listGoalCon.getSum_spri()));
+		minimap.put("nail_num", Integer.parseInt(listGoalCon.getSum_nail()));
+		minimap.put("abcs_num", Integer.parseInt(listGoalCon.getSum_abcs()));
+		minimap.put("card_num", Integer.parseInt(listGoalCon.getSum_card()));
+		minimap.put("como_num", Integer.parseInt(listGoalCon.getSum_como()));
+		
+		minimap = CollectionUtil.sortByValue(minimap);
+		
+		Set set = minimap.keySet();
+		Iterator ittt = set.iterator();
+		for(int i=0;i<minimap.size();i++) {
+            String key = (String) ittt.next();
+            Integer value = minimap.get(key);
+            sum_num += value;
+        }
+		ittt = set.iterator();
+		for (int i=0;i<3;i++) {
+			String key = (String) ittt.next();
+			Integer value = minimap.get(key);
+			analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("miniCount",listGoal);
 		jsonObject.put("analyseResult", analyseResult);
@@ -495,6 +663,39 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(sum);
 			listGoal.add(avg);
 
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> linenmap = new HashMap<String, Integer>();
+			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
+			linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
+			linenmap.put("laba_num", Integer.parseInt(sum.getLaba_num()));
+			linenmap.put("besh_num", Integer.parseInt(sum.getBesh_num()));
+			linenmap.put("facl_num", Integer.parseInt(sum.getFacl_num()));
+			linenmap.put("bato_num", Integer.parseInt(sum.getBato_num()));
+			linenmap.put("hato_num", Integer.parseInt(sum.getHato_num()));
+			linenmap.put("medo_num", Integer.parseInt(sum.getMedo_num()));
+			linenmap.put("flto_num", Integer.parseInt(sum.getFlto_num()));
+			linenmap.put("baro_num", Integer.parseInt(sum.getBaro_num()));
+			linenmap.put("pill_num", Integer.parseInt(sum.getPill_num()));
+			linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
+			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
+			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
+			
+			linenmap = CollectionUtil.sortByValue(linenmap);
+			
+			Set set = linenmap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<linenmap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = linenmap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = linenmap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -503,7 +704,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			contentMap.put("${formName}", formName);
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
-
+			contentMap.put("${analyseResult}", analyseResult);
 			le.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -832,6 +1033,59 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(sum);
 			listGoal.add(avg);
 
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> roommap = new HashMap<String, Integer>();
+			roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
+			roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
+			roommap.put("suge_num", Integer.parseInt(sum.getSuge_num()));
+			roommap.put("coup_num", Integer.parseInt(sum.getCoup_num()));
+			roommap.put("penc_num", Integer.parseInt(sum.getPenc_num()));
+			roommap.put("erse_num", Integer.parseInt(sum.getErse_num()));
+			roommap.put("clca_num", Integer.parseInt(sum.getClca_num()));
+			roommap.put("fati_num", Integer.parseInt(sum.getFati_num()));
+			roommap.put("enca_num", Integer.parseInt(sum.getEnca_num()));
+			roommap.put("bage_num", Integer.parseInt(sum.getBage_num()));
+			roommap.put("teab_num", Integer.parseInt(sum.getTeab_num()));
+			roommap.put("meca_num", Integer.parseInt(sum.getMeca_num()));
+			roommap.put("opbo_num", Integer.parseInt(sum.getOpbo_num()));
+			roommap.put("blte_num", Integer.parseInt(sum.getBlte_num()));
+			roommap.put("dnds_num", Integer.parseInt(sum.getDnds_num()));
+			roommap.put("tvca_num", Integer.parseInt(sum.getTvca_num()));
+			roommap.put("orel_num", Integer.parseInt(sum.getOrel_num()));
+			roommap.put("memo_num", Integer.parseInt(sum.getMemo_num()));
+			roommap.put("coas_num", Integer.parseInt(sum.getCoas_num()));
+			roommap.put("matc_num", Integer.parseInt(sum.getMatc_num()));
+			roommap.put("mapp_num", Integer.parseInt(sum.getMapp_num()));
+			roommap.put("rule_num", Integer.parseInt(sum.getRule_num()));
+			roommap.put("stat_num", Integer.parseInt(sum.getStat_num()));
+			roommap.put("clip_num", Integer.parseInt(sum.getClip_num()));
+			roommap.put("bape_num", Integer.parseInt(sum.getBape_num()));
+			roommap.put("comp_num", Integer.parseInt(sum.getComp_num()));
+			roommap.put("lali_num", Integer.parseInt(sum.getLali_num()));
+			roommap.put("losu_num", Integer.parseInt(sum.getLosu_num()));
+			roommap.put("shpa_num", Integer.parseInt(sum.getShpa_num()));
+			roommap.put("anma_num", Integer.parseInt(sum.getAnma_num()));
+			roommap.put("grte_num", Integer.parseInt(sum.getGrte_num()));
+			roommap.put("chsl_num", Integer.parseInt(sum.getChsl_num()));
+			roommap.put("cocl_num", Integer.parseInt(sum.getCocl_num()));
+			roommap.put("arel_num", Integer.parseInt(sum.getArel_num()));
+			
+			roommap = CollectionUtil.sortByValue(roommap);
+			
+			Set set = roommap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<roommap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = roommap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = roommap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -840,6 +1094,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			contentMap.put("${formName}", formName);
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
+			contentMap.put("${analyseResult}", analyseResult);
 
 			we.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
@@ -1203,6 +1458,51 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(sum);
 			listGoal.add(avg);
 
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> washmap = new HashMap<String, Integer>();
+			washmap.put("toth_num", Integer.parseInt(sum.getToth_num()));
+			washmap.put("ropa_num", Integer.parseInt(sum.getRopa_num()));
+			washmap.put("rins_num", Integer.parseInt(sum.getRins_num()));
+			washmap.put("bafo_num", Integer.parseInt(sum.getBafo_num()));
+			washmap.put("haco_num", Integer.parseInt(sum.getHaco_num()));
+			washmap.put("shge_num", Integer.parseInt(sum.getShge_num()));
+			washmap.put("capa_num", Integer.parseInt(sum.getCapa_num()));
+			washmap.put("garb_num", Integer.parseInt(sum.getGarb_num()));
+			washmap.put("paex_num", Integer.parseInt(sum.getPaex_num()));
+			washmap.put("peep_num", Integer.parseInt(sum.getPeep_num()));
+			washmap.put("shca_num", Integer.parseInt(sum.getShca_num()));
+			washmap.put("shav_num", Integer.parseInt(sum.getShav_num()));
+			washmap.put("comb_num", Integer.parseInt(sum.getComb_num()));
+			washmap.put("shcl_num", Integer.parseInt(sum.getShcl_num()));
+			washmap.put("soap_num", Integer.parseInt(sum.getSoap_num()));
+			washmap.put("nacl_num", Integer.parseInt(sum.getNacl_num()));
+			washmap.put("flow_num", Integer.parseInt(sum.getFlow_num()));
+			washmap.put("basa_num", Integer.parseInt(sum.getBasa_num()));
+			washmap.put("scpa_num", Integer.parseInt(sum.getScpa_num()));
+			washmap.put("rugl_num", Integer.parseInt(sum.getRugl_num()));
+			washmap.put("dete_num", Integer.parseInt(sum.getDete_num()));
+			washmap.put("thim_num", Integer.parseInt(sum.getThim_num()));
+			washmap.put("bacl_num", Integer.parseInt(sum.getBacl_num()));
+			washmap.put("tocl_num", Integer.parseInt(sum.getTocl_num()));
+			washmap.put("babr_num", Integer.parseInt(sum.getBabr_num()));
+			washmap.put("clbr_num", Integer.parseInt(sum.getClbr_num()));
+			
+			washmap = CollectionUtil.sortByValue(washmap);
+			
+			Set set = washmap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<washmap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = washmap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = washmap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -1211,6 +1511,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			contentMap.put("${formName}", formName);
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
+			contentMap.put("${analyseResult}", analyseResult);
 
 			we.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
@@ -1570,7 +1871,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 	/********** zjn添加 **********/
 	// 导出房间或卫生间耗品分析图
-	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportRoomOrWashExpendPic(Map<String, String> map) {
 		ResponseEntity<byte[]> byteArr = null;
@@ -1614,7 +1914,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	}
 
 	// 导出布草用量分析图
-	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportLinenOrMiniExpendPic(Map<String, String> map) {
 		ResponseEntity<byte[]> byteArr = null;
@@ -1775,7 +2074,43 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			MiniExpend avg = avgMiniExpend(listGoal);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
-
+			
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> minimap = new HashMap<String, Integer>();
+			minimap.put("redb_num", Integer.parseInt(sum.getRedb_num()));
+			minimap.put("coco_num", Integer.parseInt(sum.getCoco_num()));
+			minimap.put("pari_num", Integer.parseInt(sum.getPari_num()));
+			minimap.put("bige_num", Integer.parseInt(sum.getBige_num()));
+			minimap.put("jdba_num", Integer.parseInt(sum.getJdba_num()));
+			minimap.put("tine_num", Integer.parseInt(sum.getTine_num()));
+			minimap.put("kunl_num", Integer.parseInt(sum.getKunl_num()));
+			minimap.put("wine_num", Integer.parseInt(sum.getWine_num()));
+			minimap.put("bree_num", Integer.parseInt(sum.getBree_num()));
+			minimap.put("vodk_num", Integer.parseInt(sum.getVodk_num()));
+			minimap.put("auru_num", Integer.parseInt(sum.getAuru_num()));
+			minimap.put("qing_num", Integer.parseInt(sum.getQing_num()));
+			minimap.put("spri_num", Integer.parseInt(sum.getSpri_num()));
+			minimap.put("nail_num", Integer.parseInt(sum.getNail_num()));
+			minimap.put("abcs_num", Integer.parseInt(sum.getAbcs_num()));
+			minimap.put("card_num", Integer.parseInt(sum.getCard_num()));
+			minimap.put("como_num", Integer.parseInt(sum.getComo_num()));
+			
+			minimap = CollectionUtil.sortByValue(minimap);
+			
+			Set set = minimap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<minimap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = minimap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = minimap.get(key);
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -1784,6 +2119,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			contentMap.put("${formName}", formName);
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
+			contentMap.put("${analyseResult}", analyseResult);
 
 			le.export2007Word(tempPath, listMap, contentMap, 2, out,-1);// 用模板生成word
 			out.close();
@@ -1941,7 +2277,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	}
 	
 	// 导出耗品统计表，excel格式
-	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportExpendExcel(Map<String, Object> map) {
 		ResponseEntity<byte[]> byteArr = null;
@@ -2052,7 +2387,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	}
 
 	//员工领取耗品统计
-	@SuppressWarnings("rawtypes")
 	@Override
 	public JSONObject selectStaExpend(Map<String, Object> map) {
 		
@@ -2104,10 +2438,10 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			for (int i=0;i<3;i++) {
 				String key = (String) itt.next();
 				Integer value = linenmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num));
-				boolean ascFlag = false;
-				CollectionUtil.sort(listGoal, key, ascFlag);
-				analyseResult += "，领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+"；";
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				//boolean ascFlag = false;
+				//CollectionUtil.sort(listGoal, key, ascFlag);
+				//analyseResult += "，领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+"；";
 			}
 			jsonObject.put("analyseResult", analyseResult);
 			break;
@@ -2236,7 +2570,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			for (int i=0;i<3;i++) {
 				String key = (String) itt2.next();
 				Integer value = washmap.get(key);
-				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num));
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
 				boolean ascFlag = false;
 				CollectionUtil.sort(listGoal2, key, ascFlag);
 				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
@@ -2288,7 +2622,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			for (int i=0;i<3;i++) {
 				String key = (String) itt3.next();
 				Integer value = minimap.get(key);
-				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num));
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
 				boolean ascFlag = false;
 				CollectionUtil.sort(listGoal3, key, ascFlag);
 				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
@@ -2496,13 +2830,44 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
-
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> linenmap = new HashMap<String, Integer>();
+			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
+			linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
+			linenmap.put("laba_num", Integer.parseInt(sum.getLaba_num()));
+			linenmap.put("besh_num", Integer.parseInt(sum.getBesh_num()));
+			linenmap.put("facl_num", Integer.parseInt(sum.getFacl_num()));
+			linenmap.put("bato_num", Integer.parseInt(sum.getBato_num()));
+			linenmap.put("hato_num", Integer.parseInt(sum.getHato_num()));
+			linenmap.put("medo_num", Integer.parseInt(sum.getMedo_num()));
+			linenmap.put("flto_num", Integer.parseInt(sum.getFlto_num()));
+			linenmap.put("baro_num", Integer.parseInt(sum.getBaro_num()));
+			linenmap.put("pill_num", Integer.parseInt(sum.getPill_num()));
+			linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
+			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
+			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
+			
+			linenmap = CollectionUtil.sortByValue(linenmap);
+			
+			Set set = linenmap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<linenmap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = linenmap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = linenmap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			String startTime = (String) map.get("startTime");
 			String endTime = (String) map.get("endTime");
-			String analyseResult = (String) map.get("analyseResult");
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
 			contentMap.put("${analyseResult}", analyseResult);
@@ -2649,7 +3014,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取房间耗品量统计表.docx";
-			String analyseResult = (String) map.get("analyseResult");
 			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
@@ -2663,7 +3027,63 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			StaRoom avg = avgStaRoomExpend(listGoal);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
-
+			
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> roommap = new HashMap<String, Integer>();
+			roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
+			roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
+			roommap.put("suge_num", Integer.parseInt(sum.getSuge_num()));
+			roommap.put("coup_num", Integer.parseInt(sum.getCoup_num()));
+			roommap.put("penc_num", Integer.parseInt(sum.getPenc_num()));
+			roommap.put("erse_num", Integer.parseInt(sum.getErse_num()));
+			roommap.put("clca_num", Integer.parseInt(sum.getClca_num()));
+			roommap.put("fati_num", Integer.parseInt(sum.getFati_num()));
+			roommap.put("enca_num", Integer.parseInt(sum.getEnca_num()));
+			roommap.put("bage_num", Integer.parseInt(sum.getBage_num()));
+			roommap.put("teab_num", Integer.parseInt(sum.getTeab_num()));
+			roommap.put("meca_num", Integer.parseInt(sum.getMeca_num()));
+			roommap.put("opbo_num", Integer.parseInt(sum.getOpbo_num()));
+			roommap.put("blte_num", Integer.parseInt(sum.getBlte_num()));
+			roommap.put("dnds_num", Integer.parseInt(sum.getDnds_num()));
+			roommap.put("tvca_num", Integer.parseInt(sum.getTvca_num()));
+			roommap.put("orel_num", Integer.parseInt(sum.getOrel_num()));
+			roommap.put("memo_num", Integer.parseInt(sum.getMemo_num()));
+			roommap.put("coas_num", Integer.parseInt(sum.getCoas_num()));
+			roommap.put("matc_num", Integer.parseInt(sum.getMatc_num()));
+			roommap.put("mapp_num", Integer.parseInt(sum.getMapp_num()));
+			roommap.put("rule_num", Integer.parseInt(sum.getRule_num()));
+			roommap.put("stat_num", Integer.parseInt(sum.getStat_num()));
+			roommap.put("clip_num", Integer.parseInt(sum.getClip_num()));
+			roommap.put("bape_num", Integer.parseInt(sum.getBape_num()));
+			roommap.put("comp_num", Integer.parseInt(sum.getComp_num()));
+			roommap.put("lali_num", Integer.parseInt(sum.getLali_num()));
+			roommap.put("losu_num", Integer.parseInt(sum.getLosu_num()));
+			roommap.put("shpa_num", Integer.parseInt(sum.getShpa_num()));
+			roommap.put("anma_num", Integer.parseInt(sum.getAnma_num()));
+			roommap.put("grte_num", Integer.parseInt(sum.getGrte_num()));
+			roommap.put("chsl_num", Integer.parseInt(sum.getChsl_num()));
+			roommap.put("cocl_num", Integer.parseInt(sum.getCocl_num()));
+			roommap.put("arel_num", Integer.parseInt(sum.getArel_num()));
+			
+			roommap = CollectionUtil.sortByValue(roommap);
+			
+			Set set = roommap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<roommap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = roommap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = roommap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				boolean ascFlag = false;
+				CollectionUtil.sort(listGoal, key, ascFlag);
+				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -2936,7 +3356,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取卫生间耗品量统计表.docx";
-			String analyseResult = (String) map.get("analyseResult");
 			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
@@ -2950,7 +3369,55 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			StaWash avg = avgStaWashExpend(listGoal);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
-
+			
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> washmap = new HashMap<String, Integer>();
+			washmap.put("toth_num", Integer.parseInt(sum.getToth_num()));
+			washmap.put("ropa_num", Integer.parseInt(sum.getRopa_num()));
+			washmap.put("rins_num", Integer.parseInt(sum.getRins_num()));
+			washmap.put("bafo_num", Integer.parseInt(sum.getBafo_num()));
+			washmap.put("haco_num", Integer.parseInt(sum.getHaco_num()));
+			washmap.put("shge_num", Integer.parseInt(sum.getShge_num()));
+			washmap.put("capa_num", Integer.parseInt(sum.getCapa_num()));
+			washmap.put("garb_num", Integer.parseInt(sum.getGarb_num()));
+			washmap.put("paex_num", Integer.parseInt(sum.getPaex_num()));
+			washmap.put("peep_num", Integer.parseInt(sum.getPeep_num()));
+			washmap.put("shca_num", Integer.parseInt(sum.getShca_num()));
+			washmap.put("shav_num", Integer.parseInt(sum.getShav_num()));
+			washmap.put("comb_num", Integer.parseInt(sum.getComb_num()));
+			washmap.put("shcl_num", Integer.parseInt(sum.getShcl_num()));
+			washmap.put("soap_num", Integer.parseInt(sum.getSoap_num()));
+			washmap.put("nacl_num", Integer.parseInt(sum.getNacl_num()));
+			washmap.put("flow_num", Integer.parseInt(sum.getFlow_num()));
+			washmap.put("basa_num", Integer.parseInt(sum.getBasa_num()));
+			washmap.put("scpa_num", Integer.parseInt(sum.getScpa_num()));
+			washmap.put("rugl_num", Integer.parseInt(sum.getRugl_num()));
+			washmap.put("dete_num", Integer.parseInt(sum.getDete_num()));
+			washmap.put("thim_num", Integer.parseInt(sum.getThim_num()));
+			washmap.put("bacl_num", Integer.parseInt(sum.getBacl_num()));
+			washmap.put("tocl_num", Integer.parseInt(sum.getTocl_num()));
+			washmap.put("babr_num", Integer.parseInt(sum.getBabr_num()));
+			washmap.put("clbr_num", Integer.parseInt(sum.getClbr_num()));
+			
+			washmap = CollectionUtil.sortByValue(washmap);
+			
+			Set set = washmap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<washmap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = washmap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = washmap.get(key);
+				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				//boolean ascFlag = false;
+				//CollectionUtil.sort(listGoal, key, ascFlag);
+				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -3174,7 +3641,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取迷你吧量统计表.docx";
-			String analyseResult = (String) map.get("analyseResult");
 			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
@@ -3188,6 +3654,45 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			listGoal.add(sum);
 			listGoal.add(avg);
 
+			float sum_num = (float) 0.0;
+			String analyseResult = "分析结果：物品领取量排名前三位：";// 分析结果
+			Map<String, Integer> minimap = new HashMap<String, Integer>();
+			minimap.put("redb_num", Integer.parseInt(sum.getRedb_num()));
+			minimap.put("coco_num", Integer.parseInt(sum.getCoco_num()));
+			minimap.put("pari_num", Integer.parseInt(sum.getPari_num()));
+			minimap.put("bige_num", Integer.parseInt(sum.getBige_num()));
+			minimap.put("jdba_num", Integer.parseInt(sum.getJdba_num()));
+			minimap.put("tine_num", Integer.parseInt(sum.getTine_num()));
+			minimap.put("kunl_num", Integer.parseInt(sum.getKunl_num()));
+			minimap.put("wine_num", Integer.parseInt(sum.getWine_num()));
+			minimap.put("bree_num", Integer.parseInt(sum.getBree_num()));
+			minimap.put("vodk_num", Integer.parseInt(sum.getVodk_num()));
+			minimap.put("auru_num", Integer.parseInt(sum.getAuru_num()));
+			minimap.put("qing_num", Integer.parseInt(sum.getQing_num()));
+			minimap.put("spri_num", Integer.parseInt(sum.getSpri_num()));
+			minimap.put("nail_num", Integer.parseInt(sum.getNail_num()));
+			minimap.put("abcs_num", Integer.parseInt(sum.getAbcs_num()));
+			minimap.put("card_num", Integer.parseInt(sum.getCard_num()));
+			minimap.put("como_num", Integer.parseInt(sum.getComo_num()));
+			
+			minimap = CollectionUtil.sortByValue(minimap);
+			
+			Set set = minimap.keySet();
+			Iterator itt = set.iterator();
+			for(int i=0;i<minimap.size();i++) {
+	            String key = (String) itt.next();
+	            Integer value = minimap.get(key);
+	            sum_num += value;
+	        }
+			itt = set.iterator();
+			for (int i=0;i<3;i++) {
+				String key = (String) itt.next();
+				Integer value = minimap.get(key);
+				analyseResult += findname(key)+",使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+				//boolean ascFlag = false;
+				//CollectionUtil.sort(listGoal, key, ascFlag);
+				//analyseResult += ",领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+";";
+			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -3352,7 +3857,6 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	}
 	
 	// 导出员工领取耗品统计表，excel格式
-	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportStaExpendExcel(Map<String, Object> map) {
 		ResponseEntity<byte[]> byteArr = null;

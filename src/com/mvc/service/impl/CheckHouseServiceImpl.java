@@ -172,7 +172,7 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 			Iterator<Object> it = listSource.iterator();
 			List<CheckHouse> checkHouseList = objToCheckHouse(it);
 
-			String[] header = { "序号", "领班", "编号", "查房时间（分钟）", "当班时间（分钟）", "效率" };// 顺序必须和对应实体一致
+			String[] header = { "序号", "领班", "编号", "查房时间（分钟）", "当班时间（分钟）", "效率","房间数量","平均查房时间" };// 顺序必须和对应实体一致
 			wh.export2007Excel(title, header, checkHouseList, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
 

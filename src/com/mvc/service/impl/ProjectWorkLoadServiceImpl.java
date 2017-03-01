@@ -160,8 +160,8 @@ public class ProjectWorkLoadServiceImpl implements ProjectWorkLoadService {
 		String startDate = (String) map.get("startDate");
 		String endDate = (String) map.get("endDate");
 		String path = (String) map.get("path");
-		String fileName = "客房部员工工作量汇总表.xlsx";
-		String title = "客房部员工工作量汇总表(" + startDate + "至" + endDate + ")";
+		String fileName = "工程部员工工作量汇总表.xlsx";
+		String title = "工程部员工工作量汇总表(" + startDate + "至" + endDate + ")";
 		try {
 			ExcelHelper<ProjectWorkLoad> ex = new ExcelHelper<ProjectWorkLoad>();
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径

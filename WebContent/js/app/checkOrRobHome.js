@@ -224,7 +224,7 @@ app
 								tableType : "0",
 								startTime : "",
 								endTime : "",
-								roomType : ""
+								roomType : "-1"
 							}
 							// 抢房效率分析查询限制条件
 							checkRob.reaLimit = {

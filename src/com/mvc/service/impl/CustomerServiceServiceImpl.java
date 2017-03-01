@@ -80,9 +80,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		List<Object> listSource = hotelCustomerDao.findHotelService(map);
 		Iterator<Object> it = listSource.iterator();
 		List<HoCustomerService> listGoal = listsourceToListGoal(it);
-
 		String analyseResult = listsourceToListGoalAnalyse(listSource);
-
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", listGoal);
 		jsonObject.put("analyseResult", analyseResult);
@@ -197,8 +195,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		listGoal.add(hoCustomerService);
 		System.out.println(listGoal);
 
-		String analyseResult = "酒店对客服务服务数量为" + serviceLoad + "，超时服务为" + timeOutService + "超时率为"
-				+timeOutRate;
+		String analyseResult = "酒店对客服务服务数量为" + serviceLoad + "，超时服务为" + timeOutService + "超时率为" + timeOutRate;
 
 		return analyseResult;
 	}
@@ -238,9 +235,9 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			List<Object> listSource = hotelCustomerDao.findHotelService(map);
 			Iterator<Object> it = listSource.iterator();
 			listGoal = listsourceToListGoal(it);
-			
+
 			analyseResult = listsourceToListGoalAnalyse(listSource);
-			
+
 		}
 		if (listGoal != null) {
 			String fileName = "酒店对客服务信息统计表.docx";

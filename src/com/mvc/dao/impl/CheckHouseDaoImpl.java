@@ -39,6 +39,7 @@ public class CheckHouseDaoImpl implements CheckHouseDao {
 
 		selectSql.append(
 				"select si.Staff_no staff_no,si.Staff_name staff_name,coalesce(sum(check_time),0) check_time ,coalesce(sum(work_time),0) work_time");
+		selectSql.append(",clean_room_workload,checkout_room_workload,overnight_room_workload ");
 		selectSql.append(" from work_record wr ");
 		selectSql.append(" left join  staff_info si on wr.staff_id=si.Staff_id");
 		selectSql.append(" left join staff_dep_rela  sdr on wr.staff_id=sdr.Staff_id");

@@ -81,6 +81,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		Iterator<Object> it = listSource.iterator();
 		List<HoCustomerService> listGoal = listsourceToListGoal(it);
 		String analyseResult = listsourceToListGoalAnalyse(listSource);
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", listGoal);
 		jsonObject.put("analyseResult", analyseResult);
@@ -194,8 +195,10 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		hoCustomerService.setTimeOutRate(Float.valueOf(timeOutRate));
 		listGoal.add(hoCustomerService);
 		System.out.println(listGoal);
+		String timeOutRate0 = StringUtil.strFloatToPer(timeOutRate);
 
-		String analyseResult = "酒店对客服务服务数量为" + serviceLoad + "，超时服务为" + timeOutService + "超时率为" + timeOutRate;
+		String analyseResult = "分析结果：酒店对客服务服务数量为" + serviceLoad + "，超时服务为" + timeOutService + "，超时率为" + timeOutRate0
+				+ "。";
 
 		return analyseResult;
 	}
@@ -374,28 +377,15 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 	// 部门对客服务工作量添加文字
 	private String listloadToListGoalAnalyse(Iterator<Object> it) {
-		List<HouseCustomerServiceLoad> listGoal = new ArrayList<HouseCustomerServiceLoad>();
 		String serviceLoad = "0.0";// 总计服务数量
 
 		Object[] obj;
-		HouseCustomerServiceLoad houseCustomerServiceLoad;
+		int i = 0;
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
-			houseCustomerServiceLoad = new HouseCustomerServiceLoad();
-			houseCustomerServiceLoad.setStaff_name(obj[0].toString());
+			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
 			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[2].toString());// 总计服务数量
 
-			listGoal.add(houseCustomerServiceLoad);
-		}
-
-		// 序号
-		Iterator<HouseCustomerServiceLoad> itGoal = listGoal.iterator();
-		int i = 0;
-		houseCustomerServiceLoad = null;
-		while (itGoal.hasNext()) {
-			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
-			houseCustomerServiceLoad = itGoal.next();
-			houseCustomerServiceLoad.setOrderNum(String.valueOf(i));
 		}
 
 		String str = StringUtil.divide(serviceLoad, i + "");

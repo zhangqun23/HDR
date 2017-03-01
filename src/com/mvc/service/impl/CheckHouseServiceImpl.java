@@ -55,6 +55,8 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 		CheckHouse checkHouse = null;
 		String checkTime = "";
 		String totalTime = "";
+		String checkRoomTime="";//平均查房时间
+		
 		List<CheckHouse> listGoal = new ArrayList<CheckHouse>();
 		int i = 0;
 		while (it.hasNext()) {
@@ -71,6 +73,12 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 			checkHouse.setCheckTime(checkTime);// 查房总用时
 			checkHouse.setTotalTime(totalTime);// 当班总用时
 			checkHouse.setEfficiency(((int) (Float.parseFloat(efficiency) * 100)) / 100.0f);// 查房效率
+			
+			String sumRoom=StringUtil.multiadd(obj[4].toString(), obj[5].toString(), obj[6].toString());
+			checkHouse.setSumRoom(sumRoom);//房间数
+			checkRoomTime=StringUtil.divide(checkTime, sumRoom);
+			checkHouse.setCheckRoomTime(checkRoomTime);//平均查房时间
+			
 
 			listGoal.add(checkHouse);
 		}

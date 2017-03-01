@@ -18,6 +18,26 @@ public class CheckHouse {
 	private String totalTime;// 当班总用时
 	private float efficiency;// 效率
 
+	// whm
+	private String sumRoom;// 房间数
+	private String checkRoomTime;//平均查房时间
+
+	public String getCheckRoomTime() {
+		return checkRoomTime;
+	}
+
+	public void setCheckRoomTime(String checkRoomTime) {
+		this.checkRoomTime = checkRoomTime;
+	}
+
+	public String getSumRoom() {
+		return sumRoom;
+	}
+
+	public void setSumRoom(String sumRoom) {
+		this.sumRoom = sumRoom;
+	}
+
 	public String getOrderNum() {
 		return orderNum;
 	}

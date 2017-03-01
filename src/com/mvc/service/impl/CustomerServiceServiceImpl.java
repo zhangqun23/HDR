@@ -313,7 +313,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		Object[] objOne = (Object[]) listSource.get(0);
 		String department = objOne[5].toString();
 
-		String analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(it);
+		String analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(listSource)+"。";
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("list", listGoal);
@@ -376,8 +376,9 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 	}
 
 	// 部门对客服务工作量添加文字
-	private String listloadToListGoalAnalyse(Iterator<Object> it) {
+	private String listloadToListGoalAnalyse(List<Object> listSource) {
 		String serviceLoad = "0.0";// 总计服务数量
+		Iterator<Object> it=listSource.iterator();
 
 		Object[] obj;
 		int i = 0;
@@ -432,7 +433,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			Iterator<Object> it = listSource.iterator();
 			listGoal = listloadToListGoal(it);
 
-			analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(it);
+			analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(listSource);
 
 		}
 
@@ -513,7 +514,6 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		return listGoal;
 	}
 
-	@SuppressWarnings("unused")
 	private List<HouseCustomerServiceType> listtypeToListGoal(Iterator<Object> it) {
 		List<HouseCustomerServiceType> listGoal = new ArrayList<HouseCustomerServiceType>();
 		String serviceLoad = "0.0";// 总计服务数量

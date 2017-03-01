@@ -51,8 +51,10 @@
 				<th class="width5">序号</th>
 				<th class="width5">领班</th>
 				<th class="width5">编号</th>
-				<th class="width5">查房时间（分钟）</th>
 				<th class="width5">当班时间（分钟）</th>
+				<th class="width5">查房时间（分钟）</th>
+				<th class="width5">查房总数</th>
+				<th class="width5">平均查房时间（分钟）</th>
 				<th class="width5">效率</th>
 			</tr>
 		</thead>
@@ -61,8 +63,10 @@
 				<td>{{c.orderNum}}</td>
 				<td>{{c.staffName}}</td>
 				<td>{{c.staffNo}}</td>
-				<td>{{c.checkTime}}</td>
 				<td>{{c.totalTime}}</td>
+				<td>{{c.checkTime}}</td>
+				<td>{{c.sumRoom}}</td>
+				<td>{{c.checkRoomTime}}</td>
 				<td>{{c.efficiency | numPercent}}</td>
 			</tr>
 		</tbody>

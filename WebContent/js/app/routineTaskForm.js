@@ -1090,7 +1090,7 @@ app
 									return false;
 								}
 								if (reportForm.wrLimit.endTime == "") {
-									alert("请选择起始时间！");
+									alert("请选择截止时间！");
 									return false;
 								}
 								$(".overlayer").fadeIn(200);

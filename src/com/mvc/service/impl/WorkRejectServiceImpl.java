@@ -471,13 +471,11 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 			List<Object> listSource = workRejectDao.selectWorkRejectByLimits(map);
 			Iterator<Object> it = listSource.iterator();
 			List<WorkReject> listGoal = objToWorkReject(it);
-
 			WorkReject sum = sumWorkReject(listGoal);
 			listGoal.add(sum);
 			String[] header = { "序号", "员工姓名", "员工编号", "抹尘房[数量,驳回数,驳回率]", "过夜房[数量,驳回数,驳回率]", "离退房[数量,驳回数,驳回率]" };// 顺序必须和对应实体一致
 			wh.export2007Excel(title, header, listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 2);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

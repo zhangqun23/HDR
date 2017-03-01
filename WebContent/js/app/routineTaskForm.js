@@ -1159,14 +1159,19 @@ app
 													var yAxis = "效率";// 纵坐标显示
 													var nowQuarter = reportForm.wraLimit.quarter;// 当前的选择季度
 													var lineName = getSelectedStaff(reportForm.wraLimit.staffId)
-															+ "员工做房驳回率";
+															+ "员工单月做房驳回率";
 													var lineData = [];// 最终传入chart1中的data
 													var allAverageData = [];// 全体员工做房驳回率的平均Data
 													var averageData = [];// 个人平均做房驳回率
 													var userData = [];// 个人工作效率
+													var singleMonthAllData = [];// 每个月的全体平均工作率
 													for ( var item in data.list) {
 														userData
 																.push(changeNumType(data.list[item]));
+													}
+													for ( var key in data.allMonAveListStr) {
+														singleMonthAllData
+																.push(changeNumType(data.allMonAveListStr[key]));
 													}
 													switch (nowQuarter) {
 													case '0':
@@ -1235,6 +1240,9 @@ app
 															allAverageData);
 													combine(lineData, lineName,
 															userData);
+													combine(lineData,
+															"单月全体平均驳回率",
+															singleMonthAllData);
 
 													lineChartForm(lineData,
 															"#lineChart",

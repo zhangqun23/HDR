@@ -224,7 +224,7 @@ app
 								tableType : "0",
 								startTime : "",
 								endTime : "",
-								roomType : ""
+								roomType : "-1"
 							}
 							// 抢房效率分析查询限制条件
 							checkRob.reaLimit = {
@@ -368,7 +368,12 @@ app
 							// zq当房型下拉框变化时获取房型名字
 							checkRob.getSortNameByNo = function() {
 								var no = $("#roomSortType").val();
-								checkRob.sortName = getSelectedRoomType(no);
+								if (no == '-1') {
+									checkRob.sortName = "全部类型";
+								} else {
+									checkRob.sortName = getSelectedRoomType(no);
+								}
+
 							}
 							// zq查询抢房明细表
 							checkRob.selectRobByLimits = function() {
@@ -882,6 +887,7 @@ app
 								if ($location.path().indexOf(
 										'/robEfficiencyForm') == 0) {
 									selectRoomSorts();
+									checkRob.sortName = "全部类型";
 
 								} else if ($location.path().indexOf(
 										'/robEffAnalyseForm') == 0) {
@@ -930,7 +936,7 @@ app
 									});
 
 						} ]);
-//lwt:小数转换为百分数过滤器
+// lwt:小数转换为百分数过滤器
 app.filter('numPercent', function() {
 	return function(input) {
 		var number = (input * 100).toFixed(2) + "%";

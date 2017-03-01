@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,8 +18,11 @@ import org.springframework.stereotype.Service;
 import com.mvc.dao.CheckHouseDao;
 import com.mvc.entityReport.CheckHouse;
 import com.mvc.entityReport.RobEfficiency;
+import com.mvc.entityReport.WorkReject;
+import com.mvc.entityReport.WorkRoomNum;
 import com.mvc.service.CheckHouseService;
 import com.utils.CollectionUtil;
+import com.utils.ExcelHelper;
 import com.utils.FileHelper;
 import com.utils.StringUtil;
 import com.utils.WordHelper;
@@ -139,6 +143,35 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 					"(" + StringUtil.strfloatToPer(((int) (checkHouseList.get(0).getEfficiency() * 100)) / 100f) + ")");
 		}
 		return analyseResult.toString();
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportCheckHouseExcel(Map<String, Object> map) {
+		ResponseEntity<byte[]> byteArr = null;
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String path = (String) map.get("path");
+		String title = "客房部领班查房工作效率统计表 ("+ startTime.substring(0,10) + "至 " + endTime.substring(0,10) + ")";
+		String fileName = "客房部领班查房工作效率统计表.xlsx";
+
+		try {
+			ExcelHelper<CheckHouse> wh = new ExcelHelper<CheckHouse>();
+			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
+			OutputStream out = new FileOutputStream(path);
+
+			// 获取列表和文本信息
+			List<Object> listSource = checkHouseDao.getCheckHouseTime(startTime, endTime);
+			Iterator<Object> it = listSource.iterator();
+			List<CheckHouse> checkHouseList = objToCheckHouse(it);
+
+			String[] header = { "序号", "领班", "编号", "查房时间（分钟）", "当班时间（分钟）", "效率" };// 顺序必须和对应实体一致
+			wh.export2007Excel(title, header, checkHouseList, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容,1表示一行表头
+			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return byteArr;
 	}
 
 }

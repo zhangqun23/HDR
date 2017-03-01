@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 
@@ -50,7 +50,7 @@ import com.mvc.entityReport.WorkReject;
 public class WordHelper<T> {
 
 	/**
-	 * 导出2007版word（模板）
+	 * 导出2007版word（模板）（不合并列项单元格）
 	 * 
 	 * @param path
 	 *            模板路径
@@ -62,6 +62,9 @@ public class WordHelper<T> {
 	 *            表头行数
 	 * @param out
 	 *            输出
+	 * @param mergeColumn在这个方法中没用，合并减下个重载的方法
+	 * 
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public void export2007Word(String path, Map<String, Object> listMap, Map<String, Object> contentMap, Integer rowNum,
@@ -87,7 +90,7 @@ public class WordHelper<T> {
 					Object val = entry.getValue();
 					Collection<T> list = (Collection<T>) val;
 					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
-					dynamicWord(doc, list, tableOrder, rowNum, mergeColumn);
+					dynamicWord(doc, list, tableOrder, rowNum);
 
 				}
 			}
@@ -100,7 +103,64 @@ public class WordHelper<T> {
 	}
 
 	/**
-	 * 根据表头动态生成word表格
+	 * export2007Word方法重载，针对传递不同的参数，对word表格的指定列项合并单元格（合并列项单元格）
+	 * 
+	 * @param path
+	 *            模板路径
+	 * @param listMap
+	 *            表格内容
+	 * @param contentMap
+	 *            特定字符串替换
+	 * @param rowNum
+	 *            表头行数
+	 * @param out
+	 *            输出
+	 * @param mergeColumn
+	 *            需要合并的列都有哪些的集合
+	 * 
+	 * @param baseContent
+	 *            根据对象的哪一个字段进行合并
+	 * 
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public void export2007Word(String path, Map<String, Object> listMap, Map<String, Object> contentMap, Integer rowNum,
+			OutputStream out, List<Integer> mergeColumn, String baseContent) {
+		// 读取模板
+		FileInputStream in = null;
+		XWPFDocument doc = null;
+		try {
+			in = new FileInputStream(new File(path));
+			doc = new XWPFDocument(in);
+
+			if (contentMap != null) {
+				// 替换模版中的变量(包含添加图片)
+				generateWord(doc, contentMap);
+			}
+
+			// 解析map中的多个list，并根据表头动态生成word表格
+			if (listMap != null) {
+				Iterator<Entry<String, Object>> it = listMap.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry<String, Object> entry = it.next();
+					Integer tableOrder = Integer.valueOf(entry.getKey());
+					Object val = entry.getValue();
+					Collection<T> list = (Collection<T>) val;
+					// 根据表头动态生成word表格(tableOrder:word模版中的第tableOrder张表格)
+					dynamicWord(doc, list, tableOrder, rowNum, mergeColumn, baseContent);
+
+				}
+			}
+			write2007Out(doc, out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 根据表头动态生成word表格（不合并列项单元格）
 	 * 
 	 * @param doc
 	 * @param list
@@ -108,8 +168,74 @@ public class WordHelper<T> {
 	 * @param rowNum:表头行数
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum) {
+		List<XWPFTable> tables;
+		XWPFTable table = null;
+		try {
+			tables = doc.getTables();
+			table = tables.get(tableOrder);// 变量
+			XWPFTableRow row0 = table.getRow(0);// 表头第一行
+			XWPFTableRow row = table.getRow(rowNum - 1);// 表头最后一行
+			List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
+			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头第一行
+			List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
+			XWPFTableCell cell = null;
+			CTTcPr cellPr = null;
+			int colNum0 = cells0.size();
+			int colNum = cells.size();
+			int Dvalue = colNum - colNum0;// 多行表头时，列的差值
+
+			for (int i = 0; i < colNum; i++) {
+				cell = cells.get(i);
+				cellPr = cell.getCTTc().getTcPr();
+				BigInteger width = cellPr.getTcW().getW();// 获取单元格宽度
+				widthList.add(width);
+			}
+
+			Iterator<T> it = list.iterator();
+			while (it.hasNext()) {
+				row = table.createRow();// 默认按第一行的列数创建行
+				if (Dvalue > 0) {// 差值>0：创建行时，追加单元格
+					for (int m = 0; m < Dvalue; m++) {
+						row.createCell();
+					}
+				}
+				T t = (T) it.next();
+				Boolean flag = tranFieldToPer(t);// 需要处理%列
+				Field[] fields = t.getClass().getDeclaredFields();
+				cells = row.getTableCells();
+				for (int i = 0; i < colNum; i++) {
+					Field field = fields[i];
+					String fieldName = field.getName();
+					String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+					cell = cells.get(i);
+					Class tCls = t.getClass();
+					Method getMethod = tCls.getMethod(getMethodName, new Class[] {});
+					Object value = getMethod.invoke(t, new Object[] {});
+					if (value != null) {
+						if (flag && judgeField(fieldName)) {
+							cell.setText(StringUtil.strFloatToPer(String.valueOf(value)));// 转换成%
+						} else {
+							cell.setText(String.valueOf(value));// 写入单元格内容
+						}
+					}
+					cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
+					cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
+					cellPr.addNewVAlign().setVal(STVerticalJc.CENTER);// 表格内容垂直居中
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 根据表头动态生成word表格,dynamicWord方法重载，针对传递不同的参数,当需要合并列项单元格使用（合并列项单元格）
+	 * 
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void dynamicWord(XWPFDocument doc, Collection<T> list, Integer tableOrder, Integer rowNum,
-			Integer mergeColumn) {
+			List<Integer> mergeColumn, String baseContent) {
 		List<XWPFTable> tables;
 		XWPFTable table = null;
 		try {
@@ -170,21 +296,24 @@ public class WordHelper<T> {
 		}
 		Integer mm = table.getNumberOfRows();
 		// 第mergeColumn列相同数据合并单元格
-		if (mergeColumn != -1) {
-			addMergedRegion0(table, mergeColumn, 1, mm);// 就是合并第一列的所有相同单元格
+		if (mergeColumn != null) {
+			addMergedRegion0(table, mergeColumn, rowNum, mm, list, baseContent);// 就是合并第一列的所有相同单元格
 		}
 
 	}
 
-	// 纵向合并单元格
-	private static void merge(XWPFTable table, int col, int fromRow, int toRow) {
+	// merge方法纵向合并单元格（合并列项单元格）
+	private static void merge(XWPFTable table, List<Integer> col, int fromRow, int toRow) {
 		for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
-			XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
-			if (rowIndex == fromRow) {
-				getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.RESTART);
-			} else {
-				getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.CONTINUE);
+			for (int i = 0; i < col.size(); i++) {
+				XWPFTableCell cell = table.getRow(rowIndex).getCell(col.get(i));
+				if (rowIndex == fromRow) {
+					getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.RESTART);
+				} else {
+					getCellCTTcPr(cell).addNewVMerge().setVal(STMerge.CONTINUE);
+				}
 			}
+
 		}
 	}
 
@@ -194,62 +323,52 @@ public class WordHelper<T> {
 		return tcPr;
 	}
 
-	public static void addMergedRegion0(XWPFTable table, int cellLine, int startRow, int endRow) {
-		String s_will = null;// 比较的字段
-		String s_current;// 比较的字段
+	/*
+	 * 当word有合并单元格要求时实现合并
+	 * 
+	 * table:要合并的表格 cellLine：要合并的列的集合（整型） startRow：起始合并行 endRow：表格总行数
+	 * list：要处理的数据集合 baseContent：根据那个字段进行合并单元格操作
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void addMergedRegion0(XWPFTable table, List<Integer> cellLine, int startRow, int endRow, Collection<T> list,
+			String baseContent) {
 
-		XWPFTableCell cell = null;
-		CTTcPr cellPr = null;
-
-		List<BigInteger> widthList = new ArrayList<BigInteger>(); // 记录表格标题宽度
-
-		// 获取第一行的数据,以便后面进行比较
-		XWPFTableRow row = table.getRow(startRow);
-		List<XWPFTableCell> cells = row.getTableCells();// 表头最后一行
-
-		s_will = cells.get(cellLine).getText();
-
-		// 获取单元格宽度
-		cellPr = cells.get(cellLine).getCTTc().getTcPr();
-		BigInteger width = cellPr.getTcW().getW();
-		widthList.add(width);
-
-		int count = 0;
-		boolean flag = false;
+		Iterator<T> it = list.iterator();
+		String preContent = null;
+		int j = 0;
 		int merge_start_row = startRow;
-		for (int i = startRow + 1; i <= endRow; i++) {
-			XWPFTableRow row0 = table.getRow(i);
-			List<XWPFTableCell> cells0 = row0.getTableCells();// 表头最后一行
-			s_current = cells0.get(cellLine).getText();// 比较的字段
-			System.out.println(s_current);
-			if (s_will.equals(s_current)) {
-				flag = true;
-				count++;
-			} else {
-				if (flag) {
-					/*
-					 * cellPr = cell.getCTTc().addNewTcPr();// 获取单元格样式
-					 * cellPr.addNewTcW().setW(widthList.get(i));// 设置单元格宽度
-					 * cellPr.addNewVAlign().setVal(STVerticalJc.CENTER);//
-					 * 表格内容垂直居中
-					 */
-					merge(table, cellLine, merge_start_row, merge_start_row + count);
+		while (it.hasNext()) {
+			T t = (T) it.next();
+			String getMethodName = "get" + baseContent;
+			Class tCls = t.getClass();
+			Method getMethod;
+
+			try {
+				getMethod = tCls.getMethod(getMethodName, new Class[] {});
+				Object value;
+				value = getMethod.invoke(t, new Object[] {});
+				String nowContent = String.valueOf(value);
+				if (!nowContent.equals(preContent)) {
+					if (j != startRow) {
+						merge(table, cellLine, merge_start_row, j);
+						merge_start_row = j + 1;
+					}
 
 				}
-				flag = false;
-				count = 0;
-				merge_start_row = i;
-			}
-			s_will = s_current;
+				preContent = nowContent;
+				j++;
+				if (j == endRow - 1) {
+					merge(table, cellLine, merge_start_row, j);
+				}
 
-			// 由于上面循环中合并的单元放在有下一次相同单元格的时候做的，所以最后如果几行有相同单元格则要运行下面的合并单元格。
-			if (i == endRow && count > 0) {
-				merge(table, cellLine, merge_start_row, merge_start_row + count);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		}
-
 	}
 
+	@SuppressWarnings("unused")
 	private static String getTableCellContent(XWPFTableCell cell) {
 		StringBuffer sb = new StringBuffer();
 		List<XWPFParagraph> cellPList = cell.getParagraphs();

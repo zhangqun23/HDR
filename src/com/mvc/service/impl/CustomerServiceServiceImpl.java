@@ -243,7 +243,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 		}
 		if (listGoal != null) {
-			String fileName = "酒店对客服务信息统计表.docx";
+			String fileName = "部门总工作量统计.docx";
 			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
 
 			// 获取列表和文本信息
@@ -277,7 +277,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			ExcelHelper<HoCustomerService> ex = new ExcelHelper<HoCustomerService>();
 			String starttime = (String) map.get("start_Time");// 开始时间
 			String endtime = (String) map.get("end_Time");// 结束时间
-			String fileName = "酒店对客服务信息excel统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
+			String fileName = "部门总工作量excel统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
 
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
@@ -285,7 +285,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			Iterator<Object> it = listSource.iterator();
 			List<HoCustomerService> listGoal = listsourceToListGoal(it);
 
-			String title = "酒店对客服务信息excel统计表(统计时间：" + starttime + "至" + endtime + ")";
+			String title = "部门总工作量excel统计表(统计时间：" + starttime + "至" + endtime + ")";
 
 			String[] header = { "序号", "部门", "服务数量", "超时服务", "超时率", "总用时", "平均用时", "总量排名", "超时率排名" };
 			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
@@ -438,7 +438,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		}
 
 		if (listGoal != null) {
-			String fileName = department + "对客服务信息统计表.docx";
+			String fileName = department + "员工工作量统计表.docx";
 			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
 
 			// 获取列表和文本信息
@@ -482,12 +482,12 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 				Iterator<Object> it = listSource.iterator();
 				listGoal = listloadToListGoal(it);
 			}
-			String fileName = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
+			String fileName = department + "员工工作量统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
 
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			String title = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
+			String title = department + "员工工作量统计表(统计时间：" + starttime + "至" + endtime + ")";
 
 			String[] header = { "序号", "员工姓名", "员工编号", "服务数量", "超时服务", "总用时", "平均用时", "超时率", "总量排名", "超时率排名" };
 			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
@@ -679,7 +679,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 		}
 		if (listGoal != null) {
-			String fileName = department + "对客服务服务类型统计表.docx";
+			String fileName = department + "服务类型统计表.docx";
 			String path0 = FileHelper.transPath(fileName, path);// 解析后的上传路径
 
 			// 获取列表和文本信息
@@ -725,12 +725,12 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 				listGoal = listtypeToListGoal(it);
 
 			}
-			String fileName = department + "对客服务类型统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
+			String fileName = department + "服务类型统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
 
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
-			String title = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
+			String title = department + "服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
 
 			String[] header = { "序号", "服务类型", "服务数量", "给定时间", "平均用时", "超时服务", "超时率", "总量排名", "超时率排名" };
 			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容

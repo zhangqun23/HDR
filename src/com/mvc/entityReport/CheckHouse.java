@@ -16,11 +16,14 @@ public class CheckHouse {
 
 	private String checkTime;// 查房总用时
 	private String totalTime;// 当班总用时
-	private float efficiency;// 效率
+	
 
 	// whm
 	private String sumRoom;// 房间数
 	private String checkRoomTime;//平均查房时间
+	
+	private float efficiency;// 效率
+
 
 	public String getCheckRoomTime() {
 		return checkRoomTime;

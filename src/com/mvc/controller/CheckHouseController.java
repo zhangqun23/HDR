@@ -94,5 +94,34 @@ public class CheckHouseController {
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}
+	
+	
+	/**
+	 * excel导出
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/exportCheckHouseExcel.do")
+	public ResponseEntity<byte[]> exportCheckHouseExcel(HttpServletRequest request, HttpServletResponse response) {
+		String startTime = "";
+		String endTime = "";
+		ResponseEntity<byte[]> byteArr = null;
+
+		if (StringUtil.strIsNotEmpty(request.getParameter("startTime"))
+				&& StringUtil.strIsNotEmpty(request.getParameter("endTime"))) {
+
+			startTime = request.getParameter("startTime");
+			endTime = request.getParameter("endTime");
+			String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
+			map.put("path", path);
+			byteArr = checkHouseService.exportCheckHouseExcel(map);
+		}
+		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
+		return byteArr;
+	}
 
 }

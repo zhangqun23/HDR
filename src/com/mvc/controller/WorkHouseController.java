@@ -231,6 +231,7 @@ public class WorkHouseController {
 		String cleanType = null;
 		String staffName = null;
 		String chart1SVGStr = null;
+		String analyseResult = null;
 
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
 			checkYear = request.getParameter("checkYear");// 年份
@@ -250,7 +251,9 @@ public class WorkHouseController {
 		if (StringUtil.strIsNotEmpty(request.getParameter("chart1SVGStr"))) {
 			chart1SVGStr = request.getParameter("chart1SVGStr");// SVG图片字符串
 		}
-
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult"))) {
+			analyseResult = request.getParameter("analyseResult");// 分析结果
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("checkYear", checkYear);
 		map.put("quarter", quarter);
@@ -258,6 +261,7 @@ public class WorkHouseController {
 		map.put("cleanType", cleanType);
 		map.put("staffName", staffName);
 		map.put("chart1SVGStr", chart1SVGStr);
+		map.put("analyseResult", analyseResult);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKHOUSEANA_PATH);// 模板路径
@@ -398,7 +402,8 @@ public class WorkHouseController {
 		String staffName = null;
 		String chartSVGStr = null;
 		String chart1SVGStr = null;
-
+		String analyseResult1 = null;
+		String analyseResult2 = null;
 		if (StringUtil.strIsNotEmpty(request.getParameter("checkYear"))) {
 			checkYear = request.getParameter("checkYear");// 年份
 		}
@@ -415,12 +420,21 @@ public class WorkHouseController {
 			chart1SVGStr = request.getParameter("chart1SVGStr");// 做房效率
 		}
 
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult1"))) {
+			analyseResult1 = request.getParameter("analyseResult1");// 分析结果
+		}
+		if (StringUtil.strIsNotEmpty(request.getParameter("analyseResult2"))) {
+			analyseResult2 = request.getParameter("analyseResult2");// 分析结果
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("checkYear", checkYear);
 		map.put("quarter", quarter);
 		map.put("staffName", staffName);
 		map.put("chartSVGStr", chartSVGStr);
 		map.put("chart1SVGStr", chart1SVGStr);
+		map.put("analyseResult1", analyseResult1);
+		map.put("analyseResult2", analyseResult2);
 
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String tempPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.WORKEFFANA_PATH);// 模板路径

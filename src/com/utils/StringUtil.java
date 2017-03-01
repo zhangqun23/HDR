@@ -68,6 +68,19 @@ public class StringUtil {
 		BigDecimal b2 = new BigDecimal(s2);
 		return b1.add(b2).toString();
 	}
+	/**
+	 *多个数 相加
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return s1+s2
+	 */
+	public static String multiadd(String s1, String s2,String s3) {
+		BigDecimal b1 = new BigDecimal(s1);
+		BigDecimal b2 = new BigDecimal(s2);
+		BigDecimal b3 = new BigDecimal(s3);
+		return b1.add(b2).add(b3).toString();
+	}
 
 	/**
 	 * 相减

@@ -31,7 +31,7 @@
 					<li><label>房间类型</label><select class="dfselect layoutStyle"
 						style="width: 140px" ng-model="reLimit.roomType" required
 						name="roomType" id="roomSortType" ng-change="getSortNameByNo()"><option
-								value="">请选择</option>
+								value="-1">全部</option>
 							<option value="{{r.sortNo}}" ng-repeat="r in roomTypes">{{r.sortName}}</option></select></li>
 					<li><input type="text" name="sortName" class="hidden"
 						ng-model="sortName"></li>

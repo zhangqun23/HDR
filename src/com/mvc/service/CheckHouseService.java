@@ -23,4 +23,7 @@ public interface CheckHouseService {
 
 	String getAnalyseResult(List<CheckHouse> checkHouseList, String writeField);
 
+	// 导出领班查房效率列表
+	ResponseEntity<byte[]> exportCheckHouseExcel(Map<String, Object> map);
+
 }

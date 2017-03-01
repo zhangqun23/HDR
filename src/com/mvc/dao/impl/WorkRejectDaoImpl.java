@@ -169,5 +169,35 @@ public class WorkRejectDaoImpl implements WorkRejectDao {
 		em.close();
 		return list;
 	}
-
+	//wq获取全体每月平均做房驳回率
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectAllMonAve(Map<String, Object> map) {
+		EntityManager em = emf.createEntityManager();
+		String sqlLimit = allWorkRejectSQL(map);
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"select DATE_FORMAT(cs.close_time,'%m') months,count(1) caseSum,sum(case when cs.is_back > 0 then 1 else 0 end) backSum");
+		sql.append(
+				"  from case_info cs left join call_info cl on cl.call_id=cs.call_id left join service_items si on si.service_name=cl.service_sort");
+		sql.append("  where si.parent_name='计划任务' " + sqlLimit + " group by months");
+		Query query = em.createNativeQuery(sql.toString());
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	// wq全体每月平均做房驳回率折线图分析查询条件
+	private String allWorkRejectSQL(Map<String, Object> map) {
+		StringBuilder sql = new StringBuilder();
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		String cleanType = (String) map.get("cleanType");
+		if (startTime != null) {
+			sql.append("  and cs.close_time between '" + startTime + "'" + " and '" + endTime + "'");
+		}
+		if (cleanType != null) {
+			sql.append("  and cs.clean_type= " + cleanType + "");
+		}
+		return sql.toString();
+	}
 }

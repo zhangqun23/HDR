@@ -76,11 +76,18 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 	// 查询酒店对客服务信息统计
 	@Override
-	public List<HoCustomerService> findHotelService(Map<String, Object> map) {
+	public String findHotelService(Map<String, Object> map) {
 		List<Object> listSource = hotelCustomerDao.findHotelService(map);
 		Iterator<Object> it = listSource.iterator();
 		List<HoCustomerService> listGoal = listsourceToListGoal(it);
-		return listGoal;
+
+		String analyseResult = listsourceToListGoalAnalyse(listSource);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", listGoal);
+		jsonObject.put("analyseResult", analyseResult);
+		return jsonObject.toString();
+
 	}
 
 	private List<HoCustomerService> listsourceToListGoal(Iterator<Object> it) {
@@ -137,6 +144,65 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		return listGoal;
 	}
 
+	// 酒店对客服务信息统计添加文字
+	private String listsourceToListGoalAnalyse(List<Object> listSource) {
+		List<HoCustomerService> listGoal = new ArrayList<HoCustomerService>();
+		Iterator<Object> it = listSource.iterator();
+		String serviceLoad = "0.0";// 总计服务数量
+		String timeOutService = "0.0";// 总计超时服务
+		String timeOutRate = "0.0";// 总计超时率
+		Object[] obj;
+		HoCustomerService hoCustomerService;
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
+			hoCustomerService = new HoCustomerService();
+
+			hoCustomerService.setDepartment(obj[0].toString());
+			hoCustomerService.setServiceLoad(Float.valueOf(obj[1].toString()));
+			hoCustomerService.setTimeOutService(obj[2].toString());
+			hoCustomerService.setSumWorkTime(obj[3].toString());
+
+			String overtime = StringUtil.divide(obj[2].toString(), obj[1].toString());// 超时率
+			hoCustomerService.setTimeOutRate(Float.valueOf(overtime));
+
+			String averagetime = StringUtil.divide(obj[3].toString(), obj[1].toString());// 平均用时
+			hoCustomerService.setAverageWorkTime(averagetime);
+			System.out.println("测试：" + averagetime);
+			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[1].toString());// 总计服务数量
+			timeOutService = DoubleFloatUtil.add(timeOutService, obj[2].toString());// 总计超时
+
+			timeOutRate = DoubleFloatUtil.add(timeOutRate, overtime);// 总计超时率
+
+			listGoal.add(hoCustomerService);
+		}
+
+		sortAndWrite(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
+		sortAndWrite(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
+
+		// 序号
+		Iterator<HoCustomerService> itGoal = listGoal.iterator();
+		int i = 0;
+		hoCustomerService = null;
+		while (itGoal.hasNext()) {
+			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
+			hoCustomerService = itGoal.next();
+			hoCustomerService.setOrderNum(String.valueOf(i));
+		}
+
+		hoCustomerService = new HoCustomerService();
+		hoCustomerService.setOrderNum("合计");
+		hoCustomerService.setServiceLoad(Float.valueOf(serviceLoad));
+		hoCustomerService.setTimeOutService(timeOutService);
+		hoCustomerService.setTimeOutRate(Float.valueOf(timeOutRate));
+		listGoal.add(hoCustomerService);
+		System.out.println(listGoal);
+
+		String analyseResult = "酒店对客服务服务数量为" + serviceLoad + "，超时服务为" + timeOutService + "超时率为"
+				+timeOutRate;
+
+		return analyseResult;
+	}
+
 	/**
 	 * 排序并插入序号
 	 * 
@@ -167,10 +233,14 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		Map<String, Object> contentMap = new HashMap<String, Object>();// 获取文本数据
 		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
 
+		String analyseResult = null;
 		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
 			List<Object> listSource = hotelCustomerDao.findHotelService(map);
 			Iterator<Object> it = listSource.iterator();
 			listGoal = listsourceToListGoal(it);
+			
+			analyseResult = listsourceToListGoalAnalyse(listSource);
+			
 		}
 		if (listGoal != null) {
 			String fileName = "酒店对客服务信息统计表.docx";
@@ -180,10 +250,11 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			listMap.put("0", listGoal);
 			contentMap.put("${starttime}", starttime);
 			contentMap.put("${endtime}", endtime);
+			contentMap.put("${analyseResult}", analyseResult);
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out, -1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -196,35 +267,36 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 		return byteww;
 	}
-	//导出酒店对客服务信息excel统计表
+
+	// 导出酒店对客服务信息excel统计表
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportCustomerServiceExcel(Map<String, Object> map, String path) {
 		ResponseEntity<byte[]> byteww = null;
-		try{
+		try {
 			ExcelHelper<HoCustomerService> ex = new ExcelHelper<HoCustomerService>();
 			String starttime = (String) map.get("start_Time");// 开始时间
 			String endtime = (String) map.get("end_Time");// 结束时间
 			String fileName = "酒店对客服务信息excel统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
-			
+
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-			OutputStream out = new FileOutputStream(path);			
+			OutputStream out = new FileOutputStream(path);
 			List<Object> listSource = hotelCustomerDao.findHotelService(map);
 			Iterator<Object> it = listSource.iterator();
 			List<HoCustomerService> listGoal = listsourceToListGoal(it);
-			
+
 			String title = "酒店对客服务信息excel统计表(统计时间：" + starttime + "至" + endtime + ")";
-			
-			String[] header = { "序号", "部门", "服务数量", "超时服务", "超时率", "总用时", "平均用时", "总量排名", "超时率排名"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,-1,-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+
+			String[] header = { "序号", "部门", "服务数量", "超时服务", "超时率", "总用时", "平均用时", "总量排名", "超时率排名" };
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
-		}catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return byteww;
 	}
 	/*
@@ -233,11 +305,20 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 	// 查询部门对客服务工作量统计
 	@Override
-	public List<HouseCustomerServiceLoad> findDepartmentLoad(Map<String, Object> map) {
+	public String findDepartmentLoad(Map<String, Object> map) {
 		List<Object> listSource = hotelCustomerDao.findDepartmentLoad(map);
 		Iterator<Object> it = listSource.iterator();
 		List<HouseCustomerServiceLoad> listGoal = listloadToListGoal(it);
-		return listGoal;
+
+		Object[] objOne = (Object[]) listSource.get(0);
+		String department = objOne[5].toString();
+
+		String analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(it);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", listGoal);
+		jsonObject.put("analyseResult", analyseResult);
+		return jsonObject.toString();
 
 	}
 
@@ -294,6 +375,36 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		return listGoal;
 	}
 
+	// 部门对客服务工作量添加文字
+	private String listloadToListGoalAnalyse(Iterator<Object> it) {
+		List<HouseCustomerServiceLoad> listGoal = new ArrayList<HouseCustomerServiceLoad>();
+		String serviceLoad = "0.0";// 总计服务数量
+
+		Object[] obj;
+		HouseCustomerServiceLoad houseCustomerServiceLoad;
+		while (it.hasNext()) {
+			obj = (Object[]) it.next();
+			houseCustomerServiceLoad = new HouseCustomerServiceLoad();
+			houseCustomerServiceLoad.setStaff_name(obj[0].toString());
+			serviceLoad = DoubleFloatUtil.add(serviceLoad, obj[2].toString());// 总计服务数量
+
+			listGoal.add(houseCustomerServiceLoad);
+		}
+
+		// 序号
+		Iterator<HouseCustomerServiceLoad> itGoal = listGoal.iterator();
+		int i = 0;
+		houseCustomerServiceLoad = null;
+		while (itGoal.hasNext()) {
+			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
+			houseCustomerServiceLoad = itGoal.next();
+			houseCustomerServiceLoad.setOrderNum(String.valueOf(i));
+		}
+
+		String str = StringUtil.divide(serviceLoad, i + "");
+		return str;
+	}
+
 	/**
 	 * 排序并插入序号
 	 * 
@@ -326,12 +437,16 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		Map<String, Object> listMap = new HashMap<String, Object>();// 多个实体list放到Map中，在WordHelper中解析
 
 		String department = null;// 部门名称
+		String analyseResult = null;
 		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
 			List<Object> listSource = hotelCustomerDao.findDepartmentLoad(map);
 			Object[] objOne = (Object[]) listSource.get(0);
 			department = objOne[5].toString();
 			Iterator<Object> it = listSource.iterator();
 			listGoal = listloadToListGoal(it);
+
+			analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(it);
+
 		}
 
 		if (listGoal != null) {
@@ -343,10 +458,11 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			contentMap.put("${starttime}", starttime);
 			contentMap.put("${endtime}", endtime);
 			contentMap.put("${depart}", department);
+			contentMap.put("${analyseResult}", analyseResult);
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out, -1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -359,12 +475,13 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 		return byteww;
 	}
+
 	// 导出部门对客服务工作量excel统计表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public ResponseEntity<byte[]> exportRoomWorkloadExcel(Map<String, Object> map, String path) {
 		ResponseEntity<byte[]> byteww = null;
-		try{
+		try {
 			ExcelHelper<HouseCustomerServiceLoad> ex = new ExcelHelper<HouseCustomerServiceLoad>();
 			String starttime = (String) map.get("start_Time");// 开始时间
 			String endtime = (String) map.get("end_Time");// 结束时间
@@ -378,22 +495,22 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 				listGoal = listloadToListGoal(it);
 			}
 			String fileName = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
-			
+
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-			OutputStream out = new FileOutputStream(path);				
-			
+			OutputStream out = new FileOutputStream(path);
+
 			String title = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
-			
-			String[] header = { "序号", "员工姓名", "员工编号", "服务数量", "超时服务", "总用时", "平均用时", "超时率", "总量排名","超时率排名"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,-1,-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+
+			String[] header = { "序号", "员工姓名", "员工编号", "服务数量", "超时服务", "总用时", "平均用时", "超时率", "总量排名", "超时率排名" };
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
-		}catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return byteww;
 	}
 	/*
@@ -456,17 +573,17 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		houseCustomerServiceType.setTimeOutServiceLoad(timeOutService);// 总计超时
 		houseCustomerServiceType.setTimeOutRate(Float.valueOf(timeOutRate));// 总计超时率
 		listGoal.add(houseCustomerServiceType);
-		
+
 		return listGoal;
 
 	}
-	
-	//得出服务类型文字分析
+
+	// 得出服务类型文字分析
 	@Override
 	public String listtypeToListGoalWord(Map<String, Object> map) {
 		List<Object> listSource = hotelCustomerDao.findRoomType(map);
 		Iterator<Object> it = listSource.iterator();
-		
+
 		List<HouseCustomerServiceType> listGoal = new ArrayList<HouseCustomerServiceType>();
 
 		Object[] obj;
@@ -488,33 +605,33 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		}
 
 		sortAndWrite1(listGoal, "timeOutRate", true, "timeOutRate_rank");// 超时率排名
-		houseCustomerServiceType=null;
+		houseCustomerServiceType = null;
 		String analyseResult0 = "分析结果:对客服务类型超时率排名前三的是：";
 		Iterator<HouseCustomerServiceType> itGoal0 = listGoal.iterator();
 		int j = 0;
-		while (itGoal0.hasNext() && j<3) {
+		while (itGoal0.hasNext() && j < 3) {
 			j++;
 			houseCustomerServiceType = itGoal0.next();
-			analyseResult0 +=houseCustomerServiceType.getServiceType();
-			if(j<3){
-				analyseResult0=analyseResult0+",";
+			analyseResult0 += houseCustomerServiceType.getServiceType();
+			if (j < 3) {
+				analyseResult0 = analyseResult0 + ",";
 			}
 		}
-		
+
 		sortAndWrite1(listGoal, "serviceLoad", false, "serviceLoad_rank");// 总量排名
-		houseCustomerServiceType=null;
+		houseCustomerServiceType = null;
 		String analyseResult00 = "对客服务类型服务数量排名前三的是：";
 		Iterator<HouseCustomerServiceType> itGoal00 = listGoal.iterator();
 		int jj = 0;
-		while (itGoal00.hasNext() && jj<3) {
+		while (itGoal00.hasNext() && jj < 3) {
 			jj++;
 			houseCustomerServiceType = itGoal00.next();
-			analyseResult00 +=houseCustomerServiceType.getServiceType();
-			if(jj<3){
-				analyseResult00=analyseResult00+",";
+			analyseResult00 += houseCustomerServiceType.getServiceType();
+			if (jj < 3) {
+				analyseResult00 = analyseResult00 + ",";
 			}
 		}
-		String analyseResult=analyseResult0+";"+analyseResult00;
+		String analyseResult = analyseResult0 + ";" + analyseResult00;
 
 		return analyseResult;
 
@@ -547,8 +664,8 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		String starttime = (String) map.get("start_Time");// 开始时间
 		String endtime = (String) map.get("end_Time");// 结束时间
 		String photo = (String) map.get("photo");// 图片
-		
-		String analyseResult=listtypeToListGoalWord(map);//图片文字
+
+		String analyseResult = listtypeToListGoalWord(map);// 图片文字
 
 		// 添加图片
 		String picName1 = null;
@@ -588,7 +705,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out,-1);
+				wh.export2007Word(modelPath, listMap, contentMap, 1, out, -1);
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -601,12 +718,13 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 		return byteww;
 	}
-	//导出部门对客服务服务类型excel统计表
+
+	// 导出部门对客服务服务类型excel统计表
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public ResponseEntity<byte[]> exportRoomTypeExcel(Map<String, Object> map, String path) {
 		ResponseEntity<byte[]> byteww = null;
-		try{
+		try {
 			ExcelHelper<HouseCustomerServiceType> ex = new ExcelHelper<HouseCustomerServiceType>();
 			String starttime = (String) map.get("start_Time");// 开始时间
 			String endtime = (String) map.get("end_Time");// 结束时间
@@ -621,22 +739,22 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 
 			}
 			String fileName = department + "对客服务类型统计表(统计时间：" + starttime + "至" + endtime + ").xlsx";
-			
+
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
-			OutputStream out = new FileOutputStream(path);				
-			
+			OutputStream out = new FileOutputStream(path);
+
 			String title = department + "对客服务信息统计表(统计时间：" + starttime + "至" + endtime + ")";
-			
-			String[] header = { "序号", "服务类型", "服务数量", "给定时间", "平均用时", "超时服务","超时率", "总量排名","超时率排名"};
-			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd",-1,-1,-1,0,1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
+
+			String[] header = { "序号", "服务类型", "服务数量", "给定时间", "平均用时", "超时服务", "超时率", "总量排名", "超时率排名" };
+			ex.export2007Excel(title, header, (Collection) listGoal, out, "yyyy-MM-dd", -1, -1, -1, 0, 1);// -1表示没有合并单元格,2:隐藏了实体类最后两个字段内容
 			out.close();
 			byteww = FileHelper.downloadFile(fileName, path);
-		}catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return byteww;
 	}
 
@@ -654,11 +772,5 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 	public List<Object> findStaffByDepId(String departid) {
 		return hotelCustomerDao.findStaffByDepId(departid);
 	}
-
-	
-
-	
-
-	
 
 }

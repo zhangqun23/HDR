@@ -1,11 +1,13 @@
 eclipse.preferences.version=1
 encoding//WebContent/jsp/checkOrRobHome/robEffAnalyseForm.html=UTF-8
+encoding//WebContent/jsp/checkOrRobHome/robEfficiencyForm.html=UTF-8
 encoding//WebContent/jsp/customerService/depWorkloadForm.html=UTF-8
 encoding//WebContent/jsp/customerService/staffWorkloadForm.html=UTF-8
 encoding//WebContent/jsp/customerService/typeForm.html=UTF-8
 encoding//WebContent/jsp/footer.jsp=UTF-8
 encoding//WebContent/jsp/left.jsp=UTF-8
 encoding//WebContent/jsp/projectForm/proMaintainForm.html=UTF-8
+encoding//WebContent/jsp/projectForm/proWorkloadForm.html=UTF-8
 encoding//WebContent/jsp/top.jsp=UTF-8
 encoding//src/com/base/SharedRenderVariableInterceptor.java=UTF-8
 encoding/<project>=UTF-8

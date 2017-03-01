@@ -2107,7 +2107,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num));
 				boolean ascFlag = false;
 				CollectionUtil.sort(listGoal, key, ascFlag);
-				//analyseResult += "，领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+"；";
+				analyseResult += "，领取该物品最多的员工为"+listGoal.get(0).getStaff_name()+"；";
 			}
 			jsonObject.put("analyseResult", analyseResult);
 			break;

@@ -94,7 +94,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
 
-		if (roomType != null) {
+		if (roomType != null && Integer.valueOf(roomType)!=-1) {
 			sql.append(" and case_info.sort_no='" + roomType + "' ");
 		}
 		if (startTime != null && endTime != null) {
@@ -116,7 +116,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
 
-		if (roomType != null) {
+		if (roomType != null && Integer.valueOf(roomType)!=-1) {
 			sql.append(" and ci.sort_no='" + roomType + "' ");
 		}
 		if (startTime != null && endTime != null) {

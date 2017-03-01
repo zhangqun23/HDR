@@ -43,12 +43,10 @@ public class CustomerServiceController {
 	public @ResponseBody String selectHotelCustomerService(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map = hotelCustomerService.JsonObjToMap(jsonObject);
-		List<HoCustomerService> list = hotelCustomerService.findHotelService(map);
+		
+		String stww=hotelCustomerService.findHotelService(map);
 
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
-
-		return jsonObject.toString();
+		return stww;
 	}
 
 	/**
@@ -104,12 +102,11 @@ public class CustomerServiceController {
 	public @ResponseBody String selectRoomWorkload(HttpServletRequest request) {
 		JSONObject jsonObject = JSONObject.fromObject(request.getParameter("limit"));
 		Map<String, Object> map = hotelCustomerService.JsonObjToMap(jsonObject);
-		List<HouseCustomerServiceLoad> list = hotelCustomerService.findDepartmentLoad(map);
+		
+		String stww=hotelCustomerService.findDepartmentLoad(map);
 
-		jsonObject = new JSONObject();
-		jsonObject.put("list", list);
 
-		return jsonObject.toString();
+		return stww;
 	}
 
 	/**

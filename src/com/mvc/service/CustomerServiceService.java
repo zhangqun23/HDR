@@ -24,10 +24,10 @@ public interface CustomerServiceService {
 	Map<String, Object> JsonObjToMap(JSONObject jsonObject);
 
 	// 查询酒店对客服务信息统计
-	List<HoCustomerService> findHotelService(Map<String, Object> map);
+	String findHotelService(Map<String, Object> map);
 
 	// 查询部门对客服务工作量统计
-	List<HouseCustomerServiceLoad> findDepartmentLoad(Map<String, Object> map);
+	String findDepartmentLoad(Map<String, Object> map);
 
 	// 查询部门对客服务类型
 	List<HouseCustomerServiceType> findRoomType(Map<String, Object> map);
@@ -39,7 +39,7 @@ public interface CustomerServiceService {
 	ResponseEntity<byte[]> exportRoomWorkload(Map<String, Object> map, String path, String modelPath);
 
 	// 导出部门对客服务服务类型统计表
-	ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path,String picPath, String modelPath);
+	ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path, String picPath, String modelPath);
 
 	// 查询部门列表
 	List<DepartmentInfo> findDep();
@@ -47,16 +47,16 @@ public interface CustomerServiceService {
 	// 根据部门ID筛选员工信息
 	List<Object> findStaffByDepId(String departid);
 
-	//导出酒店对客服务信息excel统计表
+	// 导出酒店对客服务信息excel统计表
 	ResponseEntity<byte[]> exportCustomerServiceExcel(Map<String, Object> map, String path);
 
-	//导出部门对客服务工作量excel统计表
+	// 导出部门对客服务工作量excel统计表
 	ResponseEntity<byte[]> exportRoomWorkloadExcel(Map<String, Object> map, String path);
 
-	//导出部门对客服务类型excel统计表
+	// 导出部门对客服务类型excel统计表
 	ResponseEntity<byte[]> exportRoomTypeExcel(Map<String, Object> map, String path);
-	
-	//得出服务类型文字分析
+
+	// 得出服务类型文字分析
 	String listtypeToListGoalWord(Map<String, Object> map);
 
 }

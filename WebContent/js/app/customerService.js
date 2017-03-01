@@ -1284,6 +1284,7 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.depWorkloadList = data.list;
+									reportForm.remark = data.analyseResult;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 										reportForm.listRemark = true;
@@ -1325,6 +1326,7 @@ app
 									$(".overlayer").fadeOut(200);
 									$(".tipLoading").fadeOut(200);
 									reportForm.staffWorkloadList = data.list;
+									reportForm.remark = data.analyseResult;
 									if (data.list.length) {
 										reportForm.listIsShow = false;
 										reportForm.listRemark = true;

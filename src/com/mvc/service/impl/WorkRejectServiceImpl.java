@@ -195,11 +195,14 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 				}
 			}
 		}
-
 		jsonObject.put("averRejectEff", Float.valueOf(averRejectEff));
+		List<Object> allMonAveList = workRejectDao.selectAllMonAve(map);// wq获取全体每月平均做房驳回率
+		List<String> allMonAveListStr = perMonthEff(allMonAveList, startMonth, endMonth);
+		jsonObject.put("allMonAveListStr", allMonAveListStr);
 
 		String allAverRejectEff = StringUtil.divide(sumRejectTime.toString(), sumWorkTime.toString());
 		jsonObject.put("allAverRejectEff", Float.valueOf(allAverRejectEff));// 全体员工平均做房驳回效率
+		
 		// 获取驳回原因统计扇形图
 		List<Object> reasonList = workRejectDao.selectReasonsByLimits(map);
 		Iterator<Object> iter = reasonList.iterator();

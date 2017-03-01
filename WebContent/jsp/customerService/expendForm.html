@@ -57,38 +57,40 @@
 		<caption align="top" class="table_title">布草使用量合计</caption>
 		<thead>
 			<tr>
-				<th class="width3">被罩</th>
-				<th class="width3">拼尘罩</th>
-				<th class="width3">洗衣袋</th>
-				<th class="width3">床单</th>
-				<th class="width3">面巾</th>
-				<th class="width3">浴巾</th>
-				<th class="width3">方巾</th>
-				<th class="width3">中巾</th>
-				<th class="width3">地巾</th>
-				<th class="width3">浴袍</th>
-				<th class="width3">枕套</th>
-				<th class="width3">枕芯</th>
-				<th class="width3">毛毯</th>
-				<th class="width3">购物袋</th>
+				<th calss="a"></th>
+				<th class="a">被罩</th>
+				<th class="a">拼尘罩</th>
+				<th class="a">洗衣袋</th>
+				<th class="a">床单</th>
+				<th class="a">面巾</th>
+				<th class="a">浴巾</th>
+				<th class="a">方巾</th>
+				<th class="a">中巾</th>
+				<th class="a">地巾</th>
+				<th class="a">浴袍</th>
+				<th class="a">枕套</th>
+				<th class="a">枕芯</th>
+				<th class="a">毛毯</th>
+				<th class="a">购物袋</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>{{linenCount.sum_slba}}</td>
-				<td>{{linenCount.sum_duto}}</td>
-				<td>{{linenCount.sum_laba}}</td>
-				<td>{{linenCount.sum_besh}}</td>
-				<td>{{linenCount.sum_facl}}</td>
-				<td>{{linenCount.sum_bato}}</td>
-				<td>{{linenCount.sum_hato}}</td>
-				<td>{{linenCount.sum_medo}}</td>
-				<td>{{linenCount.sum_flto}}</td>
-				<td>{{linenCount.sum_baro}}</td>
-				<td>{{linenCount.sum_pill}}</td>
-				<td>{{linenCount.sum_piin}}</td>
-				<td>{{linenCount.sum_blan}}</td>
-				<td>{{linenCount.sum_shop}}</td>
+			<tr ng-repeat="linen in linenCount">
+				<td>{{linen.orderNum}}</td>
+				<td>{{linen.sum_slba}}</td>
+				<td>{{linen.sum_duto}}</td>
+				<td>{{linen.sum_laba}}</td>
+				<td>{{linen.sum_besh}}</td>
+				<td>{{linen.sum_facl}}</td>
+				<td>{{linen.sum_bato}}</td>
+				<td>{{linen.sum_hato}}</td>
+				<td>{{linen.sum_medo}}</td>
+				<td>{{linen.sum_flto}}</td>
+				<td>{{linen.sum_baro}}</td>
+				<td>{{linen.sum_pill}}</td>
+				<td>{{linen.sum_piin}}</td>
+				<td>{{linen.sum_blan}}</td>
+				<td>{{linen.sum_shop}}</td>
 		</tbody>
 	</table>
 	<label ng-show="listRemark1" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
@@ -140,6 +142,7 @@
 		<caption  align="top" class="table_title">房间易耗品使用量合计</caption>
 		<thead>
 			<tr>
+				<th calss="a"></th>
 				<th class="a">雨伞</th>
 				<th class="a">咖啡</th>
 				<th class="a">白糖</th>
@@ -160,27 +163,29 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>{{roomCount.sum_umbr}}</td>
-				<td>{{roomCount.sum_coff}}</td>
-				<td>{{roomCount.sum_suge}}</td>
-				<td>{{roomCount.sum_coup}}</td>
-				<td>{{roomCount.sum_penc}}</td>
-				<td>{{roomCount.sum_erse}}</td>
-				<td>{{roomCount.sum_clca}}</td>
-				<td>{{roomCount.sum_fati}}</td>
-				<td>{{roomCount.sum_enca}}</td>
-				<td>{{roomCount.sum_bage}}</td>
-				<td>{{roomCount.sum_teab}}</td>
-				<td>{{roomCount.sum_meca}}</td>
-				<td>{{roomCount.sum_opbo}}</td>
-				<td>{{roomCount.sum_blte}}</td>
-				<td>{{roomCount.sum_dnds}}</td>
-				<td>{{roomCount.sum_tvca}}</td>
-				<td>{{roomCount.sum_orel}}</td>
+			<tr ng-repeat="room in roomCount">
+				<td>{{room.orderNum}}</td>
+				<td>{{room.sum_umbr}}</td>
+				<td>{{room.sum_coff}}</td>
+				<td>{{room.sum_suge}}</td>
+				<td>{{room.sum_coup}}</td>
+				<td>{{room.sum_penc}}</td>
+				<td>{{room.sum_erse}}</td>
+				<td>{{room.sum_clca}}</td>
+				<td>{{room.sum_fati}}</td>
+				<td>{{room.sum_enca}}</td>
+				<td>{{room.sum_bage}}</td>
+				<td>{{room.sum_teab}}</td>
+				<td>{{room.sum_meca}}</td>
+				<td>{{room.sum_opbo}}</td>
+				<td>{{room.sum_blte}}</td>
+				<td>{{room.sum_dnds}}</td>
+				<td>{{room.sum_tvca}}</td>
+				<td>{{room.sum_orel}}</td>
 		</tbody>
 		<thead>
 			<tr>
+				<th calss="a"></th>
 				<th class="a">便签</th>
 				<th class="a">杯垫</th>
 				<th class="a">火柴</th>
@@ -201,24 +206,25 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>{{roomCount.sum_memo}}</td>
-				<td>{{roomCount.sum_coas}}</td>
-				<td>{{roomCount.sum_matc}}</td>
-				<td>{{roomCount.sum_mapp}}</td>
-				<td>{{roomCount.sum_rule}}</td>
-				<td>{{roomCount.sum_stat}}</td>
-				<td>{{roomCount.sum_clip}}</td>
-				<td>{{roomCount.sum_bape}}</td>
-				<td>{{roomCount.sum_comp}}</td>
-				<td>{{roomCount.sum_lali}}</td>
-				<td>{{roomCount.sum_losu}}</td>
-				<td>{{roomCount.sum_shpa}}</td>
-				<td>{{roomCount.sum_anma}}</td>
-				<td>{{roomCount.sum_grte}}</td>
-				<td>{{roomCount.sum_chsl}}</td>
-				<td>{{roomCount.sum_cocl}}</td>
-				<td>{{roomCount.sum_arel}}</td>
+			<tr ng-repeat="room in roomCount">
+				<td>{{room.orderNum}}</td>
+				<td>{{room.sum_memo}}</td>
+				<td>{{room.sum_coas}}</td>
+				<td>{{room.sum_matc}}</td>
+				<td>{{room.sum_mapp}}</td>
+				<td>{{room.sum_rule}}</td>
+				<td>{{room.sum_stat}}</td>
+				<td>{{room.sum_clip}}</td>
+				<td>{{room.sum_bape}}</td>
+				<td>{{room.sum_comp}}</td>
+				<td>{{room.sum_lali}}</td>
+				<td>{{room.sum_losu}}</td>
+				<td>{{room.sum_shpa}}</td>
+				<td>{{room.sum_anma}}</td>
+				<td>{{room.sum_grte}}</td>
+				<td>{{room.sum_chsl}}</td>
+				<td>{{room.sum_cocl}}</td>
+				<td>{{room.sum_arel}}</td>
 		</tbody>
 	</table>
 	<label ng-show="listRemark2" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
@@ -314,69 +320,73 @@
 		<caption  align="top" class="table_title">卫生间易耗品使用量合计</caption>
 		<thead>
 			<tr>
-				<th class="width3">牙具</th>
-				<th class="width3">卷纸</th>
-				<th class="width3">洗发液</th>
-				<th class="width3">沐浴露</th>
-				<th class="width3">护发素</th>
-				<th class="width3">润肤露</th>
-				<th class="width3">护理包</th>
-				<th class="width3">黑垃圾袋</th>
-				<th class="width3">抽纸</th>
-				<th class="width3">卫生袋</th>
-				<th class="width3">浴帽</th>
-				<th class="width3">剃须刨</th>
-				<th class="width3">梳子</th>
+				<th class="a"></th>
+				<th class="a">牙具</th>
+				<th class="a">卷纸</th>
+				<th class="a">洗发液</th>
+				<th class="a">沐浴露</th>
+				<th class="a">护发素</th>
+				<th class="a">润肤露</th>
+				<th class="a">护理包</th>
+				<th class="a">黑垃圾袋</th>
+				<th class="a">抽纸</th>
+				<th class="a">卫生袋</th>
+				<th class="a">浴帽</th>
+				<th class="a">剃须刨</th>
+				<th class="a">梳子</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>{{washCount.sum_toth}}</td>
-				<td>{{washCount.sum_ropa}}</td>
-				<td>{{washCount.sum_rins}}</td>
-				<td>{{washCount.sum_bafo}}</td>
-				<td>{{washCount.sum_haco}}</td>
-				<td>{{washCount.sum_shge}}</td>
-				<td>{{washCount.sum_capa}}</td>
-				<td>{{washCount.sum_garb}}</td>
-				<td>{{washCount.sum_paex}}</td>
-				<td>{{washCount.sum_peep}}</td>
-				<td>{{washCount.sum_shca}}</td>
-				<td>{{washCount.sum_shav}}</td>
-				<td>{{washCount.sum_comb}}</td>
+			<tr ng-repeat="wash in washCount">
+				<td>{{wash.orderNum}}</td>
+				<td>{{wash.sum_toth}}</td>
+				<td>{{wash.sum_ropa}}</td>
+				<td>{{wash.sum_rins}}</td>
+				<td>{{wash.sum_bafo}}</td>
+				<td>{{wash.sum_haco}}</td>
+				<td>{{wash.sum_shge}}</td>
+				<td>{{wash.sum_capa}}</td>
+				<td>{{wash.sum_garb}}</td>
+				<td>{{wash.sum_paex}}</td>
+				<td>{{wash.sum_peep}}</td>
+				<td>{{wash.sum_shca}}</td>
+				<td>{{wash.sum_shav}}</td>
+				<td>{{wash.sum_comb}}</td>
 		</tbody>
 		<thead>
 			<tr>
-				<th class="width3">擦鞋布</th>
-				<th class="width3">手皂</th>
-				<th class="width3">指甲锉</th>
-				<th class="width3">干花</th>
-				<th class="width3">浴盐</th>
-				<th class="width3">百洁布</th>
-				<th class="width3">橡皮手套</th>
-				<th class="width3">洗涤灵</th>
-				<th class="width3">洗消净</th>
-				<th class="width3">浴室清洁剂</th>
-				<th class="width3">洁厕灵</th>
-				<th class="width3">浴缸刷</th>
-				<th class="width3">恭桶刷</th>
+				<th class="a"></th>
+				<th class="a">擦鞋布</th>
+				<th class="a">手皂</th>
+				<th class="a">指甲锉</th>
+				<th class="a">干花</th>
+				<th class="a">浴盐</th>
+				<th class="a">百洁布</th>
+				<th class="a">橡皮手套</th>
+				<th class="a">洗涤灵</th>
+				<th class="a">洗消净</th>
+				<th class="a">浴室清洁剂</th>
+				<th class="a">洁厕灵</th>
+				<th class="a">浴缸刷</th>
+				<th class="a">恭桶刷</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>{{washCount.sum_shcl}}</td>
-				<td>{{washCount.sum_soap}}</td>
-				<td>{{washCount.sum_nacl}}</td>
-				<td>{{washCount.sum_flow}}</td>
-				<td>{{washCount.sum_basa}}</td>
-				<td>{{washCount.sum_scpa}}</td>
-				<td>{{washCount.sum_rugl}}</td>
-				<td>{{washCount.sum_dete}}</td>
-				<td>{{washCount.sum_thim}}</td>
-				<td>{{washCount.sum_bacl}}</td>
-				<td>{{washCount.sum_tocl}}</td>
-				<td>{{washCount.sum_babr}}</td>
-				<td>{{washCount.sum_clbr}}</td>
+			<tr ng-repeat="wash in washCount">
+				<td>{{wash.orderNum}}</td>
+				<td>{{wash.sum_shcl}}</td>
+				<td>{{wash.sum_soap}}</td>
+				<td>{{wash.sum_nacl}}</td>
+				<td>{{wash.sum_flow}}</td>
+				<td>{{wash.sum_basa}}</td>
+				<td>{{wash.sum_scpa}}</td>
+				<td>{{wash.sum_rugl}}</td>
+				<td>{{wash.sum_dete}}</td>
+				<td>{{wash.sum_thim}}</td>
+				<td>{{wash.sum_bacl}}</td>
+				<td>{{wash.sum_tocl}}</td>
+				<td>{{wash.sum_babr}}</td>
+				<td>{{wash.sum_clbr}}</td>
 		</tbody>
 	</table>
 	<label ng-show="listRemark3" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>
@@ -454,44 +464,46 @@
 		<caption  align="top" class="table_title">迷你吧使用量合计</caption>
 		<thead>
 			<tr>
-				<th class="width3">红牛</th>
-				<th class="width3">可口可乐</th>
-				<th class="width3">巴黎水</th>
-				<th class="width3">大依云</th>
-				<th class="width3">加多宝</th>
-				<th class="width3">小依云</th>
-				<th class="width3">昆仑山</th>
-				<th class="width3">红葡萄酒</th>
-				<th class="width3">威士忌</th>
-				<th class="width3">伏加特</th>
-				<th class="width3">金酒</th>
-				<th class="width3">青岛听装</th>
-				<th class="width3">雪碧</th>
-				<th class="width3">指甲刀</th>
-				<th class="width3">卫生巾</th>
-				<th class="width3">扑克牌</th>
-				<th class="width3">安全套</th>
+				<th class="a"></th>
+				<th class="a">红牛</th>
+				<th class="a">可口可乐</th>
+				<th class="a">巴黎水</th>
+				<th class="a">大依云</th>
+				<th class="a">加多宝</th>
+				<th class="a">小依云</th>
+				<th class="a">昆仑山</th>
+				<th class="a">红葡萄酒</th>
+				<th class="a">威士忌</th>
+				<th class="a">伏加特</th>
+				<th class="a">金酒</th>
+				<th class="a">青岛听装</th>
+				<th class="a">雪碧</th>
+				<th class="a">指甲刀</th>
+				<th class="a">卫生巾</th>
+				<th class="a">扑克牌</th>
+				<th class="a">安全套</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>{{miniCount.sum_redb}}</td>
-				<td>{{miniCount.sum_coco}}</td>
-				<td>{{miniCount.sum_pari}}</td>
-				<td>{{miniCount.sum_bige}}</td>
-				<td>{{miniCount.sum_jdba}}</td>
-				<td>{{miniCount.sum_tine}}</td>
-				<td>{{miniCount.sum_kunl}}</td>
-				<td>{{miniCount.sum_wine}}</td>
-				<td>{{miniCount.sum_bree}}</td>
-				<td>{{miniCount.sum_vodk}}</td>
-				<td>{{miniCount.sum_auru}}</td>
-				<td>{{miniCount.sum_qing}}</td>
-				<td>{{miniCount.sum_spri}}</td>
-				<td>{{miniCount.sum_nail}}</td>
-				<td>{{miniCount.sum_abcs}}</td>
-				<td>{{miniCount.sum_card}}</td>
-				<td>{{miniCount.sum_como}}</td>
+			<tr ng-repeat="mini in miniCount">
+				<td>{{mini.orderNum}}</td>
+				<td>{{mini.sum_redb}}</td>
+				<td>{{mini.sum_coco}}</td>
+				<td>{{mini.sum_pari}}</td>
+				<td>{{mini.sum_bige}}</td>
+				<td>{{mini.sum_jdba}}</td>
+				<td>{{mini.sum_tine}}</td>
+				<td>{{mini.sum_kunl}}</td>
+				<td>{{mini.sum_wine}}</td>
+				<td>{{mini.sum_bree}}</td>
+				<td>{{mini.sum_vodk}}</td>
+				<td>{{mini.sum_auru}}</td>
+				<td>{{mini.sum_qing}}</td>
+				<td>{{mini.sum_spri}}</td>
+				<td>{{mini.sum_nail}}</td>
+				<td>{{mini.sum_abcs}}</td>
+				<td>{{mini.sum_card}}</td>
+				<td>{{mini.sum_como}}</td>
 		</tbody>
 	</table>
 	<label ng-show="listRemark4" class="listRemark">&nbsp;&nbsp;&nbsp;{{remark}}</label>

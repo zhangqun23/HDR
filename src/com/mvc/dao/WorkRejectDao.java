@@ -20,4 +20,6 @@ public interface WorkRejectDao {
 	List<Object> selectAllAverRejectEff(Map<String, Object> map);
 
 	List<Object> selectReasonsByLimits(Map<String, Object> map);
+
+	List<Object> selectAllMonAve(Map<String, Object> map);
 }

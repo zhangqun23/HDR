@@ -1169,10 +1169,10 @@ app
 														userData
 																.push(changeNumType(data.list[item]));
 													}
-													for ( var key in data.allMonAveListStr) {
+													/*for ( var key in data.allMonAveListStr) {
 														singleMonthAllData
 																.push(changeNumType(data.allMonAveListStr[key]));
-													}
+													}*/
 													switch (nowQuarter) {
 													case '0':
 														xAxis = [ '1月', '2月',
@@ -1240,9 +1240,9 @@ app
 															allAverageData);
 													combine(lineData, lineName,
 															userData);
-													combine(lineData,
+													/*combine(lineData,
 															"单月全体平均驳回率",
-															singleMonthAllData);
+															singleMonthAllData);*/
 
 													lineChartForm(lineData,
 															"#lineChart",

@@ -92,6 +92,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			WorkHouse sum = sumWorkHouse(listGoal);// 合计
 			listGoal.add(sum);
 
+			listGoal.remove(listGoal.size() - 1);
+			String analyseResult = anaWorkHouse(map, listGoal);
+
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -100,6 +103,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 7));
 			contentMap.put("${endTime}", endTime.substring(0, 7));
+			contentMap.put("${analyseResult}", analyseResult);
 
 			wh.export2007Word(tempPath, listMap, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
@@ -464,6 +468,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		String cleanTypeStr = CleanType.intToStr(Integer.valueOf(cleanType));
 		String year = (String) map.get("checkYear");
 		String quarter = (String) map.get("quarter");
+		String analyseResult = (String) map.get("analyseResult");
 
 		ResponseEntity<byte[]> byteArr = null;
 		try {
@@ -484,7 +489,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 				contentMap.put("${startTime}", startTime);
 				contentMap.put("${endTime}", endTime);
 			}
-
+			contentMap.put("${analyseResult}", analyseResult);
 			// 图片相关
 			String svg1 = (String) map.get("chart1SVGStr");
 			Map<String, Object> picMap = PictureUtil.getPicMap(picPath, svg1);
@@ -789,7 +794,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String endTime = (String) map.get("endTime");
 			contentMap.put("${startTime}", startTime.substring(0, 10));
 			contentMap.put("${endTime}", endTime.substring(0, 10));
-
+			listGoal.remove(listGoal.size() - 1);
+			String analyseResult = anaWorkEff(map, listGoal);
+			contentMap.put("${analyseResult}", analyseResult);
 			wh.export2007Word(tempPath, listMap, contentMap, 1, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载
@@ -874,7 +881,8 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		String staffName = (String) map.get("staffName");
 		String year = (String) map.get("checkYear");
 		String quarter = (String) map.get("quarter");
-
+		String analyseResult1 = (String) map.get("analyseResult1");
+		String analyseResult2 = (String) map.get("analyseResult2");
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			WordHelper<WorkHouse> wh = new WordHelper<WorkHouse>();
@@ -904,7 +912,8 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 					contentMap.put("${pic" + i + "}", picMap);
 				}
 			}
-
+			contentMap.put("${analyseResult1}", analyseResult1);
+			contentMap.put("${analyseResult2}", analyseResult2);
 			wh.export2007Word(tempPath, null, contentMap, 2, out, -1);// 用模板生成word
 			out.close();
 			byteArr = FileHelper.downloadFile(fileName, path);// 提醒下载

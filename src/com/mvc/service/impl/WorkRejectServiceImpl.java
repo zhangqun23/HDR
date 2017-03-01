@@ -183,6 +183,8 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		Long sumWorkTime = (long) 0;
 		Long sumRejectTime = (long) 0;
 		List<Object> averList = workRejectDao.selectAllAverRejectEff(map);// 获取全体员工平均做房驳回效率
+		List<String> allmonthListStr = perMonthEff(averList, startMonth, endMonth);
+		jsonObject.put("list", allmonthListStr);
 		Iterator<Object> it = averList.iterator();
 		while (it.hasNext()) {
 			obj = (Object[]) it.next();
@@ -195,11 +197,14 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 				}
 			}
 		}
-
+		List<Object> allMonAveList = workRejectDao.selectAllMonAve(map);// wq获取全体每月平均做房驳回率
+		List<String> allMonAveListStr = perMonthEff(allMonAveList, startMonth, endMonth);
+		jsonObject.put("allMonAveListStr", allMonAveListStr);
 		jsonObject.put("averRejectEff", Float.valueOf(averRejectEff));
 
 		String allAverRejectEff = StringUtil.divide(sumRejectTime.toString(), sumWorkTime.toString());
 		jsonObject.put("allAverRejectEff", Float.valueOf(allAverRejectEff));// 全体员工平均做房驳回效率
+		
 		// 获取驳回原因统计扇形图
 		List<Object> reasonList = workRejectDao.selectReasonsByLimits(map);
 		Iterator<Object> iter = reasonList.iterator();

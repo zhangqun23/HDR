@@ -104,7 +104,7 @@ public class StringUtil {
 	 */
 	public static String divide(String s1, String s2) {
 		String str = "0";
-		if (!s2.equals("0")) {
+		if (!s2.equals("0")&&!s2.equals("0.00")) {
 			BigDecimal b1 = new BigDecimal(s1);
 			BigDecimal b2 = new BigDecimal(s2);
 			str = b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).toString();// 四舍五入，保留2位小数

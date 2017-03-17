@@ -13,8 +13,9 @@
 
 <body style="background:url(${ctx}/images/topbg.gif) repeat-x;">
 	<header>
-		<div class="topleft">
-			<a href="main.html" target="_parent"><img class="img-logo"
+		<div class="topleft" style="text-align: center;">
+			<!-- <span style="font-size: 20px; color: white; margin-top: 34px;">酒店大数据统计分析系统</span> -->
+			<a href="#" target="_parent"><img class="img-logo"
 				src="${ctx}/images/logo1.png" title="系统首页" /></a>
 		</div>
 

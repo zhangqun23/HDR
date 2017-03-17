@@ -9,6 +9,10 @@
 <script type="text/javascript" src="${ctx}/js/app/exportForm.js"></script>
 <script type="text/javascript"
 	src="${ctx}/js/lib/angular/angular-route.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"
+	type="text/javascript" charset="utf-8"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"
+	type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 	$(function() {
 		//é¡¶é¨å¯¼èªåæ¢

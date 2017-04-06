@@ -73,6 +73,7 @@ public class FileHelper {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
 			byteArr = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

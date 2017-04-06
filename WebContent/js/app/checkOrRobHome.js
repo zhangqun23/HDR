@@ -408,7 +408,7 @@ app
 										} else {
 											checkRob.listIsShow = true;
 											checkRob.listRemark = false;
-											reportForm.remark = "";
+											checkRob.remark = "";
 										}
 									});
 								} else {
@@ -435,7 +435,7 @@ app
 														} else {
 															checkRob.listIsShow = true;
 															checkRob.listRemark = false;
-															reportForm.remark = "";
+															checkRob.remark = "";
 														}
 													});
 								}
@@ -646,7 +646,7 @@ app
 													} else {
 														checkRob.listIsShow = true;
 														checkRob.listRemark = false;
-														reportForm.remark = "";
+														checkRob.remark = "";
 													}
 												});
 							}
@@ -689,7 +689,7 @@ app
 														} else {
 															checkRob.listIsShow = true;
 															checkRob.listRemark = false;
-															reportForm.remark = "";
+															checkRob.remark = "";
 														}
 													});
 								} else {
@@ -715,7 +715,7 @@ app
 														} else {
 															checkRob.listIsShow = true;
 															checkRob.listRemark = false;
-															reportForm.remark = "";
+															checkRob.remark = "";
 														}
 													});
 								}

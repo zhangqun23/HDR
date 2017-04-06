@@ -1090,7 +1090,7 @@ app
 									return false;
 								}
 								if (reportForm.wrLimit.endTime == "") {
-									alert("请选择起始时间！");
+									alert("请选择截止时间！");
 									return false;
 								}
 								$(".overlayer").fadeIn(200);
@@ -1117,6 +1117,9 @@ app
 							}
 							// zq做房驳回率折线图扇形图
 							reportForm.selectWorkRejectAnalyseByLimits = function() {
+								console
+										.log(JSON
+												.stringify(reportForm.wraLimit));
 								if (reportForm.wraLimit.checkYear == "") {
 									alert("请填写查询年份！");
 									return false;

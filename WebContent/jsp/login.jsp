@@ -39,7 +39,6 @@
 
 		<span class="systemlogo"></span>
 		<div class="loginbox">
-			<a href="/HDR/projectRepair/selectProjectRepair.do">huiminjun测试</a>
 			<form action="/HDR/login/login.do" method="post" id="login-form">
 				<ul>
 					<li><input name="userName" type="text" class="loginuser"

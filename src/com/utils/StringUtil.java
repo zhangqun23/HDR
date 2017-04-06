@@ -271,5 +271,15 @@ public class StringUtil {
 		str = strFloat*100 + "%";
 		return str;
 	}
+	/**
+	 * 当object为null时自动转化为0
+	 * 
+	 * @param object
+	 * @return
+	 **/
+	public static Object objnull(Object o){
+		if(o==null) return 0;
+		else return o;
+	}
 
 }

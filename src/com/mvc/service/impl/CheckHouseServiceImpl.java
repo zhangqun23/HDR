@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.mvc.dao.CheckHouseDao;
 import com.mvc.entityReport.CheckHouse;
-import com.mvc.entityReport.RobEfficiency;
-import com.mvc.entityReport.WorkReject;
-import com.mvc.entityReport.WorkRoomNum;
 import com.mvc.service.CheckHouseService;
 import com.utils.CollectionUtil;
 import com.utils.ExcelHelper;
@@ -65,16 +61,17 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 			checkHouse = new CheckHouse();
 
 			checkHouse.setOrderNum(String.valueOf((i)));
-			checkHouse.setStaffNo(obj[0].toString());
-			checkHouse.setStaffName(obj[1].toString());
-			checkTime = obj[2].toString();
-			totalTime = obj[3].toString();
+			checkHouse.setStaffNo(StringUtil.objnull(obj[0]).toString());
+			checkHouse.setStaffName(StringUtil.objnull(obj[1]).toString());
+			checkTime = StringUtil.objnull(obj[2]).toString();
+			totalTime = StringUtil.objnull(obj[3]).toString();
 			efficiency = StringUtil.divide(checkTime, totalTime);
 			checkHouse.setCheckTime(checkTime);// 查房总用时
 			checkHouse.setTotalTime(totalTime);// 当班总用时
 			checkHouse.setEfficiency(((int) (Float.parseFloat(efficiency) * 100)) / 100.0f);// 查房效率
 			
-			String sumRoom=StringUtil.multiadd(obj[4].toString(), obj[5].toString(), obj[6].toString());
+			String sumRoom=StringUtil.multiadd(StringUtil.objnull(obj[4]).toString(),
+					StringUtil.objnull(obj[5]).toString(), StringUtil.objnull(obj[6]).toString());
 			checkHouse.setSumRoom(sumRoom);//房间数
 			checkRoomTime=StringUtil.divide(checkTime, sumRoom);
 			checkHouse.setCheckRoomTime(checkRoomTime);//平均查房时间
@@ -130,7 +127,7 @@ public class CheckHouseServiceImpl implements CheckHouseService {
 	public String getAnalyseResult(List<CheckHouse> checkHouseList, String writeField) {
 		boolean ascFlag = false;
 		StringBuilder analyseResult = new StringBuilder();
-		CollectionUtil.sort(checkHouseList, "workEffeciencyAvg", ascFlag);
+		CollectionUtil.sort(checkHouseList, "efficiency", ascFlag);
 		CollectionUtil<CheckHouse> collectionUtil = new CollectionUtil<CheckHouse>();
 		collectionUtil.writeSort(checkHouseList, writeField);
 		if (checkHouseList.size() > 3) {

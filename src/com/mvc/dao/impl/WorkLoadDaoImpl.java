@@ -37,7 +37,7 @@ public class WorkLoadDaoImpl implements WorkLoadDao {
 		selectSql.append(
 				"select si.Staff_no staff_no,si.Staff_name staff_name,coalesce(sum(clean_room_workload),0) clean_room, coalesce(sum(checkout_room_workload),0) checkout_room,coalesce(sum(overnight_room_workload),0)overnight_room,");
 		selectSql.append(
-				" coalesce(sum(actual_load),0)actual_load,coalesce(sum(beyond_load),0) beyond_load,coalesce(sum(rated_load),0) rated_load,count(record_id) work_days");
+				" coalesce(sum(actual_load),0) actual_load,coalesce(sum(beyond_load),0) beyond_load,coalesce(sum(rated_load),0) rated_load,count(record_id) work_days");
 		selectSql.append(" from work_record wr ");
 		selectSql.append(" left join  staff_info si on wr.staff_id=si.Staff_id");
 		selectSql.append(" where wr.close_time between '" + startTime + "' and '" + endTime + "'");

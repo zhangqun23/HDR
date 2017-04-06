@@ -65,8 +65,6 @@
 				<th class="width5">查退房总数</th>
 				<th class="width5">平均效率</th>
 				<th class="width5">超时率</th>
-				<th class="width5">驳回率</th>
-
 			</tr>
 		</thead>
 		<tbody>
@@ -79,8 +77,7 @@
 				<td>{{e.usedTimeAvg}}</td>
 				<td>{{e.workCount}}</td>
 				<td>{{e.workEffeciencyAvg | numPercent}}</td>
-				<td>{{e.timeOutRate}}</td>
-				<td>{{e.backRate}}</td>
+				<td>{{e.timeOutRate | numPercent}}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -103,7 +100,7 @@
 				<td>{{d.roomNo}}</td>
 				<td>{{d.usedTime}}</td>
 				<td>{{d.givenTime}}</td>
-				<td>{{d.workEffeciency}}</td>
+				<td>{{d.workEffeciency | numPercent}}</td>
 				<td>{{d.authorName}}</td>
 			</tr>
 		</tbody>

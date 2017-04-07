@@ -71,7 +71,7 @@ public class CheckOutServiceImpl implements CheckOutService {
 			checkOutEfficiency.setSumTime(obj[3].toString());
 			checkOutEfficiency.setGivenTime(fnum.format(Float.parseFloat(obj[4].toString())));
 			checkOutEfficiency.setWorkCount(obj[5].toString());
-			checkOutEfficiency.setWorkEffeciencyAvg(((int) (100 * Float.parseFloat(obj[8].toString())) / 100.0f));
+			checkOutEfficiency.setWorkEffeciencyAvg(((Float.parseFloat(obj[8].toString())) / 100.0f));
 
 			String UsedTimeAvg = StringUtil.divide(obj[3].toString(), obj[5].toString());
 			checkOutEfficiency.setUsedTimeAvg(UsedTimeAvg);// 平均用时
@@ -115,8 +115,8 @@ public class CheckOutServiceImpl implements CheckOutService {
 			checkOutDetail.setAuthorName(obj[3].toString());
 			checkOutDetail.setOrderNum(no + "");
 
-			checkOutDetail.setWorkEffeciency(
-					StringUtil.divide(Float.parseFloat(obj[2].toString()) * 100 + "", obj[1].toString()));// 效率
+			checkOutDetail
+					.setWorkEffeciency(StringUtil.divide(Float.parseFloat(obj[2].toString()) + "", obj[1].toString()));// 效率
 
 			no++;
 
@@ -457,19 +457,15 @@ public class CheckOutServiceImpl implements CheckOutService {
 		if (list.size() > 3) {
 			analyseResult.append("查退房效率最高的三名员工为：");
 			analyseResult.append(list.get(0).getAuthorName());
-			analyseResult.append(
-					"(" + StringUtil.strfloatToPer(((int) (list.get(0).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")、");
+			analyseResult.append("(" + String.format("%.2f", list.get(0).getWorkEffeciencyAvg() * 100) + "%" + ")、");
 			analyseResult.append(list.get(1).getAuthorName());
-			analyseResult.append(
-					"(" + StringUtil.strfloatToPer(((int) (list.get(1).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")、");
+			analyseResult.append("(" + String.format("%.2f", list.get(1).getWorkEffeciencyAvg() * 100) + "%" + ")、");
 			analyseResult.append(list.get(2).getAuthorName());
-			analyseResult.append(
-					"(" + StringUtil.strfloatToPer(((int) (list.get(2).getWorkEffeciencyAvg() * 100)) / 100.0f) + ");");
+			analyseResult.append("(" + String.format("%.2f", list.get(2).getWorkEffeciencyAvg() * 100) + "%" + ");");
 		} else if (list.size() == 1) {
 			analyseResult.append("查退房效率最高的员工为：");
 			analyseResult.append(list.get(0).getAuthorName());
-			analyseResult.append(
-					"(" + StringUtil.strfloatToPer(((int) (list.get(0).getWorkEffeciencyAvg() * 100)) / 100.0f) + ")");
+			analyseResult.append("(" + String.format("%.2f", list.get(0).getWorkEffeciencyAvg() * 100) + "%" + ")");
 		}
 		return analyseResult.toString();
 	}

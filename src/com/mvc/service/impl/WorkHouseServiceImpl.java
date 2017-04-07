@@ -724,9 +724,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Float level = Float.valueOf(StringUtil.divide(dValue.toString(), allAverEff));
 		if (Math.abs(level) <= 0.05) {
 			analyseResult += "良好(该员工平均" + content + "效率与全体员工平均" + content + "效率相差不大)";
-		} else if (level > 0.05) {
-			analyseResult += "优秀(该员工平均" + content + "效率高于全体员工平均" + content + "效率)";
 		} else if (level < 0.05) {
+			analyseResult += "优秀(该员工平均" + content + "效率高于全体员工平均" + content + "效率)";
+		} else if (level > 0.05) {
 			analyseResult += "不合格(该员工平均" + content + "效率远低于全体员工平均" + content + "效率)";
 		}
 		return analyseResult;

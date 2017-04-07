@@ -603,12 +603,17 @@ app
 									alert("请选择起始时间！");
 									return false;
 								}
-								if (reportForm.pmaLimit.repairType == "") {
+								if(reportForm.pmaLimit.repairType ==undefined){
+									alert("请选择维修类型！");
+									return false;
+								}
+								if (reportForm.pmaLimit.repairType == "" ) {
 									alert("请选择维修类型！");
 									return false;
 								}
 								var pmaLimits = JSON
 										.stringify(reportForm.pmaLimit);
+								console.log("fdsfsdf"+pmaLimits);
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
 								services
@@ -694,6 +699,10 @@ app
 								}
 								if (reportForm.pmfLimit.startTime == '') {
 									alert("请选择截止时间！");
+									return false;
+								}
+								if (reportForm.pmfLimit.materialType == undefined){
+									alert("请选择查找类型！");
 									return false;
 								}
 								if (reportForm.pmfLimit.materialType == '') {

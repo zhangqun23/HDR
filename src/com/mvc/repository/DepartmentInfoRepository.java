@@ -22,4 +22,7 @@ public interface DepartmentInfoRepository extends JpaRepository<DepartmentInfo, 
 	//whm查询部门
 	@Query("select d from DepartmentInfo d where isdeleted=0 ")
 	List<DepartmentInfo> selectDep();
+	//whm根据id查找名称
+	@Query("select d from DepartmentInfo d where department_id=:dept_id")
+	DepartmentInfo selectByDeptId(@Param("dept_id") String dept_id);
 }

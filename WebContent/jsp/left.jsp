@@ -27,6 +27,8 @@
 					href="${ctx}/workHouse/toReportFormPage.do#/workRejectForm">做房驳回率统计</a><i></i></li>
 				<li id="doHomeRejectAnalyse"><cite></cite> <a
 					href="${ctx}/workHouse/toReportFormPage.do#/workRejectAnalyseForm">做房驳回率分析</a><i></i></li>
+				<li id="checkHomeTime"><cite></cite> <a
+					href="${ctx}/workHouse/toReportFormPage.do#/checkEfficiencyForm">领班查房效率统计</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 查退房工作量/用时统计 -->
@@ -39,8 +41,6 @@
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEfficiencyForm">抢房效率统计</a><i></i></li>
 				<li id="robHomeEffAnalyse"><cite></cite> <a
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/robEffAnalyseForm">抢房效率分析</a><i></i></li>
-				<li id="checkHomeTime"><cite></cite> <a
-					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkEfficiencyForm">领班查房效率统计</a><i></i></li>
 				<li id="checkOutHome"><cite></cite><a
 					href="${ctx}/checkOrRobHome/toCheckOrRobHomePage.do#/checkOutHomeForm">查退房效率统计</a></li>
 				<li id="checkOutAnalyse"><cite></cite><a
@@ -64,7 +64,7 @@
 					href="${ctx}/customerService/toReportFormPage.do#/expendForm">耗品用量统计</a><i></i></li>
 				<li id="expendAnalyse"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/expendAnalyse">耗品用量分析</a><i></i></li>
-						<li id="staffExpend"><cite></cite> <a
+				<li id="staffExpend"><cite></cite> <a
 					href="${ctx}/customerService/toReportFormPage.do#/staffExpend">员工领取物品统计</a><i></i></li>
 			</ul>
 

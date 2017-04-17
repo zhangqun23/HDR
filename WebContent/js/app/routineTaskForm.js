@@ -92,6 +92,9 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/workRejectAnalyseForm', {
 		templateUrl : '/HDR/jsp/routineTaskForm/workRejectAnalyseForm.html',
 		controller : 'ReportController'
+	}).when('/checkEfficiencyForm', {
+		templateUrl : '/HDR/jsp/routineTaskForm/checkEfficiencyForm.html',
+		controller : 'ReportController'
 	})
 } ]);
 
@@ -188,6 +191,14 @@ app.factory('services', [ '$http', 'baseUrl', function($http, baseUrl) {
 			data : data
 		});
 	}
+	// zq查询领班查房效率
+	services.selectCheckEfficiencyByLimits = function(data) {
+		return $http({
+			method : 'post',
+			url : baseUrl + '/checkHouse/getCheckHouseList.do',
+			data : data
+		});
+	};
 	return services;
 } ]);
 app
@@ -1368,6 +1379,48 @@ app
 								}
 								return qName;
 							}
+							// zq获取领班查房效率列表
+							// zq查房效率
+							reportForm.ceLimit = {
+								startTime : "",
+								endTime : ""
+							}
+							reportForm.selectCheckEfficiencyByLimits = function() {
+								if (reportForm.ceLimit.startTime == "") {
+									alert("请选择起始时间！");
+									return false;
+								}
+								if (reportForm.ceLimit.endTime == "") {
+									alert("请选择截止时间！");
+									return false;
+								}
+								$(".overlayer").fadeIn(200);
+								$(".tipLoading").fadeIn(200);
+								services
+										.selectCheckEfficiencyByLimits(
+												{
+													startTime : reportForm.ceLimit.startTime,
+													endTime : reportForm.ceLimit.endTime
+												})
+										.success(
+												function(data) {
+													$(".overlayer")
+															.fadeOut(200);
+													$(".tipLoading").fadeOut(
+															200);
+													reportForm.checkEfficiencyList = data.checkHouseList;
+
+													reportForm.remark = data.analyseResult;
+													if (data.checkHouseList.length) {
+														reportForm.listIsShow = false;
+														reportForm.listRemark = true;
+													} else {
+														reportForm.listIsShow = true;
+														reportForm.listRemark = false;
+														reportForm.remark = "";
+													}
+												});
+							}
 							// zq初始化
 							function initData() {
 								console.log("初始化页面信息");
@@ -1409,6 +1462,9 @@ app
 								} else if ($location.path().indexOf(
 										'/workRejectAnalyseForm') == 0) {
 									selectRoomStaffs(0);
+								} else if ($location.path().indexOf(
+										'/checkEfficiencyForm') == 0) {
+									selectRoomSorts();
 								}
 							}
 							initData();

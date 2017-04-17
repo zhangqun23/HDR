@@ -871,6 +871,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		EntityManager em = emf.createEntityManager();
 		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
 		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+		int x = listCondition.size()-1;
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("select ");
@@ -878,13 +879,13 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 			sql.append("coalesce(sum(a" + i + ".goods_num),0),");
 		}
 		
-		sql.append("coalesce(sum(a" + listCondition.size() + ".goods_num),0) ");
+		sql.append("coalesce(sum(a" + x + ".goods_num),0) ");
 		sql.append(" from ");
 		for (int i = 0; i < listCondition.size()-1; i++) {
 			sql.append("goods_staff a" + i + ",");
 		}
-		sql.append("goods_staff a" + listCondition.size() +" where ");
-		for (int i = 0; i < listCondition.size()-1; i++) {
+		sql.append("goods_staff a" + x +" where ");
+		for (int i = 0; i < listCondition.size(); i++) {
 			sql.append("a" + i + ".goods_id=" + listCondition.get(i));
 			sql.append(" and a" + i + ".create_time between '" + startTime + "'" + " and '" + endTime + "'");
 			sql.append(" and ");
@@ -892,6 +893,20 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		
 		Query query = em.createNativeQuery(sql.toString().substring(0, sql.toString().length() - 4));
 		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> selectMiniCondition() {
+		EntityManager em = emf.createEntityManager();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select goods_id from goods_info where Goods_Typeid  ");
+		sql.append("in ('dt0201','dt0202') and Display = 1 ;");
+
+		Query query = em.createNativeQuery(sql.toString());
+		List<Integer> list = query.getResultList();
 		em.close();
 		return list;
 	}

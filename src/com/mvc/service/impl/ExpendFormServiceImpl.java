@@ -2439,6 +2439,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		JSONObject jsonObject = new JSONObject();
 		String analyseResult = "分析结果：";// 分析结果
 		Float sum_num = (float) 0.0;//物品使用总数
+		List<Object> gainnum = null;//将领取合计放入gainnum中
 		switch(tableType){
 		case "0":
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
@@ -2448,15 +2449,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			
 			List<StaLinen> linenCount = new ArrayList<StaLinen>();
 			StaLinen sum = sumStaLinenExpend(listGoal);// 消耗合计
-			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
-			/*ArrayList<Integer> afterlist = new ArrayList<Integer>();
-			for (int i=0;i<gainnum.size();i++){
-				afterlist.add(gainnum.get(i));
-			}
-			List<StaLinen> gainsum =null;
-			gainsum.addAll(afterlist);*/
-			
-			StaLinen avg = avgStaLinenExpend(gainnum);// 平均
+			gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计			
+			StaLinen avg = avgStaLinenExpend(gainnum);// 将领取合计list放入StaLine中
 			linenCount.add(sum);
 			linenCount.add(avg);
 			jsonObject.put("list", listGoal);
@@ -2509,7 +2503,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			
 			List<StaRoom> roomCount = new ArrayList<StaRoom>();
 			StaRoom sum1 = sumStaRoomExpend(listGoal1);// 合计
-			StaRoom avg1 = avgStaRoomExpend(listGoal1);// 平均
+			gainnum = expendFormDao.selectExpendGet(map, listCondition1);// 领取合计			
+			StaRoom avg1 = avgStaRoomExpend(gainnum);// 将领取合计list放入StaLine中
 			roomCount.add(sum1);
 			roomCount.add(avg1);
 			jsonObject.put("list", listGoal1);
@@ -2583,7 +2578,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			
 			List<StaWash> washCount = new ArrayList<StaWash>();
 			StaWash sum2 = sumStaWashExpend(listGoal2);// 合计
-			StaWash avg2 = avgStaWashExpend(listGoal2);// 平均
+			gainnum = expendFormDao.selectExpendGet(map, listCondition2);// 领取合计			
+			StaWash avg2 = avgStaWashExpend(gainnum);// 将领取合计list放入StaLine中
 			washCount.add(sum2);
 			washCount.add(avg2);
 			jsonObject.put("list", listGoal2);
@@ -2644,13 +2640,15 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "3":
+			List<Integer> listCondition3 = expendFormDao.selectMiniCondition();//得到迷你吧物品id
 			List<Object> listSource3 = expendFormDao.selectStaMini(map);
 			Iterator<Object> it3 = listSource3.iterator();
 			List<StaMini> listGoal3 = objToMiniStaExpand(it3);
 			
 			List<StaMini> miniCount = new ArrayList<StaMini>();
 			StaMini sum3 = sumStaMiniExpend(listGoal3);// 合计
-			StaMini avg3 = avgStaMiniExpend(listGoal3);// 平均
+			gainnum = expendFormDao.selectExpendGet(map, listCondition3);// 领取合计			
+			StaMini avg3 = avgStaMiniExpend(gainnum);// 将领取合计list放入StaLine中
 			miniCount.add(sum3);
 			miniCount.add(avg3);
 			jsonObject.put("list", listGoal3);
@@ -3001,7 +2999,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_blan_num += Integer.valueOf(staLinen.getBlan_num());
 		}
 
-		sum.setOrderNum("合计");
+		sum.setOrderNum("实用量");
 		sum.setBato_num(String.valueOf(sum_bato_num));
 		sum.setFacl_num(String.valueOf(sum_facl_num));
 		sum.setBesh_num(String.valueOf(sum_besh_num));
@@ -3066,7 +3064,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			List<StaRoom> listGoal = objToRoomStaExpand(it);
 
 			StaRoom sum = sumStaRoomExpend(listGoal);// 合计
-			StaRoom avg = avgStaRoomExpend(listGoal);// 平均
+			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+			StaRoom avg = avgStaRoomExpend(gainnum);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
 			
@@ -3230,7 +3229,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_cocl_num += Integer.valueOf(staRoom.getCocl_num());
 			sum_arel_num += Integer.valueOf(staRoom.getArel_num());
 		}
-		sum.setOrderNum("合计");
+		sum.setOrderNum("实用量");
 		sum.setUmbr_num(String.valueOf(sum_umbr_num));
 		sum.setCoff_num(String.valueOf(sum_coff_num));
 		sum.setSuge_num(String.valueOf(sum_suge_num));
@@ -3275,122 +3274,47 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	 * @param list
 	 * @return
 	 */
-	private StaRoom avgStaRoomExpend(List<StaRoom> list) {
+	private StaRoom avgStaRoomExpend(List<Object> list) {
 
 		StaRoom avg = new StaRoom();
-		Iterator<StaRoom> re = list.iterator();
-		Float chu = Float.valueOf(list.size());
-
-		Long sum_umbr_num = (long) 0;
-		Long sum_coff_num = (long) 0;
-		Long sum_suge_num = (long) 0;
-		Long sum_coup_num = (long) 0;
-		Long sum_penc_num = (long) 0;
-		Long sum_erse_num = (long) 0;
-		Long sum_clca_num = (long) 0;
-		Long sum_fati_num = (long) 0;
-		Long sum_enca_num = (long) 0;
-		Long sum_bage_num = (long) 0;
-		Long sum_teab_num = (long) 0;
-		Long sum_meca_num = (long) 0;
-		Long sum_opbo_num = (long) 0;
-		Long sum_blte_num = (long) 0;
-		Long sum_dnds_num = (long) 0;
-		Long sum_tvca_num = (long) 0;
-		Long sum_orel_num = (long) 0;
-		Long sum_memo_num = (long) 0;
-		Long sum_coas_num = (long) 0;
-		Long sum_matc_num = (long) 0;
-		Long sum_mapp_num = (long) 0;
-		Long sum_rule_num = (long) 0;
-		Long sum_stat_num = (long) 0;
-		Long sum_clip_num = (long) 0;
-		Long sum_bape_num = (long) 0;
-		Long sum_comp_num = (long) 0;
-		Long sum_lali_num = (long) 0;
-		Long sum_losu_num = (long) 0;
-		Long sum_shpa_num = (long) 0;
-		Long sum_anma_num = (long) 0;
-		Long sum_grte_num = (long) 0;
-		Long sum_chsl_num = (long) 0;
-		Long sum_cocl_num = (long) 0;
-		Long sum_arel_num = (long) 0;
-
-		StaRoom staRoom = null;
-		if (chu != 0) {
-			while (re.hasNext()) {
-				staRoom = re.next();
-				sum_umbr_num += Integer.valueOf(staRoom.getUmbr_num());
-				sum_coff_num += Integer.valueOf(staRoom.getCoff_num());
-				sum_suge_num += Integer.valueOf(staRoom.getSuge_num());
-				sum_coup_num += Integer.valueOf(staRoom.getCoup_num());
-				sum_penc_num += Integer.valueOf(staRoom.getPenc_num());
-				sum_erse_num += Integer.valueOf(staRoom.getErse_num());
-				sum_clca_num += Integer.valueOf(staRoom.getClca_num());
-				sum_fati_num += Integer.valueOf(staRoom.getFati_num());
-				sum_enca_num += Integer.valueOf(staRoom.getEnca_num());
-				sum_bage_num += Integer.valueOf(staRoom.getBage_num());
-				sum_teab_num += Integer.valueOf(staRoom.getTeab_num());
-				sum_meca_num += Integer.valueOf(staRoom.getMeca_num());
-				sum_opbo_num += Integer.valueOf(staRoom.getOpbo_num());
-				sum_blte_num += Integer.valueOf(staRoom.getBlte_num());
-				sum_dnds_num += Integer.valueOf(staRoom.getDnds_num());
-				sum_tvca_num += Integer.valueOf(staRoom.getTvca_num());
-				sum_orel_num += Integer.valueOf(staRoom.getOrel_num());
-				sum_memo_num += Integer.valueOf(staRoom.getMemo_num());
-				sum_coas_num += Integer.valueOf(staRoom.getCoas_num());
-				sum_matc_num += Integer.valueOf(staRoom.getMatc_num());
-				sum_mapp_num += Integer.valueOf(staRoom.getMapp_num());
-				sum_rule_num += Integer.valueOf(staRoom.getRule_num());
-				sum_stat_num += Integer.valueOf(staRoom.getStat_num());
-				sum_clip_num += Integer.valueOf(staRoom.getClip_num());
-				sum_bape_num += Integer.valueOf(staRoom.getBape_num());
-				sum_comp_num += Integer.valueOf(staRoom.getComp_num());
-				sum_lali_num += Integer.valueOf(staRoom.getLali_num());
-				sum_losu_num += Integer.valueOf(staRoom.getLosu_num());
-				sum_shpa_num += Integer.valueOf(staRoom.getShpa_num());
-				sum_anma_num += Integer.valueOf(staRoom.getAnma_num());
-				sum_grte_num += Integer.valueOf(staRoom.getGrte_num());
-				sum_chsl_num += Integer.valueOf(staRoom.getChsl_num());
-				sum_cocl_num += Integer.valueOf(staRoom.getCocl_num());
-				sum_arel_num += Integer.valueOf(staRoom.getArel_num());
-			}
-			avg.setOrderNum("平均");
-			avg.setUmbr_num(String.valueOf(StringUtil.save2Float(sum_umbr_num / chu)));
-			avg.setCoff_num(String.valueOf(StringUtil.save2Float(sum_coff_num / chu)));
-			avg.setSuge_num(String.valueOf(StringUtil.save2Float(sum_suge_num / chu)));
-			avg.setCoup_num(String.valueOf(StringUtil.save2Float(sum_coup_num / chu)));
-			avg.setPenc_num(String.valueOf(StringUtil.save2Float(sum_penc_num / chu)));
-			avg.setErse_num(String.valueOf(StringUtil.save2Float(sum_erse_num / chu)));
-			avg.setClca_num(String.valueOf(StringUtil.save2Float(sum_clca_num / chu)));
-			avg.setFati_num(String.valueOf(StringUtil.save2Float(sum_fati_num / chu)));
-			avg.setEnca_num(String.valueOf(StringUtil.save2Float(sum_enca_num / chu)));
-			avg.setBage_num(String.valueOf(StringUtil.save2Float(sum_bage_num / chu)));
-			avg.setTeab_num(String.valueOf(StringUtil.save2Float(sum_teab_num / chu)));
-			avg.setMeca_num(String.valueOf(StringUtil.save2Float(sum_meca_num / chu)));
-			avg.setOpbo_num(String.valueOf(StringUtil.save2Float(sum_opbo_num / chu)));
-			avg.setBlte_num(String.valueOf(StringUtil.save2Float(sum_blte_num / chu)));
-			avg.setDnds_num(String.valueOf(StringUtil.save2Float(sum_dnds_num / chu)));
-			avg.setTvca_num(String.valueOf(StringUtil.save2Float(sum_tvca_num / chu)));
-			avg.setOrel_num(String.valueOf(StringUtil.save2Float(sum_orel_num / chu)));
-			avg.setMemo_num(String.valueOf(StringUtil.save2Float(sum_memo_num / chu)));
-			avg.setCoas_num(String.valueOf(StringUtil.save2Float(sum_coas_num / chu)));
-			avg.setMatc_num(String.valueOf(StringUtil.save2Float(sum_matc_num / chu)));
-			avg.setMapp_num(String.valueOf(StringUtil.save2Float(sum_mapp_num / chu)));
-			avg.setRule_num(String.valueOf(StringUtil.save2Float(sum_rule_num / chu)));
-			avg.setStat_num(String.valueOf(StringUtil.save2Float(sum_stat_num / chu)));
-			avg.setClip_num(String.valueOf(StringUtil.save2Float(sum_clip_num / chu)));
-			avg.setBape_num(String.valueOf(StringUtil.save2Float(sum_bape_num / chu)));
-			avg.setComp_num(String.valueOf(StringUtil.save2Float(sum_comp_num / chu)));
-			avg.setLali_num(String.valueOf(StringUtil.save2Float(sum_lali_num / chu)));
-			avg.setLosu_num(String.valueOf(StringUtil.save2Float(sum_losu_num / chu)));
-			avg.setShpa_num(String.valueOf(StringUtil.save2Float(sum_shpa_num / chu)));
-			avg.setAnma_num(String.valueOf(StringUtil.save2Float(sum_anma_num / chu)));
-			avg.setGrte_num(String.valueOf(StringUtil.save2Float(sum_grte_num / chu)));
-			avg.setChsl_num(String.valueOf(StringUtil.save2Float(sum_chsl_num / chu)));
-			avg.setCocl_num(String.valueOf(StringUtil.save2Float(sum_cocl_num / chu)));
-			avg.setArel_num(String.valueOf(StringUtil.save2Float(sum_arel_num / chu)));
-		}
+		Iterator<Object> it = list.iterator();
+		Object[] obj = null;
+		obj = (Object[]) it.next();
+		avg.setOrderNum("领取量");
+		avg.setUmbr_num(obj[6].toString());
+		avg.setCoff_num(obj[30].toString());
+		avg.setSuge_num(obj[27].toString());
+		avg.setCoup_num(obj[31].toString());
+		avg.setPenc_num(obj[1].toString());
+		avg.setErse_num(obj[3].toString());
+		avg.setClca_num(obj[23].toString());
+		avg.setFati_num(obj[16].toString());
+		avg.setEnca_num(obj[24].toString());
+		avg.setBage_num(obj[12].toString());
+		avg.setTeab_num(obj[29].toString());
+		avg.setMeca_num(obj[8].toString());
+		avg.setOpbo_num(obj[20].toString());
+		avg.setBlte_num(obj[26].toString());
+		avg.setDnds_num(obj[6].toString());
+		avg.setTvca_num(obj[22].toString());
+		avg.setOrel_num(obj[14].toString());
+		avg.setMemo_num(obj[17].toString());
+		avg.setCoas_num(obj[0].toString());
+		avg.setMatc_num(obj[33].toString());
+		avg.setMapp_num(obj[21].toString());
+		avg.setRule_num(obj[2].toString());
+		avg.setStat_num(obj[18].toString());
+		avg.setClip_num(obj[13].toString());
+		avg.setBape_num(obj[11].toString());
+		avg.setComp_num(obj[9].toString());
+		avg.setLali_num(obj[19].toString());
+		avg.setLosu_num(obj[28].toString());
+		avg.setShpa_num(obj[10].toString());
+		avg.setAnma_num(obj[32].toString());
+		avg.setGrte_num(obj[25].toString());
+		avg.setChsl_num(obj[5].toString());
+		avg.setCocl_num(obj[4].toString());
+		avg.setArel_num(obj[15].toString());
 
 		return avg;
 	}
@@ -3412,7 +3336,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			List<StaWash> listGoal = objToWashStaExpand(it);
 
 			StaWash sum = sumStaWashExpend(listGoal);// 合计
-			StaWash avg = avgStaWashExpend(listGoal);// 平均
+			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+			StaWash avg = avgStaWashExpend(gainnum);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
 			
@@ -3555,7 +3480,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_babr_num += Integer.valueOf(staWash.getBabr_num());
 			sum_clbr_num += Integer.valueOf(staWash.getClbr_num());
 		}
-		sum.setOrderNum("合计");
+		sum.setOrderNum("实用量");
 		sum.setToth_num(String.valueOf(sum_toth_num));
 		sum.setRopa_num(String.valueOf(sum_ropa_num));
 		sum.setRins_num(String.valueOf(sum_rins_num));
@@ -3592,99 +3517,41 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	 * @param list
 	 * @return
 	 */
-	private StaWash avgStaWashExpend(List<StaWash> list) {
+	private StaWash avgStaWashExpend(List<Object> list) {
 
-		StaWash avg = new StaWash();
-		Iterator<StaWash> it = list.iterator();
-		Float chu = Float.valueOf(list.size());
+		StaWash staWash = new StaWash();
+		Iterator<Object> it = list.iterator();
+		Object[] obj = null;
+		obj = (Object[]) it.next();
+		staWash.setOrderNum("领取量");
+		staWash.setToth_num(obj[0].toString());
+		staWash.setRopa_num(obj[1].toString());
+		staWash.setRins_num(obj[9].toString());
+		staWash.setBafo_num(obj[10].toString());
+		staWash.setHaco_num(obj[11].toString());
+		staWash.setShge_num(obj[12].toString());
+		staWash.setCapa_num(obj[23].toString());
+		staWash.setGarb_num(obj[24].toString());
+		staWash.setPaex_num(obj[2].toString());
+		staWash.setPeep_num(obj[8].toString());
+		staWash.setShca_num(obj[5].toString());
+		staWash.setShav_num(obj[7].toString());
+		staWash.setComb_num(obj[3].toString());
+		staWash.setShcl_num(obj[4].toString());
+		staWash.setSoap_num(obj[25].toString());
+		staWash.setNacl_num(obj[6].toString());
+		staWash.setFlow_num(obj[13].toString());
+		staWash.setBasa_num(obj[14].toString());
+		staWash.setScpa_num(obj[21].toString());
+		staWash.setRugl_num(obj[22].toString());
+		staWash.setDete_num(obj[19].toString());
+		staWash.setThim_num(obj[18].toString());
+		staWash.setBacl_num(obj[17].toString());
+		staWash.setTocl_num(obj[16].toString());
+		staWash.setBabr_num(obj[15].toString());
+		staWash.setClbr_num(obj[20].toString());
 
-		Long sum_toth_num = (long) 0;
-		Long sum_ropa_num = (long) 0;
-		Long sum_rins_num = (long) 0;
-		Long sum_bafo_num = (long) 0;
-		Long sum_haco_num = (long) 0;
-		Long sum_shge_num = (long) 0;
-		Long sum_capa_num = (long) 0;
-		Long sum_garb_num = (long) 0;
-		Long sum_paex_num = (long) 0;
-		Long sum_peep_num = (long) 0;
-		Long sum_shca_num = (long) 0;
-		Long sum_shav_num = (long) 0;
-		Long sum_comb_num = (long) 0;
-		Long sum_shcl_num = (long) 0;
-		Long sum_soap_num = (long) 0;
-		Long sum_nacl_num = (long) 0;
-		Long sum_flow_num = (long) 0;
-		Long sum_basa_num = (long) 0;
-		Long sum_scpa_num = (long) 0;
-		Long sum_rugl_num = (long) 0;
-		Long sum_dete_num = (long) 0;
-		Long sum_thim_num = (long) 0;
-		Long sum_bacl_num = (long) 0;
-		Long sum_tocl_num = (long) 0;
-		Long sum_babr_num = (long) 0;
-		Long sum_clbr_num = (long) 0;
-
-		StaWash staWash = null;
-		if (chu != 0) {
-			while (it.hasNext()) {
-				staWash = it.next();
-				sum_toth_num += Integer.valueOf(staWash.getToth_num());
-				sum_ropa_num += Integer.valueOf(staWash.getRopa_num());
-				sum_rins_num += Integer.valueOf(staWash.getRins_num());
-				sum_bafo_num += Integer.valueOf(staWash.getBafo_num());
-				sum_haco_num += Integer.valueOf(staWash.getHaco_num());
-				sum_shge_num += Integer.valueOf(staWash.getShge_num());
-				sum_capa_num += Integer.valueOf(staWash.getCapa_num());
-				sum_garb_num += Integer.valueOf(staWash.getGarb_num());
-				sum_paex_num += Integer.valueOf(staWash.getPaex_num());
-				sum_peep_num += Integer.valueOf(staWash.getPeep_num());
-				sum_shca_num += Integer.valueOf(staWash.getShca_num());
-				sum_shav_num += Integer.valueOf(staWash.getShav_num());
-				sum_comb_num += Integer.valueOf(staWash.getComb_num());
-				sum_shcl_num += Integer.valueOf(staWash.getShcl_num());
-				sum_soap_num += Integer.valueOf(staWash.getSoap_num());
-				sum_nacl_num += Integer.valueOf(staWash.getNacl_num());
-				sum_flow_num += Integer.valueOf(staWash.getFlow_num());
-				sum_basa_num += Integer.valueOf(staWash.getBasa_num());
-				sum_scpa_num += Integer.valueOf(staWash.getScpa_num());
-				sum_rugl_num += Integer.valueOf(staWash.getRugl_num());
-				sum_dete_num += Integer.valueOf(staWash.getDete_num());
-				sum_thim_num += Integer.valueOf(staWash.getThim_num());
-				sum_bacl_num += Integer.valueOf(staWash.getBacl_num());
-				sum_tocl_num += Integer.valueOf(staWash.getTocl_num());
-				sum_babr_num += Integer.valueOf(staWash.getBabr_num());
-				sum_clbr_num += Integer.valueOf(staWash.getClbr_num());
-			}
-			avg.setOrderNum("平均");
-			avg.setToth_num(String.valueOf(StringUtil.save2Float(sum_toth_num / chu)));
-			avg.setRopa_num(String.valueOf(StringUtil.save2Float(sum_ropa_num / chu)));
-			avg.setRins_num(String.valueOf(StringUtil.save2Float(sum_rins_num / chu)));
-			avg.setBafo_num(String.valueOf(StringUtil.save2Float(sum_bafo_num / chu)));
-			avg.setHaco_num(String.valueOf(StringUtil.save2Float(sum_haco_num / chu)));
-			avg.setShge_num(String.valueOf(StringUtil.save2Float(sum_shge_num / chu)));
-			avg.setCapa_num(String.valueOf(StringUtil.save2Float(sum_capa_num / chu)));
-			avg.setGarb_num(String.valueOf(StringUtil.save2Float(sum_garb_num / chu)));
-			avg.setPaex_num(String.valueOf(StringUtil.save2Float(sum_paex_num / chu)));
-			avg.setPeep_num(String.valueOf(StringUtil.save2Float(sum_peep_num / chu)));
-			avg.setShca_num(String.valueOf(StringUtil.save2Float(sum_shca_num / chu)));
-			avg.setShav_num(String.valueOf(StringUtil.save2Float(sum_shav_num / chu)));
-			avg.setComb_num(String.valueOf(StringUtil.save2Float(sum_comb_num / chu)));
-			avg.setShcl_num(String.valueOf(StringUtil.save2Float(sum_shcl_num / chu)));
-			avg.setSoap_num(String.valueOf(StringUtil.save2Float(sum_soap_num / chu)));
-			avg.setNacl_num(String.valueOf(StringUtil.save2Float(sum_nacl_num / chu)));
-			avg.setFlow_num(String.valueOf(StringUtil.save2Float(sum_flow_num / chu)));
-			avg.setBasa_num(String.valueOf(StringUtil.save2Float(sum_basa_num / chu)));
-			avg.setScpa_num(String.valueOf(StringUtil.save2Float(sum_scpa_num / chu)));
-			avg.setRugl_num(String.valueOf(StringUtil.save2Float(sum_rugl_num / chu)));
-			avg.setDete_num(String.valueOf(StringUtil.save2Float(sum_dete_num / chu)));
-			avg.setThim_num(String.valueOf(StringUtil.save2Float(sum_thim_num / chu)));
-			avg.setBacl_num(String.valueOf(StringUtil.save2Float(sum_bacl_num / chu)));
-			avg.setTocl_num(String.valueOf(StringUtil.save2Float(sum_tocl_num / chu)));
-			avg.setBabr_num(String.valueOf(StringUtil.save2Float(sum_babr_num / chu)));
-			avg.setClbr_num(String.valueOf(StringUtil.save2Float(sum_clbr_num / chu)));
-		}
-		return avg;
+		return staWash;
 	}
 
 	//员工领取迷你吧导出
@@ -3692,6 +3559,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	public ResponseEntity<byte[]> exportStaMini(Map<String, Object> map, String path, String tempPath) {
 		ResponseEntity<byte[]> byteArr = null;
 		try {
+			List<Integer> listCondition = expendFormDao.selectMiniCondition();//得到迷你吧物品id
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取迷你吧量统计表.docx";
 			
@@ -3703,7 +3571,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			List<StaMini> listGoal = objToMiniStaExpand(it);
 
 			StaMini sum = sumStaMiniExpend(listGoal);// 合计
-			StaMini avg = avgStaMiniExpend(listGoal);// 平均
+			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+			StaMini avg = avgStaMiniExpend(gainnum);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
 
@@ -3820,7 +3689,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			sum_card_num += Integer.valueOf(staMini.getCard_num());
 			sum_como_num += Integer.valueOf(staMini.getComo_num());
 		}
-		sum.setOrderNum("合计");
+		sum.setOrderNum("实用量");
 		sum.setRedb_num(String.valueOf(sum_redb_num));
 		sum.setCoco_num(String.valueOf(sum_coco_num));
 		sum.setPari_num(String.valueOf(sum_pari_num));
@@ -3848,72 +3717,31 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	 * @param list
 	 * @return
 	 */
-	private StaMini avgStaMiniExpend(List<StaMini> list) {
+	private StaMini avgStaMiniExpend(List<Object> list) {
 
-		StaMini avg = new StaMini();
-		Iterator<StaMini> it = list.iterator();
-
-		Long sum_redb_num = (long) 0;
-		Long sum_coco_num = (long) 0;
-		Long sum_pari_num = (long) 0;
-		Long sum_bige_num = (long) 0;
-		Long sum_jdba_num = (long) 0;
-		Long sum_tine_num = (long) 0;
-		Long sum_kunl_num = (long) 0;
-		Long sum_wine_num = (long) 0;
-		Long sum_bree_num = (long) 0;
-		Long sum_vodk_num = (long) 0;
-		Long sum_auru_num = (long) 0;
-		Long sum_qing_num = (long) 0;
-		Long sum_spri_num = (long) 0;
-		Long sum_nail_num = (long) 0;
-		Long sum_abcs_num = (long) 0;
-		Long sum_card_num = (long) 0;
-		Long sum_como_num = (long) 0;
-
-		StaMini staMini = null;
-		Float chu = Float.valueOf(list.size());
-		if (chu != 0) {
-			while (it.hasNext()) {
-				staMini = it.next();
-				sum_redb_num += Integer.valueOf(staMini.getRedb_num()); 
-				sum_coco_num += Integer.valueOf(staMini.getCoco_num());
-				sum_pari_num += Integer.valueOf(staMini.getPari_num());
-				sum_bige_num += Integer.valueOf(staMini.getBige_num());
-				sum_jdba_num += Integer.valueOf(staMini.getJdba_num());
-				sum_tine_num += Integer.valueOf(staMini.getTine_num());
-				sum_kunl_num += Integer.valueOf(staMini.getKunl_num());
-				sum_wine_num += Integer.valueOf(staMini.getWine_num());
-				sum_bree_num += Integer.valueOf(staMini.getBree_num());
-				sum_vodk_num += Integer.valueOf(staMini.getVodk_num());
-				sum_auru_num += Integer.valueOf(staMini.getAuru_num());
-				sum_qing_num += Integer.valueOf(staMini.getQing_num());
-				sum_spri_num += Integer.valueOf(staMini.getSpri_num());
-				sum_nail_num += Integer.valueOf(staMini.getNail_num());
-				sum_abcs_num += Integer.valueOf(staMini.getAbcs_num());
-				sum_card_num += Integer.valueOf(staMini.getCard_num());
-				sum_como_num += Integer.valueOf(staMini.getComo_num());
-			}
-			avg.setOrderNum("平均");
-			avg.setRedb_num(String.valueOf(StringUtil.save2Float(sum_redb_num / chu)));
-			avg.setCoco_num(String.valueOf(StringUtil.save2Float(sum_coco_num / chu)));
-			avg.setPari_num(String.valueOf(StringUtil.save2Float(sum_pari_num / chu)));
-			avg.setBige_num(String.valueOf(StringUtil.save2Float(sum_bige_num / chu)));
-			avg.setJdba_num(String.valueOf(StringUtil.save2Float(sum_jdba_num / chu)));
-			avg.setTine_num(String.valueOf(StringUtil.save2Float(sum_tine_num / chu)));
-			avg.setKunl_num(String.valueOf(StringUtil.save2Float(sum_kunl_num / chu)));
-			avg.setWine_num(String.valueOf(StringUtil.save2Float(sum_wine_num / chu)));
-			avg.setBree_num(String.valueOf(StringUtil.save2Float(sum_bree_num / chu)));
-			avg.setVodk_num(String.valueOf(StringUtil.save2Float(sum_vodk_num / chu)));
-			avg.setAuru_num(String.valueOf(StringUtil.save2Float(sum_auru_num / chu)));
-			avg.setQing_num(String.valueOf(StringUtil.save2Float(sum_qing_num / chu)));
-			avg.setSpri_num(String.valueOf(StringUtil.save2Float(sum_spri_num / chu)));
-			avg.setNail_num(String.valueOf(StringUtil.save2Float(sum_nail_num / chu)));
-			avg.setAbcs_num(String.valueOf(StringUtil.save2Float(sum_abcs_num / chu)));
-			avg.setCard_num(String.valueOf(StringUtil.save2Float(sum_card_num / chu)));
-			avg.setComo_num(String.valueOf(StringUtil.save2Float(sum_como_num / chu)));
-		}
-		return avg;
+		StaMini staMini = new StaMini();
+		Iterator<Object> it = list.iterator();
+		Object[] obj = null;
+		obj = (Object[]) it.next();
+		staMini.setOrderNum("领取量");
+		staMini.setRedb_num(obj[0].toString());
+		staMini.setCoco_num(obj[1].toString());
+		staMini.setPari_num(obj[2].toString());
+		staMini.setBige_num(obj[3].toString());
+		staMini.setJdba_num(obj[4].toString());
+		staMini.setTine_num(obj[5].toString());
+		staMini.setKunl_num(obj[6].toString());
+		staMini.setWine_num(obj[7].toString());
+		staMini.setBree_num(obj[8].toString());
+		staMini.setVodk_num(obj[9].toString());
+		staMini.setAuru_num(obj[10].toString());
+		staMini.setQing_num(obj[11].toString());
+		staMini.setSpri_num(obj[12].toString());
+		staMini.setNail_num(obj[13].toString());
+		staMini.setAbcs_num(obj[14].toString());
+		staMini.setCard_num(obj[15].toString());
+		staMini.setComo_num(obj[16].toString());
+		return staMini;
 	}
 	
 	// 导出员工领取耗品统计表，excel格式
@@ -3947,7 +3775,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					staLinenList = objToLinenStaExpand(it);
 					StaLinen sum = sumStaLinenExpend(staLinenList);// 合计
 					List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
-					StaLinen avg = avgStaLinenExpend(gainnum);// 平均
+					StaLinen avg = avgStaLinenExpend(gainnum);// 领取合计放入StaLinen
 					staLinenList.add(sum);
 					staLinenList.add(avg);
 
@@ -3977,7 +3805,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					Iterator<Object> it = listSource.iterator();
 					staRoomList = objToRoomStaExpand(it);
 					StaRoom sum = sumStaRoomExpend(staRoomList);// 合计
-					StaRoom avg = avgStaRoomExpend(staRoomList);// 平均
+					List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+					StaRoom avg = avgStaRoomExpend(gainnum);// 平均
 					staRoomList.add(sum);
 					staRoomList.add(avg);
 
@@ -4008,7 +3837,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					Iterator<Object> it = listSource.iterator();
 					staWashList = objToWashStaExpand(it);
 					StaWash sum = sumStaWashExpend(staWashList);// 合计
-					StaWash avg = avgStaWashExpend(staWashList);// 平均
+					List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+					StaWash avg = avgStaWashExpend(gainnum);// 平均
 					staWashList.add(sum);
 					staWashList.add(avg);
 
@@ -4028,6 +3858,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				String minifileName = "客房部员工领取迷你吧量统计表.xlsx";
 				String minititle = "(客房部员工领取迷你吧量统计表" + startTime.substring(0,10) + "至 " + endTime.substring(0,10) + ")";
 				try {
+					List<Integer> listCondition = expendFormDao.selectMiniCondition();//得到迷你吧物品id
 					ExcelHelper<MiniExpend> ex = new ExcelHelper<MiniExpend>();
 					path = FileHelper.transPath(minifileName, path);// 解析后的上传路径
 					OutputStream out = new FileOutputStream(path);
@@ -4038,7 +3869,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					Iterator<Object> it = listSource.iterator();
 					staMiniList = objToMiniStaExpand(it);
 					StaMini sum = sumStaMiniExpend(staMiniList);// 合计
-					StaMini avg = avgStaMiniExpend(staMiniList);// 平均
+					List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+					StaMini avg = avgStaMiniExpend(gainnum);// 平均
 					staMiniList.add(sum);
 					staMiniList.add(avg);
 

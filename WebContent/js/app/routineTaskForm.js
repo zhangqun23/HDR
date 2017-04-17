@@ -296,6 +296,10 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
+								if(reportForm.limit.roomType ==undefined){
+									alert("请选择房间类型！");
+									return false;
+								}
 								if (reportForm.limit.roomType == "") {
 									alert("请选择房间类型！");
 									return false;

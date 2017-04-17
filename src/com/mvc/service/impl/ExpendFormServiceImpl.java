@@ -2447,8 +2447,16 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			List<StaLinen> listGoal = objToLinenStaExpand(it);
 			
 			List<StaLinen> linenCount = new ArrayList<StaLinen>();
-			StaLinen sum = sumStaLinenExpend(listGoal);// 合计
-			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
+			StaLinen sum = sumStaLinenExpend(listGoal);// 消耗合计
+			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+			/*ArrayList<Integer> afterlist = new ArrayList<Integer>();
+			for (int i=0;i<gainnum.size();i++){
+				afterlist.add(gainnum.get(i));
+			}
+			List<StaLinen> gainsum =null;
+			gainsum.addAll(afterlist);*/
+			
+			StaLinen avg = avgStaLinenExpend(gainnum);// 平均
 			linenCount.add(sum);
 			linenCount.add(avg);
 			jsonObject.put("list", listGoal);
@@ -2889,7 +2897,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			List<StaLinen> listGoal = objToLinenStaExpand(it);
 
 			StaLinen sum = sumStaLinenExpend(listGoal);// 合计
-			StaLinen avg = avgStaLinenExpend(listGoal);// 平均
+			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+			StaLinen avg = avgStaLinenExpend(gainnum);// 平均
 			listGoal.add(sum);
 			listGoal.add(avg);
 			float sum_num = (float) 0.0;
@@ -3017,62 +3026,26 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	 * @param list
 	 * @return
 	 */
-	private StaLinen avgStaLinenExpend(List<StaLinen> list) {
-
+	private StaLinen avgStaLinenExpend(List<Object> list) {
 		StaLinen avg = new StaLinen();
-		Iterator<StaLinen> it = list.iterator();
-
-		Long sum_bato_num = (long) 0;
-		Long sum_facl_num = (long) 0;
-		Long sum_besh_num = (long) 0;
-		Long sum_hato_num = (long) 0;
-		Long sum_medo_num = (long) 0;
-		Long sum_flto_num = (long) 0;
-		Long sum_baro_num = (long) 0;
-		Long sum_slba_num = (long) 0;
-		Long sum_duto_num = (long) 0;
-		Long sum_pill_num = (long) 0;
-		Long sum_shop_num = (long) 0;
-		Long sum_laba_num = (long) 0;
-		Long sum_piin_num = (long) 0;
-		Long sum_blan_num = (long) 0;
-
-		StaLinen staLinen = null;
-		Float chu = Float.valueOf(list.size());
-		if (chu != 0) {
-			while (it.hasNext()) {
-				staLinen = it.next();
-				sum_bato_num += Integer.valueOf(staLinen.getBato_num());
-				sum_facl_num += Integer.valueOf(staLinen.getFacl_num());
-				sum_besh_num += Integer.valueOf(staLinen.getBesh_num());
-				sum_hato_num += Integer.valueOf(staLinen.getHato_num());
-				sum_medo_num += Integer.valueOf(staLinen.getMedo_num());
-				sum_flto_num += Integer.valueOf(staLinen.getFlto_num());
-				sum_baro_num += Integer.valueOf(staLinen.getBaro_num());
-				sum_slba_num += Integer.valueOf(staLinen.getSlba_num());
-				sum_duto_num += Integer.valueOf(staLinen.getDuto_num());
-				sum_pill_num += Integer.valueOf(staLinen.getPill_num());
-				sum_shop_num += Integer.valueOf(staLinen.getShop_num());
-				sum_laba_num += Integer.valueOf(staLinen.getLaba_num());
-				sum_piin_num += Integer.valueOf(staLinen.getPiin_num());
-				sum_blan_num += Integer.valueOf(staLinen.getBlan_num());
-			}
-			avg.setOrderNum("平均");
-			avg.setBato_num(String.valueOf(StringUtil.save2Float(sum_bato_num / chu)));
-			avg.setFacl_num(String.valueOf(StringUtil.save2Float(sum_facl_num / chu)));
-			avg.setBesh_num(String.valueOf(StringUtil.save2Float(sum_besh_num / chu)));
-			avg.setHato_num(String.valueOf(StringUtil.save2Float(sum_hato_num / chu)));
-			avg.setMedo_num(String.valueOf(StringUtil.save2Float(sum_medo_num / chu)));
-			avg.setFlto_num(String.valueOf(StringUtil.save2Float(sum_flto_num / chu)));
-			avg.setBaro_num(String.valueOf(StringUtil.save2Float(sum_baro_num / chu)));
-			avg.setSlba_num(String.valueOf(StringUtil.save2Float(sum_slba_num / chu)));
-			avg.setDuto_num(String.valueOf(StringUtil.save2Float(sum_duto_num / chu)));
-			avg.setPill_num(String.valueOf(StringUtil.save2Float(sum_pill_num / chu)));
-			avg.setShop_num(String.valueOf(StringUtil.save2Float(sum_shop_num / chu)));
-			avg.setLaba_num(String.valueOf(StringUtil.save2Float(sum_laba_num / chu)));
-			avg.setPiin_num(String.valueOf(StringUtil.save2Float(sum_piin_num / chu)));
-			avg.setBlan_num(String.valueOf(StringUtil.save2Float(sum_blan_num / chu)));
-		}
+		Iterator<Object> it = list.iterator();
+		Object[] obj = null;
+		obj = (Object[]) it.next();
+		avg.setOrderNum("领取量");
+		avg.setBato_num(obj[0].toString());
+		avg.setFacl_num(obj[1].toString());
+		avg.setBesh_num(obj[2].toString());
+		avg.setHato_num(obj[3].toString());
+		avg.setMedo_num(obj[4].toString());
+		avg.setFlto_num(obj[5].toString());
+		avg.setBaro_num(obj[6].toString());
+		avg.setSlba_num(obj[7].toString());
+		avg.setDuto_num(obj[8].toString());
+		avg.setPill_num(obj[9].toString());
+		avg.setShop_num(obj[10].toString());
+		avg.setLaba_num(obj[11].toString());
+		avg.setPiin_num(obj[12].toString());
+		avg.setBlan_num(obj[13].toString());
 		return avg;
 	}
 
@@ -3870,7 +3843,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	}
 
 	/**
-	 * 布草list求平均
+	 * 迷你吧list求平均
 	 * 
 	 * @param list
 	 * @return
@@ -3973,7 +3946,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 					Iterator<Object> it = listSource.iterator();
 					staLinenList = objToLinenStaExpand(it);
 					StaLinen sum = sumStaLinenExpend(staLinenList);// 合计
-					StaLinen avg = avgStaLinenExpend(staLinenList);// 平均
+					List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+					StaLinen avg = avgStaLinenExpend(gainnum);// 平均
 					staLinenList.add(sum);
 					staLinenList.add(avg);
 

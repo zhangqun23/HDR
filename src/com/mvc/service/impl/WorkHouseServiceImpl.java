@@ -210,10 +210,15 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
-		String sortNo = (String) map.get("roomType");
 		strb.append("从" + startTime.substring(0, 7) + "至" + endTime.substring(0, 7));
-		RoomSort roomSort = roomSortRepository.selectNameBySortNo(sortNo);
-		strb.append(roomSort.getSortName() + "房型，员工做房平均用时排名前三：");
+		String sortNo = (String) map.get("roomType");
+		if(sortNo.equals("-1")){
+			strb.append("全部房型，员工做房平均用时排名前三：");
+		}
+		else{
+			RoomSort roomSort = roomSortRepository.selectNameBySortNo(sortNo);
+			strb.append(roomSort.getSortName() + "房型，员工做房平均用时排名前三：");
+		}
 
 		StringBuilder strbLeave = new StringBuilder();
 		int i = 0;

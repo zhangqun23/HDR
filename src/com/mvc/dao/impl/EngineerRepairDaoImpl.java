@@ -157,18 +157,28 @@ public class EngineerRepairDaoImpl implements EngineerRepairDao {
 
 		EntityManager em = emf.createEntityManager();
 		StringBuilder sql = new StringBuilder();
-		sql.append(" select aa.sort_id,sort_name,father_id,parent_name,COALESCE(bb.amount,0) as amount from");
-		sql.append("(select sort_id,sort_name,parent_name,father_id from engineer_case_sort) as aa ");
-		sql.append("left join ");
 		if (dateMap.containsKey("repairType")) {
 			if (StringUtil.strIsNotEmpty(dateMap.get("repairType").toString())) {
 				String repairType = (String) dateMap.get("repairType");
-				sql.append(
-						"(select sort_id,close_time,count(1) as amount from engineer_info GROUP by sort_id) as bb on aa.sort_id=bb.sort_id  where close_time between '"
-								+ startTime + "' and '" + endTime + "' and aa.father_id<>0 and father_id='" + repairType
-								+ "' order by aa.father_id");
-			}
+				if (repairType.equals(-1)) {
+					sql.append(" select aa.sort_id,sort_name,father_id,parent_name,coalesce(sum(bb.amount),0) as AMOUNT from");
+					sql.append("(select sort_id,sort_name,parent_name,father_id from engineer_case_sort) as aa ");
+					sql.append("left join ");
+					sql.append(
+							"(select sort_id,close_time,count(1) as amount from engineer_info GROUP by sort_id) as bb on aa.sort_id=bb.sort_id  where close_time between '"
+									+ startTime + "' and '" + endTime + "' and aa.father_id<>0 order by aa.father_id");
+				}else{
+					sql.append(" select aa.sort_id,sort_name,father_id,parent_name,COALESCE(bb.amount,0) as amount from");
+					sql.append("(select sort_id,sort_name,parent_name,father_id from engineer_case_sort) as aa ");
+					sql.append("left join ");
+					sql.append(
+							"(select sort_id,close_time,count(1) as amount from engineer_info GROUP by sort_id) as bb on aa.sort_id=bb.sort_id  where close_time between '"
+									+ startTime + "' and '" + endTime + "' and aa.father_id<>0 and father_id='" + repairType
+									+ "' order by aa.father_id");
+				}
+				}
 		}
+		
 		Query query = em.createNativeQuery(sql.toString());
 		List<Object> list = query.getResultList();
 		em.close();

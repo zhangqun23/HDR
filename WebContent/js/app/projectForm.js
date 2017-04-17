@@ -615,7 +615,6 @@ app
 										.stringify(reportForm.pmaLimit);
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
-								console.log(reportForm.pmaLimit);
 								services
 										.selectProMaintainAnalyse({
 											limit : pmaLimits

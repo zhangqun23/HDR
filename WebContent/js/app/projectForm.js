@@ -634,7 +634,7 @@ app
 																if (data.list[item].repairType != '') {
 																	combinePie(
 																			pieItems,
-																			data.list[item].repairType,
+																			data.list[item].repairParentType,
 																			parseInt(data.list[item].serviceLoad));
 																}
 															}

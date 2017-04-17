@@ -218,7 +218,7 @@ app
 							checkRob.reaLimit = {
 								checkYear : "",
 								quarter : "0",
-								roomType : "",
+								roomType : "-1",
 								staffId : ""
 							}
 							// 查退房效率统计查询限制条件
@@ -226,7 +226,7 @@ app
 								tableType : "0",
 								startTime : "",
 								endTime : "",
-								roomType : ""
+								roomType : "-1"
 							}
 							// 获取房间类型名称
 							checkRob.sortName = "";
@@ -689,7 +689,7 @@ app
 							checkRob.coaLimit = {
 								checkYear : '',
 								quarter : '0',
-								roomType : '',
+								roomType : '-1',
 								staffId : ''
 							};
 							checkRob.selectCheckOutAnalyseByLimits = function() {

@@ -242,13 +242,13 @@ app
 							reportForm.limit = {
 								startTime : "",
 								endTime : "",
-								roomType : ""
+								roomType : "-1"
 							};
 							// zq做房用时分析界面设置条件
 							reportForm.whaLimit = {
 								checkYear : "",
 								quarter : "0",
-								roomType : "",
+								roomType : "-1",
 								cleanType : "0",
 								staffId : ""
 							};

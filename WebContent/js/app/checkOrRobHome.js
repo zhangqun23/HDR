@@ -396,7 +396,7 @@ app
 								if (checkRob.reLimit.tableType == '0') {
 									services.selectRobEfficiencyByLimits({
 										limit : robEfficiencyLimit,
-										page : nowPage
+										page : 1
 									}).success(function(data) {
 										$(".overlayer").fadeOut(200);
 										$(".tipLoading").fadeOut(200);
@@ -415,7 +415,7 @@ app
 									services
 											.selectRobDetailByLimits({
 												limit : robEfficiencyLimit,
-												page : nowPage
+												page : 1
 											})
 											.success(
 													function(data) {
@@ -424,6 +424,9 @@ app
 														$(".tipLoading")
 																.fadeOut(200);
 														checkRob.robDetailList = data.list;
+														console
+																.log("ddsjhfkdshfkjdshfkhsdkfh"
+																		+ data.list.length);
 														pageTurn(
 																data.totalPage,
 																1,

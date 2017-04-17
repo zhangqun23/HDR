@@ -310,8 +310,15 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		Iterator<Object> it = listSource.iterator();
 		List<HouseCustomerServiceLoad> listGoal = listloadToListGoal(it);
 
-		Object[] objOne = (Object[]) listSource.get(0);
-		String department = objOne[5].toString();
+		Object[] objOne;		
+		String string=(String) map.get("depart");
+		DepartmentInfo departmentInfo= departmentInfoRepository.selectByDeptId(string);
+		String department=departmentInfo.getDepartmentName() ;
+		if(listSource.size()!=0){
+			objOne = (Object[]) listSource.get(0);
+			department = objOne[5].toString();
+		}
+		
 
 		String analyseResult = department + "员工的平均服务数量为" + listloadToListGoalAnalyse(listSource)+"。";
 

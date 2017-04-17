@@ -325,9 +325,75 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		String repairType = map.get("repairType");
 
 		dateMap.put("repairType", repairType);
+
 		List<Object> listSource = engineerRepairDao.getProjectRepairIcon(dateMap);
-		String stww = listsourceToListGoalIcon(listSource);
-		return stww;
+		if (repairType == "-1") {
+			String stww = listsourceToListGoalIcon0(listSource);
+			return stww;
+		} else {
+			String stww = listsourceToListGoalIcon(listSource);
+			return stww;
+		}
+
+	}
+
+	private String listsourceToListGoalIcon0(List<Object> listSource) {
+		Iterator<Object> it = listSource.iterator();
+
+		List<ProjectRepair> listGoal = new ArrayList<ProjectRepair>();
+		Object[] objects;
+		ProjectRepair projectRepair;
+		String parentname = null;
+		String analyseResult;
+		while (it.hasNext()) {
+			objects = (Object[]) it.next();
+			projectRepair = new ProjectRepair();
+			projectRepair.setRepairParentType(objects[3].toString());// 父类型
+
+			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
+			parentname = objects[3].toString();
+
+			listGoal.add(projectRepair);
+		}
+		// 序号
+		Iterator<ProjectRepair> itGoal = listGoal.iterator();
+		projectRepair = null;
+		int i = 0;
+		while (itGoal.hasNext()) {
+			i++;
+			projectRepair = itGoal.next();
+			projectRepair.setOrderNum(String.valueOf(i));
+		}
+		sortAndWriteW(listGoal, "serviceLoad", false);// 数量排名
+		Iterator<ProjectRepair> itGoalRange = listGoal.iterator();
+		projectRepair = null;
+		int w = 0;
+		analyseResult = "报修项排名前三的是：";
+		if (i <= 3) {
+			while (itGoalRange.hasNext()) {
+				w++;
+				projectRepair = itGoalRange.next();
+				if (w < i) {
+					analyseResult += projectRepair.getRepairParentType() + "(" + projectRepair.getServiceLoad() + ")，";
+				} else {
+					analyseResult += projectRepair.getRepairParentType() + "(" + projectRepair.getServiceLoad() + ")。";
+				}
+			}
+		} else {
+			while (itGoalRange.hasNext() && w < 3) {
+				w++;
+				projectRepair = itGoalRange.next();
+				if (w < i && w < 3) {
+					analyseResult += projectRepair.getRepairParentType() + "(" + projectRepair.getServiceLoad() + ")，";
+				} else if (w == 3) {
+					analyseResult += projectRepair.getRepairParentType() + "(" + projectRepair.getServiceLoad() + ")。";
+				}
+			}
+		}
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", listGoal);
+		jsonObject.put("analyseResult", analyseResult);
+		return jsonObject.toString();
 
 	}
 
@@ -343,6 +409,7 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 			objects = (Object[]) it.next();
 			projectRepair = new ProjectRepair();
 			projectRepair.setRepairType(objects[1].toString());// 子类型
+
 			projectRepair.setServiceLoad(Integer.valueOf(objects[4].toString()));// 数量
 			parentname = objects[3].toString();
 

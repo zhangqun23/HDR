@@ -3,6 +3,7 @@ package com.mvc.dao;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 酒店对客服务信息统计
  * 
@@ -47,7 +48,7 @@ public interface ExpendFormDao {
 	// 查询迷你吧总条数
 	Long countminiTotal(Map<String, Object> map);
 	
-	// 查询员工领取耗品总条数
+	// 查询员工消耗耗品总条数
 	Long countStaTotal(Map<String, Object> map);
 
 	// 房间耗品统计分页
@@ -77,10 +78,13 @@ public interface ExpendFormDao {
 	// 卫生间耗品统计分析
 	List<Object> selectMiniExpendAnalyse(Map<String, Object> map);
 	
-	// 员工领取布草量、房间耗品、卫生间耗品(用于导出)
+	// 员工消耗布草量、房间耗品、卫生间耗品(用于导出)
 	List<Object> selectStaExpend(Map<String, Object> map, List<Integer> listCondition);
 	
-	// 员工领取迷你吧量(用于导出)
+	// 员工消耗迷你吧量(用于导出)
 	List<Object> selectStaMini(Map<String, Object> map);
+
+	// 员工领取耗品总数
+	List<Object> selectExpendGet(Map<String, Object> map, List<Integer> listCondition);
 
 }

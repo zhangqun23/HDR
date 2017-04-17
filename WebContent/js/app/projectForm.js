@@ -595,7 +595,7 @@ app
 							reportForm.pmaLimit = {
 								checkYear : '',
 								quarter : '0',
-								repairType : ''
+								repairType : '-1'
 							};
 							// zq工程维修项的分析扇形图
 							reportForm.selectProMaintainAnalyse = function() {
@@ -613,9 +613,9 @@ app
 								}
 								var pmaLimits = JSON
 										.stringify(reportForm.pmaLimit);
-								console.log("fdsfsdf"+pmaLimits);
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
+								console.log(reportForm.pmaLimit);
 								services
 										.selectProMaintainAnalyse({
 											limit : pmaLimits

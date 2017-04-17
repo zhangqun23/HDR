@@ -745,7 +745,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return list;
 	}
 
-	// 员工领取耗品分页总条数
+	// 员工消耗耗品分页总条数
 	@Override
 	public Long countStaTotal(Map<String, Object> map) {
 
@@ -764,7 +764,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return totalRow.longValue();
 	}
 	
-	// 员工领取耗品统计SQL条件
+	// 员工消耗耗品统计SQL条件
 	private String staExpendSQL(Map<String, Object> map) {
 		StringBuilder sql = new StringBuilder();
 
@@ -826,7 +826,7 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return sqlStr;
 	}
 
-	//人员布草、房间耗品、卫生间耗品统计
+	//员工消耗布草量、房间耗品、卫生间耗品(用于导出)
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> selectStaExpend(Map<String, Object> map, List<Integer> listCondition) {
@@ -863,5 +863,38 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		em.close();
 		return list;
 	}
+
+	//员工领取耗品总数
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> selectExpendGet(Map<String, Object> map, List<Integer> listCondition) {
+		EntityManager em = emf.createEntityManager();
+		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
+		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("select ");
+		for (int i = 0; i < listCondition.size()-1; i++) {
+			sql.append("coalesce(sum(a" + i + ".goods_num),0),");
+		}
+		
+		sql.append("coalesce(sum(a" + listCondition.size() + ".goods_num),0) ");
+		sql.append(" from ");
+		for (int i = 0; i < listCondition.size()-1; i++) {
+			sql.append("goods_staff a" + i + ",");
+		}
+		sql.append("goods_staff a" + listCondition.size() +" where ");
+		for (int i = 0; i < listCondition.size()-1; i++) {
+			sql.append("a" + i + ".goods_id=" + listCondition.get(i));
+			sql.append(" and a" + i + ".create_time between '" + startTime + "'" + " and '" + endTime + "'");
+			sql.append(" and ");
+		}
+		
+		Query query = em.createNativeQuery(sql.toString().substring(0, sql.toString().length() - 4));
+		List<Object> list = query.getResultList();
+		em.close();
+		return list;
+	}
+	
 	
 }

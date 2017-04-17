@@ -611,6 +611,10 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
+								if(checkRob.coLimit.roomType ==undefined){
+									alert("请选择房间类型！");
+									return false;
+								}
 								if (checkRob.coLimit.roomType == "") {
 									alert("请选择房间类型！");
 									return false;

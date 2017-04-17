@@ -211,9 +211,12 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append(" AND case_author = '");
 		sql.append(staffId);
 		sql.append("' ");
-		sql.append("AND case_info.sort_no = '");
-		sql.append(roomType);
-		sql.append("' ");
+		if(roomType.equals("-1")){
+		}else{
+			sql.append(" AND case_info.sort_no = '");
+			sql.append(roomType);
+			sql.append("' ");
+		}
 		sql.append("GROUP BY months ");
 
 		Query query = em.createNativeQuery(sql.toString());

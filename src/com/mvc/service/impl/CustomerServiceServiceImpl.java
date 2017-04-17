@@ -435,8 +435,16 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		String analyseResult = null;
 		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
 			List<Object> listSource = hotelCustomerDao.findDepartmentLoad(map);
-			Object[] objOne = (Object[]) listSource.get(0);
-			department = objOne[5].toString();
+	
+			Object[] objOne;		
+			String string=(String) map.get("depart_Id");
+			DepartmentInfo departmentInfo= departmentInfoRepository.selectByDeptId(string);
+			department=departmentInfo.getDepartmentName() ;
+			if(listSource.size()!=0){
+				objOne = (Object[]) listSource.get(0);
+				department = objOne[5].toString();
+			}
+			
 			Iterator<Object> it = listSource.iterator();
 			listGoal = listloadToListGoal(it);
 
@@ -484,8 +492,16 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			String department = null;// 部门名称
 			if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
 				List<Object> listSource = hotelCustomerDao.findDepartmentLoad(map);
-				Object[] objOne = (Object[]) listSource.get(0);
-				department = objOne[5].toString();
+				
+				Object[] objOne;		
+				String string=(String) map.get("depart_Id");
+				DepartmentInfo departmentInfo= departmentInfoRepository.selectByDeptId(string);
+				department=departmentInfo.getDepartmentName() ;
+				if(listSource.size()!=0){
+					objOne = (Object[]) listSource.get(0);
+					department = objOne[5].toString();
+				}
+				
 				Iterator<Object> it = listSource.iterator();
 				listGoal = listloadToListGoal(it);
 			}
@@ -653,7 +669,7 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public ResponseEntity<byte[]> exportRoomType(Map<String, Object> map, String path, String picPath,
-			String modelPath) {
+			String modelPath,String modelPath0) {
 		ResponseEntity<byte[]> byteww = null;
 		String starttime = (String) map.get("start_Time");// 开始时间
 		String endtime = (String) map.get("end_Time");// 结束时间
@@ -668,7 +684,9 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			picPath = FileHelper.transPath(picName1, picPath);
 		}
 		Map<String, Object> picMap = new HashMap<String, Object>();
-		picMap = PictureUtil.getHighPicMap(picName1, picPath, photo);
+		if (StringUtil.strIsNotEmpty(photo)) {
+			picMap = PictureUtil.getHighPicMap(picName1, picPath, photo);
+		}
 
 		List<HouseCustomerServiceType> listGoal = null;
 		WordHelper wh = new WordHelper();
@@ -679,8 +697,16 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 		String department = null;// 部门名称
 		if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
 			List<Object> listSource = hotelCustomerDao.findRoomType(map);
-			Object[] objOne = (Object[]) listSource.get(0);
-			department = objOne[5].toString();
+			
+			Object[] objOne;		
+			String string=(String) map.get("depart_Id");
+			DepartmentInfo departmentInfo= departmentInfoRepository.selectByDeptId(string);
+			department=departmentInfo.getDepartmentName() ;
+			if(listSource.size()!=0){
+				objOne = (Object[]) listSource.get(0);
+				department = objOne[5].toString();
+			}
+			
 			Iterator<Object> it = listSource.iterator();
 			listGoal = listtypeToListGoal(it);
 
@@ -694,12 +720,18 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			contentMap.put("${starttime}", starttime);
 			contentMap.put("${endtime}", endtime);
 			contentMap.put("${depart}", department);
-			contentMap.put("${photo}", picMap);
+			if(!picMap.isEmpty()){
+				contentMap.put("${photo}", picMap);
+			}		
 			contentMap.put("${analyseResult}", analyseResult);
 
 			try {
 				OutputStream out = new FileOutputStream(path0);// 保存路径
-				wh.export2007Word(modelPath, listMap, contentMap, 1, out, -1);
+				if (StringUtil.strIsNotEmpty(photo)) {
+					wh.export2007Word(modelPath, listMap, contentMap, 1, out, -1);
+				}else{
+					wh.export2007Word(modelPath0, listMap, contentMap, 1, out, -1);
+				}			
 				out.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -726,8 +758,15 @@ public class CustomerServiceServiceImpl implements CustomerServiceService {
 			String department = null;// 部门名称
 			if (StringUtil.strIsNotEmpty(starttime) && StringUtil.strIsNotEmpty(endtime)) {
 				List<Object> listSource = hotelCustomerDao.findRoomType(map);
-				Object[] objOne = (Object[]) listSource.get(0);
-				department = objOne[5].toString();
+				
+				Object[] objOne;		
+				String string=(String) map.get("depart_Id");
+				DepartmentInfo departmentInfo= departmentInfoRepository.selectByDeptId(string);
+				department=departmentInfo.getDepartmentName() ;
+				if(listSource.size()!=0){
+					objOne = (Object[]) listSource.get(0);
+					department = objOne[5].toString();
+				}
 				Iterator<Object> it = listSource.iterator();
 				listGoal = listtypeToListGoal(it);
 

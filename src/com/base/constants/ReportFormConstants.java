@@ -92,6 +92,8 @@ public class ReportFormConstants {
 	public static final String ROOMWORKLOAD_PATH = DICTIONARY + "roomWorkload.docx";
 	// 导出部门对客服务类型统计
 	public static final String ROOMWORKTYPE_PATH = DICTIONARY + "roomType.docx";
+	// 导出部门对客服务类型统计(备用，用于无photo的情况)
+	public static final String ROOMWORKTYPE_PATH0 = DICTIONARY + "roomType0.docx";
 
 	/********************* 工程部相关 **************************************/
 	// 导出部门对客服务类型统计

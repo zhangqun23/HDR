@@ -71,9 +71,6 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when('/robEffAnalyseForm', {
 		templateUrl : '/HDR/jsp/checkOrRobHome/robEffAnalyseForm.html',
 		controller : 'CheckOrRobHomeController'
-	}).when('/checkEfficiencyForm', {
-		templateUrl : '/HDR/jsp/checkOrRobHome/checkEfficiencyForm.html',
-		controller : 'CheckOrRobHomeController'
 	}).when('/checkOutHomeForm', {
 		templateUrl : '/HDR/jsp/checkOrRobHome/checkOutHomeForm.html',
 		controller : 'CheckOrRobHomeController'
@@ -139,16 +136,7 @@ app
 									data : data
 								});
 							};
-							// zq查询领班查房效率
-							services.selectCheckEfficiencyByLimits = function(
-									data) {
-								return $http({
-									method : 'post',
-									url : baseUrl
-											+ '/checkHouse/getCheckHouseList.do',
-									data : data
-								});
-							};
+
 							// zq获取查退房效率表
 							services.selectCheckOutEfficiencyByLimits = function(
 									data) {
@@ -232,11 +220,6 @@ app
 								quarter : "0",
 								roomType : "",
 								staffId : ""
-							}
-							// zq查房效率
-							checkRob.ceLimit = {
-								startTime : "",
-								endTime : ""
 							}
 							// 查退房效率统计查询限制条件
 							checkRob.coLimit = {
@@ -616,43 +599,7 @@ app
 								var name = $("#staffId").val();
 								checkRob.staffName = getSelectedStaff(name);
 							}
-							// zq获取领班查房效率列表
-							checkRob.selectCheckEfficiencyByLimits = function() {
-								if (checkRob.ceLimit.startTime == "") {
-									alert("请选择起始时间！");
-									return false;
-								}
-								if (checkRob.ceLimit.endTime == "") {
-									alert("请选择截止时间！");
-									return false;
-								}
-								$(".overlayer").fadeIn(200);
-								$(".tipLoading").fadeIn(200);
-								services
-										.selectCheckEfficiencyByLimits(
-												{
-													startTime : checkRob.ceLimit.startTime,
-													endTime : checkRob.ceLimit.endTime
-												})
-										.success(
-												function(data) {
-													$(".overlayer")
-															.fadeOut(200);
-													$(".tipLoading").fadeOut(
-															200);
-													checkRob.checkEfficiencyList = data.checkHouseList;
 
-													checkRob.remark = data.analyseResult;
-													if (data.checkHouseList.length) {
-														checkRob.listIsShow = false;
-														checkRob.listRemark = true;
-													} else {
-														checkRob.listIsShow = true;
-														checkRob.listRemark = false;
-														checkRob.remark = "";
-													}
-												});
-							}
 							// zq获取查退房明细或效率表selectCheckOutRooms
 							checkRob.selectCheckOutRooms = function() {
 
@@ -662,6 +609,10 @@ app
 								}
 								if (checkRob.coLimit.endTime == "") {
 									alert("请选择截止时间！");
+									return false;
+								}
+								if(checkRob.coLimit.roomType ==undefined){
+									alert("请选择房间类型！");
 									return false;
 								}
 								if (checkRob.coLimit.roomType == "") {
@@ -896,9 +847,6 @@ app
 										'/robEffAnalyseForm') == 0) {
 									selectRoomSorts();
 									selectRoomStaffs(0);
-								} else if ($location.path().indexOf(
-										'/checkEfficiencyForm') == 0) {
-									selectRoomSorts();
 								} else if ($location.path().indexOf(
 										'/checkOutHomeForm') == 0) {
 									selectRoomSorts();

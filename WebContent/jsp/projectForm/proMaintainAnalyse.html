@@ -23,7 +23,7 @@
 				<li><label>类型</label><select class="dfselect layoutStyle"
 					style="width: 140px" ng-model="pmaLimit.repairType"
 					name="repairType" id="repairType" required><option
-							value="">请选择</option>
+								value="-1">全部</option>
 						<option value="{{r.sortId}}" ng-repeat="r in repairTypes">{{r.sortName}}</option></select></li>
 				<li><input class="btn layoutStyle" style="width: 60px"
 					type="button" value="查询" ng-click="selectProMaintainAnalyse()"></li>

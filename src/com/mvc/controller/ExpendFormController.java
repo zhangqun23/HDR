@@ -465,7 +465,7 @@ public class ExpendFormController {
 		
 	}
 	/**
-	 * 员工耗品统计
+	 * 员工消耗耗品统计
 	 * 
 	 * @param
 	 * @return
@@ -481,7 +481,7 @@ public class ExpendFormController {
 		return jsonObject.toString();
 	}
 	/**
-	 * 导出员工领取耗品，word格式
+	 * 导出员工耗品，word格式
 	 * 
 	 * @param request
 	 * @param response

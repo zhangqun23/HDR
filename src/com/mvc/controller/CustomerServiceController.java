@@ -198,9 +198,7 @@ public class CustomerServiceController {
 		String path = request.getSession().getServletContext().getRealPath(ReportFormConstants.SAVE_PATH);// 上传服务器的路径
 		String picPath=request.getSession().getServletContext().getRealPath(ReportFormConstants.PIC_PATH);// 图片路径
 		String modelPath = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMWORKTYPE_PATH);// 模板路径
-		String modelPath0 = request.getSession().getServletContext().getRealPath(ReportFormConstants.ROOMWORKTYPE_PATH0);// 模板路径
-		
-		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomType(map, path,picPath, modelPath,modelPath0);
+		ResponseEntity<byte[]> byteArr = hotelCustomerService.exportRoomType(map, path,picPath, modelPath);
 		response.addCookie(CookieUtil.exportFlag());// 返回导出成功的标记
 		return byteArr;
 	}

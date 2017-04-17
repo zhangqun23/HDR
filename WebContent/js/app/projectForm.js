@@ -595,7 +595,7 @@ app
 							reportForm.pmaLimit = {
 								checkYear : '',
 								quarter : '0',
-								repairType : ''
+								repairType : '-1'
 							};
 							// zq工程维修项的分析扇形图
 							reportForm.selectProMaintainAnalyse = function() {
@@ -603,19 +603,19 @@ app
 									alert("请选择起始时间！");
 									return false;
 								}
-								if(reportForm.pmaLimit.repairType ==undefined){
+								if (reportForm.pmaLimit.repairType == undefined) {
 									alert("请选择维修类型！");
 									return false;
 								}
-								if (reportForm.pmaLimit.repairType == "" ) {
+								if (reportForm.pmaLimit.repairType == "") {
 									alert("请选择维修类型！");
 									return false;
 								}
 								var pmaLimits = JSON
 										.stringify(reportForm.pmaLimit);
-								console.log("fdsfsdf"+pmaLimits);
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
+								console.log(reportForm.pmaLimit);
 								services
 										.selectProMaintainAnalyse({
 											limit : pmaLimits
@@ -629,14 +629,26 @@ app
 													var title = "工程维修项统计分析扇形图";
 													var pieItems = [];
 													if (data.list.length) {
-														for ( var item in data.list) {
-															if (data.list[item].repairType != '') {
-																combinePie(
-																		pieItems,
-																		data.list[item].repairType,
-																		parseInt(data.list[item].serviceLoad));
+														if (reportForm.pmaLimit.repairType == "-1") {
+															for ( var item in data.list) {
+																if (data.list[item].repairType != '') {
+																	combinePie(
+																			pieItems,
+																			data.list[item].repairType,
+																			parseInt(data.list[item].serviceLoad));
+																}
+															}
+														} else {
+															for ( var item in data.list) {
+																if (data.list[item].repairType != '') {
+																	combinePie(
+																			pieItems,
+																			data.list[item].repairType,
+																			parseInt(data.list[item].serviceLoad));
+																}
 															}
 														}
+
 														pieChartForm(
 																"#pieChart",
 																title, "维修项占比",
@@ -701,7 +713,7 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
-								if (reportForm.pmfLimit.materialType == undefined){
+								if (reportForm.pmfLimit.materialType == undefined) {
 									alert("请选择查找类型！");
 									return false;
 								}

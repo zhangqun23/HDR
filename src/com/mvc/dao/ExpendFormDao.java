@@ -87,4 +87,7 @@ public interface ExpendFormDao {
 	// 员工领取耗品总数
 	List<Object> selectExpendGet(Map<String, Object> map, List<Integer> listCondition);
 
+	//得到迷你吧物品id
+	List<Integer> selectMiniCondition();
+
 }

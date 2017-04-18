@@ -630,7 +630,7 @@ app
 													if (data.list.length) {
 														if (reportForm.pmaLimit.repairType == "-1") {
 															for ( var item in data.list) {
-																if (data.list[item].repairType != '') {
+																if (data.list[item].repairParentType != '') {
 																	combinePie(
 																			pieItems,
 																			data.list[item].repairParentType,

@@ -230,15 +230,16 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		}
 
 		Iterator<WorkHouse> itGoal = listAfter2.iterator();
+		//List<WorkHouse> list = new ArrayList<WorkHouse>();
 		int i = 0;
 		workHouse = null;
 		while (itGoal.hasNext()) {
 			i++;// 注意：若写序号放在第一个循环中，根据orderNum排序后存在问题：2在10后面
 			workHouse = (WorkHouse) itGoal.next();
 			workHouse.setOrderNum(String.valueOf(i));
+			//list.add(workHouse);
 		}
-
-		return listGoal;
+		return listAfter2;
 	}
 
 	/**
@@ -297,6 +298,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 	 */
 	private String getFirstThree(List<WorkHouse> list, String filedName, boolean ascFlag) {
 		CollectionUtil.sort(list, filedName, ascFlag);
+		
 		StringBuilder subStrb = new StringBuilder();
 		String getMethodName = "get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1);
 		Class<WorkHouse> tCls = WorkHouse.class;
@@ -304,8 +306,9 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		try {
 			getMethod = tCls.getMethod(getMethodName, new Class[] {});
 			int i = 0;
-			for (WorkHouse workHouse : list) {
+			for (WorkHouse workHouse : list) one:{
 				Object value = getMethod.invoke(workHouse, new Object[] {});
+				if(String.valueOf(value).equals("0.0")) break one;
 				if (i < 3) {
 					subStrb.append(workHouse.getStaff_name() + "("
 							+ StringUtil.save2Float(Float.valueOf(String.valueOf(value))) + ")，");

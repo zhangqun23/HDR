@@ -325,9 +325,9 @@ public class EngineerRepairServiceImpl implements EngineerRepairService {
 		String repairType = map.get("repairType");
 
 		dateMap.put("repairType", repairType);
-
+		System.out.println("试验："+repairType);
 		List<Object> listSource = engineerRepairDao.getProjectRepairIcon(dateMap);
-		if (repairType == "-1") {
+		if (repairType.equals("-1")) {
 			String stww = listsourceToListGoalIcon0(listSource);
 			return stww;
 		} else {

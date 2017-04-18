@@ -100,7 +100,7 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
 
-		if (roomType != null && roomType!="-1") {
+		if (roomType != null && !roomType.equals("-1")) {
 			sql.append(" and case_info.sort_no='" + roomType + "' ");
 		}
 		if (startTime != null && endTime != null) {
@@ -154,7 +154,7 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		String startTime = (String) map.get("startTime");
 		String endTime = (String) map.get("endTime");
 
-		if (roomType != null && roomType!="-1" ) {
+		if (roomType != null && !roomType.equals("-1") ) {
 			sql.append(" and ci.sort_no='" + roomType + "' ");
 		}
 		if (startTime != null && endTime != null) {
@@ -211,9 +211,12 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append(" AND case_author = '");
 		sql.append(staffId);
 		sql.append("' ");
-		sql.append("AND case_info.sort_no = '");
-		sql.append(roomType);
-		sql.append("' ");
+		if(roomType.equals("-1")){
+		}else{
+			sql.append(" AND case_info.sort_no = '");
+			sql.append(roomType);
+			sql.append("' ");
+		}
 		sql.append("GROUP BY months ");
 
 		Query query = em.createNativeQuery(sql.toString());

@@ -161,7 +161,7 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		Object[] obj = null;
 		WorkHouse workHouse = null;
 		while (it.hasNext()) {
-			obj = (Object[]) it.next();
+			one: {obj = (Object[]) it.next();
 			workHouse = new WorkHouse();
 			workHouse.setStaff_name(obj[0].toString());
 			workHouse.setStaff_no(obj[1].toString());
@@ -171,7 +171,8 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			workHouse.setTotal_time_night(obj[5].toString());// 过夜房总用时
 			workHouse.setNum_leave(obj[6].toString());// 离退房数量
 			workHouse.setTotal_time_leave(obj[7].toString());// 离退房总用时
-
+			if(workHouse.getNum_dust().equals("0")&&workHouse.getNum_leave().equals("0")
+					&&workHouse.getNum_night().equals("0")) break one;
 			String avg_time_dust = StringUtil.divide(obj[3].toString(), obj[2].toString());
 			workHouse.setAvg_time_dust(Float.valueOf(avg_time_dust));// 抹尘房平均用时
 			String avg_time_night = StringUtil.divide(obj[5].toString(), obj[4].toString());
@@ -179,14 +180,56 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 			String avg_time_leave = StringUtil.divide(obj[7].toString(), obj[6].toString());
 			workHouse.setAvg_time_leave(Float.valueOf(avg_time_leave));// 离退房平均用时
 
-			listGoal.add(workHouse);
+			listGoal.add(workHouse);}
 		}
-		// 分别对抹尘房、过夜房、离退房排序并编号
-		sortAndWrite(listGoal, "avg_time_dust", true, "rank_dust");
-		sortAndWrite(listGoal, "avg_time_night", true, "rank_night");
-		sortAndWrite(listGoal, "avg_time_leave", true, "rank_leave");
+		CollectionUtil<WorkHouse> collectionUtil = new CollectionUtil<WorkHouse>();
+		//对抹尘房进行排序、编号
+		List<WorkHouse> listAfter = new ArrayList<WorkHouse>();
+		CollectionUtil.sort(listGoal, "avg_time_dust", true);
+		for(int i=0;i<listGoal.size();i++){
+			if(listGoal.get(i).getAvg_time_dust() != 0){
+				listAfter.add(listGoal.get(i));
+			}
+		}
+		collectionUtil.writeSort(listAfter, "rank_dust");
+		for(int i=0;i<listGoal.size();i++){
+			if(listGoal.get(i).getAvg_time_dust() == 0){
+				listGoal.get(i).setRank_dust("-");
+				listAfter.add(listGoal.get(i));
+			}
+		}
+		//对过夜房进行排序、编号
+		List<WorkHouse> listAfter1 = new ArrayList<WorkHouse>();
+		CollectionUtil.sort(listGoal, "avg_time_night", true);
+		for(int i=0;i<listGoal.size();i++){
+			if(listGoal.get(i).getAvg_time_night() != 0){
+				listAfter1.add(listGoal.get(i));
+			}
+		}
+		collectionUtil.writeSort(listAfter, "rank_night");
+		for(int i=0;i<listGoal.size();i++){
+			if(listGoal.get(i).getAvg_time_night() == 0){
+				listGoal.get(i).setRank_night("-");
+				listAfter1.add(listGoal.get(i));
+			}
+		}
+		//对离退房进行编号、排序
+		List<WorkHouse> listAfter2 = new ArrayList<WorkHouse>();
+		CollectionUtil.sort(listGoal, "avg_time_leave", true);
+		for(int i=0;i<listGoal.size();i++){
+			if(listGoal.get(i).getAvg_time_leave() != 0){
+				listAfter2.add(listGoal.get(i));
+			}
+		}
+		collectionUtil.writeSort(listAfter2, "rank_leave");
+		for(int i=0;i<listGoal.size();i++){
+			if(listGoal.get(i).getAvg_time_leave() == 0){
+				listGoal.get(i).setRank_leave("-");
+				listAfter2.add(listGoal.get(i));
+			}
+		}
 
-		Iterator<WorkHouse> itGoal = listGoal.iterator();
+		Iterator<WorkHouse> itGoal = listAfter2.iterator();
 		int i = 0;
 		workHouse = null;
 		while (itGoal.hasNext()) {
@@ -279,23 +322,6 @@ public class WorkHouseServiceImpl implements WorkHouseService {
 		} else {
 			return subStrb.substring(0, subStrb.length() - 1);
 		}
-	}
-
-	/**
-	 * 排序并插入序号
-	 * 
-	 * @param list
-	 * @param filedNamezg
-	 *            按指定字段排序
-	 * @param ascFlag
-	 *            true升序,false降序
-	 * @param writeField
-	 *            向指定字段插入序号
-	 */
-	private void sortAndWrite(List<WorkHouse> list, String filedName, boolean ascFlag, String writeField) {
-		CollectionUtil.sort(list, filedName, ascFlag);
-		CollectionUtil<WorkHouse> collectionUtil = new CollectionUtil<WorkHouse>();
-		collectionUtil.writeSort(list, writeField);
 	}
 
 	// 获取单个员工做房用时

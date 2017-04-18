@@ -83,7 +83,8 @@ public class WorkHouseDaoImpl implements WorkHouseDao {
 		String cleanType = (String) map.get("cleanType");
 		String staffId = (String) map.get("staffId");
 
-		if (roomType != null) {
+		if (roomType.equals("-1")) {}
+		else{
 			sql.append(" and cs.sort_no='" + roomType + "'");
 		}
 		if (startTime != null && endTime != null) {

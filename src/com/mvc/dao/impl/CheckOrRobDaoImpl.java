@@ -228,7 +228,7 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append(" AND case_author = '");
 		sql.append(staffId);
 		sql.append("' ");
-		if (roomType.equals("-1")) {
+		if (!roomType.equals("-1")) {
 			sql.append("AND case_info.sort_no = '");
 			sql.append(roomType);
 			sql.append("' ");

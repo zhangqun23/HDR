@@ -307,7 +307,7 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
-								if(reportForm.limit.roomType ==undefined){
+								if (reportForm.limit.roomType == undefined) {
 									alert("请选择房间类型！");
 									return false;
 								}
@@ -1301,6 +1301,11 @@ app
 															s = [
 																	'房间卫生',
 																	data.reasonList[4] ];
+															break;
+														case 5:
+															s = [
+																	'其他',
+																	data.reasonList[5] ];
 															break;
 
 														}

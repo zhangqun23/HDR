@@ -78,11 +78,11 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		String endTime = (String) map.get("endTime");
 		strb.append("从" + startTime.substring(0, 10) + "至" + endTime.substring(0, 10));
 		strb.append("客房部员工做房驳回率分析，抹尘房驳回率最高的三位：");
-		strb.append(getEffFirstThree(list, "reject_dust_eff", false) + "；");
+		strb.append(getEffFirstThree(list, "reject_dust_eff", false, "num_dust") + "；");
 		strb.append("过夜房驳回率最高的三位：");
-		strb.append(getEffFirstThree(list, "reject_night_eff", false) + "；");
+		strb.append(getEffFirstThree(list, "reject_night_eff", false, "num_night") + "；");
 		strb.append("离退房驳回率最高的三位：");
-		strb.append(getEffFirstThree(list, "reject_leave_eff", false) + "；");
+		strb.append(getEffFirstThree(list, "reject_leave_eff", false, "num_leave") + "；");
 		return strb.toString();
 	}
 
@@ -96,24 +96,33 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 	 *            true升序,false降序
 	 * @return
 	 */
-	private String getEffFirstThree(List<WorkReject> list, String filedName, boolean ascFlag) {
+	private String getEffFirstThree(List<WorkReject> list, String filedName, boolean ascFlag, String filedName1) {
 		CollectionUtil.sort(list, filedName, ascFlag);
 		StringBuilder subStrb = new StringBuilder();
 		String getMethodName = "get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1);
+		String getMethodName1 = "get" + filedName1.substring(0, 1).toUpperCase() + filedName1.substring(1);
 		Class<WorkReject> tCls = WorkReject.class;
 		Method getMethod;
+		Method getMethod1;
 		try {
 			getMethod = tCls.getMethod(getMethodName, new Class[] {});
+			getMethod1 = tCls.getMethod(getMethodName1, new Class[] {});
 			int i = 0;
 			for (WorkReject workReject : list) {
 				Object value = getMethod.invoke(workReject, new Object[] {});
+				Object value1 = getMethod1.invoke(workReject, new Object[] {});
+
 				if (i < 3) {
-					subStrb.append(
-							workReject.getStaff_name() + "(" + StringUtil.strFloatToPer(String.valueOf(value)) + ")，");
+					if (Integer.valueOf(value1.toString()) != 0 && !value.toString().equals("0.0")) {
+						subStrb.append(workReject.getStaff_name() + "("
+								+ StringUtil.strFloatToPer(String.valueOf(value)) + ")，");
+						i++;
+					}
+
 				} else {
 					break;
 				}
-				i++;
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -202,41 +211,66 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 
 		String allAverRejectEff = StringUtil.divide(sumRejectTime.toString(), sumWorkTime.toString());
 		jsonObject.put("allAverRejectEff", Float.valueOf(allAverRejectEff));// 全体员工平均做房驳回效率
-		
+
 		// 获取驳回原因统计扇形图
 		List<Object> reasonList = workRejectDao.selectReasonsByLimits(map);
 		Iterator<Object> iter = reasonList.iterator();
-		int reasonArr[] = new int[] { 0, 0, 0, 0, 0 };
-
+		int reasonArr[] = new int[] { 0, 0, 0, 0, 0, 0 };
 		Object obj1 = null;
 		while (iter.hasNext()) {
 			obj1 = (Object) iter.next();
 			JSONObject reasonJson = JSONObject.fromObject(obj1);
+
 			if (reasonJson.containsKey("consumables")) {
-				reasonArr[0] += 1;
+				int consumablesSize = getReasonsSize(reasonJson.getString("consumables"));
+				if (consumablesSize > 0) {
+					reasonArr[0] += 1;
+				}
 			}
 			if (reasonJson.containsKey("barProblems")) {
-				reasonArr[1] += 1;
+				int barProblemsSize = getReasonsSize(reasonJson.get("barProblems").toString());
+				if (barProblemsSize > 0) {
+					reasonArr[1] += 1;
+				}
 			}
 			if (reasonJson.containsKey("toiletProblems")) {
-				reasonArr[2] += 1;
+				int toiletProblemsSize = getReasonsSize(reasonJson.get("toiletProblems").toString());
+				if (toiletProblemsSize > 0) {
+					reasonArr[2] += 1;
+				}
 			}
 			if (reasonJson.containsKey("towels")) {
-				reasonArr[3] += 1;
+				int towelsReasonSize = getReasonsSize(reasonJson.get("towels").toString());
+				if (towelsReasonSize > 0) {
+					reasonArr[3] += 1;
+				}
+
 			}
 			if (reasonJson.containsKey("roomProblems")) {
-				reasonArr[4] += 1;
+				int roomProblemsSize = getReasonsSize(reasonJson.get("roomProblems").toString());
+				if (roomProblemsSize > 0) {
+					reasonArr[4] += 1;
+				}
+
+			}
+			if (reasonJson.containsKey("otherProblems")) {
+				int otherProblems = reasonJson.get("otherProblems").toString().length();
+				if (otherProblems > 0) {
+					reasonArr[5] += 1;
+				}
+
 			}
 
 		}
-		int sum_num = reasonArr[0] + reasonArr[1] + reasonArr[2] + reasonArr[3] + reasonArr[4];
-		jsonObject.put("reasonList", reasonArr);// 全体员工平均做房驳回效率
+		int sum_num = reasonArr[0] + reasonArr[1] + reasonArr[2] + reasonArr[3] + reasonArr[4] + reasonArr[5];
+		jsonObject.put("reasonList", reasonArr);//
 		Map<String, Integer> linenmap = new HashMap<String, Integer>();
 		linenmap.put("布草问题", reasonArr[0]);
 		linenmap.put("迷你吧问题", reasonArr[1]);
 		linenmap.put("卫生间问题", reasonArr[2]);
 		linenmap.put("毛巾问题", reasonArr[3]);
 		linenmap.put("房间卫生", reasonArr[4]);
+		linenmap.put("其他", reasonArr[5]);
 		linenmap = CollectionUtil.sortByValue(linenmap);
 		Set set = linenmap.keySet();
 		Iterator itt = set.iterator();
@@ -268,6 +302,17 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		}
 		jsonObject.put("analyseResult", result);
 		return jsonObject.toString();
+	}
+
+	private Integer getReasonsSize(String subReasons) {
+		String content = subReasons.substring(1, subReasons.length() - 1);
+		int reasonsNum = 0;
+		if (content.equals("") || content == null) {
+			reasonsNum = 0;
+		} else {
+			reasonsNum = content.split(",").length;
+		}
+		return reasonsNum;
 	}
 
 	/**

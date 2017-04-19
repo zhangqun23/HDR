@@ -259,9 +259,11 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("' AND '");
 		sql.append(endTime);
 		sql.append("' ");
-		sql.append("AND case_info.sort_no = '");
-		sql.append(roomType);
-		sql.append("' ");
+		if (!roomType.equals("-1")) {
+			sql.append("AND case_info.sort_no = '");
+			sql.append(roomType);
+			sql.append("' ");
+		}
 
 		Query query = em.createNativeQuery(sql.toString());
 		@SuppressWarnings("unchecked")
@@ -287,9 +289,11 @@ public class CheckOrRobDaoImpl implements CheckOrRobDao {
 		sql.append("' AND '");
 		sql.append(endTime);
 		sql.append("' ");
-		sql.append("AND case_info.sort_no = '");
-		sql.append(roomType);
-		sql.append("' ");
+		if (!roomType.equals("-1")) {
+			sql.append("AND case_info.sort_no = '");
+			sql.append(roomType);
+			sql.append("' ");
+		}
 		sql.append("AND case_info.case_author=");
 		sql.append(staffId);
 

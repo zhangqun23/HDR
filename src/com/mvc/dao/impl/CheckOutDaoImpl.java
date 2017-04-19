@@ -211,8 +211,7 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append(" AND case_author = '");
 		sql.append(staffId);
 		sql.append("' ");
-		if(roomType.equals("-1")){
-		}else{
+		if(!roomType.equals("-1")){
 			sql.append(" AND case_info.sort_no = '");
 			sql.append(roomType);
 			sql.append("' ");
@@ -243,10 +242,11 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append("' AND '");
 		sql.append(endTime);
 		sql.append("' ");
-		sql.append("AND case_info.sort_no = '");
-		sql.append(roomType);
-		sql.append("' ");
-
+		if(!roomType.equals("-1")){
+			sql.append(" AND case_info.sort_no = '");
+			sql.append(roomType);
+			sql.append("' ");
+		}
 		Query query = em.createNativeQuery(sql.toString());
 		@SuppressWarnings("unchecked")
 		String str = query.getSingleResult().toString();
@@ -271,9 +271,11 @@ public class CheckOutDaoImpl implements CheckOutDao {
 		sql.append("' AND '");
 		sql.append(endTime);
 		sql.append("' ");
-		sql.append("AND case_info.sort_no = '");
-		sql.append(roomType);
-		sql.append("' ");
+		if(!roomType.equals("-1")){
+			sql.append(" AND case_info.sort_no = '");
+			sql.append(roomType);
+			sql.append("' ");
+		}
 		sql.append("AND case_info.case_author=");
 		sql.append(staffId);
 

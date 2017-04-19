@@ -252,44 +252,46 @@ app
 						function($scope, services, $location) {
 							var reportForm = $scope;
 							var nowPage = 1;
+							var myDate = new Date();
+							var myDateTime = new Date().format('yyyy-MM-dd');
 							// wq布草分析统计界面设置条件
 							reportForm.allimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// wq布草分析统计界面设置条件
 							reportForm.arlimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// wq卫生间分析统计界面设置条件
 							reportForm.awlimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// wq迷你吧分析统计界面设置条件
 							reportForm.amlimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// wq耗品统计界面设置条件
 							reportForm.reLimit = {
 								tableType : "0",
-								startTime : "",
-								endTime : "",
+								startTime : myDateTime,
+								endTime : myDateTime,
 								formType : "0"
 							}
 							// wq耗品分析界面设置条件
 							reportForm.areLimit = {
 								tableType : "0",
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							}
 							// wq耗品分析界面设置条件
 							reportForm.sLimit = {
 								tableType : "0",
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							}
 							// wq获取报表类型名称
 							reportForm.formName = "对客服务";
@@ -1210,19 +1212,19 @@ app
 							}
 							// lwt对客服务部门设置条件
 							reportForm.depWorkloadLimit = {
-								start_time : "",
-								end_time : ""
+								start_time : myDateTime,
+								end_time : myDateTime
 							};
 							// lwt对客服务员工工作量统计设置条件
 							reportForm.staffWorkloadLimit = {
-								start_time : "",
-								end_time : "",
+								start_time : myDateTime,
+								end_time : myDateTime,
 								depart : ""
 							}
 							// lwt对客服务类型统计
 							reportForm.typeLimit = {
-								start_time : "",
-								end_time : "",
+								start_time : myDateTime,
+								end_time : myDateTime,
 								depart : ""
 
 							}

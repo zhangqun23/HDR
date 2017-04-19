@@ -169,6 +169,8 @@ app
 						'$location',
 						function($scope, services, $location) {
 							var reportForm = $scope;
+							var myDate = new Date();
+							var myDateTime = new Date().format('yyyy-MM-dd');
 							// zq打扫类型默认值
 							reportForm.cleanTypes = [ {
 								id : 0,
@@ -374,8 +376,8 @@ app
 							 * zq公共函数终
 							 */
 							reportForm.pwLimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// zq添加员工工作量统计表
 							reportForm.selectProWorkLoad = function() {
@@ -408,7 +410,7 @@ app
 								});
 							}
 							reportForm.pwaLimit = {
-								checkYear : '',
+								checkYear : myDate.getFullYear(),
 								quarter : '0',
 								staffId : ''
 							};
@@ -550,8 +552,8 @@ app
 							};
 							// zq工程部维修项报表统计
 							reportForm.pmLimit = {
-								start_time : '',
-								end_time : '',
+								start_time : myDateTime,
+								end_time : myDateTime,
 								repairtype : '-1'
 							}
 
@@ -593,7 +595,7 @@ app
 												});
 							}
 							reportForm.pmaLimit = {
-								checkYear : '',
+								checkYear : myDate.getFullYear(),
 								quarter : '0',
 								repairType : '-1'
 							};
@@ -699,8 +701,8 @@ app
 							}
 							// zq工程物料统计表
 							reportForm.pmfLimit = {
-								startTime : '',
-								endTime : '',
+								startTime : myDateTime,
+								endTime : myDateTime,
 								materialType : ''
 							};
 							reportForm.selectProMaterialByLimits = function() {

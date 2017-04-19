@@ -12,8 +12,8 @@
 		<form action="../workReject/exportWorkRejectAnalyseBylimits.do"
 			method="post" enctype="multipart/form-data">
 			<ul class="projectListLimit">
-				<li><label>年份</label> <input type="text" name="checkYear"
-					ng-model="wraLimit.checkYear" required
+				<li><label>年份</label> <input type="text" id="startTime"
+					name="checkYear" ng-model="wraLimit.checkYear" required
 					class="dfselect dateLayoutStyle"
 					onFocus="WdatePicker(WdatePicker({lang:'zh-cn',dateFmt:'yyyy',readOnly:'true',onpicked: function(){$(this).trigger('change')}})) "
 					onChange=""></li>

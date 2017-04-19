@@ -210,6 +210,8 @@ app
 						'$location',
 						function($scope, services, $location) {
 							var reportForm = $scope;
+							var myDate = new Date();
+							var myDateTime = new Date().format('yyyy-MM-dd');
 							// zq打扫类型默认值
 							reportForm.cleanTypes = [ {
 								id : 0,
@@ -240,13 +242,13 @@ app
 							} ];
 							// zq做房用时统计界面设置条件
 							reportForm.limit = {
-								startTime : "",
-								endTime : "",
+								startTime : myDateTime,
+								endTime : myDateTime,
 								roomType : "-1"
 							};
 							// zq做房用时分析界面设置条件
 							reportForm.whaLimit = {
-								checkYear : "",
+								checkYear : myDate.getFullYear(),
 								quarter : "0",
 								roomType : "-1",
 								cleanType : "0",
@@ -254,12 +256,12 @@ app
 							};
 							// zq做房效率统计界面设置条件
 							reportForm.wefLimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// zq做房效率分析界面设置条件
 							reportForm.weafLimit = {
-								checkYear : "",
+								checkYear : myDate.getFullYear(),
 								quarter : "0",
 								staffId : ""
 							};
@@ -268,12 +270,12 @@ app
 							reportForm.sortName = "";
 							// zq驳回率统计
 							reportForm.wrLimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							}
 							// zq驳回率分析折线图条件
 							reportForm.wraLimit = {
-								checkYear : "",
+								checkYear : myDate.getFullYear(),
 								quarter : "0",
 								cleanType : "0",
 								staffId : ""
@@ -827,19 +829,19 @@ app
 							// lwt例行任务工作量统计界面设置条件
 							reportForm.workloadLimit = {
 								tableType : "0",
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// lwt例行任务工作量分析界面设置条件
 							reportForm.staffWorkloadLimit = {
-								checkYear : "",
+								checkYear : myDate.getFullYear(),
 								quarter : "0",
 								staffId : ""
 							};
 							// lwt例行任务工作量饱和度分析设置条件
 							reportForm.workLoadLevelLimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							};
 							// lwt根据条件查找例行任务工作量统计
 							reportForm.selectWorkloadByLimits = function() {
@@ -1132,9 +1134,6 @@ app
 							}
 							// zq做房驳回率折线图扇形图
 							reportForm.selectWorkRejectAnalyseByLimits = function() {
-								console
-										.log(JSON
-												.stringify(reportForm.wraLimit));
 								if (reportForm.wraLimit.checkYear == "") {
 									alert("请填写查询年份！");
 									return false;
@@ -1387,8 +1386,8 @@ app
 							// zq获取领班查房效率列表
 							// zq查房效率
 							reportForm.ceLimit = {
-								startTime : "",
-								endTime : ""
+								startTime : myDateTime,
+								endTime : myDateTime
 							}
 							reportForm.selectCheckEfficiencyByLimits = function() {
 								if (reportForm.ceLimit.startTime == "") {

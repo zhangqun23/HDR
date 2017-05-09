@@ -179,6 +179,8 @@ app
 						function($scope, services, $location) {
 							var checkRob = $scope;
 							var nowPage = 1;
+							var myDate = new Date();
+							var myDateTime=new Date().format('yyyy-MM-dd');
 							// zq打扫类型默认值
 							checkRob.cleanTypes = [ {
 								id : 0,
@@ -210,13 +212,13 @@ app
 							// 抢房效率统计查询限制条件
 							checkRob.reLimit = {
 								tableType : "0",
-								startTime : "",
-								endTime : "",
+								startTime : myDateTime,
+								endTime : myDateTime,
 								roomType : "-1"
 							}
 							// 抢房效率分析查询限制条件
 							checkRob.reaLimit = {
-								checkYear : "",
+								checkYear : myDate.getFullYear(),
 								quarter : "0",
 								roomType : "-1",
 								staffId : ""
@@ -224,8 +226,8 @@ app
 							// 查退房效率统计查询限制条件
 							checkRob.coLimit = {
 								tableType : "0",
-								startTime : "",
-								endTime : "",
+								startTime : myDateTime,
+								endTime : myDateTime,
 								roomType : "-1"
 							}
 							// 获取房间类型名称
@@ -611,7 +613,7 @@ app
 									alert("请选择截止时间！");
 									return false;
 								}
-								if(checkRob.coLimit.roomType ==undefined){
+								if (checkRob.coLimit.roomType == undefined) {
 									alert("请选择房间类型！");
 									return false;
 								}
@@ -687,7 +689,7 @@ app
 							}
 							// zq查退房效率分析
 							checkRob.coaLimit = {
-								checkYear : '',
+								checkYear : myDate.getFullYear(),
 								quarter : '0',
 								roomType : '-1',
 								staffId : ''

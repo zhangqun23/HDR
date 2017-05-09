@@ -90,4 +90,10 @@ public interface ExpendFormDao {
 	//得到迷你吧物品id
 	List<Integer> selectMiniCondition();
 
+	//判断是否有查询结果，防止sql查询时遍历整个数据库
+	boolean getstaffisnull(Map<String, Object> map, List<Integer> listCondition);
+
+	//判断是否有查询结果，防止sql查询时遍历整个数据库
+	boolean getroomisnull(Map<String, Object> map, List<Integer> listCondition);
+
 }

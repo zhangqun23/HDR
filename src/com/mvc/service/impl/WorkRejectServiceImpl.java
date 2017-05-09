@@ -219,46 +219,51 @@ public class WorkRejectServiceImpl implements WorkRejectService {
 		Object obj1 = null;
 		while (iter.hasNext()) {
 			obj1 = (Object) iter.next();
-			JSONObject reasonJson = JSONObject.fromObject(obj1);
+			int first = obj1.toString().indexOf("{");
+			int end = obj1.toString().indexOf("}");
+			int num = obj1.toString().length() - 1;
+			if (first == 0 && end == num) {
+				JSONObject reasonJson = JSONObject.fromObject(obj1);
 
-			if (reasonJson.containsKey("consumables")) {
-				int consumablesSize = getReasonsSize(reasonJson.getString("consumables"));
-				if (consumablesSize > 0) {
-					reasonArr[0] += 1;
+				if (reasonJson.containsKey("consumables")) {
+					int consumablesSize = getReasonsSize(reasonJson.getString("consumables"));
+					if (consumablesSize > 0) {
+						reasonArr[0] += 1;
+					}
 				}
-			}
-			if (reasonJson.containsKey("barProblems")) {
-				int barProblemsSize = getReasonsSize(reasonJson.get("barProblems").toString());
-				if (barProblemsSize > 0) {
-					reasonArr[1] += 1;
+				if (reasonJson.containsKey("barProblems")) {
+					int barProblemsSize = getReasonsSize(reasonJson.get("barProblems").toString());
+					if (barProblemsSize > 0) {
+						reasonArr[1] += 1;
+					}
 				}
-			}
-			if (reasonJson.containsKey("toiletProblems")) {
-				int toiletProblemsSize = getReasonsSize(reasonJson.get("toiletProblems").toString());
-				if (toiletProblemsSize > 0) {
-					reasonArr[2] += 1;
+				if (reasonJson.containsKey("toiletProblems")) {
+					int toiletProblemsSize = getReasonsSize(reasonJson.get("toiletProblems").toString());
+					if (toiletProblemsSize > 0) {
+						reasonArr[2] += 1;
+					}
 				}
-			}
-			if (reasonJson.containsKey("towels")) {
-				int towelsReasonSize = getReasonsSize(reasonJson.get("towels").toString());
-				if (towelsReasonSize > 0) {
-					reasonArr[3] += 1;
-				}
+				if (reasonJson.containsKey("towels")) {
+					int towelsReasonSize = getReasonsSize(reasonJson.get("towels").toString());
+					if (towelsReasonSize > 0) {
+						reasonArr[3] += 1;
+					}
 
-			}
-			if (reasonJson.containsKey("roomProblems")) {
-				int roomProblemsSize = getReasonsSize(reasonJson.get("roomProblems").toString());
-				if (roomProblemsSize > 0) {
-					reasonArr[4] += 1;
 				}
+				if (reasonJson.containsKey("roomProblems")) {
+					int roomProblemsSize = getReasonsSize(reasonJson.get("roomProblems").toString());
+					if (roomProblemsSize > 0) {
+						reasonArr[4] += 1;
+					}
 
-			}
-			if (reasonJson.containsKey("otherProblems")) {
-				int otherProblems = reasonJson.get("otherProblems").toString().length();
-				if (otherProblems > 0) {
-					reasonArr[5] += 1;
 				}
+				if (reasonJson.containsKey("otherProblems")) {
+					int otherProblems = reasonJson.get("otherProblems").toString().length();
+					if (otherProblems > 0) {
+						reasonArr[5] += 1;
+					}
 
+				}
 			}
 
 		}

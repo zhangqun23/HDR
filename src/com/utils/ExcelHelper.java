@@ -134,9 +134,11 @@ public class ExcelHelper<T> {
 		dealHeader(headerSource, titleRow, workbook, sheet, title);
 		XSSFRow row = null;
 		XSSFCellStyle contentStyle = getStyle(workbook, "content");
-
+		Iterator<T> it;
+		if(list!=null){//加非空判断，wq修改
 		// 遍历集合数据，产生数据行
-		Iterator<T> it = list.iterator();
+		it = list.iterator();
+		
 		int index = titleRow;
 		while (it.hasNext()) {
 			index++;
@@ -213,6 +215,7 @@ public class ExcelHelper<T> {
 				}
 				sheet.autoSizeColumn((short) i);// 设置自动调整列宽
 			}
+		}
 		}
 		// 第mergeColumn列相同数据合并单元格
 		if (mergeColumn != -1) {

@@ -759,17 +759,26 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	// 获取房间耗品统计列表
 	public List<RoomExpend> getRoomExpendList(Map<String, Object> map) {
 		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		List<RoomExpend> listGoal;
+		boolean isnull;
+		isnull = expendFormDao.getstaffisnull(map,listCondition);
+		if(isnull){
 		List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
 
 		Iterator<Object> it = listSource.iterator();
-		List<RoomExpend> listGoal = objToRoomExpand(it);
+		listGoal = objToRoomExpand(it);
 		
 		RoomExpend sum = sumRoomExpend(listGoal);// 合计
 		RoomExpend avg = avgRoomExpend(listGoal);// 平均
 		listGoal.add(sum);
 		listGoal.add(avg);
+		}
+		else{
+			listGoal = null;
+		}
 		
 		return listGoal;
+		
 	}
 	
 	// 获取卫生间耗品统计列表
@@ -969,6 +978,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 	public List<RoomExpend> selectRoomExpend(Map<String, Object> map, Pager pager) {
 
 		List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
+		boolean isnull = expendFormDao.getroomisnull(map,listCondition);
+		if(isnull){
 		List<Object> listSource = expendFormDao.selectroomPage(map, pager.getOffset(), pager.getPageSize(),
 				listCondition);
 		
@@ -976,6 +987,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		List<RoomExpend> listGoal = objToRoomExpand(it);
 
 		return listGoal;
+		}
+		return null;
 	}
 
 	private List<RoomExpend> objToRoomExpand(Iterator<Object> it) {
@@ -1051,72 +1064,80 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			String analyseResult = "分析结果：";
 
 			List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
-			List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
-			Iterator<Object> it = listSource.iterator();
-			List<RoomExpend> listGoal = objToRoomExpand(it);
-
-			RoomExpend sum = sumRoomExpend(listGoal);// 合计
-			RoomExpend avg = avgRoomExpend(listGoal);// 平均
-			listGoal.add(sum);
-			listGoal.add(avg);
-
-			float sum_num = (float) 0.0;
-			Map<String, Integer> roommap = new HashMap<String, Integer>();
-			roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
-			roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
-			roommap.put("suge_num", Integer.parseInt(sum.getSuge_num()));
-			roommap.put("coup_num", Integer.parseInt(sum.getCoup_num()));
-			roommap.put("penc_num", Integer.parseInt(sum.getPenc_num()));
-			roommap.put("erse_num", Integer.parseInt(sum.getErse_num()));
-			roommap.put("clca_num", Integer.parseInt(sum.getClca_num()));
-			roommap.put("fati_num", Integer.parseInt(sum.getFati_num()));
-			roommap.put("enca_num", Integer.parseInt(sum.getEnca_num()));
-			roommap.put("bage_num", Integer.parseInt(sum.getBage_num()));
-			roommap.put("teab_num", Integer.parseInt(sum.getTeab_num()));
-			roommap.put("meca_num", Integer.parseInt(sum.getMeca_num()));
-			roommap.put("opbo_num", Integer.parseInt(sum.getOpbo_num()));
-			roommap.put("blte_num", Integer.parseInt(sum.getBlte_num()));
-			roommap.put("dnds_num", Integer.parseInt(sum.getDnds_num()));
-			roommap.put("tvca_num", Integer.parseInt(sum.getTvca_num()));
-			roommap.put("orel_num", Integer.parseInt(sum.getOrel_num()));
-			roommap.put("memo_num", Integer.parseInt(sum.getMemo_num()));
-			roommap.put("coas_num", Integer.parseInt(sum.getCoas_num()));
-			roommap.put("matc_num", Integer.parseInt(sum.getMatc_num()));
-			roommap.put("mapp_num", Integer.parseInt(sum.getMapp_num()));
-			roommap.put("rule_num", Integer.parseInt(sum.getRule_num()));
-			roommap.put("stat_num", Integer.parseInt(sum.getStat_num()));
-			roommap.put("clip_num", Integer.parseInt(sum.getClip_num()));
-			roommap.put("bape_num", Integer.parseInt(sum.getBape_num()));
-			roommap.put("comp_num", Integer.parseInt(sum.getComp_num()));
-			roommap.put("lali_num", Integer.parseInt(sum.getLali_num()));
-			roommap.put("losu_num", Integer.parseInt(sum.getLosu_num()));
-			roommap.put("shpa_num", Integer.parseInt(sum.getShpa_num()));
-			roommap.put("anma_num", Integer.parseInt(sum.getAnma_num()));
-			roommap.put("grte_num", Integer.parseInt(sum.getGrte_num()));
-			roommap.put("chsl_num", Integer.parseInt(sum.getChsl_num()));
-			roommap.put("cocl_num", Integer.parseInt(sum.getCocl_num()));
-			roommap.put("arel_num", Integer.parseInt(sum.getArel_num()));
-			
-			roommap = CollectionUtil.sortByValue(roommap);
-			
-			Set set = roommap.keySet();
-			Iterator itt = set.iterator();
-			for(int i=0;i<roommap.size();i++) {
-	            String key = (String) itt.next();
-	            Integer value = roommap.get(key);
-	            sum_num += value;
-	        }
-			if(sum_num != 0){
-				analyseResult += "物品领取量排名前三位：";// 分析结果
-				itt = set.iterator();
-				for (int i=0;i<3;i++) {
-					String key = (String) itt.next();
-					Integer value = roommap.get(key);
-					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			List<RoomExpend> listGoal;
+			boolean isnull = expendFormDao.getroomisnull(map,listCondition);
+			if(isnull){
+				List<Object> listSource = expendFormDao.selectroomExpend(map, listCondition);
+				
+				Iterator<Object> it = listSource.iterator();
+				listGoal = objToRoomExpand(it);
+	
+				RoomExpend sum = sumRoomExpend(listGoal);// 合计
+				RoomExpend avg = avgRoomExpend(listGoal);// 平均
+				listGoal.add(sum);
+				listGoal.add(avg);
+	
+				float sum_num = (float) 0.0;
+				Map<String, Integer> roommap = new HashMap<String, Integer>();
+				roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
+				roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
+				roommap.put("suge_num", Integer.parseInt(sum.getSuge_num()));
+				roommap.put("coup_num", Integer.parseInt(sum.getCoup_num()));
+				roommap.put("penc_num", Integer.parseInt(sum.getPenc_num()));
+				roommap.put("erse_num", Integer.parseInt(sum.getErse_num()));
+				roommap.put("clca_num", Integer.parseInt(sum.getClca_num()));
+				roommap.put("fati_num", Integer.parseInt(sum.getFati_num()));
+				roommap.put("enca_num", Integer.parseInt(sum.getEnca_num()));
+				roommap.put("bage_num", Integer.parseInt(sum.getBage_num()));
+				roommap.put("teab_num", Integer.parseInt(sum.getTeab_num()));
+				roommap.put("meca_num", Integer.parseInt(sum.getMeca_num()));
+				roommap.put("opbo_num", Integer.parseInt(sum.getOpbo_num()));
+				roommap.put("blte_num", Integer.parseInt(sum.getBlte_num()));
+				roommap.put("dnds_num", Integer.parseInt(sum.getDnds_num()));
+				roommap.put("tvca_num", Integer.parseInt(sum.getTvca_num()));
+				roommap.put("orel_num", Integer.parseInt(sum.getOrel_num()));
+				roommap.put("memo_num", Integer.parseInt(sum.getMemo_num()));
+				roommap.put("coas_num", Integer.parseInt(sum.getCoas_num()));
+				roommap.put("matc_num", Integer.parseInt(sum.getMatc_num()));
+				roommap.put("mapp_num", Integer.parseInt(sum.getMapp_num()));
+				roommap.put("rule_num", Integer.parseInt(sum.getRule_num()));
+				roommap.put("stat_num", Integer.parseInt(sum.getStat_num()));
+				roommap.put("clip_num", Integer.parseInt(sum.getClip_num()));
+				roommap.put("bape_num", Integer.parseInt(sum.getBape_num()));
+				roommap.put("comp_num", Integer.parseInt(sum.getComp_num()));
+				roommap.put("lali_num", Integer.parseInt(sum.getLali_num()));
+				roommap.put("losu_num", Integer.parseInt(sum.getLosu_num()));
+				roommap.put("shpa_num", Integer.parseInt(sum.getShpa_num()));
+				roommap.put("anma_num", Integer.parseInt(sum.getAnma_num()));
+				roommap.put("grte_num", Integer.parseInt(sum.getGrte_num()));
+				roommap.put("chsl_num", Integer.parseInt(sum.getChsl_num()));
+				roommap.put("cocl_num", Integer.parseInt(sum.getCocl_num()));
+				roommap.put("arel_num", Integer.parseInt(sum.getArel_num()));
+				
+				roommap = CollectionUtil.sortByValue(roommap);
+				
+				Set set = roommap.keySet();
+				Iterator itt = set.iterator();
+				for(int i=0;i<roommap.size();i++) {
+		            String key = (String) itt.next();
+		            Integer value = roommap.get(key);
+		            sum_num += value;
+		        }
+				if(sum_num != 0){
+					analyseResult += "物品领取量排名前三位：";// 分析结果
+					itt = set.iterator();
+					for (int i=0;i<3;i++) {
+						String key = (String) itt.next();
+						Integer value = roommap.get(key);
+						analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+					}
+				}
+				else{
+					analyseResult += "没有数据";
 				}
 			}
 			else{
-				analyseResult += "没有数据";
+				listGoal=null;
 			}
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
@@ -2440,63 +2461,69 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String analyseResult = "分析结果：";// 分析结果
 		Float sum_num = (float) 0.0;//物品使用总数
 		List<Object> gainnum = null;//将领取合计放入gainnum中
+		boolean isnull;
 		switch(tableType){
 		case "0":
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
-			List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
-			Iterator<Object> it = listSource.iterator();
-			List<StaLinen> listGoal = objToLinenStaExpand(it);
-			
-			List<StaLinen> linenCount = new ArrayList<StaLinen>();
-			StaLinen sum = sumStaLinenExpend(listGoal);// 消耗合计
-			gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计			
-			StaLinen avg = avgStaLinenExpend(gainnum);// 将领取合计list放入StaLine中
-			linenCount.add(sum);
-			linenCount.add(avg);
-			jsonObject.put("list", listGoal);
-			jsonObject.put("count", linenCount);
-			
-			Map<String, Integer> linenmap = new HashMap<String, Integer>();
-			linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
-			linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
-			linenmap.put("laba_num", Integer.parseInt(sum.getLaba_num()));
-			linenmap.put("besh_num", Integer.parseInt(sum.getBesh_num()));
-			linenmap.put("facl_num", Integer.parseInt(sum.getFacl_num()));
-			linenmap.put("bato_num", Integer.parseInt(sum.getBato_num()));
-			linenmap.put("hato_num", Integer.parseInt(sum.getHato_num()));
-			linenmap.put("medo_num", Integer.parseInt(sum.getMedo_num()));
-			linenmap.put("flto_num", Integer.parseInt(sum.getFlto_num()));
-			linenmap.put("baro_num", Integer.parseInt(sum.getBaro_num()));
-			linenmap.put("pill_num", Integer.parseInt(sum.getPill_num()));
-			linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
-			linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
-			linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
-			
-			linenmap = CollectionUtil.sortByValue(linenmap);
-			
-			Set set = linenmap.keySet();
-			Iterator itt = set.iterator();
-			for(int i=0;i<linenmap.size();i++) {
-	            String key = (String) itt.next();
-	            Integer value = linenmap.get(key);
-	            sum_num += value;
-	        }
-			if(sum_num != 0){
-				analyseResult += "物品领取量排名前三位：";// 分析结果
-				itt = set.iterator();
-				for (int i=0;i<3;i++) {
-					String key = (String) itt.next();
-					Integer value = linenmap.get(key);
-					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			isnull = expendFormDao.getstaffisnull(map,listCondition);
+			if(isnull){
+				List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
+				Iterator<Object> it = listSource.iterator();
+				List<StaLinen> listGoal = objToLinenStaExpand(it);
+				
+				List<StaLinen> linenCount = new ArrayList<StaLinen>();
+				StaLinen sum = sumStaLinenExpend(listGoal);// 消耗合计
+				gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计			
+				StaLinen avg = avgStaLinenExpend(gainnum);// 将领取合计list放入StaLine中
+				linenCount.add(sum);
+				linenCount.add(avg);
+				jsonObject.put("list", listGoal);
+				jsonObject.put("count", linenCount);
+				
+				Map<String, Integer> linenmap = new HashMap<String, Integer>();
+				linenmap.put("slba_num", Integer.parseInt(sum.getSlba_num()));
+				linenmap.put("duto_num", Integer.parseInt(sum.getDuto_num()));
+				linenmap.put("laba_num", Integer.parseInt(sum.getLaba_num()));
+				linenmap.put("besh_num", Integer.parseInt(sum.getBesh_num()));
+				linenmap.put("facl_num", Integer.parseInt(sum.getFacl_num()));
+				linenmap.put("bato_num", Integer.parseInt(sum.getBato_num()));
+				linenmap.put("hato_num", Integer.parseInt(sum.getHato_num()));
+				linenmap.put("medo_num", Integer.parseInt(sum.getMedo_num()));
+				linenmap.put("flto_num", Integer.parseInt(sum.getFlto_num()));
+				linenmap.put("baro_num", Integer.parseInt(sum.getBaro_num()));
+				linenmap.put("pill_num", Integer.parseInt(sum.getPill_num()));
+				linenmap.put("piin_num", Integer.parseInt(sum.getPiin_num()));
+				linenmap.put("blan_num", Integer.parseInt(sum.getBlan_num()));
+				linenmap.put("shop_num", Integer.parseInt(sum.getShop_num()));
+				
+				linenmap = CollectionUtil.sortByValue(linenmap);
+				
+				Set set = linenmap.keySet();
+				Iterator itt = set.iterator();
+				for(int i=0;i<linenmap.size();i++) {
+		            String key = (String) itt.next();
+		            Integer value = linenmap.get(key);
+		            sum_num += value;
+		        }
+				if(sum_num != 0){
+					analyseResult += "物品领取量排名前三位：";// 分析结果
+					itt = set.iterator();
+					for (int i=0;i<3;i++) {
+						String key = (String) itt.next();
+						Integer value = linenmap.get(key);
+						analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+					}
 				}
+				else{
+					analyseResult += "没有数据";
+				}
+				jsonObject.put("analyseResult", analyseResult);
 			}
-			else{
-				analyseResult += "没有数据";
-			}
-			jsonObject.put("analyseResult", analyseResult);
 			break;
 		case "1":
 			List<Integer> listCondition1 = expendFormDao.selectCondition("房间易耗品");
+			isnull = expendFormDao.getstaffisnull(map,listCondition1);
+			if(isnull){
 			List<Object> listSource1 = expendFormDao.selectStaExpend(map, listCondition1);
 			Iterator<Object> it1 = listSource1.iterator();
 			List<StaRoom> listGoal1 = objToRoomStaExpand(it1);
@@ -2569,9 +2596,12 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			}
 
 			jsonObject.put("analyseResult", analyseResult);
+			}
 			break;
 		case "2":
 			List<Integer> listCondition2 = expendFormDao.selectCondition("卫生间易耗品");
+			isnull = expendFormDao.getstaffisnull(map,listCondition2);
+			if(isnull){
 			List<Object> listSource2 = expendFormDao.selectStaExpend(map, listCondition2);
 			Iterator<Object> it2 = listSource2.iterator();
 			List<StaWash> listGoal2 = objToWashStaExpand(it2);
@@ -2638,9 +2668,12 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 				analyseResult += "没有数据";
 			}
 			jsonObject.put("analyseResult", analyseResult);
+			}
 			break;
 		case "3":
 			List<Integer> listCondition3 = expendFormDao.selectMiniCondition();//得到迷你吧物品id
+			isnull = expendFormDao.getstaffisnull(map,listCondition3);
+			if(isnull){
 			List<Object> listSource3 = expendFormDao.selectStaMini(map);
 			Iterator<Object> it3 = listSource3.iterator();
 			List<StaMini> listGoal3 = objToMiniStaExpand(it3);
@@ -2696,9 +2729,9 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			}
 
 			jsonObject.put("analyseResult", analyseResult);
+			}
 			break;
 		}
-		
 		return jsonObject;
 	}
 	
@@ -3054,81 +3087,88 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		try {
 			WordHelper<StaRoom> le = new WordHelper<StaRoom>();
 			String fileName = "客房部员工领取房间耗品量统计表.docx";
+			String analyseResult = "分析结果：";// 分析结果
 			
 			path = FileHelper.transPath(fileName, path);// 解析后的上传路径
 			OutputStream out = new FileOutputStream(path);
 
 			List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
-			List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
-			Iterator<Object> it = listSource.iterator();
-			List<StaRoom> listGoal = objToRoomStaExpand(it);
-
-			StaRoom sum = sumStaRoomExpend(listGoal);// 合计
-			List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
-			StaRoom avg = avgStaRoomExpend(gainnum);// 平均
-			listGoal.add(sum);
-			listGoal.add(avg);
-			
-			float sum_num = (float) 0.0;
-			String analyseResult = "分析结果：";// 分析结果
-			Map<String, Integer> roommap = new HashMap<String, Integer>();
-			roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
-			roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
-			roommap.put("suge_num", Integer.parseInt(sum.getSuge_num()));
-			roommap.put("coup_num", Integer.parseInt(sum.getCoup_num()));
-			roommap.put("penc_num", Integer.parseInt(sum.getPenc_num()));
-			roommap.put("erse_num", Integer.parseInt(sum.getErse_num()));
-			roommap.put("clca_num", Integer.parseInt(sum.getClca_num()));
-			roommap.put("fati_num", Integer.parseInt(sum.getFati_num()));
-			roommap.put("enca_num", Integer.parseInt(sum.getEnca_num()));
-			roommap.put("bage_num", Integer.parseInt(sum.getBage_num()));
-			roommap.put("teab_num", Integer.parseInt(sum.getTeab_num()));
-			roommap.put("meca_num", Integer.parseInt(sum.getMeca_num()));
-			roommap.put("opbo_num", Integer.parseInt(sum.getOpbo_num()));
-			roommap.put("blte_num", Integer.parseInt(sum.getBlte_num()));
-			roommap.put("dnds_num", Integer.parseInt(sum.getDnds_num()));
-			roommap.put("tvca_num", Integer.parseInt(sum.getTvca_num()));
-			roommap.put("orel_num", Integer.parseInt(sum.getOrel_num()));
-			roommap.put("memo_num", Integer.parseInt(sum.getMemo_num()));
-			roommap.put("coas_num", Integer.parseInt(sum.getCoas_num()));
-			roommap.put("matc_num", Integer.parseInt(sum.getMatc_num()));
-			roommap.put("mapp_num", Integer.parseInt(sum.getMapp_num()));
-			roommap.put("rule_num", Integer.parseInt(sum.getRule_num()));
-			roommap.put("stat_num", Integer.parseInt(sum.getStat_num()));
-			roommap.put("clip_num", Integer.parseInt(sum.getClip_num()));
-			roommap.put("bape_num", Integer.parseInt(sum.getBape_num()));
-			roommap.put("comp_num", Integer.parseInt(sum.getComp_num()));
-			roommap.put("lali_num", Integer.parseInt(sum.getLali_num()));
-			roommap.put("losu_num", Integer.parseInt(sum.getLosu_num()));
-			roommap.put("shpa_num", Integer.parseInt(sum.getShpa_num()));
-			roommap.put("anma_num", Integer.parseInt(sum.getAnma_num()));
-			roommap.put("grte_num", Integer.parseInt(sum.getGrte_num()));
-			roommap.put("chsl_num", Integer.parseInt(sum.getChsl_num()));
-			roommap.put("cocl_num", Integer.parseInt(sum.getCocl_num()));
-			roommap.put("arel_num", Integer.parseInt(sum.getArel_num()));
-			
-			roommap = CollectionUtil.sortByValue(roommap);
-			
-			Set set = roommap.keySet();
-			Iterator itt = set.iterator();
-			for(int i=0;i<roommap.size();i++) {
-	            String key = (String) itt.next();
-	            Integer value = roommap.get(key);
-	            sum_num += value;
-	        }
-			if(sum_num != 0){
-				analyseResult += "物品领取量排名前三位：";// 分析结果
-				itt = set.iterator();
-				for (int i=0;i<3;i++) {
-					String key = (String) itt.next();
-					Integer value = roommap.get(key);
-					analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+			boolean isnull;
+			List<StaRoom> listGoal;
+			isnull = expendFormDao.getstaffisnull(map,listCondition);
+			if(isnull){
+				List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
+				Iterator<Object> it = listSource.iterator();
+				listGoal = objToRoomStaExpand(it);
+	
+				StaRoom sum = sumStaRoomExpend(listGoal);// 合计
+				List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+				StaRoom avg = avgStaRoomExpend(gainnum);// 平均
+				listGoal.add(sum);
+				listGoal.add(avg);
+				
+				float sum_num = (float) 0.0;
+				Map<String, Integer> roommap = new HashMap<String, Integer>();
+				roommap.put("umbr_num", Integer.parseInt(sum.getUmbr_num()));
+				roommap.put("coff_num", Integer.parseInt(sum.getCoff_num()));
+				roommap.put("suge_num", Integer.parseInt(sum.getSuge_num()));
+				roommap.put("coup_num", Integer.parseInt(sum.getCoup_num()));
+				roommap.put("penc_num", Integer.parseInt(sum.getPenc_num()));
+				roommap.put("erse_num", Integer.parseInt(sum.getErse_num()));
+				roommap.put("clca_num", Integer.parseInt(sum.getClca_num()));
+				roommap.put("fati_num", Integer.parseInt(sum.getFati_num()));
+				roommap.put("enca_num", Integer.parseInt(sum.getEnca_num()));
+				roommap.put("bage_num", Integer.parseInt(sum.getBage_num()));
+				roommap.put("teab_num", Integer.parseInt(sum.getTeab_num()));
+				roommap.put("meca_num", Integer.parseInt(sum.getMeca_num()));
+				roommap.put("opbo_num", Integer.parseInt(sum.getOpbo_num()));
+				roommap.put("blte_num", Integer.parseInt(sum.getBlte_num()));
+				roommap.put("dnds_num", Integer.parseInt(sum.getDnds_num()));
+				roommap.put("tvca_num", Integer.parseInt(sum.getTvca_num()));
+				roommap.put("orel_num", Integer.parseInt(sum.getOrel_num()));
+				roommap.put("memo_num", Integer.parseInt(sum.getMemo_num()));
+				roommap.put("coas_num", Integer.parseInt(sum.getCoas_num()));
+				roommap.put("matc_num", Integer.parseInt(sum.getMatc_num()));
+				roommap.put("mapp_num", Integer.parseInt(sum.getMapp_num()));
+				roommap.put("rule_num", Integer.parseInt(sum.getRule_num()));
+				roommap.put("stat_num", Integer.parseInt(sum.getStat_num()));
+				roommap.put("clip_num", Integer.parseInt(sum.getClip_num()));
+				roommap.put("bape_num", Integer.parseInt(sum.getBape_num()));
+				roommap.put("comp_num", Integer.parseInt(sum.getComp_num()));
+				roommap.put("lali_num", Integer.parseInt(sum.getLali_num()));
+				roommap.put("losu_num", Integer.parseInt(sum.getLosu_num()));
+				roommap.put("shpa_num", Integer.parseInt(sum.getShpa_num()));
+				roommap.put("anma_num", Integer.parseInt(sum.getAnma_num()));
+				roommap.put("grte_num", Integer.parseInt(sum.getGrte_num()));
+				roommap.put("chsl_num", Integer.parseInt(sum.getChsl_num()));
+				roommap.put("cocl_num", Integer.parseInt(sum.getCocl_num()));
+				roommap.put("arel_num", Integer.parseInt(sum.getArel_num()));
+				
+				roommap = CollectionUtil.sortByValue(roommap);
+				
+				Set set = roommap.keySet();
+				Iterator itt = set.iterator();
+				for(int i=0;i<roommap.size();i++) {
+		            String key = (String) itt.next();
+		            Integer value = roommap.get(key);
+		            sum_num += value;
+		        }
+				if(sum_num != 0){
+					analyseResult += "物品领取量排名前三位：";// 分析结果
+					itt = set.iterator();
+					for (int i=0;i<3;i++) {
+						String key = (String) itt.next();
+						Integer value = roommap.get(key);
+						analyseResult += findname(key)+"，使用了"+value+"件，占该类物品消耗总数的"+StringUtil.strfloatToPer(StringUtil.save2Float(value/sum_num))+"；";
+					}
+				}
+				else{
+					analyseResult += "没有数据";
 				}
 			}
 			else{
-				analyseResult += "没有数据";
+				listGoal = null;
 			}
-
 			Map<String, Object> listMap = new HashMap<String, Object>();
 			listMap.put("0", listGoal);// key存放该list在word中表格的索引，value存放list
 			Map<String, Object> contentMap = new HashMap<String, Object>();
@@ -3800,15 +3840,22 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 
 					// 获取列表和文本信息
 					List<Integer> listCondition = expendFormDao.selectCondition("房间易耗品");
-					List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
-
-					Iterator<Object> it = listSource.iterator();
-					staRoomList = objToRoomStaExpand(it);
-					StaRoom sum = sumStaRoomExpend(staRoomList);// 合计
-					List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
-					StaRoom avg = avgStaRoomExpend(gainnum);// 平均
-					staRoomList.add(sum);
-					staRoomList.add(avg);
+					boolean isnull;
+					isnull = expendFormDao.getstaffisnull(map,listCondition);
+					if(isnull){
+						List<Object> listSource = expendFormDao.selectStaExpend(map, listCondition);
+	
+						Iterator<Object> it = listSource.iterator();
+						staRoomList = objToRoomStaExpand(it);
+						StaRoom sum = sumStaRoomExpend(staRoomList);// 合计
+						List<Object> gainnum = expendFormDao.selectExpendGet(map, listCondition);// 领取合计
+						StaRoom avg = avgStaRoomExpend(gainnum);// 平均
+						staRoomList.add(sum);
+						staRoomList.add(avg);
+					}
+					else{
+						staRoomList = null;
+					}
 
 					String[] header = {"序号","员工编号","员工姓名", "雨伞","咖啡","白糖","伴侣","铅笔","橡皮","即扫牌","面巾纸","环保卡","手提袋","袋泡茶","送餐牌","意见书","立顿红茶","请勿打扰牌","电视节目单","信封(普通)",
 							"便签","杯垫","火柴","地图","尺子","信纸","回形针","圆珠笔","针线包","洗衣单","低卡糖","擦鞋布","防毒面具","立顿绿茶","拖鞋(儿童)","彩色曲别针","信封(航空)"};// 顺序必须和对应实体一致

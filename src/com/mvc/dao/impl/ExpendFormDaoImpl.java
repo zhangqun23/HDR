@@ -911,5 +911,53 @@ public class ExpendFormDaoImpl implements ExpendFormDao {
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean getstaffisnull(Map<String, Object> map, List<Integer> listCondition) {
+		EntityManager em = emf.createEntityManager();
+		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
+		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+		int a=listCondition.size();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select tl.staff_id from temp_list tl left join case_info ci ");
+		sql.append("on tl.call_id=ci.call_id where tl.goods_id in (");
+		for (int i = 0; i < listCondition.size()-1; i++) {
+			sql.append(listCondition.get(i)+",");
+		}
+		sql.append(listCondition.get(a-1));
+		sql.append(")and ci.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+		Query query = em.createNativeQuery(sql.toString());
+		List<Integer> list = query.getResultList();
+		boolean isnull= true;
+		if(list.size()==0){
+			isnull = false;
+			}
+		return isnull;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean getroomisnull(Map<String, Object> map, List<Integer> listCondition) {
+		EntityManager em = emf.createEntityManager();
+		String startTime = StringUtil.dayFirstTime((String) map.get("startTime"));
+		String endTime = StringUtil.dayLastTime((String) map.get("endTime"));
+		int a=listCondition.size();
+		StringBuilder sql = new StringBuilder();
+		sql.append("select tl.room_no from temp_list tl left join case_info ci ");
+		sql.append("on tl.call_id=ci.call_id where tl.goods_id in (");
+		for (int i = 0; i < listCondition.size()-1; i++) {
+			sql.append(listCondition.get(i)+",");
+		}
+		sql.append(listCondition.get(a-1));
+		sql.append(")and ci.open_time between '" + startTime + "'" + " and '" + endTime + "'");
+		Query query = em.createNativeQuery(sql.toString());
+		List<Integer> list = query.getResultList();
+		boolean isnull= true;
+		if(list.size()==0){
+			isnull = false;
+			}
+		return isnull;
+	}
+	
 	
 }

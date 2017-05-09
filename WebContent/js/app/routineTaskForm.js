@@ -357,6 +357,10 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								if (reportForm.whaLimit.staffId == undefined) {
+									alert("请选择查询员工！");
+									return false;
+								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
 								var userWorkHouseLimit = JSON
@@ -613,6 +617,10 @@ app
 									return false;
 								}
 								if (reportForm.weafLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								if (reportForm.weafLimit.staffId == undefined) {
 									alert("请选择查询员工！");
 									return false;
 								}
@@ -1146,6 +1154,10 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								if (reportForm.wraLimit.staffId == undefined) {
+									alert("请选择查询员工！");
+									return false;
+								}
 								if (reportForm.wraLimit.cleanType == "") {
 									alert("请选择打扫类型！");
 									return false;
@@ -1161,6 +1173,8 @@ app
 										})
 										.success(
 												function(data) {
+													console.log("返回值"
+															+ data.reasonList);
 													$(".overlayer")
 															.fadeOut(200);
 													$(".tipLoading").fadeOut(

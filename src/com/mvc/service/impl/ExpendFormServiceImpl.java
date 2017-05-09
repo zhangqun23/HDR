@@ -2440,6 +2440,8 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 		String analyseResult = "分析结果：";// 分析结果
 		Float sum_num = (float) 0.0;//物品使用总数
 		List<Object> gainnum = null;//将领取合计放入gainnum中
+		boolean isnull = expendFormDao.getstaffisnull(map);
+		if(isnull){
 		switch(tableType){
 		case "0":
 			List<Integer> listCondition = expendFormDao.selectCondition("房间布草");
@@ -2698,7 +2700,7 @@ public class ExpendFormServiceImpl implements ExpendFormService {
 			jsonObject.put("analyseResult", analyseResult);
 			break;
 		}
-		
+		}
 		return jsonObject;
 	}
 	

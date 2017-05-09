@@ -90,4 +90,6 @@ public interface ExpendFormDao {
 	//得到迷你吧物品id
 	List<Integer> selectMiniCondition();
 
+	boolean getstaffisnull(Map<String, Object> map);
+
 }

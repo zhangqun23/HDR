@@ -1317,6 +1317,10 @@ app
 									alert("请选择部门！");
 									return false;
 								}
+								if (reportForm.staffWorkloadLimit.depart == undefined) {
+									alert("请选择部门！");
+									return false;
+								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
 
@@ -1358,6 +1362,10 @@ app
 									return false;
 								}
 								if (reportForm.typeLimit.depart == "") {
+									alert("请选择部门！");
+									return false;
+								}
+								if (reportForm.typeLimit.depart == undefined) {
 									alert("请选择部门！");
 									return false;
 								}

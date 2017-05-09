@@ -180,7 +180,7 @@ app
 							var checkRob = $scope;
 							var nowPage = 1;
 							var myDate = new Date();
-							var myDateTime=new Date().format('yyyy-MM-dd');
+							var myDateTime = new Date().format('yyyy-MM-dd');
 							// zq打扫类型默认值
 							checkRob.cleanTypes = [ {
 								id : 0,
@@ -453,6 +453,10 @@ app
 									alert("请选择查询员工！");
 									return false;
 								}
+								if (checkRob.reaLimit.staffId == undefined) {
+									alert("请选择查询员工！");
+									return false;
+								}
 								$(".overlayer").fadeIn(200);
 								$(".tipLoading").fadeIn(200);
 								var robEffAnalyseLimit = JSON
@@ -704,6 +708,10 @@ app
 									return false;
 								}
 								if (checkRob.coaLimit.staffId == "") {
+									alert("请选择查询员工！");
+									return false;
+								}
+								if (checkRob.coaLimit.staffId == undefined) {
 									alert("请选择查询员工！");
 									return false;
 								}
